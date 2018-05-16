@@ -1,0 +1,9 @@
+pytest
+networkx
+numpy
+pandas
+shapely
+pyproj
+matplotlib
+nose
+pytest-mpl
