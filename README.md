@@ -139,7 +139,7 @@ This can be used as a foundation to analyze networks or to generate models.
 uesgraphs is released by RWTH Aachen University, E.ON Energy
 Research Center, Institute for Energy Efficient Buildings and Indoor Climate,
 under the
-[MIT License](https://github.com/RWTH-EBC/uesgraphs/blob/master/License.md).
+[MIT License](https://github.com/RWTH-EBC/uesgraphs/blob/master/LICENSE.md).
 
 ## Reference
 
