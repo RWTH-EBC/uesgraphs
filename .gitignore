@@ -9,6 +9,8 @@ workspace/
 .spyderproject
 .spyderworkspace
 *.idea
+build/
+dist/
 
 #Unit tests #
 #####################
@@ -17,3 +19,4 @@ __pycache__/
 coverage_html_report/
 .pytest_cache/
 result_images/
+
