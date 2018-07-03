@@ -210,6 +210,8 @@ class Visuals(object):
                          '--',
                          color='black',
                          alpha=0.7)
+            elif len(neighbors) == 0:
+                text_pos = self.uesgraph.node[node]['position']
             else:
                 neighbor_pos = self.uesgraph.node[neighbors[0]]['position']
 
