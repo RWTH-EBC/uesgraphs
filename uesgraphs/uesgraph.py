@@ -51,6 +51,10 @@ class UESGraph(nx.Graph):
         Dictionary contains nodelists for all cooling networks. Keys are names
         of the networks in str format, values are lists of all node ids that
         belong to the network
+    nodelists_bidirectional : dict
+        Dictionary contains nodelists for all bidirectional networks. Keys are
+        names of the networks in str format, values are lists of all node ids
+        that belong to the network
     nodelists_electricity : dict
         Dictionary contains nodelists for all electricity networks. Keys are
         names of the networks in str format, values are lists of all node
@@ -102,12 +106,14 @@ class UESGraph(nx.Graph):
         self.nodelist_building = []
         self.nodelists_heating = {'default': []}
         self.nodelists_cooling = {'default': []}
+        self.nodelists_bidirectional = {'default': []}
         self.nodelists_electricity = {'default': []}
         self.nodelists_gas = {'default': []}
         self.nodelists_others = {'default': []}
 
         self.network_types = ['heating',
                               'cooling',
+                              'bidirectional',
                               'electricity',
                               'gas',
                               'others']
@@ -212,6 +218,7 @@ class UESGraph(nx.Graph):
     def add_building(self, name=None, position=None,
                      is_supply_heating=False,
                      is_supply_cooling=False,
+                     is_supply_bidirectional=False,
                      is_supply_electricity=False,
                      is_supply_gas=False,
                      is_supply_other=False,
@@ -230,6 +237,9 @@ class UESGraph(nx.Graph):
             True if the building contains a heat supply unit, False if not
         is_supply_cooling : boolean
             True if the building contains a cooling supply unit, False if not
+        is_supply_bidirectional : boolean
+            True if the building contains a bidirectional supply unit, False
+            if not
         is_supply_electricity : boolean
             True if the building contains an electricity supply unit, False if
             not
@@ -260,6 +270,7 @@ class UESGraph(nx.Graph):
             'position': position,
             'is_supply_heating': is_supply_heating,
             'is_supply_cooling': is_supply_cooling,
+            'is_supply_bidirectional': is_supply_bidirectional,
             'is_supply_electricity': is_supply_electricity,
             'is_supply_gas': is_supply_gas,
             'is_supply_other': is_supply_other}
@@ -445,6 +456,8 @@ class UESGraph(nx.Graph):
             nodelist = self.nodelists_heating[network_id]
         elif network_type == 'cooling':
             nodelist = self.nodelists_cooling[network_id]
+        elif network_type == 'bidirectional':
+            nodelist = self.nodelists_bidirectional[network_id]
         elif network_type == 'electricity':
             nodelist = self.nodelists_electricity[network_id]
         elif network_type == 'gas':
@@ -475,6 +488,8 @@ class UESGraph(nx.Graph):
                     nodelist.append(node_number)
                 elif network_type == 'cooling':
                     nodelist.append(node_number)
+                elif network_type == 'bidirectional':
+                    nodelist.append(node_number)
                 elif network_type == 'electricity':
                     nodelist.append(node_number)
                 elif network_type == 'gas':
@@ -488,6 +503,8 @@ class UESGraph(nx.Graph):
             if network_type == 'heating':
                 nodelist.append(node_number)
             elif network_type == 'cooling':
+                nodelist.append(node_number)
+            elif network_type == 'bidirectional':
                 nodelist.append(node_number)
             elif network_type == 'electricity':
                 nodelist.append(node_number)
@@ -510,6 +527,7 @@ class UESGraph(nx.Graph):
         """
         #  Search for occurrence of node number within different network dicts
         network_list = [self.nodelists_heating, self.nodelists_cooling,
+                        self.nodelists_bidirectional,
                         self.nodelists_electricity, self.nodelists_gas,
                         self.nodelists_others]
 
@@ -608,6 +626,8 @@ class UESGraph(nx.Graph):
             nodelists = self.nodelists_heating
         elif network_type == 'cooling':
             nodelists = self.nodelists_cooling
+        elif network_type == 'bidirectional':
+            nodelists = self.nodelists_bidirectional
         elif network_type == 'electricity':
             nodelists = self.nodelists_electricity
         elif network_type == 'gas':
@@ -652,6 +672,10 @@ class UESGraph(nx.Graph):
                     elif network_type == 'cooling':
                         H.nodelists_cooling[
                             network_id] = self.nodelists_cooling[network_id]
+                    elif network_type == 'bidirectional':
+                        H.nodelists_bidirectional[
+                            network_id] = self.nodelists_bidirectional[
+                                network_id]
                     elif network_type == 'electricity':
                         H.nodelists_electricity[
                             network_id] = self.nodelists_electricity[
@@ -689,6 +713,8 @@ class UESGraph(nx.Graph):
                     if (self.nodes[building]['is_supply_heating'] is False and
                             self.nodes[building][
                                 'is_supply_cooling'] is False and
+                            self.nodes[building][
+                                    'is_supply_bidirectional'] is False and
                             self.nodes[building][
                                 'is_supply_electricity'] is False and
                             self.nodes[building][
@@ -794,6 +820,29 @@ class UESGraph(nx.Graph):
             # TODO: This currently only supports heating and cooling supplies
             if 'supply' in node['node_type']:
                 supply_id = node['name']
+                if 'bidirectional' in node['node_type']:
+                    if (node['is_supply_heating'] & node['is_supply_cooling']):
+                        new_node = self.add_building(
+                            name=supply_id,
+                            position=this_position,
+                            is_supply_heating=True,
+                            is_supply_cooling=True,
+                            is_supply_bidirectional=True)
+                    elif node['is_supply_heating']:
+                        new_node = self.add_building(
+                            name=supply_id,
+                            position=this_position,
+                            is_supply_heating=True)
+                    elif node['is_supply_cooling']:
+                        new_node = self.add_building(
+                            name=supply_id,
+                            position=this_position,
+                            is_supply_cooling=True)
+                    else:
+                        new_node = self.add_building(
+                            name=supply_id,
+                            position=this_position,
+                            is_supply_bidirecitonal=True)
                 if 'heating' in node['node_type']:
                     new_node = self.add_building(name=supply_id,
                                                  position=this_position,
@@ -822,6 +871,7 @@ class UESGraph(nx.Graph):
                 'name',
                 'is_supply_heating',
                 'is_supply_cooling',
+                'is_supply_bidirectional',
                 'node_type',
             ]
             for attrib in node.keys():
@@ -941,6 +991,8 @@ class UESGraph(nx.Graph):
                     if 'is_supply_cooling' in self.nodes[node]:
                         if self.nodes[node]['is_supply_cooling'] is True:
                             node_type = 'supply_cooling'
+                    if 'bidirectional' in node_type:
+                        node_type = 'supply_bidirectional'
                 nodes[-1]['node_type'] = node_type
             if all_data is True:
                 for key in self.nodes[node]:
@@ -1389,6 +1441,8 @@ class UESGraph(nx.Graph):
                 nodelists = list(self.nodelists_heating.values())
             elif node_type == 'cooling':
                 nodelists = list(self.nodelists_cooling.values())
+            elif node_type == 'bidirectional':
+                nodelists = list(self.nodelists_bidirectional.values())
             elif node_type == 'electricity':
                 nodelists = list(self.nodelists_electricity.values())
             elif node_type == 'gas':
@@ -1530,6 +1584,8 @@ class UESGraph(nx.Graph):
             nodelists = self.nodelists_heating
         elif network_type == 'cooling':
             nodelists = self.nodelists_cooling
+        elif network_type == 'bidirectional':
+            nodelists = self.nodelists_bidirectional
         elif network_type == 'electricity':
             nodelists = self.nodelists_electricity
         elif network_type == 'gas':
@@ -1648,6 +1704,10 @@ class UESGraph(nx.Graph):
         elif network_type == 'cooling':
             is_supply = 'is_supply_cooling'
             nodelist = self.nodelists_cooling[network_id]
+        # TODO: not all supply types in bidir. networks(missing just heat/cool)
+        elif network_type == 'bidirectional':
+            is_supply = 'is_supply_bidirectional'
+            nodelist = self.nodelists_bidirectional[network_id]
 
         supplies = []
         for node in self.nodelist_building:
@@ -1734,6 +1794,8 @@ class UESGraph(nx.Graph):
             nodelist = self.nodelists_heating[network_id]
         elif network_type == 'cooling':
             nodelist = self.nodelists_cooling[network_id]
+        elif network_type == 'bidirectional':
+            nodelist = self.nodelists_bidirectional[network_id]
 
         def remove_end(end):
             """Deletes a dead end and follows up on its neighbor for recursion
