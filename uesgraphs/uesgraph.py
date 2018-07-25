@@ -180,6 +180,8 @@ class UESGraph(nx.Graph):
             self.nodelists_heating[network_id] = []
         elif network_type == 'cooling':
             self.nodelists_cooling[network_id] = []
+        elif network_type == 'bidirectional':
+            self.nodelists_bidirectional[network_id] = []
         elif network_type == 'electricity':
             self.nodelists_electricity[network_id] = []
         elif network_type == 'gas':
