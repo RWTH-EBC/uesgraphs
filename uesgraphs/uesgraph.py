@@ -18,6 +18,8 @@ from shapely.prepared import prep
 import uuid
 import warnings
 import xml.etree.ElementTree
+from sklearn.cluster import DBSCAN
+from random import randint
 
 try:
     import pyproj
@@ -1705,7 +1707,7 @@ class UESGraph(nx.Graph):
             if self.edges[edge[0], edge[1]]['length'] <= 1e-9:
                 if edge[0] == edge[1]:
                     to_remove.append([edge[0], edge[1]])
-                    
+
         for edge in to_remove:
             self.remove_edge(edge[0], edge[1])
             number_removed_edges += 1
@@ -1769,6 +1771,84 @@ class UESGraph(nx.Graph):
             remove_end(end)
 
         return removed
+
+    def cluster_bldg(self, eps=20):
+        """Clusters demand buildings geographically
+
+        Parameters
+        ----------
+        eps : int
+            max distance (in km) that points can be away from each other to
+            be considered a cluster
+        """
+        coords_dict = {"x": [], "y": [], "node": []}
+        for node in self.nodelist_building:
+            if not self.nodes[node]['is_supply_heating']:
+                coords_dict["x"].append(self.nodes[node]["position"].x)
+                coords_dict["y"].append(self.nodes[node]["position"].y)
+                coords_dict["node"].append(node)
+
+        coords_df = pd.DataFrame(data=coords_dict)
+        coords = coords_df.as_matrix(columns=["x", "y"])
+
+        db = DBSCAN(eps=eps, min_samples=1).fit(coords)
+        cluster_labels = [x for x in db.labels_]
+        num_clusters = len(set(cluster_labels))
+        print("Number of cluster: {} (before: {} coords)".format(num_clusters, len(coords)))
+
+        clusters = {}
+        for i, cluster_label in enumerate(cluster_labels):
+            if cluster_label not in clusters:
+                clusters[cluster_label] = [coords_dict["node"][i]]
+            else:
+                clusters[cluster_label].append(coords_dict["node"][i])
+
+        cluster_names = []
+        for cluster in clusters.keys():
+            if len(clusters[cluster]) > 1:
+                xs = []
+                ys = []
+                input_heat = {}
+                for node in clusters[cluster]:
+                    xs.append(self.nodes[node]["position"].x)
+                    ys.append(self.nodes[node]["position"].y)
+                    input_heat[node] = self.nodes[node]["input_heat"]
+
+                x_mean = np.mean(xs)
+                y_mean = np.mean(ys)
+                _err = np.inf
+                for i, (_x, _y) in enumerate(zip(xs,ys)):
+                    err = (_x-x_mean)**2 + (_y-y_mean)**2
+                    if err < _err:
+                        _err = err
+                        x = _x
+                        y = _y
+                        node_before = clusters[cluster][i]
+
+                input_heat = pd.DataFrame(input_heat).sum(axis=1).values.tolist()
+                cl_name = "Cluster{}".format(cluster)
+                self.add_building(
+                    name=cl_name,
+                    position=sg.Point(x, y),
+                    input_heat=input_heat
+                )
+                edges_to_add = []
+                cluster_node = self.nodes_by_name[cl_name]
+                for i, edge in enumerate(self.edges):
+                    if edge[0] == node_before:
+                        edges_to_add.append([edge[1], cluster_node])
+
+                    elif edge[1] == node_before:
+                        edges_to_add.append([edge[0], cluster_node])
+
+                cluster_names.append(cl_name)
+                for edge in edges_to_add:
+                    self.add_edge(edge[0], edge[1], name=randint(0,10000000))
+
+                for node in clusters[cluster]:
+                    self.remove_building(node)
+
+        return cluster_names
 
     def calc_angle(self, a, b, output='rad'):
         """Returns the angle of a line from point a to b in rad or degrees
