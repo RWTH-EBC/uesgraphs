@@ -794,11 +794,17 @@ class UESGraph(nx.Graph):
             # TODO: This currently only supports heating and cooling supplies
             if 'supply' in node['node_type']:
                 supply_id = node['name']
-                if 'heating' in node['node_type']:
+                if ('heating' in node['node_type'] and
+                        'cooling' in node['node_type']):
+                    new_node = self.add_building(name=supply_id,
+                                                 position=this_position,
+                                                 is_supply_heating=True,
+                                                 is_supply_cooling=True)
+                elif 'heating' in node['node_type']:
                     new_node = self.add_building(name=supply_id,
                                                  position=this_position,
                                                  is_supply_heating=True)
-                if 'cooling' in node['node_type']:
+                elif 'cooling' in node['node_type']:
                     new_node = self.add_building(name=supply_id,
                                                  position=this_position,
                                                  is_supply_cooling=True)
@@ -935,10 +941,15 @@ class UESGraph(nx.Graph):
             if 'node_type' in self.nodes[node]:
                 node_type = self.nodes[node]['node_type']
                 if 'building' in node_type:
-                    if 'is_supply_heating' in self.nodes[node]:
+                    if ('is_supply_heating' in self.nodes[node] and
+                            'is_supply_cooling' in self.nodes[node]):
+                        if (self.nodes[node]['is_supply_heating'] is True and
+                                self.nodes[node]['is_supply_cooling'] is True):
+                            node_type = 'supply_heating_cooling'
+                    elif 'is_supply_heating' in self.nodes[node]:
                         if self.nodes[node]['is_supply_heating'] is True:
                             node_type = 'supply_heating'
-                    if 'is_supply_cooling' in self.nodes[node]:
+                    elif 'is_supply_cooling' in self.nodes[node]:
                         if self.nodes[node]['is_supply_cooling'] is True:
                             node_type = 'supply_cooling'
                 nodes[-1]['node_type'] = node_type
