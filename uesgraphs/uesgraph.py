@@ -786,25 +786,38 @@ class UESGraph(nx.Graph):
             # Add buildings
             if 'building' in node['node_type']:
                 building_id = node['name']
-                new_node = self.add_building(name=building_id,
-                                             position=this_position)
+                if ('is_supply_heating' in node and
+                    'is_supply_cooling' in node and
+                    node['is_supply_heating'] is True and
+                        node['is_supply_cooling'] is True):
+                    new_node = self.add_building(name=building_id,
+                                                 position=this_position,
+                                                 is_supply_heating=True,
+                                                 is_supply_cooling=True)
+                elif ('is_supply_heating' in node and
+                        node['is_supply_heating'] is True):
+                    new_node = self.add_building(name=building_id,
+                                                 position=this_position,
+                                                 is_supply_heating=True)
+                elif ('is_supply_cooling' in node and
+                        node['is_supply_cooling'] is True):
+                    new_node = self.add_building(name=building_id,
+                                                 position=this_position,
+                                                 is_supply_cooling=True)
+                else:
+                    new_node = self.add_building(name=building_id,
+                                                 position=this_position)
 
 
             # Add supplies
             # TODO: This currently only supports heating and cooling supplies
             if 'supply' in node['node_type']:
                 supply_id = node['name']
-                if ('heating' in node['node_type'] and
-                        'cooling' in node['node_type']):
-                    new_node = self.add_building(name=supply_id,
-                                                 position=this_position,
-                                                 is_supply_heating=True,
-                                                 is_supply_cooling=True)
-                elif 'heating' in node['node_type']:
+                if 'heating' in node['node_type']:
                     new_node = self.add_building(name=supply_id,
                                                  position=this_position,
                                                  is_supply_heating=True)
-                elif 'cooling' in node['node_type']:
+                if 'cooling' in node['node_type']:
                     new_node = self.add_building(name=supply_id,
                                                  position=this_position,
                                                  is_supply_cooling=True)
@@ -945,7 +958,7 @@ class UESGraph(nx.Graph):
                             'is_supply_cooling' in self.nodes[node]):
                         if (self.nodes[node]['is_supply_heating'] is True and
                                 self.nodes[node]['is_supply_cooling'] is True):
-                            node_type = 'supply_heating_cooling'
+                            node_type = 'building'
                     elif 'is_supply_heating' in self.nodes[node]:
                         if self.nodes[node]['is_supply_heating'] is True:
                             node_type = 'supply_heating'
