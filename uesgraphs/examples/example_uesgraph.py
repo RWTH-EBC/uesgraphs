@@ -126,6 +126,56 @@ def simple_dhc_model():
 
     return example_district
 
+def simple_bidirectional_network_model():
+    """Initializes an UESGraph object, adds 1 bidirectional network
+
+    Returns
+    -------
+    example_district : uesgraphs.uesgraph.UESGraph object
+        An UESGraph containing 4 buildings connected to 1 ideal plant.
+    """
+    example_district = ug.UESGraph()
+    ideal_plant_1 = example_district.add_building(name='idealPlant',
+                                                  position=Point(1, 2),
+                                                  is_supply_heating=True,
+                                                  is_supply_cooling=True)
+
+    building_1 = example_district.add_building(name='building_1',
+                                               position=Point(2, 3),
+                                               is_supply_heating=True,
+                                               is_supply_cooling=True,
+                                               input_heat=[1500, 1000, 500],
+                                               input_cool=[0, 500, 1000])
+    building_2 = example_district.add_building(name='building_2',
+                                               position=Point(3, 3),
+                                               is_supply_heating=True,
+                                               is_supply_cooling=True,
+                                               input_heat=[1500, 1000, 500],
+                                               input_cool=[0, 500, 1000])
+    building_3 = example_district.add_building(name='building_3',
+                                               position=Point(4, 3),
+                                               is_supply_heating=True,
+                                               input_cool=[0, 500, 1000])
+    building_4 = example_district.add_building(name='building_4',
+                                               position=Point(5, 3),
+                                               is_supply_cooling=True,
+                                               input_heat=[1500, 1000, 500])
+
+    n_1 = example_district.add_network_node(network_type='heating',
+                                             position=Point(2, 2))
+    n_2 = example_district.add_network_node(network_type='heating',
+                                             position=Point(3, 2))
+    n_3 = example_district.add_network_node(network_type='heating',
+                                             position=Point(3, 1))
+    example_district.add_edge(ideal_plant_1, n_1)
+    example_district.add_edge(n_1, building_1)
+    example_district.add_edge(n_1, n_2)
+    example_district.add_edge(n_2, building_2)
+    example_district.add_edge(ideal_plant_1, n_3)
+    example_district.add_edge(n_3, building_3)
+    example_district.add_edge(n_3, building_4)
+
+    return example_district
 
 def add_more_networks(example_district):
     """Adds an electric grid to the simple_dhc_model example

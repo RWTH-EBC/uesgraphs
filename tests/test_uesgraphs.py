@@ -199,3 +199,29 @@ class Test_uesgraphs(object):
         assert len(example_district.edges()) == 12, msg
         assert removed == [1015], msg
 
+
+    def test_to_from_json(self):
+        """Tests the output and input of an uesgraph to JSON
+        """
+        workspace = ug.make_workspace('json_output')
+
+        example_district = ug.simple_bidirectional_network_model()
+        example_district.to_json(path=workspace,
+                                 name='demo',
+                                 all_data=True)
+        example_district_import = ug.UESGraph()
+        example_district_import.from_json(path=workspace,
+                                          network_type='heating')
+
+        assert (len(example_district_import.nodelist_building) == 5)
+
+        mapping = {}
+        for b in example_district.nodelist_building:
+            name = example_district.nodes[b]['name']
+            for n in example_district_import.nodelist_building:
+                if name==example_district_import.nodes[n]['name']:
+                    mapping[b] = n
+        for b in example_district.nodelist_building:
+            for k in example_district.nodes[b].keys():
+                assert example_district.nodes[b][k] ==\
+                       example_district_import[mapping[b]][k]
