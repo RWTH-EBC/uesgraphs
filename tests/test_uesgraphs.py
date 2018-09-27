@@ -222,6 +222,48 @@ class Test_uesgraphs(object):
                 if name==example_district_import.nodes[n]['name']:
                     mapping[b] = n
         for b in example_district.nodelist_building:
-            for k in example_district.nodes[b].keys():
-                assert example_district.nodes[b][k] ==\
-                       example_district_import[mapping[b]][k]
+            if example_district.nodes[b]['name'] == 'building_1':
+                assert example_district_import.nodes[mapping[b]][
+                    'is_supply_heating'] is True
+                assert example_district_import.nodes[mapping[b]][
+                    'is_supply_cooling'] is True
+                assert 'input_heat' in example_district_import.nodes[
+                    mapping[b]]
+                assert 'input_cool' in example_district_import.nodes[
+                    mapping[b]]
+            elif example_district.nodes[b]['name'] == 'building_2':
+                assert example_district_import.nodes[mapping[b]][
+                           'is_supply_heating'] is True
+                assert example_district_import.nodes[mapping[b]][
+                           'is_supply_cooling'] is True
+                assert 'input_heat' in example_district_import.nodes[
+                    mapping[b]]
+                assert 'input_cool' in example_district_import.nodes[
+                    mapping[b]]
+            elif example_district.nodes[b]['name'] == 'building_3':
+                assert example_district_import.nodes[mapping[b]][
+                           'is_supply_heating'] is True
+                if 'is_supply_cooling' in example_district_import.nodes[
+                        mapping[b]]:
+                    assert example_district_import.nodes[mapping[b]][
+                               'is_supply_cooling'] is False
+                assert 'input_cool' in example_district_import.nodes[
+                    mapping[b]]
+            elif example_district.nodes[b]['name'] == 'building_4':
+                if 'is_supply_heating' in example_district_import.nodes[
+                        mapping[b]]:
+                    assert example_district_import.nodes[mapping[b]][
+                        'is_supply_heating'] is False
+                assert example_district_import.nodes[mapping[b]][
+                    'is_supply_cooling'] is True
+                assert 'input_heat' in example_district_import.nodes[
+                    mapping[b]]
+            elif example_district.nodes[b]['name'] == 'idealPlant':
+                assert example_district_import.nodes[mapping[b]][
+                    'is_supply_heating'] is True
+                assert example_district_import.nodes[mapping[b]][
+                    'is_supply_cooling'] is True
+                assert 'input_heat' not in example_district_import.nodes[
+                    mapping[b]]
+                assert 'input_cool' not in example_district_import.nodes[
+                    mapping[b]]
