@@ -820,7 +820,7 @@ class Visuals(object):
             norm = mpl.colors.Normalize(vmin=temperature_min,
                                         vmax=temperature_max)
             cb1 = mpl.colorbar.ColorbarBase(ax1,
-                                            cmap=plt.get_cmap('viridis'),
+                                            cmap=plt.get_cmap('seismic'),
                                             norm=norm,
                                             orientation='vertical'
                                             )
@@ -832,8 +832,8 @@ class Visuals(object):
 
             # The following work-around tries to make sure that the
             # ticklabels are not obscured by some strange offset behaviour
-            ticklabels = [float(item.get_text()) for item in
-                          cb1.ax.get_yticklabels()]
+            # ticklabels = [float(item.get_text()) for item in
+            #               cb1.ax.get_yticklabels()]
 
             # Calculate new ticklabels
             dT = temperature_max - temperature_min
