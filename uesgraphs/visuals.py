@@ -204,9 +204,10 @@ class Visuals(object):
                 # Place text on line between `ref_point` and `node`
                 # text_pos = sg.LineString([node_pos, ref_point]).interpolate(
                 #     curr_scaling)
+                # text_pos = sg.Point(ref_point.x - 3, ref_point.y - 3)
                 text_pos = ref_point
-                plt.plot([ref_point.x, node_pos.x],
-                         [ref_point.y, node_pos.y],
+                plt.plot([text_pos.x, node_pos.x],
+                         [text_pos.y, node_pos.y],
                          '--',
                          color='black',
                          alpha=0.7)
@@ -832,8 +833,8 @@ class Visuals(object):
 
             # The following work-around tries to make sure that the
             # ticklabels are not obscured by some strange offset behaviour
-            # ticklabels = [float(item.get_text()) for item in
-            #               cb1.ax.get_yticklabels()]
+            ticklabels = [float(item) for item in
+                          cb1.get_ticks()]
 
             # Calculate new ticklabels
             dT = temperature_max - temperature_min
