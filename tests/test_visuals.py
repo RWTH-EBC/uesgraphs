@@ -9,13 +9,16 @@ import sys
 
 import uesgraphs as ug
 
+from uesgraphs.examples import e2_simple_dhc as e2
+from uesgraphs.examples import e3_add_network as e3
+
 
 @pytest.fixture(scope='module')
 def example_district():
     """Provides the example district for each test
     """
-    example_district = ug.simple_dhc_model()
-    example_district = ug.add_more_networks(example_district)
+    example_district = e2.simple_dhc_model()
+    example_district = e3.add_more_networks(example_district)
 
     return example_district
 
@@ -38,7 +41,7 @@ def test_basic_plot(example_district):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='02_heating.png',
+                               filename='02_heating_1.png',
                                savefig_kwargs={'dpi': 150})
 def test_heating_network(example_district):
     """Tests the plotting of an extracted heating network subgraph
@@ -55,7 +58,43 @@ def test_heating_network(example_district):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='03_cooling.png',
+                               filename='03_cooling_1.png',
+                               savefig_kwargs={'dpi': 150})
+def test_cooling_network(example_district):
+    """Tests the plotting of an extracted cooling network subgraph
+    """
+    cooling_network = example_district.create_subgraphs('cooling')[
+        'default']
+
+    scaling_factor = 10
+    vis = ug.Visuals(cooling_network)
+    fig = vis.show_network(
+        show_plot=False,
+        scaling_factor=scaling_factor,
+    )
+    return fig
+
+
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
+                               filename='04_heating_2.png',
+                               savefig_kwargs={'dpi': 150})
+def test_heating_network_2(example_district):
+    """Tests the plotting of an extracted heating network subgraph
+    """
+    heating_network_2 = example_district.create_subgraphs(
+        'heating')['heating_2']
+
+    scaling_factor = 10
+    vis = ug.Visuals(heating_network_2)
+    fig = vis.show_network(
+        show_plot=False,
+        scaling_factor=scaling_factor,
+    )
+    return fig
+
+
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
+                               filename='05_cooling_2.png',
                                savefig_kwargs={'dpi': 150})
 def test_cooling_network_2(example_district):
     """Tests the plotting of an extracted cooling network subgraph
@@ -73,13 +112,13 @@ def test_cooling_network_2(example_district):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='04_electricity.png',
+                               filename='06_electricity.png',
                                savefig_kwargs={'dpi': 150})
 def test_electricity_network(example_district):
     """Tests the plotting of an extracted electricity network subgraph
     """
-    electricity_network = example_district.create_subgraphs('electricity')[
-                            'default']
+    electricity_network = example_district.create_subgraphs(
+        'electricity')['default']
 
     scaling_factor = 10
     vis = ug.Visuals(electricity_network)
@@ -91,7 +130,7 @@ def test_electricity_network(example_district):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='05_gas.png',
+                               filename='07_gas.png',
                                savefig_kwargs={'dpi': 150})
 def test_gas_network(example_district):
     """Tests the plotting of an extracted gas network subgraph
@@ -108,7 +147,7 @@ def test_gas_network(example_district):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='06_others.png',
+                               filename='08_others.png',
                                savefig_kwargs={'dpi': 150})
 def test_others_network(example_district):
     """Tests the plotting of an extracted others network subgraph
@@ -125,7 +164,7 @@ def test_others_network(example_district):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='07_network_explosion_base.png',
+                               filename='09_network_3d.png',
                                savefig_kwargs={'dpi': 150})
 def test_network_explosion_base(example_district):
     """Tests the plotting of a network explosion drawing for base layer
@@ -142,7 +181,7 @@ def test_network_explosion_base(example_district):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='08_network_explosion_all.png',
+                               filename='10_network_explosion.png',
                                savefig_kwargs={'dpi': 150})
 def test_network_explosion_all(example_district):
     """Tests the plotting of a network explosion drawing for all layers
@@ -158,7 +197,7 @@ def test_network_explosion_all(example_district):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='09_simple.png',
+                               filename='11_simple.png',
                                savefig_kwargs={'dpi': 150})
 def test_simple_plot(example_district):
     """Tests the plotting with simple set to True
@@ -174,7 +213,7 @@ def test_simple_plot(example_district):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='10_diameters.png',
+                               filename='12_diameters.png',
                                savefig_kwargs={'dpi': 150})
 def test_diameters(example_district):
     """Tests the plotting of diameters with line thickness
@@ -211,7 +250,7 @@ def test_diameters(example_district):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='10_diameters_scaling.png',
+                               filename='13_diameters_scaling.png',
                                savefig_kwargs={'dpi': 150})
 def test_diameters_scaling(example_district):
     """Tests the plotting of diameters with line thickness
@@ -249,7 +288,7 @@ def test_diameters_scaling(example_district):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='11_mass_flows.png',
+                               filename='14_mass_flows.png',
                                savefig_kwargs={'dpi': 150})
 def test_mass_flows(example_district):
     """Tests the plotting of mass flow rates with line thickness
@@ -284,7 +323,7 @@ def test_mass_flows(example_district):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='12_temperatures.png',
+                               filename='15_temperatures.png',
                                savefig_kwargs={'dpi': 150})
 def test_temperatures(example_district):
     """Tests the plotting of temperatures with line colors
@@ -330,7 +369,7 @@ def test_temperatures(example_district):
 @pytest.mark.skipif(sys.version_info < (3, 6),
                     reason="The labeling of nodes will vary for Python 2")
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='13_markers.png',
+                               filename='16_markers.png',
                                savefig_kwargs={'dpi': 150})
 def test_markers(example_district):
     """Tests marking a node and an edge
@@ -371,7 +410,7 @@ def test_markers(example_district):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
-                               filename='14_3D.png',
+                               filename='17_3D.png',
                                savefig_kwargs={'dpi': 150})
 def test_3D(example_district):
     """Tests the 3D plot
