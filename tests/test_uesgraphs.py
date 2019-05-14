@@ -3,6 +3,10 @@ This module contains unit tests for uesgraphs module
 """
 
 import uesgraphs as ug
+from uesgraphs.examples import e2_simple_dhc as e2
+from uesgraphs.examples import e3_add_network as e3
+from uesgraphs.examples import e6_additional_building_attributes as e6
+from uesgraphs.examples import e7_plot_uesgraphs as e7
 import math
 import shapely.geometry as sg
 
@@ -34,7 +38,7 @@ class Test_uesgraphs(object):
         Verifies the subgraph creation for `all_buildings = True` and
         `all_buildings = False`
         """
-        example_district = ug.simple_dhc_model()
+        example_district = e2.simple_dhc_model()
 
         heating_network_0 = example_district.create_subgraphs('heating')[
             'default']
@@ -69,7 +73,7 @@ class Test_uesgraphs(object):
     def test_subgraph_buildings(self):
         """Tests the subgraph setting None to export only buildings in a graph
         """
-        example_district = ug.simple_dhc_model()
+        example_district = e2.simple_dhc_model()
 
         building_graph = example_district.create_subgraphs(None)['default']
         assert len(building_graph.nodes()) == 8
@@ -78,12 +82,12 @@ class Test_uesgraphs(object):
     def test_plot_example_networks(self):
         """Runs the example network plotting to make sure example works
         """
-        ug.plot_example_networks()
+        e7.plot_example_networks()
 
     def test_additional_attribs(self):
         """Runs the additional attribute demo to make sure the example works
         """
-        ug.additional_attrib()
+        e6.additional_attrib()
 
     def test_remove_network_node(self):
         """
@@ -168,7 +172,7 @@ class Test_uesgraphs(object):
     def test_remove_unconnected_nodes(self):
         """Tests the remove_unconnected_nodes() method
         """
-        example_district = ug.simple_dhc_model()
+        example_district = e2.simple_dhc_model()
 
         lone_heating_node = example_district.add_network_node(
             network_type='heating',
@@ -183,7 +187,7 @@ class Test_uesgraphs(object):
     def test_remove_dead_ends(self):
         """Tests the remove_dead_ends() method
         """
-        example_district = ug.simple_dhc_model()
+        example_district = e2.simple_dhc_model()
 
         dead_end_heating_node = example_district.add_network_node(
             network_type='heating',

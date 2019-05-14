@@ -204,9 +204,10 @@ class Visuals(object):
                 # Place text on line between `ref_point` and `node`
                 # text_pos = sg.LineString([node_pos, ref_point]).interpolate(
                 #     curr_scaling)
+                # text_pos = sg.Point(ref_point.x - 3, ref_point.y - 3)
                 text_pos = ref_point
-                plt.plot([ref_point.x, node_pos.x],
-                         [ref_point.y, node_pos.y],
+                plt.plot([text_pos.x, node_pos.x],
+                         [text_pos.y, node_pos.y],
                          '--',
                          color='black',
                          alpha=0.7)
@@ -808,11 +809,15 @@ class Visuals(object):
                         'temperature_supply'])
             mean_temperature = np.mean(temperatures)
             std_temperatures = np.std(temperatures)
-            temperature_min = max(min(temperatures),
-                                  mean_temperature - 2 * std_temperatures)
-            temperature_max = min(max(temperatures),
-                                  mean_temperature + 2 * std_temperatures)
+            temperature_min = 56.21334421417651
+            temperature_max = 78.30040843644306
 
+            # temperature_min = max(min(temperatures),
+            #                       mean_temperature - 2 * std_temperatures)
+            # temperature_max = min(max(temperatures),
+            #                       mean_temperature + 2 * std_temperatures)
+            print('mean_temperature', mean_temperature)
+            print('std_temperatures', std_temperatures)
             print('temperature_min for colormap', temperature_min)
             print('temperature_max for colormap', temperature_max)
 
@@ -832,30 +837,30 @@ class Visuals(object):
 
             # The following work-around tries to make sure that the
             # ticklabels are not obscured by some strange offset behaviour
-            ticklabels = [float(item.get_text()) for item in
-                          cb1.ax.get_yticklabels()]
+            # ticklabels = [float(item) for item in
+            #               cb1.get_ticks()]
 
-            # Calculate new ticklabels
-            dT = temperature_max - temperature_min
-            step = dT / (len(ticklabels) + 1)
+            # # Calculate new ticklabels
+            # dT = temperature_max - temperature_min
+            # step = dT / (len(ticklabels) + 1)
 
-            new_ticklabels = []
-            for i in range(len(ticklabels)):
-                base_temperature = temperature_min
-                if temperature_min - 273.15 > 0:
-                    base_temperature -= 273.15
+            # new_ticklabels = []
+            # for i in range(len(ticklabels)):
+            #     base_temperature = temperature_min
+            #     if temperature_min - 273.15 > 0:
+            #         base_temperature -= 273.15
 
-                if step > 1:
-                    decimals = 0
-                elif step > 0.1:
-                    decimals = 1
-                else:
-                    decimals = 2
+            #     if step > 1:
+            #         decimals = 0
+            #     elif step > 0.1:
+            #         decimals = 1
+            #     else:
+            #         decimals = 2
 
-                new_ticklabels.append(round(base_temperature+step*(i+1),
-                                            decimals))
+            #     new_ticklabels.append(round(base_temperature+step*(i+1),
+            #                                 decimals))
 
-            cb1.ax.set_yticklabels(new_ticklabels)
+            # cb1.ax.set_yticklabels(new_ticklabels)
 
         if save_as is not None:
             plt.savefig(save_as, bbox_inches='tight', dpi=150)
@@ -900,7 +905,7 @@ class Visuals(object):
         ax = self.create_plot_3d(ax, z_attrib=z_attrib, show_flow=show_flow,
                                  angle=angle, label_size=label_size)
 
-        # plt.tight_layout()
+        plt.tight_layout()
         if save_as is not None:
             # plt.savefig(save_as, bbox_inches='tight')
             plt.savefig(save_as)
