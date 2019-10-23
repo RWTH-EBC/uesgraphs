@@ -122,6 +122,10 @@ class UESGraph(nx.Graph):
         self.pipeIDs = []
 
     @property
+    def node(self):
+        return self.nodes
+
+    @property
     def positions(self):
         for node in self.nodes(data=True):
             if node[0] is not None:
