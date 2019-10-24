@@ -2,7 +2,7 @@
 import setuptools
 
 setuptools.setup(name='uesgraphs',
-                 version='0.6.3',
+                 version='0.6.4',
                  description='Graphs to describe Urban Energy Systems',
                  url='https://github.com/RWTH-EBC/uesgraphs',
                  author='Marcus Fuchs',
