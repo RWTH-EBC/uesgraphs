@@ -1538,7 +1538,7 @@ class UESGraph(nx.Graph):
             nodelists = self.nodelists_electricity
         elif network_type == 'gas':
             nodelists = self.nodelists_gas
-        elif network_type == 'other':
+        elif network_type == 'others':
             nodelists = self.nodelists_others
 
         assert network_id in nodelists.keys(), 'Unknown network_id'
@@ -1652,6 +1652,12 @@ class UESGraph(nx.Graph):
         elif network_type == 'cooling':
             is_supply = 'is_supply_cooling'
             nodelist = self.nodelists_cooling[network_id]
+        elif network_type == 'others':
+            is_supply = 'is_supply_other'
+            nodelist = self.nodelists_others[network_id]
+        else:
+            warnings.warn('Removal of unconnected nodes is not supported for network type {}.'.format(network_type))
+            return removed
 
         supplies = []
         for node in self.nodelist_building:
