@@ -1,0 +1,30 @@
+test_conda:
+  image: continuumio/miniconda3
+  stage: test
+
+  before_script:
+    - conda create -n python39 python=3.9 -y
+    - source activate python39
+    - python -V
+    - pip install pytest-cov
+    - pip install coveralls
+    - pip install --user --upgrade -e .
+
+  script:
+    - python -m pytest --cov=uesgraphs --mpl
+
+# test_python:
+#   image: python:latest
+#   stage: test
+
+#   before_script:
+#     - python -V               # Print out python version for debugging
+#     - pip install virtualenv
+#     - virtualenv venv
+#     - source venv/bin/activate
+#     - pip install pytest-cov
+#     - pip install coveralls
+#     - pip install --upgrade -e .
+
+#   script:
+#     - python -m pytest --cov=uesgraphs --mpl

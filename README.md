@@ -1,9 +1,9 @@
 ![E.ON EBC RWTH Aachen University](./uesgraphs/img/EBC_Logo.png)
 
-# uesgraphs
+# uesgraphs version 2.0
 
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
-[![Build Status](https://travis-ci.org/RWTH-EBC/uesgraphs.svg?branch=master)](https://travis-ci.org/RWTH-EBC/uesgraphs)
+[![Build Status](https://travis-ci.com/RWTH-EBC/uesgraphs.svg?token=ssfy4ps1Qm5kvs5yAxfm&branch=master)](https://travis-ci.com/RWTH-EBC/uesgraphs)
 
 uesgraphs is a Python package to describe Urban Energy Systems and manage their
 data in a Python graph structure. We extend the
@@ -16,9 +16,25 @@ uesgraphs is being developed at [RWTH Aachen University, E.ON Energy
 Research Center, Institute for Energy Efficient Buildings and Indoor
 Climate](https://www.ebc.eonerc.rwth-aachen.de/cms/~dmzz/E-ON-ERC-EBC/?lidx=1).
 
+This repository contains the version 2.0. The main goal of this repository is to add and integrate district heating models developed in [AixLib](https://github.com/RWTH-EBC/AixLib) and better visualization of simulation results.
+
 ## Getting started
 
 ### Install uesgraphs
+
+#### Installation using conda
+
+For a easier installation process we recommend using conda / anaconda.
+
+With conda install simple perform the following steps:
+
+- `conda create -n uesgraphs python=3.9`
+- `conda activate uesgraphs`
+- `pip install -e <path/to/your/uesgraphs>`
+- Verify your uesgraphs installation by running the automated tests. Go to your
+uesgraphs top-level folder and type `py.test --mpl`
+
+#### Manual installation
 
 uesgraphs relies on other packages to function correctly. On Windows, it may be
 necessary to install *shapely* and *pyproj* before uesgraphs.
@@ -114,7 +130,7 @@ heating_network_1 = graph.create_subgraphs('heating')['default']
 In the example above, this extracts the first of the two heating networks shown
 in red:
 
-![Example graph](./tests/baseline_images/02_heating.png)
+![Example graph](./tests/baseline_images/02_heating_1.png)
 
 You can use this graph framework to add data to the nodes and edges, e.g.
 

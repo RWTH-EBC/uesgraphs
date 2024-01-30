@@ -4,6 +4,7 @@ numpy
 pandas
 shapely
 pyproj
-matplotlib
+matplotlib==3.1.2
 nose
 pytest-mpl
+scikit-learn
