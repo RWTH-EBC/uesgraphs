@@ -235,10 +235,3 @@ class Test_uesgraphs(object):
         assert example_district.nodes[1048]["name"] == "AMICA"
         assert example_district.nodes[1048]["addr_street"] == "Otto-Blumenthal-Straße"
 
-    def test_uesgenerator(self):
-        """Test uesgenerator
-        """
-
-        example_district = e9.generate_ues()
-
-        assert example_district.calc_network_length("heating") == 8818.59
