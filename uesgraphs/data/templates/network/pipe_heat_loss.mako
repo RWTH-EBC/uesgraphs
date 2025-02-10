@@ -1,1 +1,0 @@
-  Modelica.Blocks.Sources.RealExpression heat_loss_pipes(y=TGround.port.Q_flow);
