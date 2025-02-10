@@ -1,0 +1,25 @@
+language: python
+python:
+- 2.7
+- 3.5
+- 3.6
+install:
+- pip install --upgrade pip setuptools wheel
+- pip install -e .
+- pip install pytest-cov
+- pip install coveralls
+before_script:
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+- sleep 3
+script:
+- py.test --mpl
+after_success:
+- coveralls
+deploy:
+  provider: pypi
+  user: "uesgraphs-deploy"
+  password:
+    secure: XuTkCrCCaKVBV4ELw+6JVgG2ZjNoU7/UlM+XyfTmiyDap6KoYNj6+lPaCMbKxO57F5E5QPi07Hx3+bzNxLVHTolCNinxIqLSkwHB4k06IOAREyRt7AmK4VS9kMvK0mxMtzpM9tl62E9iDTkSDgQLJBFJ3CKoCCBYcJ5r6VH2qGlEl+RdTdc62Au96NJNxjTocjo2/g+WMy9qHbD3J6O81imHfzpVx91LJtjIzyYv/FusubcIF1MiQJtQOoJhAD1IxiAx+7GHWPRxZwjAaTvHzNUp90Y3m4JNFBIvJPr1+2ooaQp9O3m03dJytSASghwonTsINnvi7MjZYKPBSgdgrG9ZRY4Zm1jYVEc4az+H85XAcn7Lu/jqiF+zYvAAvEIj7LiBr+wvC/OXJFSYl0V2YezhVGz98Ghw6/EmDVZpZCQwnl97OWUuQ+TFAQEGzWKYNJhODfSAvdSeiAC0blDnm1rISYgnDm2Eui7lyjRfworPxNIdeEe6ZfabD1Oh+uQubSw923Bw9sH10MFV6m2S7WbaAQIEoLoaSXDyHr6Wh3tz/86n8J1nfsAt/Blb4hznTgz8oEwULulbfmUr+1tLXtZILlKhwWecYeXn+VCiwmbTAWDkcojGqteHZWBpILKn/PscGiJBmFZo+6VaxoFxtVUDlY/EoVfpE3udgKgUfPE=
+  on:
+    tags: true

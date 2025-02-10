@@ -1,0 +1,22 @@
+*.pyc
+.pydevproject
+org.eclipse.core.resoucres.prefs
+.settings
+.project
+.cache/
+*.egg-info/
+workspace/
+.spyderproject
+.spyderworkspace
+*.idea
+build/
+dist/
+
+#Unit tests #
+#####################
+__pycache__/
+.coverage
+coverage_html_report/
+.pytest_cache/
+result_images/
+

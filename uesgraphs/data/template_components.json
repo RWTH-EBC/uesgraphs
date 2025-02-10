@@ -1,0 +1,34 @@
+{
+  "base_paths": {
+    "Demand": "AixLib.Fluid.DistrictHeatingCooling.Demands.",
+    "Supply": "AixLib.Fluid.DistrictHeatingCooling.Supplies.",
+    "Pipe": "AixLib.Fluid.DistrictHeatingCooling.Pipes."
+  },
+  "models": {
+    "Demand": [
+      "ClosedLoop.DHCSubstationHeatPumpChiller",
+      "ClosedLoop.DHCSubstationHeatPumpDirectCooling",
+      "ClosedLoop.SubstationCooling",
+      "ClosedLoop.SubstationDirectCooling",
+      "ClosedLoop.SubstationDirectHeatingDirectCooling",
+      "ClosedLoop.SubstationDirectHeatingDirectCoolingDHW",
+      "ClosedLoop.SubstationHeating",
+      "ClosedLoop.SubstationHeatingCoolingFixDeltaT",
+      "ClosedLoop.SubstationHeatingCoolingVarDeltaT",
+      "OpenLoop.HeatPumpCarnot",
+      "OpenLoop.VarTSupplyDp",
+      "OpenLoop.VarTSupplyDpBypass",
+      "OpenLoop.VarTSupplyDpFixedTempDifferenceBypass"
+    ],
+    "Supply": [
+      "ClosedLoop.DHCSupplyHeaterCoolerStorage",
+      "OpenLoop.SourceIdeal"
+    ],
+    "Pipe": [
+      "DHCPipe",
+      "PlugFlowPipeEmbedded",
+      "PlugFlowPipeZeta",
+      "StaticPipe"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=64", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "uesgraphs"
+version = "2.0.0"
+description = "Graphs to describe Urban Energy Systems"
+authors = [{name = "Rahul Mohandasan Karuvingal", email = "rahul.karuvingal@eonerc.rwth-aachen.de"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+	"geopandas",
+    "networkx>=2.1",
+    "numpy",
+    "pandas",
+    "shapely",
+    "pyproj",
+    "matplotlib",
+    "scikit-learn",
+    "mako",
+	"dxfgrabber",
+	"seaborn",
+	"openpyxl",
+	"pyarrow",
+	"ipykernel",
+    "pytest>=6.0",
+    "pytest-mpl",  #Necessary to compare pictures 
+    "scipy"
+]
+
+[tool.pytest.ini_options]
+addopts = "--mpl"
+testpaths = ["tests"]
+python_files = [
+    "test_*.py",
+    "__init__.py"
+]
+
+[project.optional-dependencies]
+dev = [
+    "nose",
+    "pytest-mpl",
+	"ipykernel",
+]
+
+[tool.setuptools]
+packages = ["uesgraphs"]
+
+[project.urls]
+repository = "https://github.com/RWTH-EBC/uesgraphs"
+
+[project.scripts]
+validate-install = "pytest:main"
