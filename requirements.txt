@@ -1,9 +1,0 @@
-pytest
-networkx>=2.1
-numpy
-pandas
-shapely
-pyproj
-matplotlib
-nose
-pytest-mpl

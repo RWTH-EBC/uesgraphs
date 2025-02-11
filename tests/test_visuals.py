@@ -11,7 +11,37 @@ import uesgraphs as ug
 
 from uesgraphs.examples import e2_simple_dhc as e2
 from uesgraphs.examples import e3_add_network as e3
+import matplotlib.pyplot as plt
 
+import pytest
+
+def test_mpl_plugin_configuration():
+    """Verify pytest-mpl plugin is installed and configured correctly"""
+    import sys
+    try:
+        import pytest_mpl
+        print(f"pytest-mpl version: {pytest_mpl.__version__}")
+        
+        # Überprüft, ob das Plugin installiert ist
+        assert pytest_mpl.__version__, "pytest-mpl version not found"
+        
+        # Überprüft, ob die Plugin-Funktionalität verfügbar ist
+        assert hasattr(pytest.mark, 'mpl_image_compare'), \
+            "mpl_image_compare marker not available"
+            
+        # Überprüft, ob --mpl Flag gesetzt ist
+        is_mpl_flag_set = '--mpl' in sys.argv
+        
+        assert is_mpl_flag_set, \
+            "pytest-mpl plugin is installed but --mpl flag is not set. " \
+            "Add --mpl to pytest command or configure in pyproject.toml"
+            
+        print("pytest-mpl plugin is active and configured correctly")
+        
+    except ImportError:
+        pytest.fail("pytest-mpl is not installed")
+    except Exception as e:
+        pytest.fail(f"Error in pytest-mpl configuration: {str(e)}")
 
 @pytest.fixture(scope='module')
 def example_district():
@@ -37,6 +67,9 @@ def test_basic_plot(example_district):
         show_plot=False,
         scaling_factor=scaling_factor,
     )
+
+    # Sicherstellen, dass wir eine gültige Figure haben
+    assert fig is not None, "No figure available for comparison"
     return fig
 
 
@@ -251,7 +284,8 @@ def test_diameters(example_district):
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
                                filename='13_diameters_scaling.png',
-                               savefig_kwargs={'dpi': 150})
+                               savefig_kwargs={'dpi': 150,
+                                               'bbox_inches': 'tight'})
 def test_diameters_scaling(example_district):
     """Tests the plotting of diameters with line thickness
     """
@@ -289,7 +323,8 @@ def test_diameters_scaling(example_district):
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
                                filename='14_mass_flows.png',
-                               savefig_kwargs={'dpi': 150})
+                               savefig_kwargs={'dpi': 150,
+                                               'bbox_inches': 'tight'})
 def test_mass_flows(example_district):
     """Tests the plotting of mass flow rates with line thickness
     """

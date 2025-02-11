@@ -3,45 +3,100 @@
 # uesgraphs
 
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
-[![Build Status](https://travis-ci.org/RWTH-EBC/uesgraphs.svg?branch=master)](https://travis-ci.org/RWTH-EBC/uesgraphs)
+[![Build Status](https://travis-ci.com/RWTH-EBC/uesgraphs.svg?token=ssfy4ps1Qm5kvs5yAxfm&branch=master)](https://travis-ci.com/RWTH-EBC/uesgraphs)
 
-uesgraphs is a Python package to describe Urban Energy Systems and manage their
-data in a Python graph structure. We extend the
+**uesgraphs** is a Python package for describing Urban Energy Systems, managing their data within a Python graph structure, and enabling the automatic generation of dynamic district simulation models. We extend the
 [networkx](https://networkx.github.io/) Graph class and add basic methods to
-represent buildings and energy networks in the graph. uesgraphs can be used as a
+represent buildings and energy networks in the graph. **uesgraphs** can be used as a
 foundation to analyze energy network structures, evaluate district energy
-systems or generate simulation models.
+systems or generate simulation models. **Version 2** has been updated with the following enhancements:
+- **Simplified Installation**: Easier installation with the removal of unnecessary Python library dependencies.
+- **Enabled Logging Features**: Logging functionality has been activated for better tracking and debugging.
+- **Enhanced Compatibility**: Compatible with the latest versions of Modelica and the AixLib package.
+- **Improved Visualization**: Enhanced visualization features for better representation of results.
+- **Addition of `analyze.py`**: Introduced `analyze.py` to enable simulation post-processing and visualization for dynamic district simulations.
+- **Updated Model Template Generation**: The template generation feature for Modelica models has been updated, enabling automation of multiple models.
+- **Updated Examples**: The examples for **uesgraphs** have been updated, and two new examples have been added to clarify the use of template generation and the `analyze.py` script.
 
-uesgraphs is being developed at [RWTH Aachen University, E.ON Energy
+**uesgraphs** is being developed at [RWTH Aachen University, E.ON Energy
 Research Center, Institute for Energy Efficient Buildings and Indoor
 Climate](https://www.ebc.eonerc.rwth-aachen.de/cms/~dmzz/E-ON-ERC-EBC/?lidx=1).
 
-## Getting started
+## :rocket: Quick start
 
-### Install uesgraphs
+### :wrench: Install uesgraphs
 
-uesgraphs relies on other packages to function correctly. On Windows, it may be
-necessary to install *shapely* and *pyproj* before uesgraphs.
-We recommend to download  the .whl
-files for installing [*shapely*](http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely)
-and [*pyproj*](http://www.lfd.uci.edu/~gohlke/pythonlibs/#pyproj) from the
-[Unofficial Windows Binaries for Python Extension Packages](http://www.lfd.uci.edu/~gohlke/pythonlibs/)
-for your system and python versions. Install both .whl files with
-`pip install <path/to/file.whl>`.
+We recommend using **Conda** or **Anaconda** for installing **uesgraphs**.
 
-One way to get uesgraphs set up is to use a fresh Conda environment by following
-these steps:
+Follow these steps to install **uesgraphs** using Conda:
 
-- Install Miniconda or update your conda installation with `conda update conda`
-- Create a new environment with `conda create -n <nameOfEnvironment> python=3.6`
-- Activate the environment with `source activate <nameOfEnvironment>` on Linux
-or `activate <nameOfEnvironment>` on Windows
-- Clone uesgraphs with `git clone https://github.com/RWTH-EBC/uesgraphs.git`
-- Install uesgraphs with `pip install -e <path/to/your/uesgraphs>`
-- Verify your uesgraphs installation by running the automated tests. Go to your
-uesgraphs top-level folder and type `py.test --mpl`
+1. **Create a new virtual environment**:
 
-### Usage
+   ```bash
+   conda create -n uesgraphs python=3.13
+   ```
+
+   > **Note**: Replace `3.13` with your desired version of Python.
+
+2. **Activate the virtual environment**:
+
+   ```bash
+   conda activate uesgraphs
+   ```
+
+3. **Clone or download the uesgraphs repository**.
+
+   - If you're cloning the repository using Git, run:
+
+     ```bash
+     git clone https://github.com/RWTH-EBC/uesgraphs.git
+     ```
+
+   - If you've downloaded the repository as a ZIP file, extract it to your desired location.
+
+4. **Install uesgraphs in editable mode**:
+
+   Navigate to the directory where _uesgraphs_ is located and run:
+
+   ```bash
+   pip install -e <path/to/your/uesgraphs>
+   ```
+
+5. **Verify your uesgraphs installation** by running the automated tests:
+
+   Navigate to the top-level _uesgraphs_ folder and execute:
+
+   ```bash
+   pytest --mpl
+   ```
+
+   This will run the test suite and verify that everything is set up correctly.
+
+For more detailed information, please check the `pyproject.toml` file.
+
+6. **Install OpenModelica and OMPython to Run Examples 9 to 14**
+
+   To run examples 9 to 14, you need to install **OpenModelica** and **OMPython**.
+
+   - **Download and Install OpenModelica**:
+
+     - Visit the [OpenModelica download page](https://openmodelica.org/download/download-windows/) to download the installer for your operating system.
+     - Follow the on-screen instructions to install OpenModelica on your computer.
+     - Add OpenModelica to the environment variable
+
+   - **Install OMPython**:
+
+     - **OMPython** is a Python interface for OpenModelica.
+     - Install OMPython using `pip`:
+
+       ```bash
+       pip install OMPython
+       ```
+
+     - For more information on OMPython, refer to the [OMPython documentation](https://openmodelica.org/doc/OpenModelicaUsersGuide/latest/ompython.html#ompython).
+
+
+### :bulb: Usage
 
 You can assemble a graph of an urban energy system by adding buildings, network
 nodes and edges to an `UESGraph` object. The following code builds a heating
@@ -114,7 +169,7 @@ heating_network_1 = graph.create_subgraphs('heating')['default']
 In the example above, this extracts the first of the two heating networks shown
 in red:
 
-![Example graph](./tests/baseline_images/02_heating.png)
+![Example graph](./tests/baseline_images/02_heating_1.png)
 
 You can use this graph framework to add data to the nodes and edges, e.g.
 
@@ -134,22 +189,32 @@ graph.nodes[demand]['heat_load_kW'] = 200
 
 This can be used as a foundation to analyze networks or to generate models.
 
-## License
+## :herb: Branch strategy
 
-uesgraphs is released by RWTH Aachen University, E.ON Energy
+Main branch: `development`
+
+Fixing issues: `issues\issueXXX_lilDescription`
+
+## :memo: Documentation
+
+Further documentation is available in the `/doc` directory. There you find:
+
+- Manual that gives a gist
+- Development guidelines
+
+## :page_facing_up: License
+
+**uesgraphs** is released by RWTH Aachen University, E.ON Energy
 Research Center, Institute for Energy Efficient Buildings and Indoor Climate,
 under the
 [MIT License](https://github.com/RWTH-EBC/uesgraphs/blob/master/LICENSE.md).
 
-## Reference
+## :books: How to cite uesgraphs
 
-To reference uesgraphs, please cite the following paper (doi
-[10.1016/j.energy.2016.04.023](https://doi.org/10.1016/j.energy.2016.04.023)):
+To reference **uesgraphs**, please cite the following papers: 
++ (doi [10.1016/j.energy.2016.04.023](https://doi.org/10.1016/j.energy.2016.04.023)):
 
-
->Marcus Fuchs, Jens Teichmann, Moritz Lauster, Peter Remmen, Rita Streblow,
-Dirk Müller: Workflow automation for combined modeling of buildings and district
-energy systems, Energy, Volume 117, Part 2, 2016, Pages 478-484.
+> M. Fuchs, J. Teichmann, M. Lauster, P. Remmen, R. Streblow, and D. Müller, “Workflow automation for combined modeling of buildings and district energy systems,” Energy, vol. 117, pp. 478–484, Dec. 2016.
 
 The BibTex for this paper is:
 
@@ -167,13 +232,33 @@ The BibTex for this paper is:
   journal = {Energy}
 }
 ```
+### Related Publications
++ (doi [10.3390/en151243723](https://doi.org/10.3390/en15124372)):
 
-## Acknowledgements
+> M. Mans, T. Blacha, T. Schreiber, and D. Müller, “Development and Application of an Open-Source Framework for Automated Thermal Network Generation and Simulations in Modelica,” Energies, vol. 15, no. 12, p. 4372, Jun. 2022.
+
+The BibTex for this paper is:
+
+```BibTex
+@article{Mans2022,
+  doi = {10.3390/en15124372},
+  url = {https://doi.org/10.3390/en15124372},
+  year  = {2022},
+  month = {jun},
+  publisher = {Energies},
+  volume = {15},
+  pages = {4372},
+  author = {Michael Mans and Tobias Blacha and Thomas Schreiber and Dirk M\"{u}ller},
+  title = {Development and Application of an Open-Source Framework for Automated Thermal Network Generation and Simulations in Modelica},
+  journal = {Energies}
+}
+```
+
+## :clap: Acknowledgements
 
 This  work  was  supported  by  the  Helmholtz  Association  under  the  Joint  Initiative  “Energy System 2050 – A Contribution of the Research Field Energy”.
 
 Parts of uesgraphs have been developed within public funded projects
-and with financial support by BMWi (German Federal Ministry for Economic
-Affairs and Energy).
+and with financial support by BMWK (German Federal Ministry for Economic Affairs and Climate Action).
 
-<img src="http://www.innovation-beratung-foerderung.de/INNO/Redaktion/DE/Bilder/Titelbilder/titel_foerderlogo_bmwi.jpg;jsessionid=4BD60B6CD6337CDB6DE21DC1F3D6FEC5?__blob=poster&v=2)" width="200">
+<img src="https://www.innovation-beratung-foerderung.de/INNO/Redaktion/DE/Bilder/Titelbilder/titel_foerderlogo_bmwi.jpg?__blob=normal" width="200">

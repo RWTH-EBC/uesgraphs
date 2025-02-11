@@ -1,0 +1,8 @@
+#1
+double ${name_variable}(${rows}, 2)
+%if description != '':
+# ${description}
+%endif
+%for t, val in zip(time, values):
+${t}   ${'{number:.{digits}f}'.format(number=val, digits=digits)}
+%endfor
