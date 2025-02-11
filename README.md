@@ -74,6 +74,28 @@ Follow these steps to install **uesgraphs** using Conda:
 
 For more detailed information, please check the `pyproject.toml` file.
 
+6. **Install OpenModelica and OMPython to Run Examples 9 to 14**
+
+   To run examples 9 to 14, you need to install **OpenModelica** and **OMPython**.
+
+   - **Download and Install OpenModelica**:
+
+     - Visit the [OpenModelica download page](https://openmodelica.org/download/download-windows/) to download the installer for your operating system.
+     - Follow the on-screen instructions to install OpenModelica on your computer.
+     - Add OpenModelica to the environment variable
+
+   - **Install OMPython**:
+
+     - **OMPython** is a Python interface for OpenModelica.
+     - Install OMPython using `pip`:
+
+       ```bash
+       pip install OMPython
+       ```
+
+     - For more information on OMPython, refer to the [OMPython documentation](https://openmodelica.org/doc/OpenModelicaUsersGuide/latest/ompython.html#ompython).
+
+
 ### :bulb: Usage
 
 You can assemble a graph of an urban energy system by adding buildings, network
