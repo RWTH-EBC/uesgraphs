@@ -111,7 +111,7 @@ def load_models(config_file: str = 'data/template_components.json') -> Dict[str,
 
 def main(custom_library: str = None, custom_models: str = None, rigorous: bool = False, workspace: str = None):    
     if custom_library:
-        libs_to_load = [custom_library]
+        libs_to_load = custom_library if isinstance(custom_library, list) else [custom_library]        
         models = custom_models
     else:
         set_aixlib_path()
