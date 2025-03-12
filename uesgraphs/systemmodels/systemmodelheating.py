@@ -684,11 +684,11 @@ class SystemModelHeating(UESGraph):
         else:
             raise ValueError("No template for chosen medium {}".format(self.medium))
 
-        has_substation_heat_pump = False
-        for node in self.nodelist_building:
-            if "comp_model" in self.nodes[node]:
-                if "HeatPump" in self.nodes[node]["comp_model"]:
-                    has_substation_heat_pump = True
+        has_substation_heat_pump = any(
+            "comp_model" in self.nodes[node] and 
+            ("HeatPump" in self.nodes[node]["comp_model"] or "HeaPum" in self.nodes[node]["comp_model"])
+            for node in self.nodelist_building
+            )
 
         if has_substation_heat_pump:
             template_medium = Template(
@@ -699,6 +699,9 @@ class SystemModelHeating(UESGraph):
             mo_medium += template_medium.render_unicode(
                 T_nominal=30 + 273.15, p_nominal=3e5, T_default=30 + 273.15
             )
+            
+            ### Air usage
+            mo_medium += "\n  package MediumAir = Modelica.Media.Air.SimpleAir; \n \n"
 
         return mo_medium
 
