@@ -116,10 +116,7 @@ class UESTemplates:
         """Checks if selected template exists"""
         # Check if template path exists
         if not os.path.isfile(self.save_path):
-            exit(
-                "No template found for model %s at %s"
-                % (self.model_name, self.save_path)
-            )
+            raise FileNotFoundError(f"No template found for model {self.model_name} at {self.save_path} with model type {self.model_type} and directory. Try to give absolute path")
 
     def call_function(self, function_string):
         """Calls function in template
@@ -548,7 +545,7 @@ class ModelInfoExtractor:
         try:
             from OMPython import OMCSessionZMQ
         except ImportError:
-            exit(
+            raise ImportError(
                 "For automated template generation you need to install the "
                 "OMPython package"
                 " and Openmodelica"
