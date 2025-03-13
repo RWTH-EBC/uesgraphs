@@ -88,8 +88,10 @@ class UESTemplates:
 
         self.optional_params = []  # List of optional parameters
         self.mandatory_params = []  # List of mandatory parameters
-
-        self.template_name = self.model_name.replace(".", "_") + ".mako"
+        try:
+            self.template_name = self.model_name.replace(".", "_") + ".mako"
+        except AttributeError:
+            raise ValueError(f"No model name given! model_name: {model_name}, model_type: {model_type}, template_path: {template_path}")
         # check if template_path is filled and individual path should be used
         if template_path is None:
             if self.model_type == "Demand":
@@ -108,6 +110,12 @@ class UESTemplates:
                 self.save_path = ""
         # set individual template path
         else:
+            if not os.path.isabs(template_path):
+                raise ValueError(f"Using custom templates requires absolutepath. You provided: {template_path}")
+
+            # Prüfe, ob der Pfad mit .mako endet
+            if not template_path.endswith('.mako'):
+                raise ValueError(f"Absolute Template path must end with .mako extension: {template_path}")
             self.save_path = os.path.abspath(template_path)
 
     
