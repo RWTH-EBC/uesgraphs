@@ -1,4 +1,4 @@
-  AixLib.Fluid.DistrictHeatingCooling.Pipes.StaticPipe pipe${str(name)}(
+  AixLib.Fluid.FixedResistances.PlugFlowPipe pipe${str(name)}(
     redeclare package Medium = Medium,
     %if CPip is not None:
     CPip = ${str(round(CPip, 4))},
@@ -18,11 +18,17 @@
     %if rho_default is not None:
     rho_default = ${str(round(rho_default, 4))},
     %endif
-    %if use_zeta is not None:
-    use_zeta = ${str(use_zeta).lower()},
+    %if have_pipCap_a is not None:
+    have_pipCap_a = ${str(have_pipCap_a).lower()},
     %endif
     %if from_dp is not None:
     from_dp = ${str(from_dp).lower()},
+    %endif
+    %if have_pipCap is not None:
+    have_pipCap = ${str(have_pipCap).lower()},
+    %endif
+    %if have_symmetry is not None:
+    have_symmetry = ${str(have_symmetry).lower()},
     %endif
     %if dh is not None:
     dh = ${str(round(dh, 4))},
@@ -35,12 +41,6 @@
     %endif
     %if roughness is not None:
     roughness = ${str(round(roughness, 4))},
-    %endif
-    %if m_flow_nominal is not None:
-    m_flow_nominal = ${str(round(m_flow_nominal, 4))},
-    %endif
-    %if m_flow_small is not None:
-    m_flow_small = ${str(round(m_flow_small, 4))},
     %endif
     %if cPip is not None:
     cPip = ${str(round(cPip, 4))},
@@ -69,9 +69,6 @@
     %if fac is not None:
     fac = ${str(round(fac, 4))},
     %endif
-    %if sum_zetas is not None:
-    sum_zetas = ${str(round(sum_zetas, 4))},
-    %endif
     %if linearized is not None:
     linearized = ${str(linearized).lower()},
     %endif
@@ -80,6 +77,12 @@
     %endif
     %if _dp_start is not None:
     _dp_start = ${str(round(_dp_start, 4))},
+    %endif
+    %if m_flow_nominal is not None:
+    m_flow_nominal = ${str(round(m_flow_nominal, 4))},
+    %endif
+    %if m_flow_small is not None:
+    m_flow_small = ${str(round(m_flow_small, 4))},
     %endif
     %if show_T is not None:
     show_T = ${str(show_T).lower()},
@@ -98,7 +101,7 @@
 <%def name="get_main_parameters()">
    length dIns kIns
 </%def><%def name="get_aux_parameters()">
-   CPip VEqu sta_default cp_default C rho_default use_zeta from_dp dh v_nominal ReC roughness m_flow_nominal m_flow_small cPip rhoPip thickness T_start_in T_start_out initDelay m_flow_start R fac sum_zetas linearized _m_flow_start _dp_start show_T allowFlowReversal
+   CPip VEqu sta_default cp_default C rho_default have_pipCap_a from_dp have_pipCap have_symmetry dh v_nominal ReC roughness cPip rhoPip thickness T_start_in T_start_out initDelay m_flow_start R fac linearized _m_flow_start _dp_start m_flow_nominal m_flow_small show_T allowFlowReversal
 </%def><%def name="get_connector_names()">
    
 </%def>
