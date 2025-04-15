@@ -367,6 +367,45 @@ def assign_data_to_uesgraphs(graph,sim_data,start_date,end_date, aixlib_version 
             ) from e_key
     return graph
 
+
+#### Functions 5: Data post-processing ####
+
+def calculate_pump_power(graph):
+    """
+    Calculate the pump power based on the pressure drop and mass flow rate.
+    
+    This function calculates the pump power for each edge in the graph using the formula:
+        Pump Power = Pressure Drop * Mass Flow Rate
+    The results are stored in the edge attributes of the graph.
+    
+    Returns:
+        None
+    """
+    #if graph uesgraphs:
+    source_node, source_edge = find_source_node(graph)
+    calculate_accumulated_pressure_drop([graph], source_node, "press_drop")
+
+
+def find_source_node(heat_net):
+    nodes = sorted(heat_net.nodes)
+    for node in nodes:
+        name = heat_net.nodes[node]["name"]
+        if isinstance(name, str):
+            if name.lower() == "supply1":
+                edge =  heat_net.edges(node) #Find adjacent edges
+                if len(edge) == 1:
+                    return node, list(edge)[0]
+                else:
+                    logger.error(f"Source node {node} has more than one edge. Check graph")
+    return "no source (name = supply1) node found. Please make sure your json file has a node with the name supply1 and only one edge connected to it."
+
+def calculate_accumulated_pressure_drop(heat_nets, source_node, key):
+    for heat_net in heat_nets:
+        #Calculate the accumulated pressure drops from source node to all other nodes
+        pressure = nx.single_source_dijkstra_path_length(heat_net, source_node, weight=key)
+        for nodes in heat_net.nodes():
+            heat_net.nodes[nodes]["acc_press_drop"] = pressure[nodes]
+    return heat_nets
 def plot_network(graph):
     vis = ug.Visuals(graph)
     fig = vis.show_network(show_plot=show_plot)

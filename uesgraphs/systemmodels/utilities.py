@@ -268,7 +268,7 @@ def create_model(
     new_model.model_name = name
     new_model.meta_data = meta_data
     new_model.write_modelica_package(save_at=save_at)
-
+    return new_model
 
 def estimate_fac(graph, u_form_distance=25, n_gate_valve=2.0):
     """Calculate fac for all pipes based on m_flow_nominal
