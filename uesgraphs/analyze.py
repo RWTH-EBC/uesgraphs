@@ -142,31 +142,48 @@ def process_simulation_result(file_path: str, filter_list: List[str]) -> pd.Data
 
 #### Functions 3: Data Processing ####
 
-def prepare_DataFrame(df, start_date, end_date, base_date=datetime(2024, 1,1)):
+def prepare_DataFrame(df, base_date=datetime(2024, 1,1),time_interval="15min",start_date=None,end_date=None):
     """
-    Generates a DataFrame from a parquet file, converts the index to datetime format, 
-    and extracts data for a specified time period.
-
-    Args:
-    parquet_path (str): The path to the parquet file.
-    start_date (datetime): The start date for the data extraction. e.g: start_date = datetime(2024, 1,17)
-    end_date (datetime): The end date for the data extraction. e.g end_date = datetime(2024,1,17, 10)
-    base_date (datetime, optional): The base date for the data. Defaults to January 1, 2024.
-
+    Prepare a DataFrame with a datetime index using customizable parameters.
+    
+    Parameters:
+    -----------
+    df : pandas.DataFrame
+        The DataFrame to be processed
+    base_date : datetime, optional
+        The starting date for the index (default: 2024-01-01)
+    time_interval : str, optional
+        Frequency of the time intervals (e.g., '15min', '1h', '30min', default: '15min')
+    start_date : datetime, optional
+        If provided, slice the DataFrame from this date (inclusive)
+    end_date : datetime, optional
+        If provided, slice the DataFrame until this date (inclusive)
+    
     Returns:
+   
     DataFrame: A DataFrame containing the data from the parquet file for the specified time period.
     """
-    # Index in seconds (falls noch nicht in Sekunden)
-    hourly_index = pd.date_range(start=base_date, periods=len(df), freq='h')
-    df.index = hourly_index
+    try:
+        # Create datetime index with specified frequency    
+        datetime_index = pd.date_range(start=base_date, periods=len(df), freq=time_interval)
+        
+        # Set the index of the DataFrame to the datetime index
+        df.index = datetime_index
 
-    # Benenne den Index um
-    df.index.name = 'DateTime'
+        #Filter by data_range if specified
+        if start_date is not None and end_date is not None:
+            return df.loc[start_date:end_date]
+        elif start_date is not None:
+            return df.loc[start_date:]
+        elif end_date is not None:
+            return df.loc[:end_date]
+        # Benenne den Index um
+        df.index.name = 'DateTime'
 
-    # Extrahiere den gewünschten Zeitraum
-    mask = (df.index >= start_date) & (df.index <= end_date)
-    df = df.loc[mask]
-    return df
+        return df
+    except ValueError as e:
+        raise ValueError(f"Error create data range with frequency {time_interval} and base date {base_date}."
+                         f"Original error: {e}") 
 
 def get_mostfrequent_value(liste):
     #Find unique values and frequencies
@@ -301,7 +318,7 @@ def get_MASKS(aixlib_version):
 
 #### Functions 4: Data Assignment (main) ####
 
-def assign_data_to_uesgraphs(graph,sim_data,start_date,end_date, aixlib_version ="2.1.0"):
+def assign_data_to_uesgraphs(graph,sim_data,start_date,end_date, aixlib_version ="2.1.0",time_interval="15min"):
     
     check_supply_type(graph) # Check if the graph is a supply or return graph
 
@@ -318,7 +335,7 @@ def assign_data_to_uesgraphs(graph,sim_data,start_date,end_date, aixlib_version 
                 filter_list.append(MASKS[mask].format(pipe_code=pipe_code, 
                                                     type=supply_type_prefix[graph.graph["supply_type"]]))
         df = process_simulation_result(file_path=sim_data, filter_list=filter_list)
-        df = prepare_DataFrame(df, start_date, end_date)
+        df = prepare_DataFrame(df,start_date=start_date, end_date=end_date,time_interval=time_interval)
         
         graph = get_node_values(graph, df.iloc[0],pipe_type=supply_type_prefix[graph.graph["supply_type"]])
         
