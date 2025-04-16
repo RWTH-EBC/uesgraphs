@@ -123,5 +123,8 @@ def main():
                            save_as=os.path.join(workspace, "press_flow.png"),
                            timestamp=f"{graph.graph["name"]}: Mean pressure flow"
                            )
+    
+    df = analyze.pump_power_analysis(graph, True, r"D:\rka-lko\work\2025_04_analysis\3")
+
 if __name__ == "__main__":
     main()
