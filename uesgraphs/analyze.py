@@ -355,10 +355,11 @@ def assign_data_to_uesgraphs(graph,sim_data,start_date,end_date, aixlib_version 
         for edge in graph.edges:
             graph.edges[edge]["m_flow"] = df[MASKS["m_flow"].format(pipe_code=graph.edges[edge]["name"],
                                                                 type=supply_type_prefix[graph.graph["supply_type"]])]
-            graph.edges[edge]["press_drop"] = abs(graph.nodes[edge[0]]["press_flow"] - graph.nodes[edge[1]]["press_flow"])
-            graph.edges[edge]["press_drop_length"] = graph.edges[edge]["press_drop"] / graph.edges[edge]["length"]
-            
-            graph.edges[edge]["temp_diff"] = abs(graph.nodes[edge[0]]["temperature_supply"] - graph.nodes[edge[1]]["temperature_supply"])
+            #graph.edges[edge]["press_drop"] = abs(graph.nodes[edge[0]]["press_flow"] - graph.nodes[edge[1]]["press_flow"])
+            #graph.edges[edge]["press_drop_length"] = graph.edges[edge]["press_drop"] / graph.edges[edge]["length"]
+            dp = df[MASKS["dp"].format(pipe_code=graph.edges[edge]["name"],type=supply_type_prefix[graph.graph["supply_type"]])]
+            graph.edges[edge]["press_drop"] = abs(dp)
+            #graph.edges[edge]["temp_diff"] = abs(graph.nodes[edge[0]]["temperature_supply"] - graph.nodes[edge[1]]["temperature_supply"])
     except KeyError as e_key:
         if "ports_b[1]" in str(e_key):
             raise KeyError(f"Key: {e_key}  not found in data."
