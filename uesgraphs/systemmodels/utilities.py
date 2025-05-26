@@ -474,6 +474,56 @@ def estimate_m_flow_nominal_tablebased(graph, network_type):
     return graph
 
 
+
+
+def size_hydronic_network(
+    graph: Any,
+    m_flow_key = None,
+    catalog = None,
+    dT_attribute: str = "dT_Network",
+    network_type: str = "heating",
+    demand_attribute: str = "input_heat",
+    load_scenario: str = "peak_load",
+    cp: float = 4184,
+    logger: Optional[logging.Logger] = None
+) -> Any:
+    
+    # Set up logger
+    if logger is None:
+        logger = set_up_logger(
+            name="hydronic_network_sizing",
+            #log_dir="./logs",  # Optional: specify custom directory
+            level=logging.DEBUG  # INFO level captures all important steps
+        )
+
+    if m_flow_key == None:
+        # Estimate mass flows
+        logger.info(f"Sizing hydronic network: estimating mass flows for {network_type} network with {load_scenario} scenario")
+        graph = estimate_m_flow_demand_based(
+            graph=graph,
+            network_type=network_type,
+            demand_attribute=demand_attribute,
+            load_scenario=load_scenario,
+            cp=cp,
+            dT_attribute=dT_attribute,
+            logger=logger  
+        )
+        m_flow_key = f"m_flow_{load_scenario}"
+
+    logger.info("Mass flow estimation completed successfully")
+    
+    # Estimate pipe diameters
+    logger.info(f"Sizing hydronic network: estimating pipe diameters for {network_type} network with {load_scenario} scenario")
+    if catalog:
+        df = load_pipe_catalog(catalog)
+        get_pipe_catalog_DN_m_flow(graph,pipe_catalog=df,logger=logger, mass_flow_key=m_flow_key, dn_key="DN", diameter_key="diameter", robust=True)
+    else:
+        raise NotImplementedError()
+    
+    return graph
+
+
+
 def estimate_m_flow_demand_based(
     graph: Any,
     network_type: str = "heating",
