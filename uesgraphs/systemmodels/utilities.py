@@ -1006,3 +1006,215 @@ def __normalize_edge(edge):
     """
     return tuple(sorted(edge))
 
+
+
+def get_pipe_catalog_DN_m_flow(
+    graph,
+    pipe_catalog: pd.DataFrame,
+    logger: logging.Logger,
+    mass_flow_key: str,
+    dn_key: str,
+    diameter_key: str,
+    robust: bool = True
+) -> None:
+    """
+    Assign pipe diameters to edges based on mass flow and catalog data.
+    
+    Parameters
+    ----------
+    graph : Graph
+        Network graph with edges containing mass flow data
+    pipe_catalog : pd.DataFrame
+        Catalog with columns: DN, inner_diameter, mass_flow_min, mass_flow_max
+    logger : logging.Logger
+        Logger instance
+    mass_flow_key : str
+        Edge attribute containing mass flow [kg/s]
+    dn_key : str
+        Edge attribute to store DN (default: "DN")
+    diameter_key : str
+        Edge attribute to store diameter [m] (default: "diameter")
+    robust : bool
+        If True, selects next larger pipe when no exact match (default: True)
+    """
+    # Collect all edges missing the required mass flow attribute
+    missing_edges = []
+    for edge in graph.edges:
+        if mass_flow_key not in graph.edges[edge]:
+            missing_edges.append(edge)
+
+    if missing_edges:
+        logger.error("The following edges are missing the '%s' attribute:", mass_flow_key)
+        for edge in missing_edges:
+            logger.error("  - %s", edge)
+        raise ValueError(
+            f"Aborting because edges are missing the '{mass_flow_key}' attribute."
+        )
+
+    # Update DN and the diameter information for each edge
+    for edge in graph.edges:
+        m_flow = graph.edges[edge][mass_flow_key]
+        matching_rows = pipe_catalog[
+            (pipe_catalog['mass_flow_min'] <= m_flow) &
+            (pipe_catalog['mass_flow_max'] >= m_flow)
+        ]
+        num_matches = len(matching_rows)
+
+        # Scenario 1: No matching row
+        if num_matches == 0:
+            if robust:
+                # Attempt to find the next bigger pipe
+                bigger_rows = pipe_catalog[pipe_catalog['mass_flow_min'] > m_flow]
+                if not bigger_rows.empty:
+                    logger.warning(
+                        "Edge %s: No row directly matches mass_flow=%.2f. "
+                        "Using the next bigger pipe.",
+                        edge, m_flow
+                    )
+                    next_bigger_idx = bigger_rows['mass_flow_min'].idxmin()
+                    chosen_row = bigger_rows.loc[next_bigger_idx]
+                else:
+                    # Fallback: there is no bigger pipe either
+                    raise ValueError(
+                        f"Edge {edge}: No direct match for flow {m_flow}, "
+                        "and no bigger pipe available. Consider extending your pipe catalog."
+                    )
+            else:
+                raise ValueError(
+                    f"Edge {edge}: No matching row for flow {m_flow}, and robust=False. "
+                    "Consider adding more pipe entries or adjusting your data."
+                )
+
+        # Scenario 2: Exactly one match
+        elif num_matches == 1:
+            chosen_row = matching_rows.iloc[0]
+
+        # Scenario 3: Multiple matching rows
+        else:
+            if robust:
+                logger.warning(
+                    "Edge %s: Multiple matching rows for mass_flow=%.2f. "
+                    "Selecting the row with the largest DN among them.",
+                    edge, m_flow
+                )
+                max_dn_idx = matching_rows['DN'].idxmax()
+                chosen_row = matching_rows.loc[max_dn_idx]
+            else:
+                raise ValueError(
+                    f"Edge {edge}: Multiple rows match flow {m_flow}, robust=False. "
+                    "Validate pipe catalog ranges for overlaps or remove duplicates."
+                )
+
+        dn_value = chosen_row['DN']
+        diameter_value = float(chosen_row['inner_diameter'])
+
+        if dn_key in graph.edges[edge]:
+            logger.warning(
+                "Edge %s already has '%s' set to %s and will be overwritten.",
+                edge, dn_key, graph.edges[edge][dn_key]
+            )
+        if diameter_key in graph.edges[edge]:
+            logger.warning(
+                "Edge %s already has '%s' set to %s and will be overwritten.",
+                edge, diameter_key, graph.edges[edge][diameter_key]
+            )
+
+        graph.edges[edge][dn_key] = dn_value
+        graph.edges[edge][diameter_key] = diameter_value
+
+        logger.info(
+            "Edge %s updated: %s=%s, %s=%.2f (mass_flow=%.2f)",
+            edge, dn_key, dn_value, diameter_key, diameter_value, m_flow
+        )
+
+
+def load_pipe_catalog(catalog_name: str = "isoplus",custom_path: Optional[str] = None) -> pd.DataFrame:
+    """
+    Load pipe catalog data from CSV file in the data/pipe_catalogs directory.
+    
+    This function loads manufacturer pipe catalog data containing pipe dimensions
+    and flow capacities for different nominal diameters (DN). The catalog files
+    are expected to be located in the data/pipe_catalogs subdirectory relative
+    to the systemmodels module.
+    
+    Parameters
+    ---------- 
+    catalog_name : str, optional
+        Name of the pipe catalog to load (default: "isoplus")
+        The function will look for a file named "{catalog_name}.csv"
+        
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame containing pipe catalog data with columns:
+        - DN: Nominal diameter [designated, e.g. DN20]
+        - wall_thickness: Pipe wall thickness [m] 
+        - inner_diameter: Inner pipe diameter [m]
+        - mass_flow_min: Minimum mass flow capacity [kg/s]
+        - mass_flow_max: Maximum mass flow capacity [kg/s]
+        
+    Raises
+    ------
+    FileNotFoundError
+        If the specified catalog file does not exist
+    ValueError
+        If the catalog file exists but contains invalid data structure
+        
+    Examples
+    --------
+    >>> catalog = load_pipe_catalog("isoplus")
+    >>> print(catalog.columns.tolist())
+    ['DN', 'wall_thickness', 'inner_diameter', 'mass_flow_min', 'mass_flow_max']
+    
+    >>> # Load different catalog (if available)
+    >>> rehau_catalog = load_pipe_catalog("rehau")
+    
+    Notes
+    -----
+    The CSV files can contain comment lines starting with '#' which will be
+    automatically ignored during loading. This allows for metadata and source
+    information to be stored directly in the catalog files.
+    
+    The function expects the catalog files to be located at:
+    {module_directory}/uesgraphs/data/pipe_catalogs/{catalog_name}.csv
+    """
+    
+    if custom_path:
+        catalog_path = os.path.join(custom_path, f"{catalog_name}.csv")
+    else:
+        # Einfacher relativer Pfad
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        catalog_path = os.path.join(current_dir, "..", "data", "pipe_catalogs", f"{catalog_name}.csv")
+    
+    # Convert to absolute path for better error reporting
+    catalog_path = os.path.abspath(catalog_path)    
+
+    if not os.path.exists(catalog_path):
+        raise FileNotFoundError(f"Catalog '{catalog_name}' not found at: {catalog_path}")
+    
+    try:
+        # Load CSV data, ignoring comment lines starting with '#'
+        catalog_df = pd.read_csv(catalog_path, comment='#')
+        
+        # Validate required columns exist
+        required_columns = ['DN', 'inner_diameter', 'mass_flow_min', 'mass_flow_max']
+        missing_columns = [col for col in required_columns if col not in catalog_df.columns]
+        
+        if missing_columns:
+            raise ValueError(
+                f"Catalog '{catalog_name}' is missing required columns: {missing_columns}\n"
+                f"Available columns: {catalog_df.columns.tolist()}"
+            )
+        
+        # Sort by DN for consistent ordering
+        catalog_df = catalog_df.sort_values('inner_diameter').reset_index(drop=True)
+        
+        return catalog_df
+        
+    except pd.errors.EmptyDataError:
+        raise ValueError(f"Catalog file '{catalog_name}' is empty or contains no valid data")
+    except pd.errors.ParserError as e:
+        raise ValueError(f"Error parsing catalog file '{catalog_name}': {str(e)}")
+
+
+

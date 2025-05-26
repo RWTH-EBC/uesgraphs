@@ -1,0 +1,28 @@
+# Isoplus Pipe Catalog - Starre Verbundsysteme
+# Source: http://www.isoplus.de/fileadmin/user_upload/downloads/documents/germany/Catalogue_German/Kapitel_2_Starre_Verbundsysteme.pdf
+# Page: 9 - Zulässige Massenströme bei einem Druckverlust von 60-80 Pa/m Rohrlänge
+# Date extracted: 2025
+# Units: DN [designation], wall_thickness [m], inner_diameter [m], mass_flow [kg/s] (SI units)
+DN,wall_thickness,inner_diameter,mass_flow_min,mass_flow_max
+DN20,0.0026,0.0217,0.111,0.139
+DN25,0.0032,0.0273,0.222,0.278
+DN32,0.0032,0.0360,0.472,0.556
+DN40,0.0032,0.0419,0.694,0.833
+DN50,0.0032,0.0539,1.306,1.528
+DN65,0.0032,0.0697,2.583,3.056
+DN80,0.0032,0.0825,4.028,4.583
+DN100,0.0036,0.1071,7.917,9.167
+DN125,0.0036,0.1325,13.889,16.111
+DN150,0.0040,0.1603,22.778,26.389
+DN200,0.0045,0.2101,46.389,53.611
+DN250,0.0050,0.2630,83.333,96.667
+DN300,0.0056,0.3127,131.111,151.944
+DN350,0.0056,0.3444,169.444,195.833
+DN400,0.0063,0.3938,239.444,277.778
+DN450,0.0063,0.4446,327.778,380.556
+DN500,0.0063,0.4954,436.111,505.556
+DN600,0.0071,0.5958,700.000,811.111
+DN700,0.0080,0.6950,1047.222,1213.889
+DN800,0.0088,0.7954,1497.222,1733.333
+DN900,0.0100,0.8940,2055.556,2361.111
+DN1000,0.0110,0.9940,2555.556,
