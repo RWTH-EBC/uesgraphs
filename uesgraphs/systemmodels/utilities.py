@@ -3,6 +3,48 @@
 from uesgraphs.systemmodels import systemmodelheating as sysmh
 
 import networkx as nx
+import logging
+import tempfile
+
+def set_up_logger(name, log_dir=None, level=int(logging.INFO)):  # Changed to INFO for more details
+    """
+    Set up a file-based logger with timestamp and detailed formatting.
+    
+    Parameters
+    ----------
+    name : str
+        Logger name, used for log file naming
+    log_dir : str, optional
+        Directory for log files. If None, uses system temp directory
+    level : int, optional
+        Logging level (default: INFO for detailed mass flow logging)
+        
+    Returns
+    -------
+    logging.Logger
+        Configured logger instance writing to timestamped file
+    """
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    
+    # Determine log directory
+    if log_dir is None:
+        log_dir = tempfile.gettempdir()
+    
+    # Create timestamped log file
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = os.path.join(log_dir, f"{name}_{timestamp}.log")
+    print(f"Logfile findable here: {log_file}")
+    
+    # Configure file handler with detailed formatting
+    handler = logging.FileHandler(log_file)
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - [%(filename)s:%(lineno)d] - %(levelname)s - %(message)s'
+    )
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    
+    return logger
 
 def prepare_graph(
     graph,
