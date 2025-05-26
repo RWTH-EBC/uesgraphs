@@ -5,6 +5,8 @@ from uesgraphs.systemmodels import systemmodelheating as sysmh
 import networkx as nx
 import logging
 import tempfile
+from datetime import datetime
+
 
 def set_up_logger(name, log_dir=None, level=int(logging.INFO)):  # Changed to INFO for more details
     """
