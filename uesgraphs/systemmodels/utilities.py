@@ -5,7 +5,15 @@ from uesgraphs.systemmodels import systemmodelheating as sysmh
 import networkx as nx
 import logging
 import tempfile
+import os
 from datetime import datetime
+
+import pandas as pd
+
+import warnings
+from typing import Any, Dict, List, Optional, Set, Tuple
+
+
 
 
 def set_up_logger(name, log_dir=None, level=int(logging.INFO)):  # Changed to INFO for more details
@@ -356,10 +364,15 @@ def estimate_fac(graph, u_form_distance=25, n_gate_valve=2.0):
 
     return graph
 
-
 def estimate_m_flow_nominal(graph, dT_design, network_type, cp=4184):
-    """Calculate all design mass flows based on nominal loads for each edge
-
+    """
+    DEPRECATED: Use estimate_m_flow_demand_based instead.
+    
+    This function is maintained for backward compatibility and will be
+    removed in version X.Y.Z.
+    
+    Calculate all design mass flows based on nominal loads for each edge.
+    
     Parameters
     ----------
     graph : uesgraphs.uesgraph.UESGraph
@@ -370,64 +383,31 @@ def estimate_m_flow_nominal(graph, dT_design, network_type, cp=4184):
         {'heating', 'cooling'}
     cp : float
         Specific heat capacity of fluid in the network
-
+        
     Returns
     -------
     graph : uesgraphs.uesgraph.UESGraph
         Graph of the network
     """
-    # Distinguish between supply and demand nodes
-    demands = []
-    supplies = []
-    for node in graph.nodelist_building:
-        if not graph.nodes[node]["is_supply_{}".format(network_type)]:
-            demands.append(node)
-        else:
-            supplies.append(node)
-
-    # Add loads of each building to each edge by following the shortest paths for each supply
-    for supply in supplies:
-        for node in demands:
-            if nx.has_path(graph, supply, node):
-                loads = [abs(x) for x in graph.nodes[node]["input_heat"]]
-                load = max(loads)
-                path = nx.shortest_path(graph, supply, node)
-                for i, n in enumerate(path):
-                    if n != path[-1]:
-                        if (
-                            "load_nominal_{}".format(supply)
-                            not in graph.edges[path[i], path[i + 1]]
-                        ):
-                            graph.edges[path[i], path[i + 1]][
-                                "load_nominal_{}".format(supply)
-                            ] = load
-                            graph.edges[path[i], path[i + 1]]["load_nominal"] = None
-                        else:
-                            graph.edges[path[i], path[i + 1]][
-                                "load_nominal_{}".format(supply)
-                            ] += load
-                            graph.edges[path[i], path[i + 1]]["load_nominal"] = None
-
-    # For multiple supplies, take maximum load for each edge
-    for edge in graph.edges():
-        if "load_nominal" in graph.edges[edge]:
-            loads_nominal = []
-            for supply in supplies:
-                if "load_nominal_{}".format(supply) in graph.edges[edge]:
-                    loads_nominal.append(
-                        graph.edges[edge]["load_nominal_{}".format(supply)]
-                    )
-                    del graph.edges[edge]["load_nominal_{}".format(supply)]
-            graph.edges[edge]["load_nominal"] = max(loads_nominal)
-
-    # Calculate each edge's design mass flow rate based on load and dT_design
-    for edge in graph.edges():
-        if "load_nominal" in graph.edges[edge]:
-            load = graph.edges[edge[0], edge[1]]["load_nominal"]
-            m_flow_nominal = load / (cp * dT_design)
-            graph.edges[edge[0], edge[1]]["m_flow_nominal"] = m_flow_nominal
-
-    return graph
+    warnings.warn(
+        "Function estimate_m_flow_nominal is deprecated and will be removed in "
+        "future versions. Use estimate_m_flow_demand_based instead.",
+        DeprecationWarning, 
+        stacklevel=2
+    )
+    
+    # Set the same dT value for all nodes
+    for node in graph.nodes():
+        graph.nodes[node]['dT_Network'] = dT_design
+    
+    # Call the new function with appropriate parameters
+    return estimate_m_flow_demand_based(
+        graph=graph,
+        network_type=network_type,
+        cp=cp,
+        dT_attribute='dT_Network',
+        load_scenario='peak_load'  # Assume nominal = peak load
+    )
 
 
 def estimate_m_flow_nominal_tablebased(graph, network_type):
@@ -492,3 +472,487 @@ def estimate_m_flow_nominal_tablebased(graph, network_type):
         graph.edges[edge[0], edge[1]]["m_flow_nominal"] = m_flow_nominal
 
     return graph
+
+
+def estimate_m_flow_demand_based(
+    graph: Any,
+    network_type: str = "heating",
+    demand_attribute: str = "input_heat",
+    load_scenario: str = "peak_load",
+    cp: float = 4184,
+    dT_attribute: str = "dT_Network",
+    logger: Optional[logging.Logger] = None
+) -> Any:
+    """
+    Estimates mass flow for each edge by calculating flows at demand nodes and propagating backwards.
+    
+    This function implements a physically correct approach where mass flows are calculated
+    at each demand node based on their specific load and temperature difference, then
+    aggregated backwards through the network following mass conservation principles.
+    
+    Parameters
+    ----------
+    graph : UESGraph or nx.Graph
+        The graph representing the network with nodelist_building attribute.
+    network_type : str, optional
+        Type of network, default is "heating". Must be "heating" or "cooling".
+    demand_attribute : str, optional
+        Attribute name containing load values in demand nodes, default is "input_heat".
+    load_scenario : str, optional
+        Load scenario for calculation, default is "peak_load".
+        Options: "peak_load" (maximum value) or "average_load" (mean value).
+    cp : float, optional
+        Specific heat capacity of the fluid in J/(kg*K), default is 4184.
+    dT_attribute : str
+        Node attribute name for temperature difference values in Kelvin.
+        Must be present in all demand nodes with positive numeric values.
+        Used for individual mass flow calculations at each demand node.
+    logger : logging.Logger, optional
+        Logger instance for logging messages. If None, creates a default logger.
+        
+    Returns
+    -------
+    graph : UESGraph or nx.Graph
+        Input graph with additional edge attributes:
+        - m_flow_{load_scenario}: Mass flow rate in kg/s for each edge
+        - contributing_demands_{load_scenario}: List of demand nodes contributing to edge flow
+        - supply_attribution_{load_scenario}: Dictionary showing which supply serves which demands
+        
+    Raises
+    ------
+    TypeError
+        If graph does not have required nodelist_building attribute.
+    ValueError
+        If network_type or load_scenario parameters are invalid.
+        If no supply or demand nodes are found.
+        If required node attributes are missing.
+    """
+    # Initialize logger
+    if logger is None:
+        logger = set_up_logger(
+            name="",
+            #log_dir="./logs",  # Optional: specify custom directory
+            level=logging.DEBUG  # INFO level captures all important steps
+        )    
+    # Validate input parameters
+    _validate_parameters(graph, network_type, load_scenario, demand_attribute)
+    
+    # Step 1: Identify and categorize nodes
+    supply_nodes, demand_nodes = _identify_network_nodes(
+        graph, network_type, demand_attribute, logger
+    )
+    
+    # Step 2: Calculate mass flows at demand nodes
+    demand_mass_flows = _calculate_demand_mass_flows(
+        graph, demand_nodes, demand_attribute, load_scenario, cp, dT_attribute, logger
+    )
+    
+    # Step 3: Build supply-to-demand flow paths
+    supply_demand_paths = build_flow_paths(
+        graph, supply_nodes, demand_nodes, logger
+    )
+    
+   # Step 4: Aggregate mass flows on edges using maximum principle
+    _aggregate_edge_flows_robust(
+        graph, supply_demand_paths, demand_mass_flows, load_scenario, logger
+    )
+    
+    logger.info(f"Successfully calculated mass flows for {len(graph.edges)} edges "
+               f"using demand-based approach with {load_scenario} scenario")
+    
+    return graph
+
+
+def _validate_parameters(
+    graph: Any, 
+    network_type: str, 
+    load_scenario: str, 
+    demand_attribute: str
+) -> None:
+    """Validate input parameters for the mass flow estimation function."""
+    if not hasattr(graph, "nodelist_building"):
+        raise TypeError("Graph must be a UESGraph object with nodelist_building attribute")
+    
+    if network_type not in ["heating", "cooling"]:
+        raise ValueError("network_type must be 'heating' or 'cooling'")
+    
+    if load_scenario not in ["peak_load", "average_load"]:
+        raise ValueError("load_scenario must be 'peak_load' or 'average_load'")
+
+
+def _identify_network_nodes(
+    graph: Any, 
+    network_type: str, 
+    demand_attribute: str, 
+    logger: logging.Logger
+) -> Tuple[List[Any], List[Any]]:
+    """
+    Identify and categorize supply and demand nodes in the network.
+    
+    Returns
+    -------
+    tuple
+        (supply_nodes, demand_nodes) - Lists of supply and demand node identifiers
+    """
+    supply_nodes = []
+    demand_nodes = []
+    supply_attr = f"is_supply_{network_type}"
+    
+    for node in graph.nodelist_building:
+        # Check for required supply attribute
+        if supply_attr not in graph.nodes[node]:
+            raise ValueError(f"Node {node} missing required attribute '{supply_attr}'")
+        
+        if graph.nodes[node][supply_attr]:
+            supply_nodes.append(node)
+        else:
+            # Validate demand node has required load attribute
+            if demand_attribute not in graph.nodes[node]:
+                raise ValueError(f"Demand node {node} missing required attribute '{demand_attribute}'")
+            demand_nodes.append(node)
+    
+    # Ensure we have both supply and demand nodes
+    if not supply_nodes:
+        raise ValueError(f"No supply nodes found for network type '{network_type}'")
+    if not demand_nodes:
+        raise ValueError(f"No demand nodes found for network type '{network_type}'")
+    
+    logger.info(f"Identified {len(supply_nodes)} supply nodes and {len(demand_nodes)} demand nodes")
+    return supply_nodes, demand_nodes
+
+
+def _calculate_demand_mass_flows(
+    graph: Any,
+    demand_nodes: List[Any],
+    demand_attribute: str,
+    load_scenario: str,
+    cp: float,
+    dT_attribute: str,
+    logger: logging.Logger
+) -> Dict[Any, float]:
+    """
+    Calculate mass flow requirements at each demand node.
+    
+    This function processes each demand node individually, calculating the required
+    mass flow based on the node's load and temperature difference (dT).
+    
+    Parameters
+    ----------
+    graph : UESGraph or nx.Graph
+        Network graph containing node data
+    demand_nodes : List[Any]
+        List of demand node identifiers
+    demand_attribute : str
+        Attribute name containing load values
+    load_scenario : str
+        Either "peak_load" or "average_load"
+    cp : float
+        Specific heat capacity in J/(kg*K)
+    dT_attribute : str
+        Node attribute name for temperature difference values in Kelvin.
+        Must be present in all demand nodes with positive numeric values.
+        Used for individual mass flow calculations at each demand node.
+    logger : logging.Logger
+        Logger for status messages
+        
+    Returns
+    -------
+    Dict[Any, float]
+        Dictionary mapping demand node identifiers to their mass flow requirements in kg/s
+    """
+    
+    for demand_node in demand_nodes:
+        if dT_attribute not in graph.nodes[demand_node]:
+            # Get available attributes for better error message
+            available_attrs = list(graph.nodes[demand_node].keys())
+            dT_related_attrs = [attr for attr in available_attrs if 'dT' in attr or 'delta' in attr.lower() or 'temp' in attr.lower()]
+
+            error_msg = (
+                f"Demand node '{demand_node}' is missing the required temperature difference attribute '{dT_attribute}'. "
+                f"This attribute must contain the temperature difference (dT) in Kelvin between supply and return flow "
+                f"for mass flow calculation (formula: m_flow = thermal_load / (cp * dT)).\n\n"
+                f"To fix this issue:\n"
+                f"1. Add '{dT_attribute}' attribute to node '{demand_node}' with a numeric value in Kelvin\n, like with graph.nodes[{demand_node}]['{dT_attribute}'] = 30\n"
+                f"2. Or specify a different attribute name using the 'dT_attribute' parameter\n"
+            )
+
+            if dT_related_attrs:
+                error_msg += f"\nConsider using: dT_attribute='{dT_related_attrs[0]}' if appropriate, when calling method"
+
+            raise ValueError(error_msg)
+        
+    demand_mass_flows = {}
+    
+    for demand_node in demand_nodes:
+        # Extract load values from node attribute
+        load_values = graph.nodes[demand_node][demand_attribute]
+        
+        # Handle both single values and lists
+        if isinstance(load_values, (int, float)):
+            load_values = [load_values]
+        
+        # Convert to absolute values for calculation
+        abs_load_values = [abs(x) for x in load_values]
+        
+        # Calculate load based on scenario
+        if load_scenario == "peak_load":
+            load = max(abs_load_values)
+        elif load_scenario == "average_load":
+            load = sum(abs_load_values) / len(abs_load_values)
+        
+        # Get node-specific temperature difference
+        node_dT = graph.nodes[demand_node][dT_attribute]
+        # Validate dT value
+        if not isinstance(node_dT, (int, float)) or node_dT <= 0:
+            raise ValueError(
+                f"Temperature difference (dT) for demand node '{demand_node}' must be a positive number, "
+                f"got {node_dT} (type: {type(node_dT).__name__})"
+            )
+
+        # Calculate mass flow: m_flow = Q / (cp * dT)
+        mass_flow = load / (cp * node_dT)
+        demand_mass_flows[demand_node] = mass_flow
+        
+        logger.debug(f"Demand node {demand_node}: load={load:.2f}W, dT={node_dT}K, "
+                    f"m_flow={mass_flow:.6f}kg/s")
+    
+    
+    total_demand_flow = sum(demand_mass_flows.values())
+    logger.info(f"Calculated mass flows for {len(demand_nodes)} demand nodes, "
+               f"total demand: {total_demand_flow:.6f} kg/s")
+    
+    return demand_mass_flows
+
+def build_flow_paths(
+    graph: Any,
+    supply_nodes: List[Any],
+    demand_nodes: List[Any],
+    logger: logging.Logger
+) -> Dict[Tuple[Any, Any], List[Tuple[Any, Any]]]:
+    """
+    Build flow paths from each supply node to reachable demand nodes.
+    
+    This function identifies all supply-demand pairs that are connected and
+    determines the shortest path between them, converting paths to edge lists.
+    
+    Parameters
+    ----------
+    graph : UESGraph or nx.Graph
+        Network graph
+    supply_nodes : List[Any]
+        List of supply node identifiers
+    demand_nodes : List[Any]
+        List of demand node identifiers
+    logger : logging.Logger
+        Logger for status messages
+        
+    Returns
+    -------
+    Dict[Tuple[Any, Any], List[Tuple[Any, Any]]]
+        Dictionary mapping (supply, demand) tuples to lists of edges in the flow path
+    """
+    supply_demand_paths = {}
+    unreachable_demands = set(demand_nodes)  # Track which demands are reachable
+    
+    for supply in supply_nodes:
+        reachable_from_this_supply = []
+        
+        for demand in demand_nodes:
+            try:
+                if nx.has_path(graph, supply, demand):
+                    # Calculate shortest path and convert to edge list
+                    node_path = nx.shortest_path(graph, supply, demand)
+                    edge_path = [(node_path[i], node_path[i + 1]) 
+                                for i in range(len(node_path) - 1)]
+                    
+                    supply_demand_paths[(supply, demand)] = edge_path
+                    reachable_from_this_supply.append(demand)
+                    
+                    # Remove from unreachable set
+                    unreachable_demands.discard(demand)
+                    
+            except nx.NetworkXNoPath:
+                # Explicitly handle case where no path exists
+                continue
+        
+        logger.debug(f"Supply {supply} can reach {len(reachable_from_this_supply)} demands: "
+                    f"{reachable_from_this_supply}")
+    
+    # Log summary information
+    total_paths = len(supply_demand_paths)
+    logger.info(f"Built {total_paths} supply-to-demand flow paths")
+    
+    if unreachable_demands:
+        logger.warning(f"Unreachable demand nodes found: {list(unreachable_demands)}")
+    
+    return supply_demand_paths
+
+def _aggregate_edge_flows_robust(
+    graph: Any,
+    supply_demand_paths: Dict[Tuple[Any, Any], List[Tuple[Any, Any]]],
+    demand_mass_flows: Dict[Any, float],
+    load_scenario: str,
+    logger: logging.Logger
+) -> None:
+    """
+    Aggregate mass flows on edges using a robust supply-based approach with maximum flow principle.
+    
+    This function implements a two-stage aggregation process:
+    1. For each supply node, calculate cumulative flows on all edges serving its connected demands
+    2. Apply maximum flow principle when multiple supplies can serve the same edge
+    
+    This approach ensures robust network sizing where each edge is dimensioned for the worst-case
+    scenario among all possible supply configurations.
+    
+    Parameters
+    ----------
+    graph : UESGraph or nx.Graph
+        Network graph to be modified with calculated flow data
+    supply_demand_paths : Dict[Tuple[Any, Any], List[Tuple[Any, Any]]]
+        Mapping of (supply, demand) pairs to their corresponding edge paths
+    demand_mass_flows : Dict[Any, float]
+        Mass flow requirements for each demand node in kg/s
+    load_scenario : str
+        Load scenario identifier used for attribute naming in the graph
+    logger : logging.Logger
+        Logger instance for progress and summary information
+    """
+    logger.info("Starting robust edge flow aggregation using supply-based approach")
+    
+    # Initialize data structures for supply-based flow tracking
+    supply_edge_flows = {}  # {supply_node: {edge: accumulated_flow}}
+    edge_contributing_demands = {}  # {edge: set_of_demand_nodes}
+    supply_attribution = {}  # {demand_node: supply_node}
+    
+    # Step 1: Group supply-demand paths by supply node for separate processing
+    supplies = set(supply for supply, demand in supply_demand_paths.keys())
+    logger.info(f"Processing flows for {len(supplies)} supply nodes")
+    
+    # Step 2: Calculate aggregated flows for each supply node independently
+    for supply in supplies:
+        supply_edge_flows[supply] = {}
+        demands_served = []
+        
+        logger.debug(f"Processing supply node: {supply}")
+        
+        # Process all demand nodes served by this supply
+        for (sup, demand), edge_path in supply_demand_paths.items():
+            if sup == supply:
+                demand_flow = demand_mass_flows[demand]
+                demands_served.append(demand)
+                
+                # Record supply attribution for this demand
+                supply_attribution[demand] = supply
+                
+                # Accumulate demand flow along the entire path to this demand
+                for edge in edge_path:
+                    # Add flow to supply-specific edge flow tracking
+                    if edge in supply_edge_flows[supply]:
+                        supply_edge_flows[supply][edge] += demand_flow
+                    else:
+                        supply_edge_flows[supply][edge] = demand_flow
+                    
+                    # Track which demands contribute to each edge for documentation
+                    if edge not in edge_contributing_demands:
+                        edge_contributing_demands[edge] = set()
+                    edge_contributing_demands[edge].add(demand)
+        
+        total_supply_flow = sum(demand_mass_flows[d] for d in demands_served)
+        logger.debug(f"Supply {supply}: serves {len(demands_served)} demands, "
+                    f"total flow = {total_supply_flow:.6f} kg/s")
+    
+    logger.debug(f"Identified flows: {supply_edge_flows}")
+
+    # Step 3: Apply maximum flow principle across all supplies for robust sizing
+    logger.info("Applying maximum flow principle across supplies for robust edge sizing")
+    final_edge_flows = {}
+    supply_conflicts = {}  # Track edges with multiple supply options
+    
+    for supply, edge_flows in supply_edge_flows.items():
+        for edge, flow in edge_flows.items():
+            # Normalize edge representation for consistent dictionary access
+            normalized_edge = __normalize_edge(edge)
+            logger.debug(f"Processing edge {edge} with flow {flow:.6f} kg/s from supply {supply}")
+            if normalized_edge  in final_edge_flows:
+                # Multiple supplies can serve this edge - apply maximum principle
+                if normalized_edge  not in supply_conflicts:
+                    supply_conflicts[normalized_edge ] = []
+                supply_conflicts[normalized_edge ].append((supply, flow))
+                
+                # Update to maximum flow value for robust design
+                final_edge_flows[normalized_edge ] = max(final_edge_flows[normalized_edge ], flow)
+            else:
+                # First supply to use this edge
+                final_edge_flows[normalized_edge ] = flow
+    
+    # Log information about supply conflicts and robust sizing decisions
+    if supply_conflicts:
+        logger.info(f"Applied maximum flow principle to {len(supply_conflicts)} edges "
+                   f"with multiple supply options")
+        for edge, conflicts in supply_conflicts.items():
+            flows = [f"{supply}: {flow:.6f}" for supply, flow in conflicts]
+            max_flow = final_edge_flows[edge]
+            logger.debug(f"Edge {edge} - Supplies: [{', '.join(flows)}] → "
+                        f"Selected: {max_flow:.6f} kg/s")
+    
+    # Step 4: Apply calculated flows to all graph edges
+    edges_with_flow = 0
+    edges_without_flow = 0
+    
+    for edge in graph.edges:
+        # Normalize the current graph edge for dictionary lookup
+        normalized_edge = __normalize_edge(edge)
+        if normalized_edge in final_edge_flows:
+            # Set mass flow attribute for edges with calculated flows
+            graph.edges[normalized_edge][f"m_flow_{load_scenario}"] = final_edge_flows[normalized_edge]
+            #graph.edges[normalized_edge][f"contributing_demands_{load_scenario}"] = list(edge_contributing_demands[normalized_edge]) lists contain non normalized edges
+            
+            edges_with_flow += 1
+        else:
+            logger.warning(f"Edge {edge} has no flow assigned, setting to 0.0 kg/s")
+            # Initialize edges without flow (not part of any supply-demand path)
+            graph.edges[normalized_edge][f"m_flow_{load_scenario}"] = 0.0
+            graph.edges[normalized_edge][f"contributing_demands_{load_scenario}"] = []
+            edges_without_flow += 1
+    
+    # Step 5: Store supply attribution information at graph level for reference
+    graph.graph[f"supply_attribution_{load_scenario}"] = supply_attribution
+    
+    # Step 6: Calculate and log comprehensive summary statistics
+    total_demand_flow = sum(demand_mass_flows.values())
+    active_edges_flow = sum(final_edge_flows.values()) if final_edge_flows else 0.0
+    
+    logger.info(f"Flow aggregation completed successfully:")
+    logger.info(f"  - Total demand flow: {total_demand_flow:.6f} kg/s")
+    logger.info(f"  - Edges with flow: {edges_with_flow}/{len(graph.edges)}")
+    logger.info(f"  - Edges without flow: {edges_without_flow}")
+    logger.info(f"  - Supply-demand pairs processed: {len(supply_demand_paths)}")
+    
+    # Log flow distribution statistics for active edges
+    if final_edge_flows:
+        max_edge_flow = max(final_edge_flows.values())
+        min_edge_flow = min(final_edge_flows.values())
+        avg_edge_flow = sum(final_edge_flows.values()) / len(final_edge_flows)
+        
+        logger.info(f"Active edge flow statistics:")
+        logger.info(f"  - Maximum edge flow: {max_edge_flow:.6f} kg/s")
+        logger.info(f"  - Minimum edge flow: {min_edge_flow:.6f} kg/s")
+        logger.info(f"  - Average edge flow: {avg_edge_flow:.6f} kg/s")
+    
+    logger.info("Robust edge flow aggregation completed successfully")
+
+def __normalize_edge(edge):
+    """
+    Normalize edge tuple to consistent order for undirected graph operations.
+    
+    This function ensures that edges (A, B) and (B, A) are treated as the same edge
+    by always returning the tuple with the smaller node ID first.
+    
+    Args:
+        edge (tuple): Edge as (node1, node2)
+        
+    Returns:
+        tuple: Normalized edge as (min_node, max_node)
+    """
+    return tuple(sorted(edge))
+
