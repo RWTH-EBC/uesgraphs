@@ -87,30 +87,6 @@ def process_parquet_file(file_path: str, filter_list: List[str],
     for chunk in parquet_file.iter_batches(batch_size=chunk_size, columns=columns_to_read):
         yield chunk.to_pandas()
 
-def check_input_file(file_path):
-    if not file_path:
-        raise ValueError("File path cannot be empty")
-
-    base_path = os.path.splitext(file_path)[0]
-    gzip_path = f"{base_path}.gzip"
-
-    # Check for gzip first
-    if os.path.exists(gzip_path):
-        return gzip_path
-    # Then check for .mat
-    mat_path = f"{base_path}.mat"
-    if os.path.exists(mat_path):
-        try:
-            print(f"Converting .mat file to parquet: {mat_path}")
-            gzip_new = mat_to_parquet(save_as = base_path, fname = mat_path,with_unit=False)
-            print(f"Converted .mat file to parquet: {gzip_new}")
-            return gzip_new
-        except:
-            raise ValueError(f"Could not convert .mat file to parquet: {mat_path}") 
-    # Finally check if file exists with any extension
-    if not os.path.exists(file_path):
-        raise ValueError(f"File does not exist: {file_path}")
-
 
 def process_simulation_result(file_path: str, filter_list: List[str]) -> pd.DataFrame:
     """
