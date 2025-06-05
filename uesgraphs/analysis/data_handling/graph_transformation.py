@@ -150,24 +150,23 @@ def map_system_model_to_uesgraph(graph_sysm,uesgraph):
     for node in uesgraph.nodes:
         name = uesgraph.nodes[node]["name"]
         # Get all pipes connected to this node in the system model
-        relevant_pipes = get_pipes_for_node(graph, name)
+        relevant_pipes = get_pipes_for_node(graph_sysm, name)
         #print(f"For node {node} found {relevant_pipes} pipes")
         
         # Handle based on the number of connected pipes
         if len(relevant_pipes) == 1:
             # Terminal nodes should only be buildings (consumers or suppliers)
             if uesgraph.nodes[node]["node_type"] == "building":    
-                node_to_ports_mapping[node] = list(get_ports_for_bldg_node(graph, name))
+                node_to_ports_mapping[node] = list(get_ports_for_bldg_node(graph_sysm, name))
             else:
                 raise ValueError(f"Node {node} has an open end, meaning just one pipe is connected to it, while its not a consumer or supplier")
         else:
             # For junction nodes, find all unique ports connected to the pipes
-            node_to_ports_mapping[node]= list(get_ports_for_network_node(graph, relevant_pipes))
+            node_to_ports_mapping[node]= list(get_ports_for_network_node(graph_sysm, relevant_pipes))
 
     #Validate the mapping structure
     validate_structural_node_port_mapping(uesgraph, node_to_ports_mapping)
     
     return node_to_ports_mapping
 
-        
-map_system_model_to_uesgraph(mo,uesgraph)
+
