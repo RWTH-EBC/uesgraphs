@@ -47,46 +47,6 @@ def set_up_logger(name,log_dir = None,level=int(logging.ERROR)):
 
         return logger
 
-#### Functions 2: Data Processing ####
-
-def process_parquet_file(file_path: str, filter_list: List[str], 
-                        chunk_size: int = 100000) -> Generator[pd.DataFrame, None, None]:
-    """
-    Process a parquet file in chunks to reduce memory usage.
-    
-    Args:
-        file_path: Path to the parquet file
-        filter_list: List of column patterns to filter
-        chunk_size: Number of rows to process at once
-    """
-    # Read parquet file metadata to get columns
-    parquet_file = pq.ParquetFile(file_path)
-    all_columns = parquet_file.schema.names
-    
-    # Pre-filter columns based on filter_list to reduce memory usage
-    columns_to_read = []
-    for pattern in filter_list:
-        if pattern.endswith('$'):
-            # Regex filter
-            regex_pattern = pattern[:-1] + '$'
-            columns_to_read.extend(
-                col for col in all_columns 
-                if re.match(regex_pattern, col)
-            )
-        else:
-            # Simple string filter
-            columns_to_read.extend(
-                col for col in all_columns 
-                if pattern in col
-            )
-    
-    # Remove duplicates while preserving order
-    columns_to_read = list(dict.fromkeys(columns_to_read))
-    
-    # Read and process the file in chunks
-    for chunk in parquet_file.iter_batches(batch_size=chunk_size, columns=columns_to_read):
-        yield chunk.to_pandas()
-
 
 def process_simulation_result(file_path: str, filter_list: List[str]) -> pd.DataFrame:
     """
@@ -124,7 +84,6 @@ def process_simulation_result(file_path: str, filter_list: List[str]) -> pd.Data
     
     return result_df
 
-#### Functions 3: Data Processing ####
 
 def prepare_DataFrame(df, base_date=datetime(2024, 1,1),time_interval="15min",start_date=None,end_date=None):
     """
@@ -168,6 +127,7 @@ def prepare_DataFrame(df, base_date=datetime(2024, 1,1),time_interval="15min",st
     except ValueError as e:
         raise ValueError(f"Error create data range with frequency {time_interval} and base date {base_date}."
                          f"Original error: {e}") 
+
 
 def get_mostfrequent_value(liste):
     #Find unique values and frequencies
