@@ -22,6 +22,8 @@ systems or generate simulation models. **Version 2** has been updated with the f
 Research Center, Institute for Energy Efficient Buildings and Indoor
 Climate](https://www.ebc.eonerc.rwth-aachen.de/cms/~dmzz/E-ON-ERC-EBC/?lidx=1).
 
+If you have any questions regarding the tool feel free to contact us at ebc-tools@eonerc.rwth-aachen.de.
+
 ## :rocket: Quick start
 
 ### :wrench: Install uesgraphs
