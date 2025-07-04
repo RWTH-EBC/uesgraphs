@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=64", "wheel", "setuptools_scm[toml]>=6.2"]
+requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -27,8 +27,12 @@ dependencies = [
 	"ipykernel",
     "pytest>=6.0",
     "pytest-mpl",  #Necessary to compare pictures 
-    "scipy"
+    "scipy",
+    "tomli>=1.2.0;python_version<'3.11'",  # For Python < 3.11
 ]
+
+[tool.aixlib]
+compatible_aixlib_version = "2.1.1"
 
 [tool.pytest.ini_options]
 addopts = "--mpl"
@@ -40,9 +44,7 @@ python_files = [
 
 [project.optional-dependencies]
 dev = [
-    "nose",
-    "pytest-mpl",
-	"ipykernel",
+    "pyyaml",
 ]
 
 [tool.setuptools]
@@ -51,5 +53,4 @@ packages = ["uesgraphs"]
 [project.urls]
 repository = "https://github.com/RWTH-EBC/uesgraphs"
 
-[project.scripts]
-validate-install = "pytest:main"
+
