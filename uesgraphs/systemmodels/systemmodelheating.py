@@ -65,8 +65,7 @@ def set_up_logger(name,log_dir = None,level=int(logging.ERROR)):
 
     return logger   
 
-versionfile = os.path.join(os.path.dirname(__file__), "version.py")
-exec(open(versionfile).read())
+
 
 
 class SystemModelHeating(UESGraph):
