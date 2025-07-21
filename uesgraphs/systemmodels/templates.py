@@ -21,9 +21,6 @@ from typing import List, Tuple, Any
 
 from uesgraphs import get_versioning_info
 
-versionfile = os.path.join(os.path.dirname(__file__), "version.py")
-
-exec(open(versionfile).read())
 
 def check_variable_name(name, max_attempts = 5):
     attempts = 0
