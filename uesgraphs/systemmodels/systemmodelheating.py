@@ -17,6 +17,8 @@ import json
 from uesgraphs.uesgraph import UESGraph
 from uesgraphs.systemmodels.templates import UESTemplates
 
+from uesgraphs import get_versioning_info
+
 
 #For logging
 import logging
@@ -120,6 +122,7 @@ class SystemModelHeating(UESGraph):
         #set up logger
         self.logger = set_up_logger("SystemModelHeating",level=logging.DEBUG)
         self.meta_data = {}
+        self.version_info = get_versioning_info()
 
         self.model_name = model_name
         self.nodelist_pipe = []
@@ -133,7 +136,7 @@ class SystemModelHeating(UESGraph):
         self.__medium = "AixLib.Media.Water"
 
         self.__doc_string = None
-        self.documentation = "Network model generated with uesmodels"
+        self.documentation = "Network model generated with uesgraphs"
         self.uses = ["AixLib"]
 
         self.add_ground_around_pipe = False
@@ -163,9 +166,8 @@ class SystemModelHeating(UESGraph):
     @property
     def doc_string(self):
         if self.__doc_string is None:
-            output = "Model automatically generated with uesmodels at {}"
-            output_dated = output.format(datetime.datetime.now())
-            return output_dated
+            output = f"Model automatically generated with uesgraphs version {self.version_info["uesgraphs_version"]} at {datetime.datetime.now()}"
+            return output
         else:
             return self.__doc_string
 
@@ -951,7 +953,7 @@ class SystemModelHeating(UESGraph):
         documentation = template_documentation.render_unicode(
             documentation=self.documentation,
             now=datetime.datetime.now(),
-            version=__version__,
+            version=self.version_info['uesgraphs_version'],
         )
         mo_ann += documentation
 
@@ -1262,9 +1264,7 @@ class SystemModelHeating(UESGraph):
         with open(os.path.join(dir_dest, "package.mo"), "w") as package_mo:
             package_mo.write("within ;\n")
             package_mo.write(
-                """package {} "Package created with uesmodels"\n""".format(
-                    self.model_name
-                )
+                f"""package {self.model_name} "Package created with uesgraphs version {self.version_info['uesgraphs_version']}"\n"""
             )
             package_mo.write("end {};\n".format(self.model_name))
 
@@ -1750,7 +1750,7 @@ class SystemModelHeating(UESGraph):
                 interval=self.timestep,
                 solver=self.solver,
                 tolerance=self.tolerance,
-                version=__version__,
+                version=self.version_info['uesgraphs_version'],
             )
             out_file.write(mo)
 
