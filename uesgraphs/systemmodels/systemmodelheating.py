@@ -65,7 +65,35 @@ def set_up_logger(name,log_dir = None,level=int(logging.ERROR)):
 
     return logger   
 
+def set_up_terminal_logger(name: str, level: int = logging.INFO) -> logging.Logger:
+    """
+    Set up a simple console-only logger for small functions.
 
+    Args:
+        name: Logger name
+        level: Logging level (default: INFO)
+
+    Returns:
+        Configured console logger
+    """
+    logger = logging.getLogger(name)
+
+    # Avoid duplicate handlers if called multiple times
+    if logger.handlers:
+        return logger
+
+    logger.setLevel(level)
+
+    # Console handler only
+    console_handler = logging.StreamHandler()
+    formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+
+    # Prevent propagation to root logger to avoid double messages
+    logger.propagate = False
+
+    return logger
 
 
 class SystemModelHeating(UESGraph):
@@ -113,48 +141,77 @@ class SystemModelHeating(UESGraph):
     control_pressure : dict
         Collection of settings for pressure control: `building`, `dp`, `supply`
     """
-
-    def __init__(self, model_name="Test", network_type="heating"):
+    def __init__(self, model_name="Test", network_type="heating", logger=None):
         """Construct SystemModelHeating class."""
+        # Set up logging if provided
+        if logger is None:
+            logger = set_up_terminal_logger(f"{__name__}.SystemModelHeating.__init__")
+        
+        logger.info(f"=== SystemModelHeating.__init__ starting ===")
+        logger.debug(f"Parameters: model_name='{model_name}', network_type='{network_type}'")
+        
         # The super() is necessary to also execute nx.graphs's init
         super(SystemModelHeating, self).__init__()
-        #set up logger
-        self.logger = set_up_logger("SystemModelHeating",level=logging.DEBUG)
+        
         self.meta_data = {}
         self.version_info = get_versioning_info()
+        logger.debug(f"Version info: {self.version_info}")
 
         self.model_name = model_name
         self.nodelist_pipe = []
         self.network_type = network_type
+        logger.debug(f"Network type set to: '{self.network_type}'")
 
         self.stop_time = None
         self.timestep = None
         self.__time = []
         self.solver = "Cvode"
+        logger.debug(f"Default solver: {self.solver}")
 
         self.__medium = "AixLib.Media.Water"
+        logger.debug(f"Default medium: {self.__medium}")
 
         self.__doc_string = None
         self.documentation = "Network model generated with uesgraphs"
         self.uses = ["AixLib"]
+        logger.debug(f"Using libraries: {self.uses}")
 
         self.add_ground_around_pipe = False
         self.control_pressure = {}
 
         self.graph["T_ground"] = [273.15 + 10]  # Default ground temperature
+        logger.debug(f"Default ground temperature: {self.graph['T_ground'][0] - 273.15:.2f}°C")
 
         self.with_heat_flow_output = False
         self.with_heat_loss_output = False
 
+        # Template directory setup - CRITICAL for template resolution!
         dir_this = os.path.dirname(__file__)
         dir_par = os.path.split(dir_this)[0]
         self.template_directory = os.path.join(dir_par, "data", "templates")
+        logger.info(f"Template directory set to: {self.template_directory}")
+        
+        # Verify template directory exists
+        if os.path.exists(self.template_directory):
+            logger.debug(f"✓ Template directory exists")
+            # List available templates for debugging
+            try:
+                template_files = [f for f in os.listdir(self.template_directory) if f.endswith('.mako')]
+                logger.debug(f"Available template files: {template_files[:5]}{'...' if len(template_files) > 5 else ''}")
+            except Exception as e:
+                logger.warning(f"Could not list template files: {e}")
+        else:
+            logger.error(f"❌ Template directory does not exist: {self.template_directory}")
+        
         self.templates = {
             # Ground temperature
             "t_ground_table": {"render": self._write_mo_t_ground_table},
             "t_ground_kusuda": {"render": self._write_mo_t_ground_kusuda},
         }
-
+        logger.debug(f"Registered templates: {list(self.templates.keys())}")
+        
+        logger.info(f"SystemModelHeating initialization completed for '{model_name}'")
+     
     @property
     def time(self):
         if self.stop_time is not None and self.timestep is not None:
