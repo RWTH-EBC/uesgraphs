@@ -1,0 +1,583 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.analyze &mdash; uesgraphs 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="uesgraphs.template_generation" href="uesgraphs.template_generation.html" />
+    <link rel="prev" title="uesgraphs.visuals" href="uesgraphs.visuals.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../code/modules.html">uesgraphs</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="uesgraphs.UESGraph.html">uesgraphs.UESGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uesgraphs.Visuals.html">uesgraphs.Visuals</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uesgraphs.visuals.html">uesgraphs.visuals</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">uesgraphs.analyze</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.process_parquet_file"><code class="docutils literal notranslate"><span class="pre">process_parquet_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.check_input_file"><code class="docutils literal notranslate"><span class="pre">check_input_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.process_simulation_result"><code class="docutils literal notranslate"><span class="pre">process_simulation_result()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.prepare_DataFrame"><code class="docutils literal notranslate"><span class="pre">prepare_DataFrame()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.get_mostfrequent_value"><code class="docutils literal notranslate"><span class="pre">get_mostfrequent_value()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.get_peripheral_value"><code class="docutils literal notranslate"><span class="pre">get_peripheral_value()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.get_node_values"><code class="docutils literal notranslate"><span class="pre">get_node_values()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.check_supply_type"><code class="docutils literal notranslate"><span class="pre">check_supply_type()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.get_MASKS"><code class="docutils literal notranslate"><span class="pre">get_MASKS()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.assign_data_to_uesgraphs"><code class="docutils literal notranslate"><span class="pre">assign_data_to_uesgraphs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.pump_power_analysis"><code class="docutils literal notranslate"><span class="pre">pump_power_analysis()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.calculate_central_pump_power"><code class="docutils literal notranslate"><span class="pre">calculate_central_pump_power()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.find_source_nodes"><code class="docutils literal notranslate"><span class="pre">find_source_nodes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.get_graph_at_time"><code class="docutils literal notranslate"><span class="pre">get_graph_at_time()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.calculate_accumulated_pressure_drop"><code class="docutils literal notranslate"><span class="pre">calculate_accumulated_pressure_drop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.calculate_pump_energy"><code class="docutils literal notranslate"><span class="pre">calculate_pump_energy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.plot_pump_energy"><code class="docutils literal notranslate"><span class="pre">plot_pump_energy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.plot_network"><code class="docutils literal notranslate"><span class="pre">plot_network()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="uesgraphs.template_generation.html">uesgraphs.template_generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uesgraphs.utilities.html">uesgraphs.utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="uesgraphs.examples.html">uesgraphs.examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">uesgraphs.analyze</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/uesgraphs.analyze.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-uesgraphs.analyze">
+<span id="uesgraphs-analyze"></span><h1>uesgraphs.analyze<a class="headerlink" href="#module-uesgraphs.analyze" title="Permalink to this heading"></a></h1>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.assign_data_to_uesgraphs" title="uesgraphs.analyze.assign_data_to_uesgraphs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assign_data_to_uesgraphs</span></code></a>(graph, sim_data, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.calculate_accumulated_pressure_drop" title="uesgraphs.analyze.calculate_accumulated_pressure_drop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_accumulated_pressure_drop</span></code></a>(graph, ...)</p></td>
+<td><p>Calculate the accumulated pressure drop from a source node to all other nodes in the network.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.calculate_central_pump_power" title="uesgraphs.analyze.calculate_central_pump_power"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_central_pump_power</span></code></a>(graph[, config])</p></td>
+<td><p>Calculate pump power requirements for a district heating network.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.calculate_pump_energy" title="uesgraphs.analyze.calculate_pump_energy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_pump_energy</span></code></a>(pump_power_df)</p></td>
+<td><p>Calculate energy consumption from pump power time series data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.check_input_file" title="uesgraphs.analyze.check_input_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_input_file</span></code></a>(file_path)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.check_supply_type" title="uesgraphs.analyze.check_supply_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_supply_type</span></code></a>(graph)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.find_source_nodes" title="uesgraphs.analyze.find_source_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_source_nodes</span></code></a>(graph)</p></td>
+<td><p>Identifies source nodes and their connected edges in a heating network graph.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.get_MASKS" title="uesgraphs.analyze.get_MASKS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_MASKS</span></code></a>(aixlib_version)</p></td>
+<td><p>Returns the correct variable masks for different AixLib versions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.get_graph_at_time" title="uesgraphs.analyze.get_graph_at_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_graph_at_time</span></code></a>(graph, time_point)</p></td>
+<td><p>Creates a snapshot of the graph at a specific time point.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.get_mostfrequent_value" title="uesgraphs.analyze.get_mostfrequent_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_mostfrequent_value</span></code></a>(liste)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.get_node_values" title="uesgraphs.analyze.get_node_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_node_values</span></code></a>(heating_network, row[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.get_peripheral_value" title="uesgraphs.analyze.get_peripheral_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_peripheral_value</span></code></a>(node, edge, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.plot_network" title="uesgraphs.analyze.plot_network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_network</span></code></a>(graph)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.plot_pump_energy" title="uesgraphs.analyze.plot_pump_energy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_pump_energy</span></code></a>(df[, output_dir, label])</p></td>
+<td><p>Generate a visualization of cumulative pump energy consumption over time.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.prepare_DataFrame" title="uesgraphs.analyze.prepare_DataFrame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepare_DataFrame</span></code></a>(df[, base_date, ...])</p></td>
+<td><p>Prepare a DataFrame with a datetime index using customizable parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.process_parquet_file" title="uesgraphs.analyze.process_parquet_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_parquet_file</span></code></a>(file_path, filter_list)</p></td>
+<td><p>Process a parquet file in chunks to reduce memory usage.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.process_simulation_result" title="uesgraphs.analyze.process_simulation_result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_simulation_result</span></code></a>(file_path, filter_list)</p></td>
+<td><p>Process a single simulation result file and return the processed DataFrame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.pump_power_analysis" title="uesgraphs.analyze.pump_power_analysis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pump_power_analysis</span></code></a>(graph[, plot, ...])</p></td>
+<td><p>Perform a complete pump power and energy analysis for a district heating network.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.analyze.set_up_logger" title="uesgraphs.analyze.set_up_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_logger</span></code></a>(name[, log_dir, level])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.set_up_logger">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">set_up_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#set_up_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.set_up_logger" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.process_parquet_file">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">process_parquet_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generator" title="(in Python v3.13)"><span class="pre">Generator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.1)"><span class="pre">DataFrame</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#process_parquet_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.process_parquet_file" title="Permalink to this definition"></a></dt>
+<dd><p>Process a parquet file in chunks to reduce memory usage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> – Path to the parquet file</p></li>
+<li><p><strong>filter_list</strong> – List of column patterns to filter</p></li>
+<li><p><strong>chunk_size</strong> – Number of rows to process at once</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.check_input_file">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">check_input_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#check_input_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.check_input_file" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.process_simulation_result">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">process_simulation_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.1)"><span class="pre">DataFrame</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#process_simulation_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.process_simulation_result" title="Permalink to this definition"></a></dt>
+<dd><p>Process a single simulation result file and return the processed DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> – Complete path to the simulation result file</p></li>
+<li><p><strong>filter_list</strong> – List of column patterns to filter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Processed and filtered DataFrame from the simulation results</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.13)"><strong>FileNotFoundError</strong></a> – If the specified file does not exist</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If the file path is empty or invalid</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.prepare_DataFrame">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">prepare_DataFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">datetime.datetime(2024,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'15min'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#prepare_DataFrame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.prepare_DataFrame" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare a DataFrame with a datetime index using customizable parameters.</p>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>df<span class="classifier">pandas.DataFrame</span></dt><dd><p>The DataFrame to be processed</p>
+</dd>
+<dt>base_date<span class="classifier">datetime, optional</span></dt><dd><p>The starting date for the index (default: 2024-01-01)</p>
+</dd>
+<dt>time_interval<span class="classifier">str, optional</span></dt><dd><p>Frequency of the time intervals (e.g., ‘15min’, ‘1h’, ‘30min’, default: ‘15min’)</p>
+</dd>
+<dt>start_date<span class="classifier">datetime, optional</span></dt><dd><p>If provided, slice the DataFrame from this date (inclusive)</p>
+</dd>
+<dt>end_date<span class="classifier">datetime, optional</span></dt><dd><p>If provided, slice the DataFrame until this date (inclusive)</p>
+</dd>
+</dl>
+<p>Returns:</p>
+<p>DataFrame: A DataFrame containing the data from the parquet file for the specified time period.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.get_mostfrequent_value">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">get_mostfrequent_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">liste</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#get_mostfrequent_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.get_mostfrequent_value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.get_peripheral_value">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">get_peripheral_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heating_network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#get_peripheral_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.get_peripheral_value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.get_node_values">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">get_node_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">heating_network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#get_node_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.get_node_values" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.check_supply_type">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">check_supply_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#check_supply_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.check_supply_type" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.get_MASKS">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">get_MASKS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aixlib_version</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#get_MASKS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.get_MASKS" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the correct variable masks for different AixLib versions.</p>
+<p>The naming convention for variables in the simulation model depends on the AixLib version
+used to build it. The key difference is in how ports are referenced:
+- Version 2.1.0: Uses direct port access (e.g., port_b.p)
+- Earlier versions: Uses array indexing for ports_b (e.g., ports_b[1].p)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>aixlib_version</strong> – Version string of AixLib used to build the model</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping variable types to their full path in the simulation model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.assign_data_to_uesgraphs">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">assign_data_to_uesgraphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aixlib_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2.1.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'15min'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#assign_data_to_uesgraphs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.assign_data_to_uesgraphs" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.pump_power_analysis">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">pump_power_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#pump_power_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.pump_power_analysis" title="Permalink to this definition"></a></dt>
+<dd><p>Perform a complete pump power and energy analysis for a district heating network.</p>
+<p>This function orchestrates the full pump analysis workflow by calculating the required
+pump power, converting it to energy consumption over time, optionally plotting the
+results, and saving the data to a file if specified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<a class="reference internal" href="uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>uesgraphs.UESGraph</em></a>) – A graph representation of the heating network with hydraulic attributes.</p></li>
+<li><p><strong>plot</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>default=True</em>) – Whether to generate visualizations of the pump energy consumption.</p></li>
+<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Directory path where outputs (plots and CSV files) should be saved.
+If None, results are not saved to disk.</p></li>
+<li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>optional</em>) – Configuration parameters for pump power calculations including efficiency factors
+and operational settings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame containing time series of pump energy consumption with timestamps as index.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.1)">pandas.DataFrame</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The function requires proper hydraulic attributes in the graph (pressure drops, flows)</p></li>
+<li><p>The returned DataFrame includes columns for energy consumption in different units</p></li>
+<li><p>When saving results, the function creates ‘pump_energy.csv’ in the output_dir</p></li>
+<li><p>The plotting and saving operations are skipped if the respective parameters are not provided</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.calculate_central_pump_power">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">calculate_central_pump_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#calculate_central_pump_power"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.calculate_central_pump_power" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate pump power requirements for a district heating network.</p>
+<p>This function analyzes a heating network graph to determine the required pump power
+based on hydraulic pressure drops, flow rates, and pump configuration parameters.
+It performs time series analysis for each timestamp in the network data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<em>ug.UESGraph</em>) – A graph representation of the heating network with hydraulic attributes.
+Must contain time series data for pressure drops and mass flow rates.</p></li>
+<li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>Configuration dictionary with the following keys:
+- eta_pump: float, pump efficiency factor (default: 0.8)
+- dp_pump: float, internal pump pressure drop in Pa (default: 1000)
+- density_func: callable or float, water density function or constant value</p>
+<blockquote>
+<div><p>If callable, must accept timestamp and temperature parameters</p>
+</div></blockquote>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A tuple containing:
+- The original graph with potentially modified attributes
+- pandas.DataFrame with time series of pump power calculations including:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>timestamp: time index</p></li>
+<li><p>source_node: ID of the supply node</p></li>
+<li><p>max_pressure_node: node with maximum pressure drop</p></li>
+<li><p>max_pressure_value: maximum pressure drop value in Pa</p></li>
+<li><p>dp_tot: total pressure drop in Pa (including return pipe and pump)</p></li>
+<li><p>volume_flow: volume flow rate in m³/s</p></li>
+<li><p>pump_power: calculated pump power in kW</p></li>
+<li><p>rho: water density in kg/m³</p></li>
+<li><p>eta_pump: pump efficiency factor</p></li>
+<li><p>dp_pump: internal pump pressure drop in Pa</p></li>
+<li><p>pressure_*: accumulated pressure to each node</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – If the provided graph is not an instance of UESGraph</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Currently supports only one supply node in the network</p></li>
+<li><p>Assumes symmetric pressure drops in supply and return pipes</p></li>
+<li><p>Uses the formula: P = (dp_tot * V_dot) / (eta_pump * 1000)</p></li>
+<li><p>Where dp_tot = 2 * max_pressure_value + dp_pump</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.find_source_nodes">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">find_source_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#find_source_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.find_source_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Identifies source nodes and their connected edges in a heating network graph.</p>
+<p>Source nodes are defined as nodes with the attribute ‘is_supply_heating’ set to True.
+These typically represent heat generation facilities in district heating networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>graph</strong> (<a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.5)"><em>networkx.Graph</em></a>) – A graph representing a heating network with nodes potentially having
+the ‘is_supply_heating’ attribute.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing two lists:
+- source_nodes: List of node identifiers that are marked as supply/source nodes
+- source_edges: List of edges (tuples) connecting source nodes to the network</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If no source edges are found in the graph, making pump power calculation impossible.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Multiple source nodes are allowed but will trigger a warning message</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.get_graph_at_time">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">get_graph_at_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_point</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#get_graph_at_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.get_graph_at_time" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a snapshot of the graph at a specific time point.</p>
+<p>Extracts values from time series data (pandas Series) in both edge and node
+attributes at the specified time point to create a static graph representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.5)"><em>networkx.Graph</em></a><em> or </em><a class="reference internal" href="uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>uesgraphs.UESGraph</em></a>) – The input graph containing time series data as pandas Series in its
+node and edge attributes.</p></li>
+<li><p><strong>time_point</strong> (<em>datetime-like</em><em> or </em><em>hashable</em>) – The time point at which to extract values from time series data.
+Must be a valid index for the pandas Series attributes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new graph with the same structure as the input graph, but with
+time series attributes replaced by their values at the specified time point.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>uesgraph</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Time series data should be stored as pandas Series with a time index</p></li>
+<li><p>Non-time series attributes remain unchanged</p></li>
+<li><p>Raises KeyError if time_point is not in the index of any time series</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.calculate_accumulated_pressure_drop">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">calculate_accumulated_pressure_drop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'press_drop'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#calculate_accumulated_pressure_drop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.calculate_accumulated_pressure_drop" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate the accumulated pressure drop from a source node to all other nodes in the network.</p>
+<p>This function uses Dijkstra’s algorithm to determine the shortest path from the source node
+to all other nodes in the graph, where the path length is weighted by the pressure drop.
+It returns the node with the maximum accumulated pressure drop, its value, and a dictionary
+containing the accumulated pressure drop for all nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.5)"><em>networkx.Graph</em></a><em> or </em><a class="reference internal" href="uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>uesgraphs.UESGraph</em></a>) – A graph representing a heating network with ‘press_drop’ attributes on edges.</p></li>
+<li><p><strong>source_node</strong> (<em>node</em>) – The starting node (typically a heat source or plant) from which to calculate
+accumulated pressure drops.</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The edge attribute name used to calculate the pressure drop. Default is ‘press_drop’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing three elements:
+- max_pressure_node : The node with the maximum accumulated pressure drop
+- max_pressure_value : float, the maximum accumulated pressure drop value
+- acc_pressures : dict, mapping each node to its accumulated pressure drop from source</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The edge attribute key (default: “press_drop”) must exist for all edges in the network</p></li>
+<li><p>This function is essential for identifying critical paths in the network</p></li>
+<li><p>The maximum pressure drop node often represents the hydraulic critical consumer</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.calculate_pump_energy">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">calculate_pump_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pump_power_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#calculate_pump_energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.calculate_pump_energy" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate energy consumption from pump power time series data.</p>
+<p>This function calculates the energy consumption of pumps by integrating
+power values over time. It computes the time differences between consecutive
+measurements, calculates energy consumption for each interval, and provides
+cumulative energy values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pump_power_df</strong> (<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.1)"><em>pandas.DataFrame</em></a>) – DataFrame containing pump power data with a ‘timestamp’ column in
+datetime format and a ‘pump_power’ column containing power values in kW.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The input DataFrame with additional columns:
+- time_diff: timedelta between consecutive timestamps
+- time_diff_hours: time difference in hours
+- energy: energy consumed in each interval in kWh
+- cumulative_energy: running sum of energy consumption in kWh</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.1)">pandas.DataFrame</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This function assumes that the power remains constant between timestamps</p></li>
+<li><p>Timestamps must be sortable datetime objects</p></li>
+<li><p>The first interval uses a time difference of 0, resulting in 0 energy</p></li>
+<li><p>Energy calculation is based on the formula: Energy (kWh) = Power (kW) × Time (h)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.plot_pump_energy">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">plot_pump_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#plot_pump_energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.plot_pump_energy" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a visualization of cumulative pump energy consumption over time.</p>
+<p>Creates a time series plot of the cumulative energy consumption from the pump
+power analysis results, with adaptive time axis formatting based on the data range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.1)"><em>pandas.DataFrame</em></a>) – DataFrame containing pump energy data with at minimum the following columns:
+- timestamp: datetime or convertible to datetime
+- cumulative_energy: float, the cumulative energy consumption in kWh</p></li>
+<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Directory where the plot should be saved. If None, the plot is not saved.</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>default=&quot;&quot;</em>) – Label for the data series in the plot legend.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The function displays the plot and optionally saves it to disk.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The function automatically formats the time axis based on the data time range</p></li>
+<li><p>The plot is saved as ‘energy_consumption_plot.png’ if output_dir is provided</p></li>
+<li><p>The figure is displayed using plt.show() which may block execution in non-interactive environments</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.analyze.plot_network">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">plot_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/analyze.html#plot_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.plot_network" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="uesgraphs.visuals.html" class="btn btn-neutral float-left" title="uesgraphs.visuals" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="uesgraphs.template_generation.html" class="btn btn-neutral float-right" title="uesgraphs.template_generation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Rahul Karuvingal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

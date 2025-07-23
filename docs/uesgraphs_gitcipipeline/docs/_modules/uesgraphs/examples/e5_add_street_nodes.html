@@ -1,0 +1,191 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.examples.e5_add_street_nodes &mdash; uesgraphs 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../code/modules.html">uesgraphs</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.UESGraph.html">uesgraphs.UESGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.Visuals.html">uesgraphs.Visuals</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.template_generation.html">uesgraphs.template_generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.examples.html">uesgraphs.examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.examples.e5_add_street_nodes</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.examples.e5_add_street_nodes</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Usage of street nodes&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ug</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.examples</span><span class="w"> </span><span class="kn">import</span> <span class="n">e1_example_readme</span> <span class="k">as</span> <span class="n">e1</span>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e5_add_street_nodes.main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+
+    <span class="n">street_nodes</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="street_nodes"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e5_add_street_nodes.street_nodes">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">street_nodes</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests the street nodes implementation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Generate a workspace path.</span>
+    <span class="n">workspace</span> <span class="o">=</span> <span class="n">e1</span><span class="o">.</span><span class="n">workspace_example</span><span class="p">(</span><span class="s2">&quot;e5&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Create two points</span>
+
+    <span class="n">a</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="mf">1.234567892345678923456789</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="mf">1.234567892345678923456788</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+
+    <span class="c1"># A district network is generated</span>
+
+    <span class="n">this_district</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+
+    <span class="c1"># Add street nodes using the this_district.add_street_node function.</span>
+    <span class="c1"># In this function five parameters are available. The position of the</span>
+    <span class="c1"># street can be set. Also the resolution can be given which means the</span>
+    <span class="c1"># minimum distance between two points. The check_overlap parameter is set</span>
+    <span class="c1"># true by default. Below four streets are generated.</span>
+
+    <span class="n">sn_11</span> <span class="o">=</span> <span class="n">this_district</span><span class="o">.</span><span class="n">add_street_node</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">sn_12</span> <span class="o">=</span> <span class="n">this_district</span><span class="o">.</span><span class="n">add_street_node</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">sn_13</span> <span class="o">=</span> <span class="n">this_district</span><span class="o">.</span><span class="n">add_street_node</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">sn_14</span> <span class="o">=</span> <span class="n">this_district</span><span class="o">.</span><span class="n">add_street_node</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># The street nodes are connected to each other.</span>
+
+    <span class="n">this_district</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">sn_11</span><span class="p">,</span> <span class="n">sn_12</span><span class="p">)</span>
+    <span class="n">this_district</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">sn_12</span><span class="p">,</span> <span class="n">sn_13</span><span class="p">)</span>
+    <span class="n">this_district</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">sn_13</span><span class="p">,</span> <span class="n">sn_14</span><span class="p">)</span>
+    <span class="n">this_district</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">sn_14</span><span class="p">,</span> <span class="n">sn_11</span><span class="p">)</span>
+
+    <span class="c1"># Printout street node names.</span>
+
+    <span class="k">for</span> <span class="n">street_node</span> <span class="ow">in</span> <span class="n">this_district</span><span class="o">.</span><span class="n">nodelist_street</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Street node:&quot;</span><span class="p">,</span> <span class="n">street_node</span><span class="p">,</span> <span class="n">this_district</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">street_node</span><span class="p">])</span>
+
+    <span class="c1"># Storage path for visuals of streets.</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e5_Streets.png&quot;</span><span class="p">)</span>
+
+    <span class="c1"># To visualize the district network ug.Visuals is used. The visualization</span>
+    <span class="c1"># output will be following the graph layout specified in the input uesgraph.</span>
+
+    <span class="n">vis_streets</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">this_district</span><span class="p">)</span>
+
+    <span class="c1"># Saving the visualization to the storage path.</span>
+
+    <span class="n">vis_streets</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span><span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span></div>
+
+
+<span class="c1"># Main function</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;**** Creating graph with street nodes ***&quot;</span><span class="p">)</span>
+    <span class="n">main</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Done ***&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Rahul Karuvingal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
