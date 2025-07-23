@@ -165,7 +165,7 @@ class SystemModelHeating(UESGraph):
     @property
     def doc_string(self):
         if self.__doc_string is None:
-            output = f"Model automatically generated with uesgraphs version {self.version_info["uesgraphs_version"]} at {datetime.datetime.now()}"
+            output = f"Model automatically generated with uesgraphs version {self.version_info['uesgraphs_version']} at {datetime.datetime.now()}"
             return output
         else:
             return self.__doc_string
