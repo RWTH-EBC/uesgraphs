@@ -160,7 +160,7 @@ class UESTemplates:
 
         #3. Generate Template string based on the extracted information
         template_str = self._generate_template_string(template_dict)
-        self.logger.debug(f"")
+        self.logger.debug(f"Generated template string: {template_str[:100]}...")  # Logs the first 100 characters of the template string for debugging purposes
         #4. Save created Template to mako file
         self._save_to_mako(template_str)
         return
