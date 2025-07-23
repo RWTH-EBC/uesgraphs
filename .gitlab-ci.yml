@@ -4,6 +4,8 @@ stages:
 
 variables:
   PYTHON_VERSION: "registry.git.rwth-aachen.de/ebc/ebc_all/gitlab_ci/templates:python_3.12"
+  PAGES_BRANCH: uesgraphs_gitcipipeline
+  GIT_REPO: "RWTH-EBC/uesgraphs"
 
 
 include:
