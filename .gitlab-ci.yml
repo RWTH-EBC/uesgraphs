@@ -1,6 +1,6 @@
 stages:
   - doc
-  # - deploy
+  - deploy
 
 variables:
   PYTHON_VERSION: "registry.git.rwth-aachen.de/ebc/ebc_all/gitlab_ci/templates:python_3.11"
@@ -11,5 +11,5 @@ variables:
 include:
   - project: 'EBC/EBC_all/gitlab_ci/templates'
     file: 'python/doc/sphinxdoc.gitlab-ci.yml'
-  # - project: 'EBC/EBC_all/gitlab_ci/templates'
-  #   file: 'pages/gh-pages.gitlab-ci.yml'  
+  - project: 'EBC/EBC_all/gitlab_ci/templates'
+    file: 'pages/gh-pages.gitlab-ci.yml'  
