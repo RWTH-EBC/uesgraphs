@@ -9,7 +9,7 @@ __version__ = importlib.metadata.version("uesgraphs")
 def _get_aixlib_version():
     """Reads the compatible AixLib version to this uesgraphs installation from pyproject.toml file."""
     try:
-        import tomllib #Python 3.11+
+        import tomllib # Python 3.11+
     except ImportError:
         import tomli as tomllib # Python 3.10 and earlier
 
