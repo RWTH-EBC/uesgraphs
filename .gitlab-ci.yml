@@ -27,6 +27,7 @@ test_conda:
       - tests/result_images/**/*.png #When pictures in tests/test_visuals.py do not match they will get stored here and can be downloaded in artifacts section
 
 stages:
+  - test
   - doc
   - deploy
 
