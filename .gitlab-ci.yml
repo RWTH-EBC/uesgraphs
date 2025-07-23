@@ -1,9 +1,8 @@
 stages:
   - doc
-  - deploy
 
 variables:
-  PYTHON_VERSION: "registry.git.rwth-aachen.de/ebc/ebc_all/gitlab_ci/templates:python_3.12"
+  PYTHON_VERSION: "registry.git.rwth-aachen.de/ebc/ebc_all/gitlab_ci/templates:python_3.11"
   PAGES_BRANCH: uesgraphs_gitcipipeline
   GIT_REPO: "RWTH-EBC/uesgraphs"
 
