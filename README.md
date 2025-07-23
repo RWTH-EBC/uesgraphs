@@ -191,11 +191,18 @@ graph.nodes[demand]['heat_load_kW'] = 200
 
 This can be used as a foundation to analyze networks or to generate models.
 
+## Version Information
+
+The package version can be accessed programmatically:
+
+```python
+import uesgraphs
+print(f"uesgraphs version: {uesgraphs.__version__}")
+```
+
 ## :herb: Branch strategy
 
-Main branch: `development`
-
-Fixing issues: `issues\issueXXX_lilDescription`
+Main branch: `master`
 
 ## :memo: Documentation
 
