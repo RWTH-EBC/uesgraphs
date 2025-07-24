@@ -267,50 +267,7 @@ class SystemModelHeating(UESGraph):
         if logger is None:
             logger = set_up_terminal_logger(f"{__name__}.SystemModelHeating.import_nodes_from_uesgraph")
 
-        def _transform_coords(gis_position):
-            """Transforms coords from GIS to coords on Modelica canvas
-
-            Parameters
-            ----------
-            gis_position : shapely.geometry.Point object
-                Point object with coords from GIS
-
-            Returns
-            -------
-            modelica_position : shapely.geometry.Point object
-                Point object with coords on Modelica canvas
-            """
-            # Transform coordinates to plane
-            modelica_position = ops.transform(
-                partial(
-                    pyproj.transform,
-                    pyproj.Proj(init="EPSG:4326"),
-                    pyproj.Proj(
-                        proj="aea",
-                        lat1=uesgraph_input.min_position.y,
-                        lat2=uesgraph_input.max_position.y,
-                    ),
-                ),
-                gis_position,
-            )
-            # Transform the minimum position to the same plane
-            new_min = ops.transform(
-                partial(
-                    pyproj.transform,
-                    pyproj.Proj(init="EPSG:4326"),
-                    pyproj.Proj(
-                        proj="aea",
-                        lat1=uesgraph_input.min_position.y,
-                        lat2=uesgraph_input.max_position.y,
-                    ),
-                ),
-                uesgraph_input.min_position,
-            )
-            # Translate node, so that minimum position is at (0, 0)
-            modelica_position = shapely.affinity.translate(
-                modelica_position, xoff=-new_min.x, yoff=-new_min.y
-            )
-            return modelica_position
+        
 
         logger.info("=== Starting node import from UESGraph ===")
         logger.debug(f"Input building nodes: {len(uesgraph_input.nodelist_building)}")
@@ -320,8 +277,6 @@ class SystemModelHeating(UESGraph):
         for node in uesgraph_input.nodelist_building:
             logger.debug(f"Processing building node: {node}")
             
-            # new_position = _transform_coords(uesgraph_input.node[
-            #                                      node]['position'])
             new_position = uesgraph_input.node[node]["position"]
 
             name_node = uesgraph_input.node[node]["name"]
@@ -363,7 +318,7 @@ class SystemModelHeating(UESGraph):
                     if 'template' in attrib.lower() or 'model' in attrib.lower():
                         logger.info(f"  ⚠️  Template/Model attribute found: {attrib} = {uesgraph_input.node[node][attrib]}")
                     else:
-                        logger.debug(f"    Attribute: {attrib} = {uesgraph_input.node[node][attrib]}")
+                        logger.debug(f"    Attribute: {attrib}")
             
             logger.debug(f"  Building '{name_node}' processed: {attribute_count} attributes transferred")
             building_count += 1
@@ -394,8 +349,6 @@ class SystemModelHeating(UESGraph):
             for node in nodelist:
                 logger.debug(f"  Processing {network_type} node: {node}")
                 
-                # new_position = _transform_coords(uesgraph_input.node[
-                #                                      node]['position'])
                 new_position = uesgraph_input.node[node]["position"]
                 new = self.add_network_node(
                     name=uesgraph_input.node[node]["name"],
@@ -418,123 +371,7 @@ class SystemModelHeating(UESGraph):
         logger.info(f"Network nodes processed: {network_node_count}")
         logger.info("=== Node import completed ===")
 
-    def import_nodes_from_uesgraph(self, uesgraph_input):
-        """Adds uesgraph_input's nodes to the model graph
-
-        As a first step for the conversion from a uesgraph to a uesmodel graph,
-        this method imports the uesgraph's nodes to the nodes of
-        this class. The method conserves each node's attributes, but converts
-        the x and y coordinates from GIS data to coordinates on the canvas
-        for graphical representation of the Modelica model.
-
-        Parameters
-        ----------
-        uesgraph_input : uesgraphs.uesgraph.UESGraph object
-            At current stage, this uesgraph should contain only 1 network of 1
-            type that is indexed in the corrsponding nodelist as `'default'`
-        """
-
-        def _transform_coords(gis_position):
-            """Transforms coords from GIS to coords on Modelica canvas
-
-            Parameters
-            ----------
-            gis_position : shapely.geometry.Point object
-                Point object with coords from GIS
-
-            Returns
-            -------
-            modelica_position : shapely.geometry.Point object
-                Point object with coords on Modelica canvas
-            """
-            # Transform coordinates to plane
-            modelica_position = ops.transform(
-                partial(
-                    pyproj.transform,
-                    pyproj.Proj(init="EPSG:4326"),
-                    pyproj.Proj(
-                        proj="aea",
-                        lat1=uesgraph_input.min_position.y,
-                        lat2=uesgraph_input.max_position.y,
-                    ),
-                ),
-                gis_position,
-            )
-            # Transform the minimum position to the same plane
-            new_min = ops.transform(
-                partial(
-                    pyproj.transform,
-                    pyproj.Proj(init="EPSG:4326"),
-                    pyproj.Proj(
-                        proj="aea",
-                        lat1=uesgraph_input.min_position.y,
-                        lat2=uesgraph_input.max_position.y,
-                    ),
-                ),
-                uesgraph_input.min_position,
-            )
-            # Translate node, so that minimum position is at (0, 0)
-            modelica_position = shapely.affinity.translate(
-                modelica_position, xoff=-new_min.x, yoff=-new_min.y
-            )
-            return modelica_position
-
-        for node in uesgraph_input.nodelist_building:
-            # new_position = _transform_coords(uesgraph_input.node[
-            #                                      node]['position'])
-            new_position = uesgraph_input.node[node]["position"]
-
-            name_node = uesgraph_input.node[node]["name"]
-            if name_node[0].isdigit():
-                name_node = self.model_name[0] + name_node
-
-            bldg = self.add_building(
-                name=name_node,
-                position=new_position,
-                is_supply_heating=uesgraph_input.node[node]["is_supply_heating"],
-                is_supply_cooling=uesgraph_input.node[node]["is_supply_cooling"],
-                is_supply_electricity=uesgraph_input.node[node][
-                    "is_supply_electricity"
-                ],
-                is_supply_gas=uesgraph_input.node[node]["is_supply_gas"],
-                is_supply_other=uesgraph_input.node[node]["is_supply_other"],
-            )
-            self.nodes[bldg]["has_table"] = False
-
-            for attrib in uesgraph_input.node[node]:
-                if attrib not in self.nodes[bldg]:
-                    self.nodes[bldg][attrib] = uesgraph_input.node[node][attrib]
-
-        for network_type in self.network_types:
-            if network_type == "heating":
-                nodelist = uesgraph_input.nodelists_heating["default"]
-            elif network_type == "cooling":
-                nodelist = uesgraph_input.nodelists_cooling["default"]
-            elif network_type == "electricity":
-                nodelist = uesgraph_input.nodelists_electricity["default"]
-            elif network_type == "gas":
-                nodelist = uesgraph_input.nodelists_gas["default"]
-            elif network_type == "others":
-                nodelist = uesgraph_input.nodelists_others["default"]
-            else:
-                raise ValueError("Unknown network type")
-
-            for node in nodelist:
-                # new_position = _transform_coords(uesgraph_input.node[
-                #                                      node]['position'])
-                new_position = uesgraph_input.node[node]["position"]
-                new = self.add_network_node(
-                    name=uesgraph_input.node[node]["name"],
-                    network_type=network_type,
-                    position=new_position,
-                    check_overlap=False,
-                )
-
-                for attrib in uesgraph_input.node[node]:
-                    if attrib not in self.nodes[new]:
-                        self.nodes[new][attrib] = uesgraph_input.node[node][attrib]
-
-    def add_pipe_node(self, name=None, position=None):
+    def add_pipe_node(self, name=None, position=None, logger=None):
         """Adds a pipe node to the graph
 
         Parameters
@@ -544,42 +381,72 @@ class SystemModelHeating(UESGraph):
             the newly assigned node number will also be used as name.
         position : shapely.geometry.Point object
             New node's position
+        logger : logging.Logger, optional
+            Logger instance for debugging
 
         Returns
         -------
         node_number : int
             Identifier of the newly created pipe node
         """
+        if logger is None:
+            logger = set_up_terminal_logger(f"{__name__}.SystemModelHeating.add_pipe_node")
+        
+        logger.debug(f"Adding pipe node: name={name}, position={position}")
+        
         node_number = self.new_node_number()
         if name is None:
             name = node_number
+            logger.debug(f"  No name provided, using node number: {name}")
+        
+        logger.debug(f"  Assigned node number: {node_number}")
 
         self.add_node(node_number, name=name, node_type="pipe_heat", position=position)
 
         self.nodelist_pipe.append(node_number)
+        logger.debug(f"  Added to nodelist_pipe, total pipes: {len(self.nodelist_pipe)}")
 
         self.nodes_by_name[name] = node_number
+        logger.debug(f"  Added to nodes_by_name mapping: '{name}' → {node_number}")
 
+        logger.debug(f"Pipe node created successfully: {node_number} ('{name}')")
         return node_number
 
-    def remove_pipe_node(self, node_number):
+    def remove_pipe_node(self, node_number, logger=None):
         """Removes the specified pipe node from the graph
 
         Parameters
         ----------
         node_number : int
             Identifier of the node in the graph
+        logger : logging.Logger, optional
+            Logger instance for debugging
         """
+        if logger is None:
+            logger = set_up_terminal_logger(f"{__name__}.SystemModelHeating.remove_pipe_node")
+        
+        logger.debug(f"Attempting to remove pipe node: {node_number}")
+        
         if node_number in self.nodelist_pipe:
+            logger.debug(f"  Node {node_number} found in pipe nodelist")
+            
+            # Get node info before removal for logging
+            node_name = self.nodes[node_number].get('name', 'unknown')
+            logger.info(f"Removing pipe node {node_number} ('{node_name}')")
+            
             self.nodelist_pipe.remove(node_number)
             self.remove_node(node_number)
+            
+            logger.debug(f"  Node removed, remaining pipes: {len(self.nodelist_pipe)}")
+            logger.info(f"Pipe node {node_number} removed successfully")
         else:
+            logger.warning(f"Node {node_number} not found in pipe nodelist - cannot remove")
             warnings.warn(
                 "Node number has not been found in pipe"
                 + "nodelist. Therefore, node has not been removed."
             )
 
-    def import_pipes_from_uesgraph(self, uesgraph_input):
+    def import_pipes_from_uesgraph(self, uesgraph_input, logger=None):
         """Adds uesgraph_input's pipe edges as nodes to uesmodel graph
 
         The second step for conversion of a uesgraph to a uesmodel graph
@@ -595,11 +462,25 @@ class SystemModelHeating(UESGraph):
         uesgraph_input : uesgraphs.uesgraph.UESGraph object
             At current stage, this uesgraph should contain only 1 network of 1
             type that is indexed in the corresponding nodelist as `'default'`
+        logger : logging.Logger, optional
+            Logger instance for debugging
         """
+        if logger is None:
+            logger = set_up_terminal_logger(f"{__name__}.SystemModelHeating.import_pipes_from_uesgraph")
+            
+        logger.info("=== Starting pipe import from UESGraph ===")
+        logger.debug(f"Input edges (pipes): {len(uesgraph_input.edges())}")
+        
+        pipe_count = 0
         for curr_edge in uesgraph_input.edges():
+            logger.debug(f"Processing edge: {curr_edge}")
+            
             # Find the edge's nodes' correct numbers via their name
             name_node_0 = uesgraph_input.node[curr_edge[0]]["name"]
             name_node_1 = uesgraph_input.node[curr_edge[1]]["name"]
+            
+            original_names = (name_node_0, name_node_1)
+            logger.debug(f"  Original node names: {original_names}")
 
             if curr_edge[0] in uesgraph_input.nodelist_building:
                 if name_node_0[0].isdigit():
@@ -607,9 +488,13 @@ class SystemModelHeating(UESGraph):
             if curr_edge[1] in uesgraph_input.nodelist_building:
                 if name_node_1[0].isdigit():
                     name_node_1 = self.model_name[0] + name_node_1
+                    
+            if original_names != (name_node_0, name_node_1):
+                logger.debug(f"  Renamed node names: ({name_node_0}, {name_node_1})")
 
             curr_edge_node_0 = self.nodes_by_name[name_node_0]
             curr_edge_node_1 = self.nodes_by_name[name_node_1]
+            logger.debug(f"  Connected nodes: {curr_edge_node_0} ↔ {curr_edge_node_1}")
 
             # Find position for new pipe node between both neighbors
             new_position = sg.LineString(
@@ -621,28 +506,47 @@ class SystemModelHeating(UESGraph):
 
             # Create new pipe node
             pipe_name = uesgraph_input.edges[curr_edge[0], curr_edge[1]]["name"]
-            curr_pipe = self.add_pipe_node(position=new_position, name=pipe_name)
+            logger.debug(f"  Creating pipe node: '{pipe_name}'")
+            curr_pipe = self.add_pipe_node(position=new_position, name=pipe_name, logger=logger)
             
-            #Transfer attributes from former edge to new pipe node
+            # Transfer attributes from former edge to new pipe node
+            attribute_count = 0
+            logger.debug(f"  Transferring edge attributes to pipe node {curr_pipe}")
             for attrib in uesgraph_input.edges[curr_edge[0], curr_edge[1]]:
                 if attrib not in self.nodes[curr_pipe]:
-                    self.nodes[curr_pipe][attrib] = uesgraph_input.edges[
-                        curr_edge[0], curr_edge[1]
-                    ][attrib]
+                    value = uesgraph_input.edges[curr_edge[0], curr_edge[1]][attrib]
+                    self.nodes[curr_pipe][attrib] = value
+                    attribute_count += 1
+                    
+                    # Pay attention to important pipe attributes
+                    if attrib in ['length', 'diameter', 'comp_model', 'template_path']:
+                        logger.info(f"    ⚠️  Important pipe attribute: {attrib} = {value}")
+                    else:
+                        logger.debug(f"    Attribute: {attrib} = {value}")
 
             # Rotation of each pipe model depending on the coordinates
             # of the connected nodes in degree
-            self.nodes[curr_pipe]["rotation"] = self.calc_angle(
+            rotation_angle = self.calc_angle(
                 self.nodes[curr_edge_node_0]["position"],
                 self.nodes[curr_edge_node_1]["position"],
                 output="degrees",
             )
+            self.nodes[curr_pipe]["rotation"] = rotation_angle
+            logger.debug(f"  Pipe rotation: {rotation_angle:.1f}°")
 
             assert curr_edge_node_0 in self.nodes()
             assert curr_edge_node_1 in self.nodes()
 
+            # Create connections
             self.add_edge(curr_pipe, curr_edge_node_0)
             self.add_edge(curr_pipe, curr_edge_node_1)
+            logger.debug(f"  Created edges: {curr_pipe}↔{curr_edge_node_0}, {curr_pipe}↔{curr_edge_node_1}")
+            
+            logger.debug(f"  Pipe '{pipe_name}' processed: {attribute_count} attributes, rotation {rotation_angle:.1f}°")
+            pipe_count += 1
+
+        logger.info(f"Pipe import completed: {pipe_count} pipes processed")
+        logger.info("=== Pipe import completed ===")
 
     def import_from_uesgraph(self, uesgraph_input, logger=None):
         """Imports nodes and edges from uesgraph and transform edges to nodes
@@ -894,6 +798,274 @@ class SystemModelHeating(UESGraph):
                             name_pipe
                         )
                         self.edges[edge[0], edge[1]]["con2R"] = con2R_new
+
+    def set_connection(self, remove_network_nodes=True, logger=None):
+        """Sets connections between supplies, pipes and buildings
+
+        To connect supplies, pipes, and buildings, each edge of the model graph
+        is assigned four attributes ('con1', 'con2', 'con1R', 'con2R') that
+        characterize the connected node (supply, pipe, building) and the used
+        port of the node (port_a, port_b).
+        In case the node is a supply, a pipe, or a building, the attribute
+        (con1, con2, con1R, con2R) contains the corresponding Modelica-Code.
+        In case the node is a network-node the attribute only contains
+        the number of the node, since network-nodes can be connected to more
+        then one node. The connections of the network-nodes is written later
+        on in method 'write_network_model()'.
+
+        For remove_network_nodes is True, ports depend on type of node:
+                pipe    network    building    supply
+        con1    a/b     node #        a          b
+        con1R   a/b     node #        b          a
+        con2    a/b     node #        a          b
+        con2R   a/b     node #        b          a
+
+        Parameters
+        ----------
+        remove_network_nodes : boolean
+            If True, all connections at network nodes will be clustered onto
+            connecting ports. If False, network nodes will get their own
+            representation in the conncetion network.
+        logger : logging.Logger, optional
+            Logger instance for debugging
+        """
+        if logger is None:
+            logger = set_up_terminal_logger(f"{__name__}.SystemModelHeating.set_connection")
+        
+        logger.info("=== Starting connection setup ===")
+        logger.info(f"Network: {self.network_type} | Edges: {len(self.edges())} | Remove network nodes: {remove_network_nodes}")
+        
+        # Determine network type and flags
+        if self.network_type == "heating":
+            flag_supply = "is_supply_heating"
+            nodelist = self.nodelists_heating["default"]
+        elif self.network_type == "cooling":
+            flag_supply = "is_supply_cooling"
+            nodelist = self.nodelists_cooling["default"]
+        else:
+            logger.error(f"Unknown network type: {self.network_type}")
+            raise RuntimeError("Unknown network type")
+        
+        logger.debug(f"Network nodelist size: {len(nodelist)}")
+        
+        # Initialize clusters for network nodes
+        clusters = {}
+        for node in nodelist:
+            clusters[node] = []
+        
+        # Process each edge to set connections
+        logger.info("Step 1: Processing edges for connection assignment")
+        edge_count = 0
+        for curr_edge in self.edges(data=True):
+            edge_count += 1
+            logger.debug(f"Processing edge {edge_count}: {curr_edge[0]} ↔ {curr_edge[1]}")
+            
+            for edge_node in curr_edge:
+                if edge_node == curr_edge[0]:
+                    other_node = curr_edge[1]
+                else:
+                    other_node = curr_edge[0]
+
+                # Building nodes
+                if edge_node in self.nodelist_building:
+                    is_supply = self.nodes[edge_node][flag_supply]
+                    node_name = self.nodes[edge_node]["name"]
+                    logger.debug(f"    Building node '{node_name}': is_supply={is_supply}")
+                    
+                    if is_supply is False:
+                        con = "demand" + str(node_name) + ".port_a"
+                        con_R = "demand" + str(node_name) + ".port_b"
+                    else:
+                        con = "supply" + str(node_name) + ".port_b"
+                        con_R = "supply" + str(node_name) + ".port_a"
+                        
+                # Network nodes
+                elif edge_node in nodelist:
+                    con = edge_node
+                    con_R = edge_node
+                    logger.debug(f"    Network node: {edge_node}")
+                    
+                    if edge_node == curr_edge[0]:
+                        clusters[edge_node].append(curr_edge[1])
+                    elif edge_node == curr_edge[1]:
+                        clusters[edge_node].append(curr_edge[0])
+                    logger.debug(f"    → Added to cluster, connections: {len(clusters[edge_node])}")
+                    
+                # Pipe nodes
+                elif edge_node in self.nodelist_pipe:
+                    angle = self.calc_angle(
+                        self.nodes[edge_node]["position"],
+                        self.nodes[other_node]["position"],
+                        output="degrees",
+                    )
+                    pipe_rotation = self.nodes[edge_node]["rotation"]
+                    pipe_name = self.nodes[edge_node]["name"]
+                    
+                    
+                    if abs(pipe_rotation - angle) < 90:
+                        con = "pipe" + str(pipe_name) + ".port_b"
+                        con_R = "pipe" + str(pipe_name) + "R." + "port_b"
+                        logger.debug(f"    → Port B connections: {con}, {con_R}")
+                    else:
+                        con = "pipe" + str(pipe_name) + ".port_a"
+                        con_R = "pipe" + str(pipe_name) + "R." + "port_a"
+                        
+                # Assign connections to edge
+                if edge_node == curr_edge[0]:
+                    self.edges[curr_edge[0], curr_edge[1]]["con1"] = con
+                    self.edges[curr_edge[0], curr_edge[1]]["con1R"] = con_R
+                elif edge_node == curr_edge[1]:
+                    self.edges[curr_edge[0], curr_edge[1]]["con2"] = con
+                    self.edges[curr_edge[0], curr_edge[1]]["con2R"] = con_R
+
+        logger.info(f"Edge processing completed: {edge_count} edges processed")
+        
+        # Handle network node removal
+        if remove_network_nodes is True:
+            logger.info("Step 2: Removing network nodes and clustering connections")
+            cluster_count = 0
+            for network_node in clusters:
+                if len(clusters[network_node]) > 0:
+                    cluster_count += 1
+                    logger.debug(f"Processing cluster {cluster_count}: network_node={network_node}, connections={len(clusters[network_node])}")
+                    
+                    # Find port information of all nodes connected to network_node
+                    ports = {}
+                    for curr_node in clusters[network_node]:
+                        ports[curr_node] = {}
+                        if self.edges[network_node, curr_node]["con1"] != network_node:
+                            ports[curr_node]["fwd"] = self.edges[network_node, curr_node]["con1"]
+                            ports[curr_node]["rtn"] = self.edges[network_node, curr_node]["con1R"]
+                            logger.debug(f"  Node {curr_node}: fwd={ports[curr_node]['fwd']}, rtn={ports[curr_node]['rtn']}")
+                        else:
+                            ports[curr_node]["fwd"] = self.edges[network_node, curr_node]["con2"]
+                            ports[curr_node]["rtn"] = self.edges[network_node, curr_node]["con2R"]
+                            logger.debug(f"  Node {curr_node}: fwd={ports[curr_node]['fwd']}, rtn={ports[curr_node]['rtn']}")
+
+                    # Replace connections via network nodes with direct connections
+                    first_node = clusters[network_node][0]
+                    logger.debug(f"  First node: {first_node}")
+                    self.remove_edge(first_node, network_node)
+                    
+                    connection_count = 0
+                    for curr_node in clusters[network_node][1:]:
+                        self.add_edge(
+                            first_node,
+                            curr_node,
+                            con1=ports[first_node]["fwd"],
+                            con2=ports[curr_node]["fwd"],
+                            con1R=ports[first_node]["rtn"],
+                            con2R=ports[curr_node]["rtn"],
+                        )
+                        connection_count += 1
+                        logger.debug(f"  Created direct connection {connection_count}: {first_node} ↔ {curr_node}")
+                        
+                    self.remove_network_node(network_node)
+                    logger.debug(f"  Removed network node: {network_node}")
+                    
+            logger.info(f"Network node clustering completed: {cluster_count} clusters processed")
+        else:
+            logger.info("Step 2: Keeping network nodes and setting up junctions")
+            junction_count = 0
+            for network_node in clusters:
+                if "name" not in self.nodes[network_node]:
+                    self.nodes[network_node]["name"] = str(network_node)
+                    logger.debug(f"Set name for network node {network_node}: '{self.nodes[network_node]['name']}'")
+
+                degree = self.degree(network_node)
+                self.nodes[network_node]["degree"] = degree
+                logger.debug(f"Network node {network_node}: degree={degree}")
+
+                for i, neighbor in enumerate(self.neighbors(network_node)):
+                    curr_port = "junction{}.ports[{}]".format(self.nodes[network_node]["name"], i)
+                    curr_port_R = "junction{}R.ports[{}]".format(self.nodes[network_node]["name"], i)
+                    logger.debug(f"  Neighbor {i}: {neighbor}, ports: {curr_port}, {curr_port_R}")
+                    
+                    for con in self.edges[neighbor, network_node].keys():
+                        con_element = self.edges[neighbor, network_node][con]
+                        if con_element == network_node:
+                            if "R" in con:
+                                self.edges[neighbor, network_node][con] = curr_port_R
+                            else:
+                                self.edges[neighbor, network_node][con] = curr_port
+                            logger.debug(f"    Updated {con}: {curr_port if 'R' not in con else curr_port_R}")
+                junction_count += 1
+            logger.info(f"Junction setup completed: {junction_count} junctions configured")
+
+        # IBPSA pipe approach - overwrite connections for asymmetrical pipe setup
+        logger.info("Step 3: Applying IBPSA pipe approach - asymmetrical pipe setup")
+        
+        # Supply network processing
+        logger.debug("Processing supply network connections")
+        occurrences_port = {}
+        for pipe in self.nodelist_pipe:
+            pipe_name = self.nodes[pipe]["name"]
+            occurrences_port[pipe_name] = 0
+        logger.debug(f"Initialized port occurrences for {len(occurrences_port)} pipes")
+        
+        supply_connections = 0
+        for edge in self.edges():
+            con1 = self.edges[edge[0], edge[1]]["con1"]
+            con2 = self.edges[edge[0], edge[1]]["con2"]
+            
+            if "pipe" in con1:
+                name_pipe = con1.split(".")[0][4:]
+                if "port_b" in con1:
+                    occurrences_port[name_pipe] += 1
+                    con1_new = "pipe{}.port_b".format(name_pipe)
+                    self.edges[edge[0], edge[1]]["con1"] = con1_new
+                    logger.debug(f"  Updated con1: {con1} → {con1_new}")
+                    supply_connections += 1
+                    
+            if "pipe" in con2:
+                name_pipe = con2.split(".")[0][4:]
+                if "port_b" in con2:
+                    occurrences_port[name_pipe] += 1
+                    con2_new = "pipe{}.port_b".format(name_pipe)
+                    self.edges[edge[0], edge[1]]["con2"] = con2_new
+                    logger.debug(f"  Updated con2: {con2} → {con2_new}")
+                    supply_connections += 1
+
+        logger.debug(f"Supply network: {supply_connections} pipe connections updated")
+
+        # Return network processing
+        logger.debug("Processing return network connections")
+        occurrences_port = {}
+        for pipe in self.nodelist_pipe:
+            pipe_name = self.nodes[pipe]["name"]
+            occurrences_port[pipe_name] = 0
+        
+        return_connections = 0
+        for edge in self.edges():
+            con1R = self.edges[edge[0], edge[1]]["con1R"]
+            con2R = self.edges[edge[0], edge[1]]["con2R"]
+            
+            if "pipe" in con1R:
+                name_pipe = con1R.split(".")[0].replace("R", "")[4:]
+                if "port_b" in con1R:
+                    occurrences_port[name_pipe] += 1
+                    con1R_new = "pipe{}R.port_b".format(name_pipe)
+                    self.edges[edge[0], edge[1]]["con1R"] = con1R_new
+                    logger.debug(f"  Updated con1R: {con1R} → {con1R_new}")
+                    return_connections += 1
+                    
+            if "pipe" in con2R:
+                name_pipe = con2R.split(".")[0].replace("R", "")[4:]
+                if "port_b" in con2R:
+                    occurrences_port[name_pipe] += 1
+                    con2R_new = "pipe{}R.port_b".format(name_pipe)
+                    self.edges[edge[0], edge[1]]["con2R"] = con2R_new
+                    logger.debug(f"  Updated con2R: {con2R} → {con2R_new}")
+                    return_connections += 1
+
+        logger.debug(f"Return network: {return_connections} pipe connections updated")
+        logger.info(f"IBPSA pipe approach completed: {supply_connections + return_connections} total connections updated")
+        
+        # Final summary
+        final_edges = len(self.edges())
+        logger.info(f"=== Connection setup completed ===")
+        logger.info(f"Final graph: {len(self.nodes())} nodes, {final_edges} edges")
+
 
     def write_medium_definition(self):
         """Write the rendered Modelica code for the Medium definition
