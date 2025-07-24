@@ -247,6 +247,177 @@ class SystemModelHeating(UESGraph):
             raise ValueError("Unknown Medium choice")
         self.__medium = value
 
+    def import_nodes_from_uesgraph(self, uesgraph_input, logger=None):
+        """Adds uesgraph_input's nodes to the model graph
+
+        As a first step for the conversion from a uesgraph to a uesmodel graph,
+        this method imports the uesgraph's nodes to the nodes of
+        this class. The method conserves each node's attributes, but converts
+        the x and y coordinates from GIS data to coordinates on the canvas
+        for graphical representation of the Modelica model.
+
+        Parameters
+        ----------
+        uesgraph_input : uesgraphs.uesgraph.UESGraph object
+            At current stage, this uesgraph should contain only 1 network of 1
+            type that is indexed in the corrsponding nodelist as `'default'`
+        logger : logging.Logger, optional
+            Logger instance for debugging
+        """
+        if logger is None:
+            logger = set_up_terminal_logger(f"{__name__}.SystemModelHeating.import_nodes_from_uesgraph")
+
+        def _transform_coords(gis_position):
+            """Transforms coords from GIS to coords on Modelica canvas
+
+            Parameters
+            ----------
+            gis_position : shapely.geometry.Point object
+                Point object with coords from GIS
+
+            Returns
+            -------
+            modelica_position : shapely.geometry.Point object
+                Point object with coords on Modelica canvas
+            """
+            # Transform coordinates to plane
+            modelica_position = ops.transform(
+                partial(
+                    pyproj.transform,
+                    pyproj.Proj(init="EPSG:4326"),
+                    pyproj.Proj(
+                        proj="aea",
+                        lat1=uesgraph_input.min_position.y,
+                        lat2=uesgraph_input.max_position.y,
+                    ),
+                ),
+                gis_position,
+            )
+            # Transform the minimum position to the same plane
+            new_min = ops.transform(
+                partial(
+                    pyproj.transform,
+                    pyproj.Proj(init="EPSG:4326"),
+                    pyproj.Proj(
+                        proj="aea",
+                        lat1=uesgraph_input.min_position.y,
+                        lat2=uesgraph_input.max_position.y,
+                    ),
+                ),
+                uesgraph_input.min_position,
+            )
+            # Translate node, so that minimum position is at (0, 0)
+            modelica_position = shapely.affinity.translate(
+                modelica_position, xoff=-new_min.x, yoff=-new_min.y
+            )
+            return modelica_position
+
+        logger.info("=== Starting node import from UESGraph ===")
+        logger.debug(f"Input building nodes: {len(uesgraph_input.nodelist_building)}")
+        
+        # Import building nodes first
+        building_count = 0
+        for node in uesgraph_input.nodelist_building:
+            logger.debug(f"Processing building node: {node}")
+            
+            # new_position = _transform_coords(uesgraph_input.node[
+            #                                      node]['position'])
+            new_position = uesgraph_input.node[node]["position"]
+
+            name_node = uesgraph_input.node[node]["name"]
+            original_name = name_node
+            if name_node[0].isdigit():
+                name_node = self.model_name[0] + name_node
+                logger.debug(f"  Renamed node: '{original_name}' → '{name_node}' (starts with digit)")
+
+            # Log supply status - CRITICAL for comp_model assignment later!
+            supply_status = {
+                'heating': uesgraph_input.node[node]["is_supply_heating"],
+                'cooling': uesgraph_input.node[node]["is_supply_cooling"], 
+                'electricity': uesgraph_input.node[node]["is_supply_electricity"],
+                'gas': uesgraph_input.node[node]["is_supply_gas"],
+                'other': uesgraph_input.node[node]["is_supply_other"]
+            }
+            logger.debug(f"  Supply status: {supply_status}")
+
+            bldg = self.add_building(
+                name=name_node,
+                position=new_position,
+                is_supply_heating=uesgraph_input.node[node]["is_supply_heating"],
+                is_supply_cooling=uesgraph_input.node[node]["is_supply_cooling"],
+                is_supply_electricity=uesgraph_input.node[node]["is_supply_electricity"],
+                is_supply_gas=uesgraph_input.node[node]["is_supply_gas"],
+                is_supply_other=uesgraph_input.node[node]["is_supply_other"],
+            )
+            self.nodes[bldg]["has_table"] = False
+            logger.debug(f"  Created building node ID: {bldg}")
+
+            # Transfer all attributes - WATCH FOR COMP_MODEL OR TEMPLATE_PATH!
+            attribute_count = 0
+            for attrib in uesgraph_input.node[node]:
+                if attrib not in self.nodes[bldg]:
+                    self.nodes[bldg][attrib] = uesgraph_input.node[node][attrib]
+                    attribute_count += 1
+                    
+                    # Special attention to potential template/model attributes
+                    if 'template' in attrib.lower() or 'model' in attrib.lower():
+                        logger.info(f"  ⚠️  Template/Model attribute found: {attrib} = {uesgraph_input.node[node][attrib]}")
+                    else:
+                        logger.debug(f"    Attribute: {attrib} = {uesgraph_input.node[node][attrib]}")
+            
+            logger.debug(f"  Building '{name_node}' processed: {attribute_count} attributes transferred")
+            building_count += 1
+
+        logger.info(f"Building nodes processed: {building_count}")
+
+        # Import network nodes
+        network_node_count = 0
+        for network_type in self.network_types:
+            logger.debug(f"Processing network type: {network_type}")
+            
+            if network_type == "heating":
+                nodelist = uesgraph_input.nodelists_heating["default"]
+            elif network_type == "cooling":
+                nodelist = uesgraph_input.nodelists_cooling["default"]
+            elif network_type == "electricity":
+                nodelist = uesgraph_input.nodelists_electricity["default"]
+            elif network_type == "gas":
+                nodelist = uesgraph_input.nodelists_gas["default"]
+            elif network_type == "others":
+                nodelist = uesgraph_input.nodelists_others["default"]
+            else:
+                logger.error(f"Unknown network type: {network_type}")
+                raise ValueError("Unknown network type")
+
+            logger.debug(f"  {network_type} network nodes: {len(nodelist)}")
+            
+            for node in nodelist:
+                logger.debug(f"  Processing {network_type} node: {node}")
+                
+                # new_position = _transform_coords(uesgraph_input.node[
+                #                                      node]['position'])
+                new_position = uesgraph_input.node[node]["position"]
+                new = self.add_network_node(
+                    name=uesgraph_input.node[node]["name"],
+                    network_type=network_type,
+                    position=new_position,
+                    check_overlap=False,
+                )
+
+                # Transfer attributes
+                attribute_count = 0
+                for attrib in uesgraph_input.node[node]:
+                    if attrib not in self.nodes[new]:
+                        self.nodes[new][attrib] = uesgraph_input.node[node][attrib]
+                        attribute_count += 1
+                        logger.debug(f"    Attribute: {attrib} = {uesgraph_input.node[node][attrib]}")
+                        
+                logger.debug(f"    Network node processed: {attribute_count} attributes transferred")
+                network_node_count += 1
+
+        logger.info(f"Network nodes processed: {network_node_count}")
+        logger.info("=== Node import completed ===")
+
     def import_nodes_from_uesgraph(self, uesgraph_input):
         """Adds uesgraph_input's nodes to the model graph
 
@@ -473,8 +644,9 @@ class SystemModelHeating(UESGraph):
             self.add_edge(curr_pipe, curr_edge_node_0)
             self.add_edge(curr_pipe, curr_edge_node_1)
 
-    def import_from_uesgraph(self, uesgraph_input):
-        """Imports nodes and edges from uesgraph and adds pipe nodes
+    def import_from_uesgraph(self, uesgraph_input, logger=None):
+        """Imports nodes and edges from uesgraph and transform edges to nodes
+        which will later be pipes in modelica
 
         Parameters
         ----------
@@ -482,14 +654,38 @@ class SystemModelHeating(UESGraph):
         uesgraph_input : uesgraphs.uesgraph.UESGraph object
             At current stage, this uesgraph should contain only 1 network of 1
             type that is indexed in the corresponding nodelist as `'default'`
+        logger : logging.Logger, optional
+            Logger instance for debugging
         """
-        self.import_nodes_from_uesgraph(uesgraph_input)
-        self.import_pipes_from_uesgraph(uesgraph_input)
+        if logger is None:
+            logger = set_up_terminal_logger(f"{__name__}.SystemModelHeating.import_from_uesgraph")
+        
+        logger.info("=== Starting UESGraph import ===")
+        logger.debug(f"Input graph info: {len(uesgraph_input.nodes())} nodes, {len(uesgraph_input.edges())} edges")
+        logger.debug(f"Network types in input: {getattr(uesgraph_input, 'network_types', 'unknown')}")
+        
+        # Import nodes first
+        logger.info("Step 1: Importing nodes from UESGraph")
+        self.import_nodes_from_uesgraph(uesgraph_input, logger=logger)
+        
+        # Import pipes second  
+        logger.info("Step 2: Importing pipes from UESGraph")
+        self.import_pipes_from_uesgraph(uesgraph_input, logger=logger)
 
         # Import graph attributes
+        logger.info("Step 3: Importing graph attributes")
+        attribute_count = 0
         for attrib in uesgraph_input.graph:
             self.graph[attrib] = uesgraph_input.graph[attrib]
-
+            attribute_count += 1
+            logger.debug(f"  Imported graph attribute: {attrib} = {uesgraph_input.graph[attrib]}")
+        
+        logger.info(f"Graph import completed: {attribute_count} attributes imported")
+        logger.info(f"Final model: {len(self.nodes())} nodes, {len(self.edges())} edges")
+        logger.debug(f"Building nodes: {len(getattr(self, 'nodelist_building', []))}")
+        logger.debug(f"Pipe nodes: {len(getattr(self, 'nodelist_pipe', []))}")
+        logger.info("=== UESGraph import completed ===")
+       
     def set_connection(self, remove_network_nodes=True):
         """Sets connections between supplies, pipes and buildings
 
