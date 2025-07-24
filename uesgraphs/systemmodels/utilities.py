@@ -335,7 +335,7 @@ def create_model(
         logger.debug("Using default Kusuda parameters")
 
     logger.info("Creating SystemModelHeating instance")
-    new_model = sysmh.SystemModelHeating(network_type=graph.graph["network_type"])
+    new_model = sysmh.SystemModelHeating(network_type=graph.graph["network_type"],logger=logger)
     new_model.stop_time = stop_time
     new_model.timestep = timestep
     
