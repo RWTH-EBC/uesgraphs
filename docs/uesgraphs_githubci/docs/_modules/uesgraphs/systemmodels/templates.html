@@ -1,0 +1,909 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.systemmodels.templates &mdash; uesgraphs 2.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../code/modules.html">uesgraphs</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.UESGraph.html">uesgraphs.UESGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.Visuals.html">uesgraphs.Visuals</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.template_generation.html">uesgraphs.template_generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.systemmodels.systemmodelheating.html">uesgraphs.systemmodels.systemmodelheating</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.systemmodels.utilities.html">uesgraphs.systemmodels.utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.examples.html">uesgraphs.examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.systemmodels.templates</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.systemmodels.templates</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module includes the UESModel graph to write Modelica code from uesgraphs</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mako.template</span><span class="w"> </span><span class="kn">import</span> <span class="n">Template</span>
+
+<span class="c1">#For logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">keyword</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="c1"># For type declaration in methods</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_versioning_info</span>
+
+
+<div class="viewcode-block" id="check_variable_name"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.check_variable_name">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">check_variable_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">max_attempts</span> <span class="o">=</span> <span class="mi">5</span><span class="p">):</span>
+    <span class="n">attempts</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">attempts</span> <span class="o">&lt;</span> <span class="n">max_attempts</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">keyword</span><span class="o">.</span><span class="n">iskeyword</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^[a-zA-Z_][a-zA-Z0-9_]*$&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">keyword</span><span class="o">.</span><span class="n">iskeyword</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> **** Error </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is a reserved keyword in Python. ****</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^[a-zA-Z_][a-zA-Z0-9_]*$&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">**** Error </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is not a valid variable name. ****</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please enter a new variable name:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                         <span class="s2">&quot;Regard that this name is only used by python and not in the modelica model.&quot;</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter new variable name: &quot;</span><span class="p">)</span>
+            <span class="n">attempts</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">name</span></div>
+
+<div class="viewcode-block" id="set_up_logger"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.set_up_logger">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_up_logger</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">log_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">level</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)):</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">log_dir</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">log_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+        <span class="n">log_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">log_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.log&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Logfile findable here: </span><span class="si">{</span><span class="n">log_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+        <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - [</span><span class="si">%(filename)s</span><span class="s1">:</span><span class="si">%(lineno)d</span><span class="s1">] - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">logger</span>   </div>
+
+
+<div class="viewcode-block" id="UESTemplates"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">UESTemplates</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to handle templates for model generation with uesgraphs.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        model_name : str</span>
+<span class="sd">            Name of the modelica model.</span>
+<span class="sd">            (e.g. AixLib.Fluid.DistrictHeatingCooling.Supplies.OpenLoop.SourceIdeal)</span>
+<span class="sd">        model_type : str</span>
+<span class="sd">            Choose from [Supply, Demand, Pipe]</span>
+<span class="sd">        template_path : str</span>
+<span class="sd">            optional: sets the template path to a specific path</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="UESTemplates.__init__"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">template_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">dir_this</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+        <span class="n">par_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">dir_this</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rigorous</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#Attribute for overwriting all templates</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">template_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">par_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;templates&quot;</span>
+        <span class="p">)</span>  <span class="c1"># Define Template directory</span>
+        <span class="n">supported_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Supply&quot;</span><span class="p">,</span> <span class="s2">&quot;Demand&quot;</span><span class="p">,</span> <span class="s2">&quot;Pipe&quot;</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">model_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_types</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model type </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2"> not supported. Choose from </span><span class="si">{</span><span class="n">supported_types</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">model_name</span>  <span class="c1"># Component name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="n">model_type</span>  <span class="c1"># Component type</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">version_info</span> <span class="o">=</span> <span class="n">get_versioning_info</span><span class="p">()</span>  <span class="c1"># Get versioning information</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">optional_params</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of optional parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mandatory_params</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of mandatory parameters</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">template_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.mako&quot;</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No model name given! model_name: </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">, model_type: </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">, template_path: </span><span class="si">{</span><span class="n">template_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># check if template_path is filled and individual path should be used</span>
+        <span class="k">if</span> <span class="n">template_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Demand&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">template_directory</span><span class="p">,</span> <span class="s2">&quot;network&quot;</span><span class="p">,</span> <span class="s2">&quot;demand&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_name</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Supply&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">template_directory</span><span class="p">,</span> <span class="s2">&quot;network&quot;</span><span class="p">,</span> <span class="s2">&quot;supply&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_name</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Pipe&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">template_directory</span><span class="p">,</span> <span class="s2">&quot;network&quot;</span><span class="p">,</span> <span class="s2">&quot;pipe&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_name</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="c1"># set individual template path</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">template_path</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using custom templates requires absolutepath. You provided: </span><span class="si">{</span><span class="n">template_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Prüfe, ob der Pfad mit .mako endet</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">template_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.mako&#39;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Absolute Template path must end with .mako extension: </span><span class="si">{</span><span class="n">template_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">template_path</span><span class="p">)</span></div>
+
+    
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_template</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if selected template exists&quot;&quot;&quot;</span>
+        <span class="c1"># Check if template path exists</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No template found for model </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="si">}</span><span class="s2"> with model type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2"> and directory. Try to give absolute path&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UESTemplates.call_function"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.call_function">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">call_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_string</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls function in template</span>
+<span class="sd">            Attributes</span>
+<span class="sd">            ----------</span>
+<span class="sd">            function_string : str</span>
+<span class="sd">                Name of the function in the .mako file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_template</span><span class="p">()</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">)</span>
+        <span class="n">re</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">get_def</span><span class="p">(</span><span class="n">function_string</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">re</span></div>
+
+<div class="viewcode-block" id="UESTemplates.generate_new_template"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.generate_new_template">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">generate_new_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_library</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a new template based on parameter and package information</span>
+<span class="sd">        of the given class</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        path_library : str / list of strings</span>
+<span class="sd">            Path to package.mo of the used library (e.g. C:\\...\\Aixlib\\package.mo)</span>
+<span class="sd">            or list of paths to multiple used libraries</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_logger</span><span class="p">(</span><span class="s2">&quot;Uesgraph&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span> <span class="c1">#Log file stored in the temp directory. Regard also console output</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Uesgraph Version: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="s2">&quot;uesgraphs_version&quot;</span><span class="p">])</span>
+        
+        <span class="c1">#1. Create ModelInfoExtractor object which opens a specified library (e.g AixLib) with an openmodelica session</span>
+        <span class="n">extractor</span> <span class="o">=</span> <span class="n">ModelInfoExtractor</span><span class="p">(</span><span class="n">path_library</span><span class="p">,</span><span class="n">log_level</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="c1">#log_level=10 for debug, 20 for info. Log files are temporary stored in the temp directory. Regard also console output</span>
+        <span class="c1">#2. Extract model information from the given class/component</span>
+        <span class="n">template_dict</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract_model_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span> <span class="c1">#Extracts parameters, connectors and packages and structures them in a dictionary</span>
+
+        <span class="c1">#3. Generate Template string based on the extracted information</span>
+        <span class="n">template_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_template_string</span><span class="p">(</span><span class="n">template_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated template string: </span><span class="si">{</span><span class="n">template_str</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>  <span class="c1"># Logs the first 100 characters of the template string for debugging purposes</span>
+        <span class="c1">#4. Save created Template to mako file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_save_to_mako</span><span class="p">(</span><span class="n">template_str</span><span class="p">)</span>
+        <span class="k">return</span></div>
+       
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_template_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a template string for a Modelica component based on the provided template dictionary.</span>
+
+<span class="sd">        This method creates a formatted string representation of a Modelica component,</span>
+<span class="sd">        including its declaration, packages, parameters, annotations, and connections.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        template_dict : dict</span>
+<span class="sd">            A dictionary containing the template information, with the following keys:</span>
+<span class="sd">            - &quot;Packages&quot;: List of required packages</span>
+<span class="sd">            - &quot;Parameters&quot;: Dictionary of parameter definitions for the component</span>
+<span class="sd">            - &quot;Connectors&quot;: Dictionary of the component&#39;s connectors</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        --------</span>
+<span class="sd">        str</span>
+<span class="sd">            A formatted string representing the Modelica component template.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">        ------</span>
+<span class="sd">        - The method generates a template for a specific model type and name,</span>
+<span class="sd">        which are assumed to be class attributes (self.model_type and self.model_name).</span>
+<span class="sd">        - The template includes:</span>
+<span class="sd">            1. Component declaration</span>
+<span class="sd">            2. Package imports (using __generate_package_string)</span>
+<span class="sd">            3. Parameter definitions (using __generate_parameter_string)</span>
+<span class="sd">            4. Placement annotation (with configurable position)</span>
+<span class="sd">            5. Real input connections (using __generate_real_input_string)</span>
+<span class="sd">            6. Closing statements and parameter definitions (using __generate_end_string)</span>
+<span class="sd">        - The generated template string is logged at the debug level.</span>
+<span class="sd">        - The x and y coordinates in the placement annotation are rounded to 4 decimal places.</span>
+<span class="sd">        - The method populates class attributes for mandatory and optional parameters,</span>
+<span class="sd">        and connector lists, which are used in the end string generation.</span>
+
+<span class="sd">        Example Output:</span>
+<span class="sd">        ---------------</span>
+<span class="sd">        The generated string will have a structure similar to:</span>
+
+<span class="sd">            ModelName modelType${str(name)}(</span>
+<span class="sd">                // Package imports</span>
+<span class="sd">                // Parameter definitions</span>
+<span class="sd">            )</span>
+<span class="sd">            annotation(Placement(transformation(</span>
+<span class="sd">            extent={{-2,-2},{2,2}},</span>
+<span class="sd">            rotation=0,</span>
+<span class="sd">            origin={x,y})));</span>
+<span class="sd">            // Real input connections</span>
+<span class="sd">            // Closing statements and parameter definitions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generate new </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2"> template of model </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">template_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__generate_template_header</span><span class="p">()</span>  <span class="c1"># Generate header with version info and timestamp  </span>
+        <span class="n">template_str</span> <span class="o">=</span> <span class="n">template_str</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">$</span><span class="se">{{</span><span class="s2">str(name)</span><span class="se">}}</span><span class="s2">(</span><span class="se">\n</span><span class="s2">&quot;</span>
+        
+        <span class="n">template_str</span> <span class="o">=</span> <span class="n">template_str</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__generate_package_string</span><span class="p">(</span><span class="n">template_dict</span><span class="p">[</span><span class="s2">&quot;Packages&quot;</span><span class="p">])</span>
+        <span class="n">template_str</span> <span class="o">=</span> <span class="n">template_str</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__generate_parameter_string</span><span class="p">(</span><span class="n">template_dict</span><span class="p">[</span><span class="s2">&quot;Parameters&quot;</span><span class="p">])</span>
+        
+        <span class="c1"># Write annotation</span>
+        <span class="n">template_str</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">template_str</span> <span class="o">+</span> <span class="s2">&quot;    )</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    annotation(Placement(transformation(</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;      extent={{-2,-2},{2,2}},</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;      rotation=0,</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;      origin={${str(round(x, 4))},${str(round(y, 4))}})));</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="n">template_str</span> <span class="o">=</span> <span class="n">template_str</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__generate_real_input_string</span><span class="p">(</span><span class="n">template_dict</span><span class="p">[</span><span class="s2">&quot;Connectors&quot;</span><span class="p">])</span>
+        <span class="n">template_str</span> <span class="o">=</span> <span class="n">template_str</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__generate_end_string</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated Template string: </span><span class="si">{</span><span class="n">template_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">template_str</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">__generate_template_header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ues_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="s2">&quot;uesgraphs_version&quot;</span><span class="p">]</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;// Generated by uesgraphs version </span><span class="si">{</span><span class="n">ues_version</span><span class="si">}</span><span class="s2"> on </span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">__generate_package_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">packages</span><span class="p">):</span>
+        <span class="n">package_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">packages</span><span class="p">):</span>
+            <span class="n">package_str</span> <span class="o">=</span> <span class="n">package_str</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;    redeclare package </span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">package_str</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__generate_parameter_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a string for parameter definitions in the Modelica component.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        parameters : dict</span>
+<span class="sd">            A dictionary of parameters, where keys are parameter names and</span>
+<span class="sd">            values are Parameter objects (see also Parameter class below).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        --------</span>
+<span class="sd">        str</span>
+<span class="sd">            A formatted string of parameter definitions.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">        ------</span>
+<span class="sd">        - Parameters are sorted with optional parameters first.</span>
+<span class="sd">        - Boolean parameters are handled differently from other types.</span>
+<span class="sd">        - Optional parameters are wrapped in Mako conditional statements.</span>
+<span class="sd">        - The method populates self.optional_params and self.mandatory_params.</span>
+<span class="sd">        - The last parameter&#39;s trailing comma is removed.</span>
+<span class="sd">        - Parameter processing is logged at the debug level.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">parameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">category</span> <span class="o">!=</span> <span class="s2">&quot;optional&quot;</span><span class="p">))</span> <span class="c1">#Sort for optional first then mandatory, necessary to erase the last comma</span>
+        <span class="n">param_strings</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#Use a list of strings rather than a string is more performant</span>
+        <span class="k">for</span> <span class="n">modelica_name</span><span class="p">,</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">python_name</span> <span class="o">=</span> <span class="n">check_variable_name</span><span class="p">(</span><span class="n">modelica_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Boolean&quot;</span><span class="p">:</span>
+                <span class="n">param_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">modelica_name</span><span class="si">}</span><span class="s2"> = $</span><span class="se">{{</span><span class="s2">str(</span><span class="si">{</span><span class="n">python_name</span><span class="si">}</span><span class="s2">).lower()</span><span class="se">}}</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">param_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">modelica_name</span><span class="si">}</span><span class="s2"> = $</span><span class="se">{{</span><span class="s2">str(round(</span><span class="si">{</span><span class="n">python_name</span><span class="si">}</span><span class="s2">, 4))</span><span class="se">}}</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">category</span> <span class="o">==</span> <span class="s2">&quot;optional&quot;</span><span class="p">:</span>
+                <span class="n">param_strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    %if </span><span class="si">{</span><span class="n">python_name</span><span class="si">}</span><span class="s2"> is not None:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">param_str</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;    %endif</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optional_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">python_name</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">param_strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">param_str</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mandatory_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">python_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wrote parameter </span><span class="si">{</span><span class="n">modelica_name</span><span class="si">}</span><span class="s2"> as:</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">parameter</span><span class="o">.</span><span class="n">category</span><span class="si">}</span><span class="s2"> parameter&quot;</span><span class="p">)</span>
+        <span class="n">param_strings</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">param_strings</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;,</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">param_strings</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">__generate_real_input_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connectors</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a string for RealInput connectors in the Modelica component.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        connectors : dict</span>
+<span class="sd">            A dictionary of connectors, where keys are connector names and</span>
+<span class="sd">            values are Connector objects.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        --------</span>
+<span class="sd">        str</span>
+<span class="sd">            A formatted string of RealInput connector definitions.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">        ------</span>
+<span class="sd">        - Only processes connectors of type &quot;Modelica.Blocks.Interfaces.RealInput&quot;.</span>
+<span class="sd">        - Calculates positions for connectors in both the diagram and icon layers.</span>
+<span class="sd">        - The method populates self.connector_list.</span>
+<span class="sd">        - Connector additions are logged at the debug level.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connector_list</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of connectors</span>
+        <span class="n">input_strings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">connector_name</span><span class="p">,</span> <span class="n">connector</span> <span class="ow">in</span> <span class="n">connectors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">connector</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Modelica.Blocks.Interfaces.RealInput&quot;</span><span class="p">:</span>
+                <span class="n">number_connectors</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connector_list</span><span class="p">)</span>
+                <span class="n">y_mod_t</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="mi">25</span> <span class="o">-</span> <span class="n">number_connectors</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+                <span class="n">y_mod_it</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">number_connectors</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+                <span class="n">origin_x</span> <span class="o">=</span> <span class="s2">&quot;-100&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Demand&quot;</span> <span class="k">else</span> <span class="s2">&quot;100&quot;</span>
+                <span class="n">input_strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  Modelica.Blocks.Interfaces.RealInput ${str(name + &#39;</span><span class="si">%s</span><span class="s2">&#39;)}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;    annotation(Placement(</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;      transformation(</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;        extent={{-2,-2},{2,2}},</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;        rotation=0,</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;        origin={${str(round(x+25, 4))},${str(round(y+</span><span class="si">%s</span><span class="s2">, 4))}}),</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;      iconTransformation(</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;        extent={{-2,-2},{2,2}},</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;        rotation=0,</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;        origin={${</span><span class="si">%s</span><span class="s2">},${str(round(90 - i*180/(max(number_of_instances-1.0, 1.0)) + </span><span class="si">%s</span><span class="s2">, 4))}})</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;      ));</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">connector_name</span><span class="p">,</span> <span class="n">y_mod_t</span><span class="p">,</span> <span class="n">origin_x</span><span class="p">,</span> <span class="n">y_mod_it</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connector_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">connector_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added Real Inputs: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">connector_list</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Real Input String: </span><span class="si">{</span><span class="n">input_strings</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_strings</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">__generate_end_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the closing string for the Modelica component template.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        --------</span>
+<span class="sd">        str</span>
+<span class="sd">            A formatted string containing Mako definitions for main parameters,</span>
+<span class="sd">            auxiliary parameters, and connector names.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">        ------</span>
+<span class="sd">        - Uses class attributes self.mandatory_params, self.optional_params,</span>
+<span class="sd">        and self.connector_list populated by other methods.</span>
+<span class="sd">        - Creates three Mako definitions:</span>
+<span class="sd">        1. get_main_parameters(): for mandatory parameters</span>
+<span class="sd">        2. get_aux_parameters(): for optional parameters</span>
+<span class="sd">        3. get_connector_names(): for connector names</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mandatory_str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mandatory_params</span><span class="p">)</span>
+        <span class="n">mandatory_str</span> <span class="o">=</span> <span class="p">(</span>    
+            <span class="s1">&#39;&lt;</span><span class="si">%d</span><span class="s1">ef name=&quot;get_main_parameters()&quot;&gt;</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="sa">f</span><span class="s2">&quot;   </span><span class="si">{</span><span class="n">mandatory_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;&lt;/</span><span class="si">%d</span><span class="s2">ef&gt;&quot;</span>
+        <span class="p">)</span>
+             
+        <span class="n">optional_str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optional_params</span><span class="p">)</span>
+        <span class="n">optional_str</span> <span class="o">=</span> <span class="p">(</span>    
+            <span class="s1">&#39;&lt;</span><span class="si">%d</span><span class="s1">ef name=&quot;get_aux_parameters()&quot;&gt;</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="sa">f</span><span class="s2">&quot;   </span><span class="si">{</span><span class="n">optional_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;&lt;/</span><span class="si">%d</span><span class="s2">ef&gt;&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">connectors_str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connector_list</span><span class="p">)</span>
+        <span class="n">connectors_str</span> <span class="o">=</span> <span class="p">(</span>    
+            <span class="s1">&#39;&lt;</span><span class="si">%d</span><span class="s1">ef name=&quot;get_connector_names()&quot;&gt;</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="sa">f</span><span class="s2">&quot;   </span><span class="si">{</span><span class="n">connectors_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;&lt;/</span><span class="si">%d</span><span class="s2">ef&gt;&quot;</span>
+        <span class="p">)</span>
+        <span class="n">end_str</span> <span class="o">=</span> <span class="n">mandatory_str</span> <span class="o">+</span> <span class="n">optional_str</span> <span class="o">+</span> <span class="n">connectors_str</span>
+        <span class="k">return</span> <span class="n">end_str</span> 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_save_to_mako</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">rigorous</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Template for class </span><span class="si">%s</span><span class="s2"> already exists. Do you want to replace it&quot;</span>
+                <span class="s2">&quot; with new template? Please enter&quot;</span>
+                <span class="s1">&#39; &quot;Y&quot; to proceed or &quot;N&quot; to abort.&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span>
+            <span class="p">)</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">choice</span> <span class="o">=</span> <span class="nb">input</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delete existing template for </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">)</span>
+                    <span class="k">break</span>
+                <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;N&quot;</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Keep existing template.&quot;</span><span class="p">)</span>
+                    <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Please respond with &#39;Y&#39; or &#39;N&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">rigorous</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Write template for </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">text_file</span><span class="p">:</span>
+                <span class="n">text_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">template_str</span><span class="p">)</span>
+        <span class="k">return</span>
+        
+<div class="viewcode-block" id="UESTemplates.render"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.render">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_data</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number_of_instances</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">package_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write Modelica code for Demands.OpenLoop.HeatPumpCarnot</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node_data: dict</span>
+<span class="sd">            information of systemmodel node</span>
+<span class="sd">        i : int</span>
+<span class="sd">            Counter of instances</span>
+<span class="sd">        number_of_instances : int</span>
+<span class="sd">            Number of total nodes of this type in graph</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        mo : str</span>
+<span class="sd">            Rendered Modelica code</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_template</span><span class="p">()</span>
+        <span class="c1"># Load .mako template</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">,</span> <span class="n">strict_undefined</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Create parameters dict</span>
+        <span class="n">write_params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Assert for main parameters</span>
+        <span class="n">main_params</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">get_def</span><span class="p">(</span><span class="s2">&quot;get_main_parameters&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="c1"># check if name is given as parameter</span>
+        <span class="k">assert</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">node_data</span><span class="p">,</span> <span class="s2">&quot;No name given!&quot;</span>
+        <span class="n">main_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+ 
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">main_params</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;For the component model </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2"> must be given for node (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">node_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">assert</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">node_data</span><span class="p">,</span> <span class="n">msg</span>
+            <span class="n">write_params</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">node_data</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
+
+        <span class="c1"># Check for auxiliary parameters</span>
+        <span class="n">aux_params</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">get_def</span><span class="p">(</span><span class="s2">&quot;get_aux_parameters&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">aux_params</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">node_data</span><span class="p">:</span>
+                <span class="n">write_params</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">node_data</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">write_params</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Add position info</span>
+        <span class="n">write_params</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node_data</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">write_params</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node_data</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">if</span> <span class="s2">&quot;rotation&quot;</span> <span class="ow">in</span> <span class="n">node_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">write_params</span><span class="p">[</span><span class="s2">&quot;rotation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node_data</span><span class="p">[</span><span class="s2">&quot;rotation&quot;</span><span class="p">]</span>
+        <span class="c1"># Add information about enumerations</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">write_params</span><span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="k">if</span> <span class="n">number_of_instances</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">write_params</span><span class="p">[</span><span class="s2">&quot;number_of_instances&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">number_of_instances</span>
+
+        <span class="n">write_params</span><span class="p">[</span><span class="s2">&quot;package_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">package_name</span>
+
+        <span class="c1"># TODO care about dhw</span>
+        <span class="c1"># if &quot;dhw&quot; in self.nodes[node][&#39;name&#39;]:</span>
+        <span class="c1">#     gain_input = max(self.nodes[node][&#39;input_heat&#39;])</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     gain_input = 1</span>
+
+        <span class="n">mo</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render_unicode</span><span class="p">(</span><span class="o">**</span><span class="n">write_params</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">mo</span></div></div>
+
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Set</span>
+
+<div class="viewcode-block" id="Parameter"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.Parameter">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Parameter</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A named tuple representing a modelica parameter.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        value (Any): The value of the parameter.</span>
+<span class="sd">        type (str): The type of the parameter in model. Like Modelica.Units.SI.SpecificHeatCapacity or Boolean</span>
+<span class="sd">        category (str, optional): The category of the parameter. </span>
+<span class="sd">            Either &quot;optional&quot; or &quot;mandatory&quot;. Specified in _extract_parameters. Important for the template generation.</span>
+<span class="sd">        description (str, optional): A brief description of the parameter. Defaults to &quot;&quot;. Not needed yet.</span>
+<span class="sd">        unit (str, optional): The unit of measurement for the parameter. Defaults to &quot;&quot;. Not needed yet.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; param = Parameter(value=42, type=&quot;Integer&quot;, category=&quot;mandatory&quot;, </span>
+<span class="sd">        ...                   description=&quot;The answer to life, the universe, and everything&quot;, </span>
+<span class="sd">        ...                   unit=&quot;&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print(param.value)</span>
+<span class="sd">        42</span>
+<span class="sd">        &gt;&gt;&gt; print(param.category)</span>
+<span class="sd">        mandatory</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">value</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">category</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="c1">#Either optional or mandatory</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+    
+
+<div class="viewcode-block" id="Connector"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.Connector">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Connector</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="ModelInfoExtractor"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.ModelInfoExtractor">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ModelInfoExtractor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to extract model information from OpenModelica classes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ModelInfoExtractor.__init__"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.ModelInfoExtractor.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_library</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">log_level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_logger</span><span class="p">(</span><span class="s2">&quot;ModelInfoExtractor&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">log_level</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">omc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_omc_session</span><span class="p">(</span><span class="n">path_library</span><span class="p">)</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_open_omc_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">path_library</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Opens an OpenModelica session and loads the specified library.</span>
+
+<span class="sd">        This method initializes an OpenModelica session using OMPython and loads</span>
+<span class="sd">        the Modelica library specified by the path_library parameter. It handles</span>
+<span class="sd">        both single path strings and lists of paths.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        path_library : str or list of str</span>
+<span class="sd">            The path(s) to the Modelica library file(s) to be loaded.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        --------</span>
+<span class="sd">        OMCSessionZMQ</span>
+<span class="sd">            An initialized OpenModelica session object with the specified library loaded.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">        -------</span>
+<span class="sd">        ImportError</span>
+<span class="sd">            If the OMPython package is not installed.</span>
+<span class="sd">        FileNotFoundError</span>
+<span class="sd">            If the specified library file does not exist.</span>
+<span class="sd">        Exception</span>
+<span class="sd">            If the library fails to load for any reason.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">        ------</span>
+<span class="sd">        - This method requires the OMPython package and OpenModelica to be installed.</span>
+<span class="sd">        - The method converts all paths to absolute paths and replaces backslashes with forward slashes.</span>
+<span class="sd">        - It logs information about the loading process and any errors that occur.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># import OpenModelica Session</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">OMPython</span><span class="w"> </span><span class="kn">import</span> <span class="n">OMCSessionZMQ</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                <span class="s2">&quot;For automated template generation you need to install the &quot;</span>
+                <span class="s2">&quot;OMPython package&quot;</span>
+                <span class="s2">&quot; and Openmodelica&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path_library</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">path_library</span> <span class="o">=</span> <span class="p">[</span><span class="n">path_library</span><span class="p">]</span>
+
+        <span class="n">omc</span> <span class="o">=</span> <span class="n">OMCSessionZMQ</span><span class="p">()</span>
+        <span class="c1">## Load Library (e.g. Aixlib)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Libraries to load: </span><span class="si">{</span><span class="n">path_library</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">path_library</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Load Library: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">abs_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">abs_path</span><span class="p">)</span><span class="o">!=</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">fail_msg</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The file does not exist: </span><span class="si">{</span><span class="n">abs_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">fail_msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">fail_msg</span><span class="p">)</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="n">omc</span><span class="o">.</span><span class="n">loadFile</span><span class="p">((</span><span class="n">abs_path</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">success</span> <span class="o">!=</span> <span class="s2">&quot;true</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+                <span class="n">error</span> <span class="o">=</span> <span class="n">omc</span><span class="o">.</span><span class="n">sendExpression</span><span class="p">(</span><span class="s2">&quot;getErrorString()&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Could not load &quot;</span> <span class="o">+</span> <span class="n">abs_path</span> <span class="o">+</span> <span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="p">)</span>         
+        <span class="k">return</span> <span class="n">omc</span>
+    
+<div class="viewcode-block" id="ModelInfoExtractor.list_main_models"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.ModelInfoExtractor.list_main_models">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">list_main_models</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1">#Work in progress</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lists all main models in the loaded library.</span>
+
+<span class="sd">        This method queries OpenModelica for a list of all main models in the currently loaded library.</span>
+<span class="sd">        It returns a list of class names that can be used for further analysis.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        --------</span>
+<span class="sd">        List[str]</span>
+<span class="sd">            A list of class names representing the main models in the loaded library.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">        ------</span>
+<span class="sd">        - The method logs debug information about the found classes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Method not implemented yet. TODO: Get hierarchy of classes&quot;</span><span class="p">)</span>
+    
+        <span class="c1"># Erste Ebene</span>
+        <span class="n">all_classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">omc</span><span class="o">.</span><span class="n">sendExpression</span><span class="p">(</span><span class="s1">&#39;getClassNames()&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erste Ebene:&quot;</span><span class="p">,</span> <span class="n">all_classes</span><span class="p">)</span>  <span class="c1"># (&#39;ModelicaServices&#39;, &#39;Complex&#39;, &#39;Modelica&#39;, &#39;AixLib&#39;)</span>
+
+        <span class="c1"># Zweite Ebene - AixLib Pakete</span>
+        <span class="n">aixlib_classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">omc</span><span class="o">.</span><span class="n">sendExpression</span><span class="p">(</span><span class="s1">&#39;getClassNames(AixLib, recursive=false)&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AixLib Pakete:&quot;</span><span class="p">,</span> <span class="n">aixlib_classes</span><span class="p">)</span>
+
+        <span class="c1"># Dritte Ebene - für jedes AixLib Paket</span>
+        <span class="k">for</span> <span class="n">class_name</span> <span class="ow">in</span> <span class="n">aixlib_classes</span><span class="p">:</span>
+            <span class="n">full_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;AixLib.</span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># Wichtig: Vollständiger Pfad!</span>
+            <span class="n">class_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">omc</span><span class="o">.</span><span class="n">sendExpression</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;getClassInformation(</span><span class="si">{</span><span class="n">full_name</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Klasse: </span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Info: </span><span class="si">{</span><span class="n">class_info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Unterklassen des Pakets</span>
+            <span class="n">sub_classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">omc</span><span class="o">.</span><span class="n">sendExpression</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;getClassNames(</span><span class="si">{</span><span class="n">full_name</span><span class="si">}</span><span class="s2">, recursive=false)&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unterklassen: </span><span class="si">{</span><span class="n">sub_classes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="ModelInfoExtractor.extract_model_info"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.ModelInfoExtractor.extract_model_info">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">extract_model_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts parameters, connectors and packages from OpenModelica-classes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model_name: Liste der zu untersuchenden Klassennamen</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary mit extrahierten Informationen (Parameters, Connectors, Packages)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">template_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Parameters&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;Connectors&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;Packages&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">()}</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">class_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_inherited_classes</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">class_names</span><span class="p">:</span>
+                <span class="n">template_dict</span><span class="p">[</span><span class="s2">&quot;Parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_parameters</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+                <span class="n">template_dict</span><span class="p">[</span><span class="s2">&quot;Connectors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_connectors</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+                <span class="n">template_dict</span><span class="p">[</span><span class="s2">&quot;Packages&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_packages</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error during extraction: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_close_omc_session</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracted information: </span><span class="si">{</span><span class="n">template_dict</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">template_dict</span></div>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_inherited_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">model_name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines all inherited classes of the given model.</span>
+
+<span class="sd">        This method retrieves the inheritance hierarchy for a specified Modelica model.</span>
+<span class="sd">        For example, the class &#39;AixLib.Fluid.DistrictHeatingCooling.Pipes.DHCPipe&#39; </span>
+<span class="sd">        inherits from classes like &#39;AixLib.Fluid.Interfaces.PartialTwoPortInterface&#39; </span>
+<span class="sd">        and &#39;AixLib.Fluid.Interfaces.PartialTwoPort&#39;.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        model_name : str</span>
+<span class="sd">            The name of the Modelica model to analyze.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        --------</span>
+<span class="sd">        List[str]</span>
+<span class="sd">            A list of class names, including the main model and all inherited classes,</span>
+<span class="sd">            in order of inheritance (from child to parent).</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">        -------</span>
+<span class="sd">        AssertionError</span>
+<span class="sd">            If the provided model_name is not a valid Modelica model.</span>
+<span class="sd">        Exception</span>
+<span class="sd">            If the class inherits from more than one class, which is not expected</span>
+<span class="sd">            in this implementation.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">        ------</span>
+<span class="sd">        - The method uses OpenModelica&#39;s OMPython API to query model information.</span>
+<span class="sd">        - It assumes single inheritance and will raise an exception for multiple inheritance.</span>
+<span class="sd">        - The method logs debug information about the found classes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">class_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">model_name</span><span class="p">]</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">class_names</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not a model&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">omc</span><span class="o">.</span><span class="n">sendExpression</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;isModel(</span><span class="si">{</span><span class="n">class_names</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">),</span> <span class="n">msg</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">inherited_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">omc</span><span class="o">.</span><span class="n">sendExpression</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;getInheritedClasses(</span><span class="si">{</span><span class="n">class_names</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inherited_class</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">break</span>  <span class="c1"># Break loop, beacause no more inherited class is present</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">inherited_class</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">class_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inherited_class</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Class inherited from more than one class.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found following classes (including inherited): </span><span class="si">{</span><span class="n">class_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">class_names</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts all parameters from a given Modelica model or component.</span>
+
+<span class="sd">        This method retrieves and processes all parameters of the specified model or component,</span>
+<span class="sd">        categorizing them as either mandatory or optional based on their value assignment.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            The name of the Modelica model or component to analyze.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        --------</span>
+<span class="sd">        dict</span>
+<span class="sd">            A dictionary where keys are parameter names and values are Parameter objects.</span>
+<span class="sd">            Each Parameter object contains information such as value, type, category,</span>
+<span class="sd">            description, and unit.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">        ------</span>
+<span class="sd">        - Parameters are considered mandatory if they have no assigned value, except for &#39;m_flow_nominal&#39;.</span>
+<span class="sd">        - The method uses OpenModelica&#39;s OMPython API to query model information.</span>
+<span class="sd">        - Errors during parameter extraction are logged but do not halt the process.</span>
+<span class="sd">        - The extracted parameters are logged at the debug level.</span>
+
+<span class="sd">        Parameter Object Structure:</span>
+<span class="sd">        ---------------------------</span>
+<span class="sd">        Each Parameter object in the returned dictionary has the following attributes:</span>
+<span class="sd">        - value: The assigned value of the parameter (empty string if not assigned)</span>
+<span class="sd">        - type: The Modelica class of the parameter</span>
+<span class="sd">        - category: Either &quot;mandatory&quot; or &quot;optional&quot;</span>
+<span class="sd">        - description: The comment associated with the parameter (if any)</span>
+<span class="sd">        - unit: The unit of the parameter (if specified)</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">        -------</span>
+<span class="sd">        No specific exceptions are raised, but errors during parameter extraction</span>
+<span class="sd">        are caught and logged.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">omc</span><span class="o">.</span><span class="n">sendExpression</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;getComponentsTest(</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">components</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">comp</span><span class="p">[</span><span class="s2">&quot;variability&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;parameter&quot;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">omc</span><span class="o">.</span><span class="n">sendExpression</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;getComponentModifierValue(</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">comp</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">comp</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;m_flow_nominal&quot;</span><span class="p">:</span>
+                        <span class="n">category</span> <span class="o">=</span> <span class="s2">&quot;mandatory&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">category</span> <span class="o">=</span> <span class="s2">&quot;optional&quot;</span>
+                    <span class="n">parameters</span><span class="p">[</span><span class="n">comp</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span>
+                        <span class="n">value</span><span class="o">=</span><span class="n">val</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">comp</span><span class="p">[</span><span class="s2">&quot;className&quot;</span><span class="p">],</span>
+                        <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="p">,</span>
+                        <span class="n">description</span><span class="o">=</span><span class="n">comp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;comment&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                        <span class="n">unit</span><span class="o">=</span><span class="n">comp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;unit&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error extracting parameter </span><span class="si">{</span><span class="n">comp</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found following Parameters: </span><span class="si">{</span><span class="n">parameters</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parameters</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_connectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">connectors</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">omc</span><span class="o">.</span><span class="n">sendExpression</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;getComponentsTest(</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">components</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">omc</span><span class="o">.</span><span class="n">sendExpression</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;isConnector(</span><span class="si">{</span><span class="n">comp</span><span class="p">[</span><span class="s1">&#39;className&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">):</span>
+                <span class="n">connectors</span><span class="p">[</span><span class="n">comp</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Connector</span><span class="p">(</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="n">comp</span><span class="p">[</span><span class="s2">&quot;className&quot;</span><span class="p">]</span>
+                    <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found following Connectors: </span><span class="si">{</span><span class="n">connectors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">connectors</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_packages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">packages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">omc</span><span class="o">.</span><span class="n">sendExpression</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;getPackages(</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found following Packages: </span><span class="si">{</span><span class="n">packages</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">packages</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_close_omc_session</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">omc</span><span class="o">.</span><span class="n">sendExpression</span><span class="p">(</span><span class="s2">&quot;quit()&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;OMC session closed successfully&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error closing OMC session: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Rahul Karuvingal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
