@@ -66,7 +66,7 @@ def set_up_file_logger(name: str, log_dir: Optional[str] = None, level: int = lo
         log_dir = tempfile.gettempdir()
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_file = os.path.join(logdir, f"{name}{timestamp}.log")
+    log_file = os.path.join(log_dir, f"{name}{timestamp}.log")
     print(f"Logfile findable here: {log_file}")
 
     # File handler
@@ -340,8 +340,8 @@ def create_model(
     new_model.timestep = timestep
     
     logger.info("Importing UESGraph")
-    new_model.import_from_uesgraph(graph)
-    new_model.set_connection(remove_network_nodes=True)
+    new_model.import_from_uesgraph(graph, logger=logger)
+    new_model.set_connection(remove_network_nodes=True,logger=logger)
 
     if solver:
         logger.debug(f"Setting solver: {solver}")
