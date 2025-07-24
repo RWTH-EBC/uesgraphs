@@ -1,0 +1,26 @@
+name: Python CI
+
+on:
+  push:
+
+jobs:
+  ci:
+    uses: RWTH-EBC/ci_templates/.github/workflows/ci_pipeline.yml@main
+    secrets:
+      GH_TOKEN: ${{ secrets.UESGRAPHS_GITHUB_CI }}
+      
+    with:
+      PYTHON_VERSION: "3.13"
+      USE_PYLINT: false
+      USE_RUFF: false
+      BUILD_PACKAGE: false
+      GENERATE_DOCUMENTATION: true
+      GH_PAGES: true
+      GH_PAGES_BRANCH: "gh-pages"
+      GH_PAGES_DIR: "/tmp/gh-pages"
+      DOCS_PATH: "docs"
+      CREATE_PAGES_ON_FAILURE: true
+      EXECUTE_TESTS: false
+      EXECUTE_COVERAGE_TEST: false
+      CONVERT_EXAMPLES: false
+      
