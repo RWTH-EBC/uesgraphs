@@ -15,6 +15,12 @@ copyright = '2025, Rahul Karuvingal'
 author = 'Rahul Karuvingal'
 release = '2.1.1'
 
+# The master toctree document
+master_doc = 'index'
+
+# The name of the Pygments (syntax highlighting) style to use
+pygments_style = 'sphinx'
+
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
@@ -63,6 +69,12 @@ intersphinx_mapping = {
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
+# The name for this set of Sphinx documents
+html_title = f'{project} v{release}'
+
+# A shorter title for the navigation bar
+html_short_title = 'uesgraphs docs'
+
 # Theme options
 html_theme_options = {
     'display_version': True,
@@ -72,5 +84,18 @@ html_theme_options = {
     'sticky_navigation': True,
     'navigation_depth': 4,
     'includehidden': True,
-    'titles_only': False
+    'titles_only': False,
+    'logo_only': False,
+    'style_nav_header_background': '#2980B9',
+}
+
+# Add any custom CSS files here
+html_css_files = []
+
+# Custom sidebar templates
+html_sidebars = {
+    '**': [
+        'relations.html',  # needs 'show_related': True theme option to display
+        'searchbox.html',
+    ]
 }
