@@ -28,27 +28,22 @@ dependencies = [
     "scipy",
     "pytest>=6.0",
     "pytest-mpl>=0.12",
-    "pytest-cov>=3.0",
-    "coverage[toml]>=6.0",
-    "tomli>=1.2.0;python_version<'3.11'",  # For Python < 3.11
+    "pytest-cov>=4.0.0,<5.0.0",
+    "coverage>=7.0.0,<8.0.0",
+    "tomli>=1.2.0;python_version<'3.11'",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pyyaml",
 ]
-test = [
-    "pytest>=6.0",
-    "pytest-mpl",  # Necessary to compare pictures
-    "pytest-cov",  # Add this for coverage
-    "coverage[toml]",  # Add this for coverage with TOML support
-]
+# Removed the test section since dependencies are now in main dependencies
 
 [tool.aixlib]
 compatible_aixlib_version = "2.1.1"
 
 [tool.pytest.ini_options]
-addopts = "--cov=uesgraphs --cov-report=xml --cov-report=html --cov-report=term-missing --mpl"
+addopts = "--cov=uesgraphs --cov-report=xml:build/reports/coverage.xml --cov-report=html:build/reports/htmlcov --cov-report=term-missing --mpl"
 testpaths = ["tests"]
 python_files = [
     "test_*.py",
