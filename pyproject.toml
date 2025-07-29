@@ -48,7 +48,7 @@ compatible_aixlib_version = "2.1.1"
 packages = ["uesgraphs"]
 
 [tool.pytest.ini_options]
-addopts = "--cov=uesgraphs --cov-report=xml:coverage.xml --cov-report=html:htmlcov --cov-report=term-missing --ignore=tests/test_modelgen.py --ignore=tests/test_uesmodel.py"
+addopts = "--cov=uesgraphs --cov-report=xml:coverage.xml --cov-report=html:coverage --cov-report=term-missing --ignore=tests/test_modelgen.py --ignore=tests/test_uesmodel.py"
 testpaths = ["tests"]
 python_files = [
     "test_*.py",
