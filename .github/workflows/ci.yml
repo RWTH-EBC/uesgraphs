@@ -26,4 +26,3 @@ jobs:
       EXECUTE_TESTS: true
       EXECUTE_COVERAGE_TEST: true
       CONVERT_EXAMPLES: false
-      TEST_COMMAND: "pytest --cov=uesgraphs --cov-report=xml --cov-report=html --cov-report=term-missing --mpl --mpl-generate-missing || pytest --cov=uesgraphs --cov-report=xml --cov-report=html --cov-report=term-missing"
