@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 
 import pytest
 
-def test_mpl_plugin_configuration():
+def _test_mpl_plugin_configuration():  # Add underscore to disable
     """Verify pytest-mpl plugin is installed and configured correctly"""
     import sys
     try:

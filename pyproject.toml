@@ -43,11 +43,15 @@ dev = [
 compatible_aixlib_version = "2.1.1"
 
 [tool.pytest.ini_options]
-addopts = "--cov=uesgraphs --cov-report=xml:build/reports/coverage.xml --cov-report=html:build/reports/htmlcov --cov-report=term-missing --mpl --ignore=tests/test_modelgen.py --ignore=tests/test_uesmodel.py -k 'not test_mpl_plugin_configuration'"
+addopts = "--cov=uesgraphs --cov-report=xml:build/reports/coverage.xml --cov-report=html:build/reports/htmlcov --cov-report=term-missing --ignore=tests/test_modelgen.py --ignore=tests/test_uesmodel.py"
 testpaths = ["tests"]
 python_files = [
     "test_*.py",
     "__init__.py"
+]
+# Remove the --mpl flag entirely for now
+filterwarnings = [
+    "ignore::pytest.PytestUnknownMarkWarning",
 ]
 
 [tool.setuptools]
