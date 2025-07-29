@@ -30,7 +30,7 @@ dependencies = [
     "pytest-mpl>=0.12",
     "pytest-cov>=3.0",
     "coverage[toml]>=6.0",
-    "dateutil",
+    "tomli>=1.2.0;python_version<'3.11'",  # For Python < 3.11
 ]
 
 [project.optional-dependencies]
