@@ -13,7 +13,7 @@ jobs:
       GH_TOKEN: ${{ secrets.UESGRAPHS_GITHUB_CI }}
       
     with:
-      PYTHON_VERSION: '["3.10", "3.11", "3.12", "3.13"]'
+      PYTHON_VERSION:  "3.12"
       USE_PYLINT: false
       USE_RUFF: false
       BUILD_PACKAGE: false
