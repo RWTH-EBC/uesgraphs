@@ -11,7 +11,7 @@ license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
-	"geopandas",
+    "geopandas",
     "networkx>=2.1",
     "numpy",
     "pandas",
@@ -20,31 +20,39 @@ dependencies = [
     "matplotlib",
     "scikit-learn",
     "mako",
-	"dxfgrabber",
-	"seaborn",
-	"openpyxl",
-	"pyarrow",
-	"ipykernel",
-    "pytest>=6.0",
-    "pytest-mpl",  #Necessary to compare pictures 
+    "dxfgrabber",
+    "seaborn",
+    "openpyxl",
+    "pyarrow",
+    "ipykernel",
     "scipy",
     "tomli>=1.2.0;python_version<'3.11'",  # For Python < 3.11
+]
+
+[project.optional-dependencies]
+dev = [
+    "pyyaml",
+    "pytest>=6.0",
+    "pytest-mpl",  # Necessary to compare pictures
+    "pytest-cov",  # Add this for coverage
+    "coverage[toml]",  # Add this for coverage with TOML support
+]
+test = [
+    "pytest>=6.0",
+    "pytest-mpl",  # Necessary to compare pictures
+    "pytest-cov",  # Add this for coverage
+    "coverage[toml]",  # Add this for coverage with TOML support
 ]
 
 [tool.aixlib]
 compatible_aixlib_version = "2.1.1"
 
 [tool.pytest.ini_options]
-addopts = "--mpl"
+addopts = "--cov=uesgraphs --cov-report=xml --cov-report=html --cov-report=term-missing --mpl"
 testpaths = ["tests"]
 python_files = [
     "test_*.py",
     "__init__.py"
-]
-
-[project.optional-dependencies]
-dev = [
-    "pyyaml",
 ]
 
 [tool.setuptools]
@@ -53,4 +61,32 @@ packages = ["uesgraphs"]
 [project.urls]
 repository = "https://github.com/RWTH-EBC/uesgraphs"
 
+[tool.coverage.run]
+source = ["uesgraphs"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/examples/*",
+    "*/backup files/*",
+    "setup.py",
+]
 
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.coverage.html]
+directory = "build/reports/htmlcov"
+
+[tool.coverage.xml]
+output = "build/reports/coverage.xml"
