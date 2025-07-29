@@ -23,7 +23,7 @@ jobs:
       GH_PAGES_DIR: "/tmp/gh-pages"
       DOCS_PATH: "docs"
       CREATE_PAGES_ON_FAILURE: true
-      EXECUTE_TESTS: false
+      EXECUTE_TESTS: true
       EXECUTE_COVERAGE_TEST: true
       CONVERT_EXAMPLES: false
       

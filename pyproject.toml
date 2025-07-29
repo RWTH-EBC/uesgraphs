@@ -26,16 +26,16 @@ dependencies = [
     "pyarrow",
     "ipykernel",
     "scipy",
+    "pytest>=6.0",
+    "pytest-mpl",  # Necessary to compare pictures
+    "pytest-cov",  # Add this for coverage
+    "coverage[toml]",  # Add this for coverage with TOML support
     "tomli>=1.2.0;python_version<'3.11'",  # For Python < 3.11
 ]
 
 [project.optional-dependencies]
 dev = [
     "pyyaml",
-    "pytest>=6.0",
-    "pytest-mpl",  # Necessary to compare pictures
-    "pytest-cov",  # Add this for coverage
-    "coverage[toml]",  # Add this for coverage with TOML support
 ]
 test = [
     "pytest>=6.0",
@@ -48,7 +48,7 @@ test = [
 compatible_aixlib_version = "2.1.1"
 
 [tool.pytest.ini_options]
-addopts = "--cov=uesgraphs --cov-report=xml --cov-report=html --cov-report=term-missing --mpl"
+addopts = "--cov=uesgraphs --cov-report=xml --cov-report=html --cov-report=term-missing --mpl --mpl-generate-missing"
 testpaths = ["tests"]
 python_files = [
     "test_*.py",
