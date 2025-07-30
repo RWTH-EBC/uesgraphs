@@ -3,9 +3,9 @@
 # uesgraphs
 
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
-[![Documentation](https://rwth-ebc.github.io/uesgraphs/version_2.1.1/docs/doc.svg)](https://rwth-ebc.github.io//uesgraphs/version_2.1.1/docs/)
-[![CI](https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml/badge.svg?branch=version_2.1.1)](https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml)
-![Coverage](https://rwth-ebc.github.io/uesgraphs/version_2.1.1/coverage/badge.svg)
+[![Documentation](https://rwth-ebc.github.io/uesgraphs/master/docs/doc.svg)](https://rwth-ebc.github.io//uesgraphs/master/docs/)
+[![CI](https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml)
+![Coverage](https://rwth-ebc.github.io/uesgraphs/master/coverage/badge.svg)
 
 
 **uesgraphs** is a Python package for describing Urban Energy Systems, managing their data within a Python graph structure, and enabling the automatic generation of dynamic district simulation models. We extend the
