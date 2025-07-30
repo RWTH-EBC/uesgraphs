@@ -1,0 +1,254 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.template_generation &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+
+  
+      <script src="../../_static/jquery.js"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+      <script src="../../_static/doctools.js"></script>
+      <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../code/modules.html">uesgraphs</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/uesgraphs.UESGraph.html">uesgraphs.UESGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/uesgraphs.Visuals.html">uesgraphs.Visuals</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/uesgraphs.template_generation.html">uesgraphs.template_generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/uesgraphs.examples.html">uesgraphs.examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.template_generation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.template_generation</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels.templates</span><span class="w"> </span><span class="kn">import</span> <span class="n">UESTemplates</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels.templates</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelInfoExtractor</span>
+
+<span class="c1">## How to generate templates for different libraries</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This script needs the path to a local modelica library and a json file where the components are defined. If custom_library is not used, the script will try to use AixLib.</span>
+<span class="sd">The script will generate templates for all components defined in the json file. The json file should have the following structure:</span>
+<span class="sd">    1. A &quot;base_paths&quot; object containing the root-paths to different component categories as Key-Value pairs:</span>
+
+<span class="sd">    Keys are component categories (like &quot;Demand&quot;, &quot;Supply&quot;, &quot;Pipe&quot;)</span>
+<span class="sd">    Values are strings representing the base Modelica package paths (e.g., &quot;AixLib.Fluid.DistrictHeatingCooling.Demands.&quot;)</span>
+
+<span class="sd">    2. A &quot;models&quot; object containing the relative path from the root path to a certain component as key-value pairs where:</span>
+
+<span class="sd">    Keys match the same component categories as in &quot;base_paths&quot; (e.g., &quot;Demand&quot;, &quot;Supply&quot;, &quot;Pipe&quot;)</span>
+<span class="sd">    Values are arrays of strings, each representing a specific model path relative to its base path (e.g., &quot;ClosedLoop.DHCSubstationHeatPumpChiller&quot;)</span>
+
+<span class="sd">    Look at /data/template_aixlib_components.json for an example.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">path_aixlib</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">custom_library</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># Set to None if AixLib should be used. Set to the path of the custom library if a custom library should be used.</span>
+<span class="n">custom_models</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># Set to &quot;data/template_custom_components.json&quot; or other path where the custom models are defined.</span>
+<span class="c1">### Note</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">AixLib should be a system environment variable. If it is not, the path to the AixLib library should be set manually.</span>
+<span class="sd">For other libraries, the path should be set manually and the components should be defined in a JSON file.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="set_aixlib_path"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.template_generation.set_aixlib_path">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_aixlib_path</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">path_aixlib</span>
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;AIXLIB_LIBRARY_PATH&#39;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Error: The environment variable AIXLIB_LIBRARY_PATH is not set.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;Please set the path to the AixLib library in the environment variables.&quot;</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/package.mo&quot;</span>
+    <span class="n">path_aixlib</span> <span class="o">=</span> <span class="n">path</span></div>
+
+<div class="viewcode-block" id="load_models"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.template_generation.load_models">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_models</span><span class="p">(</span><span class="n">config_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;data/template_components.json&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads model configurations from a JSON file and creates path references for different model types.</span>
+
+<span class="sd">    The function expects a JSON file with the following structure:</span>
+<span class="sd">    {</span>
+<span class="sd">        &quot;base_paths&quot;: {</span>
+<span class="sd">            &quot;model_type1&quot;: &quot;path/to/base1/&quot;,</span>
+<span class="sd">            &quot;model_type2&quot;: &quot;path/to/base2/&quot;</span>
+<span class="sd">        },</span>
+<span class="sd">        &quot;models&quot;: {</span>
+<span class="sd">            &quot;model_type1&quot;: [&quot;model1&quot;, &quot;model2&quot;],</span>
+<span class="sd">            &quot;model_type2&quot;: [&quot;model3&quot;, &quot;model4&quot;]</span>
+<span class="sd">        }</span>
+<span class="sd">    }</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config_file (str): Relative path to the JSON configuration file.</span>
+<span class="sd">                          Defaults to &#39;data/template_components.json&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict[str, Tuple[List[str], List[str]]]: A dictionary with model types as keys.</span>
+<span class="sd">            Each value is a tuple containing:</span>
+<span class="sd">            - List of complete model paths (base_path + model)</span>
+<span class="sd">            - List of original model names</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: If the specified configuration file is not found.</span>
+<span class="sd">        JSONDecodeError: If the file is not in valid JSON format.</span>
+<span class="sd">        KeyError: If required keys are missing in the configuration.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; result = load_models()</span>
+<span class="sd">        &gt;&gt;&gt; # Example output:</span>
+<span class="sd">        &gt;&gt;&gt; # {</span>
+<span class="sd">        &gt;&gt;&gt; #     &quot;model_type1&quot;: (</span>
+<span class="sd">        &gt;&gt;&gt; #         [&quot;path/to/base1/model1&quot;, &quot;path/to/base1/model2&quot;],</span>
+<span class="sd">        &gt;&gt;&gt; #         [&quot;model1&quot;, &quot;model2&quot;]</span>
+<span class="sd">        &gt;&gt;&gt; #     )</span>
+<span class="sd">        &gt;&gt;&gt; # }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">dir_here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_here</span><span class="p">,</span> <span class="n">config_file</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        
+        <span class="n">base_paths</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;base_paths&#39;</span><span class="p">]</span>
+        <span class="n">models</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;models&#39;</span><span class="p">]</span>
+        
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">model_type</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+            <span class="n">full_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">base_paths</span><span class="p">[</span><span class="n">model_type</span><span class="p">]</span> <span class="o">+</span> <span class="n">model</span> <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">[</span><span class="n">model_type</span><span class="p">]]</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">model_type</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">full_paths</span><span class="p">,</span> <span class="n">models</span><span class="p">[</span><span class="n">model_type</span><span class="p">])</span>
+        
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: The file </span><span class="si">{</span><span class="n">config_file</span><span class="si">}</span><span class="s2"> was not found.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: The file </span><span class="si">{</span><span class="n">config_file</span><span class="si">}</span><span class="s2"> is not valid JSON.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: The key </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2"> is missing in the configuration file.&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.template_generation.main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">custom_library</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">custom_models</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">rigorous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">workspace</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>    
+    <span class="k">if</span> <span class="n">custom_library</span><span class="p">:</span>
+        <span class="n">libs_to_load</span> <span class="o">=</span> <span class="n">custom_library</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">custom_library</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">custom_library</span><span class="p">]</span>        
+        <span class="n">models</span> <span class="o">=</span> <span class="n">custom_models</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">set_aixlib_path</span><span class="p">()</span>
+        <span class="n">libs_to_load</span> <span class="o">=</span> <span class="p">[</span><span class="n">path_aixlib</span><span class="p">]</span>
+        <span class="n">models</span> <span class="o">=</span> <span class="s2">&quot;data/template_aixlib_components.json&quot;</span>
+    
+    
+    <span class="c1">#1. Load path to models</span>
+    <span class="n">all_models</span> <span class="o">=</span> <span class="n">load_models</span><span class="p">(</span><span class="n">models</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">model_type</span><span class="p">,</span> <span class="p">(</span><span class="n">full_paths</span><span class="p">,</span> <span class="n">model_names</span><span class="p">)</span> <span class="ow">in</span> <span class="n">all_models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">full_path</span> <span class="ow">in</span> <span class="n">full_paths</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating template for </span><span class="si">{</span><span class="n">model_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">template</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">full_path</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="n">model_type</span><span class="p">)</span> 
+            <span class="n">template</span><span class="o">.</span><span class="n">rigorous</span> <span class="o">=</span> <span class="n">rigorous</span> <span class="c1">#Use true to natively overwrite existing templates</span>
+            <span class="k">if</span> <span class="n">workspace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">template</span><span class="o">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">full_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.mako&quot;</span><span class="p">)</span>
+            
+            <span class="n">template</span><span class="o">.</span><span class="n">generate_new_template</span><span class="p">(</span><span class="n">path_library</span><span class="o">=</span><span class="n">libs_to_load</span><span class="p">)</span></div>
+    
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Rahul Karuvingal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
