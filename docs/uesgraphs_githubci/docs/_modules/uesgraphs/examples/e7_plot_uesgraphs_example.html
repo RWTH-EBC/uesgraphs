@@ -1,0 +1,608 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.examples.e7_plot_uesgraphs_example &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../code/modules.html">uesgraphs</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.UESGraph.html">uesgraphs.UESGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.Visuals.html">uesgraphs.Visuals</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.template_generation.html">uesgraphs.template_generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.examples.html">uesgraphs.examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.examples.e7_plot_uesgraphs_example</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.examples.e7_plot_uesgraphs_example</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Creating advanced plots of uesgraphs. Its worth to take a look at the different </span>
+<span class="sd">    outputs and how they&#39;re generated. The plots are saved in the workspace folder.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ug</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.examples</span><span class="w"> </span><span class="kn">import</span> <span class="n">e1_readme_example</span> <span class="k">as</span> <span class="n">e1</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.examples</span><span class="w"> </span><span class="kn">import</span> <span class="n">e2_simple_dhc_example</span> <span class="k">as</span> <span class="n">e2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.examples</span><span class="w"> </span><span class="kn">import</span> <span class="n">e3_add_network_example</span> <span class="k">as</span> <span class="n">e3</span>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e7_plot_uesgraphs_example.main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+
+    <span class="n">plot_example_networks</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="plot_example_networks"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e7_plot_uesgraphs_example.plot_example_networks">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">plot_example_networks</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plots example networks to demo uesgraphs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># The function of example e2 is used to generate an example district.</span>
+
+    <span class="n">example_district</span> <span class="o">=</span> <span class="n">e2</span><span class="o">.</span><span class="n">simple_dhc_model</span><span class="p">()</span>
+
+    <span class="c1"># The add_more_networks function of example e3 generates more network nodes.</span>
+
+    <span class="n">example_district</span> <span class="o">=</span> <span class="n">e3</span><span class="o">.</span><span class="n">add_more_networks</span><span class="p">(</span><span class="n">example_district</span><span class="p">)</span>
+
+    <span class="c1"># Workspace directory is set using the make_workspace function.</span>
+
+   <span class="c1"># workspace = ut.make_workspace(&quot;demo&quot;)</span>
+    <span class="n">workspace</span> <span class="o">=</span> <span class="n">e1</span><span class="o">.</span><span class="n">workspace_example</span><span class="p">(</span><span class="s2">&quot;e7&quot;</span><span class="p">)</span>
+    <span class="c1"># The scaling_factor for the following plots is set.</span>
+
+    <span class="n">scaling_factor</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="c1"># Plot full network layout</span>
+    <span class="c1"># Directory where to save the plot is set.</span>
+    <span class="c1"># The Visuals function is applied to example_district.</span>
+    <span class="c1"># The example_district is plotted using the show_network function. In this</span>
+    <span class="c1"># function 15 parameters are available. Below the hole network layout is</span>
+    <span class="c1"># plotted.</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_01_district.png&quot;</span><span class="p">)</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">example_district</span><span class="p">)</span>
+    <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span><span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">)</span>
+
+    <span class="c1"># Plot heating network</span>
+    <span class="c1"># Directory where to save the plot is set.</span>
+    <span class="c1"># A sub network is created using the create_subgraphs function.</span>
+    <span class="c1"># The Visuals function is applied to the heating sub network.</span>
+    <span class="c1"># The heating sub network is plotted using the show_network function. In this</span>
+    <span class="c1"># function 15 parameters are available.</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_02_heating_1.png&quot;</span><span class="p">)</span>
+    <span class="n">heating_network</span> <span class="o">=</span> <span class="n">example_district</span><span class="o">.</span><span class="n">create_subgraphs</span><span class="p">(</span><span class="s2">&quot;heating&quot;</span><span class="p">)[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+    <span class="n">vis_heating</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">heating_network</span><span class="p">)</span>
+    <span class="n">vis_heating</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot cooling network</span>
+    <span class="c1"># Create directory where to save the plot.</span>
+    <span class="c1"># A sub network of the cooling network is created using the create_subgraphs</span>
+    <span class="c1"># function. The Visuals function is applied to the cooling sub network.</span>
+    <span class="c1"># The cooling sub network is plotted using the show_network function. In</span>
+    <span class="c1"># this function 15 parameter are available.</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_03_cooling_1.png&quot;</span><span class="p">)</span>
+    <span class="n">cooling_network</span> <span class="o">=</span> <span class="n">example_district</span><span class="o">.</span><span class="n">create_subgraphs</span><span class="p">(</span><span class="s2">&quot;cooling&quot;</span><span class="p">)[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+    <span class="n">vis_cooling</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">cooling_network</span><span class="p">)</span>
+    <span class="n">vis_cooling</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot heating 2 network</span>
+    <span class="c1"># A second heating sub network is created and plotted.</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_04_heating_2.png&quot;</span><span class="p">)</span>
+    <span class="n">heating_network_2</span> <span class="o">=</span> <span class="n">example_district</span><span class="o">.</span><span class="n">create_subgraphs</span><span class="p">(</span><span class="s2">&quot;heating&quot;</span><span class="p">)[</span><span class="s2">&quot;heating_2&quot;</span><span class="p">]</span>
+    <span class="n">vis_heating_2</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">heating_network_2</span><span class="p">)</span>
+    <span class="n">vis_heating_2</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot cooling 2 network</span>
+    <span class="c1"># A second cooling sub network is created and plotted.</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_05_cooling_2.png&quot;</span><span class="p">)</span>
+    <span class="n">cooling_network_2</span> <span class="o">=</span> <span class="n">example_district</span><span class="o">.</span><span class="n">create_subgraphs</span><span class="p">(</span><span class="s2">&quot;cooling&quot;</span><span class="p">)[</span><span class="s2">&quot;cooling_2&quot;</span><span class="p">]</span>
+    <span class="n">vis_cooling_2</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">cooling_network_2</span><span class="p">)</span>
+    <span class="n">vis_cooling_2</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot electricity network</span>
+    <span class="c1"># An electricity sub network is created using the create_subgraphs function.</span>
+    <span class="c1"># Afterwards it is plotted using the show_network function.</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_06_electricity.png&quot;</span><span class="p">)</span>
+    <span class="n">electricity_network</span> <span class="o">=</span> <span class="n">example_district</span><span class="o">.</span><span class="n">create_subgraphs</span><span class="p">(</span><span class="s2">&quot;electricity&quot;</span><span class="p">)[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+    <span class="n">vis_electricity</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">electricity_network</span><span class="p">)</span>
+    <span class="n">vis_electricity</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot gas network</span>
+    <span class="c1"># A gas sub network is created using the create_subgraphs function.</span>
+    <span class="c1"># Afterwards it is plotted using the show_network function.</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_07_gas.png&quot;</span><span class="p">)</span>
+    <span class="n">gas_network</span> <span class="o">=</span> <span class="n">example_district</span><span class="o">.</span><span class="n">create_subgraphs</span><span class="p">(</span><span class="s2">&quot;gas&quot;</span><span class="p">)[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+    <span class="n">vis_gas</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">gas_network</span><span class="p">)</span>
+    <span class="n">vis_gas</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot other networks</span>
+    <span class="c1"># A sub network called &#39;other&#39; is created using the create_subgraphs</span>
+    <span class="c1"># function. Afterwards it is plotted using the show_network function.</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_08_others.png&quot;</span><span class="p">)</span>
+    <span class="n">others_network</span> <span class="o">=</span> <span class="n">example_district</span><span class="o">.</span><span class="n">create_subgraphs</span><span class="p">(</span><span class="s2">&quot;others&quot;</span><span class="p">)[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+    <span class="n">vis_others</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">others_network</span><span class="p">)</span>
+    <span class="n">vis_others</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot network in 3d layout</span>
+    <span class="c1"># To generate a 3D view of the network the function network_explosion is</span>
+    <span class="c1"># used. Six parameters can be adjusted in this function. For generating</span>
+    <span class="c1"># a 3D view without the explosion into different layers the networks</span>
+    <span class="c1"># parameter is an empty list. In case of network explosion the networks</span>
+    <span class="c1"># parameter is set [&#39;all&#39;]. Instead of [&#39;all&#39;], the networks list can</span>
+    <span class="c1"># specify which networks should be plotted. Accepted items are</span>
+    <span class="c1"># {&#39;heating&#39;, &#39;cooling&#39;, &#39;electricity&#39;, &#39;gas&#39;, &#39;others&#39;}. If the networks</span>
+    <span class="c1"># list is not specified it is set to [&#39;all&#39;].</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_09_network_3d.png&quot;</span><span class="p">)</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">example_district</span><span class="p">)</span>
+    <span class="n">vis</span><span class="o">.</span><span class="n">network_explosion</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span>
+        <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">angle</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+        <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">networks</span><span class="o">=</span><span class="p">[],</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot network explosion</span>
+    <span class="c1"># To generate a 3D view with network explosion the function</span>
+    <span class="c1"># network_explosion is used. Six parameters can be adjusted in this</span>
+    <span class="c1"># function. For generating a 3D view with the explosion into different</span>
+    <span class="c1"># layers the networks parameter is set [&#39;all&#39;]. Instead of [&#39;all&#39;], the</span>
+    <span class="c1"># networks list can specify which networks should be plotted. Accepted</span>
+    <span class="c1"># items are {&#39;heating&#39;, &#39;cooling&#39;, &#39;electricity&#39;, &#39;gas&#39;, &#39;others&#39;}. If the</span>
+    <span class="c1"># networks list is not specified it is set to [&#39;all&#39;]. Below the networks</span>
+    <span class="c1"># parameter is left out thus it is set to [&#39;all&#39;].</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_10_network_explosion.png&quot;</span><span class="p">)</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">example_district</span><span class="p">)</span>
+    <span class="n">vis</span><span class="o">.</span><span class="n">network_explosion</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span>
+        <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">angle</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+        <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span> <span class="o">*</span> <span class="mi">5</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot simple network visualization</span>
+    <span class="c1"># For very large uesgraphs, the standard plotting may take too long</span>
+    <span class="c1"># (hours...). In these cases, the show_network function can be adjusted</span>
+    <span class="c1"># by `simple=True`. This gives faster results.</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_11_simple.png&quot;</span><span class="p">)</span>
+    <span class="n">scaling_factor</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">example_district</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span> <span class="n">simple</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot diameters for two edges</span>
+    <span class="c1"># To show the relative diameter of the pipe set show_diameters = True.</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_12_diameters.png&quot;</span><span class="p">)</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">12345</span><span class="p">)</span>
+
+    <span class="c1"># Create a subgraph containing just the heating network.</span>
+
+    <span class="n">heating_network_1</span> <span class="o">=</span> <span class="n">example_district</span><span class="o">.</span><span class="n">create_subgraphs</span><span class="p">(</span>
+        <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">,</span> <span class="n">all_buildings</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Create a list with edges of the network and sorts the entries in</span>
+    <span class="c1"># ascending order.</span>
+
+    <span class="n">edgelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
+    <span class="n">edgelist_tuples_sorted</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edgelist</span><span class="p">:</span>
+        <span class="n">edgelist_tuples_sorted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">edge</span><span class="p">))</span>
+    <span class="n">edgelist_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">edgelist_tuples_sorted</span><span class="p">)</span>
+
+    <span class="c1"># Put some random diameters to the edge data.</span>
+
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edgelist_sorted</span><span class="p">:</span>
+        <span class="n">diameter</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;diameter&quot;</span><span class="p">,</span> <span class="n">diameter</span><span class="p">)</span>
+        <span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;diameter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">diameter</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+    <span class="c1"># The network is plotted using the show_diameters parameter.</span>
+
+    <span class="n">scaling_factor</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">heating_network_1</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span>
+        <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span>
+        <span class="n">show_diameters</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot diameters scaling</span>
+    <span class="c1"># As in the example before the relative diameter of the pipe is shown</span>
+    <span class="c1"># using show_diameters. Additional a scaling_factor_diameter is used to</span>
+    <span class="c1"># scale the width of lines.</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_13_diameters_scaling.png&quot;</span><span class="p">)</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">12345</span><span class="p">)</span>
+
+    <span class="c1"># A subgraph is created containing the heating network.</span>
+
+    <span class="n">heating_network_1</span> <span class="o">=</span> <span class="n">example_district</span><span class="o">.</span><span class="n">create_subgraphs</span><span class="p">(</span>
+        <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">,</span> <span class="n">all_buildings</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Creates a list with edges of the network and sorts the entries in</span>
+    <span class="c1"># ascending order.</span>
+
+    <span class="n">edgelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
+    <span class="n">edgelist_tuples_sorted</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edgelist</span><span class="p">:</span>
+        <span class="n">edgelist_tuples_sorted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">edge</span><span class="p">))</span>
+    <span class="n">edgelist_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">edgelist_tuples_sorted</span><span class="p">)</span>
+
+    <span class="c1"># Put some random diameters to the edge data.</span>
+
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edgelist_sorted</span><span class="p">:</span>
+        <span class="n">diameter</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;diameter&quot;</span><span class="p">,</span> <span class="n">diameter</span><span class="p">)</span>
+        <span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;diameter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">diameter</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+    <span class="c1"># The subgraph is plotted using the show_diameters parameter and a</span>
+    <span class="c1"># scaling_factor_diameter of &#39;50&#39;.</span>
+
+    <span class="n">scaling_factor</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">heating_network_1</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span>
+        <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span>
+        <span class="n">scaling_factor_diameter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">show_diameters</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot mass flows</span>
+    <span class="c1"># Plots edge width according to flow rates in the networks</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_14_mass_flows.png&quot;</span><span class="p">)</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">12345</span><span class="p">)</span>
+
+    <span class="c1"># A subgraph is created containing the heating network.</span>
+
+    <span class="n">heating_network_1</span> <span class="o">=</span> <span class="n">example_district</span><span class="o">.</span><span class="n">create_subgraphs</span><span class="p">(</span>
+        <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">,</span> <span class="n">all_buildings</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Creates a list with edges of the network and sorts the entries in</span>
+    <span class="c1"># ascending order.</span>
+
+    <span class="n">edgelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
+    <span class="n">edgelist_tuples_sorted</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edgelist</span><span class="p">:</span>
+        <span class="n">edgelist_tuples_sorted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">edge</span><span class="p">))</span>
+    <span class="n">edgelist_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">edgelist_tuples_sorted</span><span class="p">)</span>
+
+    <span class="c1"># Put some random mass flow rates to the edge data.</span>
+
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edgelist_sorted</span><span class="p">:</span>
+        <span class="n">flow</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;mass_flow&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flow</span>
+
+    <span class="c1"># The subgraph &#39;heating&#39; is plotted using the show_network function.</span>
+    <span class="c1"># The show_mass_flows parameter is set &#39;True&#39; thus the pipe width is set</span>
+    <span class="c1"># according to the mass flow rate.</span>
+
+    <span class="n">scaling_factor</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">heating_network_1</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span>
+        <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span>
+        <span class="n">show_mass_flows</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">label_size</span><span class="o">=</span><span class="mi">20</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot generic extensive size</span>
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_14_2_generic_extensive_size.png&quot;</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span>
+        <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span>
+        <span class="n">generic_extensive_size</span><span class="o">=</span> <span class="s2">&quot;mass_flow&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;mass flow [kg/s]&quot;</span><span class="p">,</span>
+        <span class="n">label_size</span><span class="o">=</span><span class="mi">20</span>
+    <span class="p">)</span>
+
+    <span class="c1">#Possible to just make up new sizes and plot them, for example mass flow deviation</span>
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_14_3_generic_statistics.png&quot;</span><span class="p">)</span>
+    
+    <span class="n">mass_flows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">edges</span> <span class="ow">in</span> <span class="n">edgelist_sorted</span><span class="p">:</span>
+        <span class="n">mass_flows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edges</span><span class="p">][</span><span class="s2">&quot;mass_flow&quot;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mass flow: </span><span class="si">{</span><span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edges</span><span class="p">][</span><span class="s1">&#39;mass_flow&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> at edge </span><span class="si">{</span><span class="n">edges</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">mean_mass_flow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mass_flows</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">edges</span> <span class="ow">in</span> <span class="n">edgelist_sorted</span><span class="p">:</span>
+        <span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edges</span><span class="p">][</span><span class="s2">&quot;mass_flow_deviation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edges</span><span class="p">][</span><span class="s2">&quot;mass_flow&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">mean_mass_flow</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean mass flow: </span><span class="si">{</span><span class="n">mean_mass_flow</span><span class="si">}</span><span class="s2"> &quot;</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span>
+        <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span>
+        <span class="n">generic_extensive_size</span><span class="o">=</span> <span class="s2">&quot;mass_flow_deviation&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;mass flow deviation [kg/s]&quot;</span><span class="p">,</span>
+        <span class="n">label_size</span><span class="o">=</span><span class="mi">20</span>
+    <span class="p">)</span>
+
+
+    <span class="c1"># Plot temperatures</span>
+    <span class="c1"># Plots edge temperatures on top of plot</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_15_temperatures.png&quot;</span><span class="p">)</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">12345</span><span class="p">)</span>
+
+    <span class="c1"># A subgraph is created containing the heating network.</span>
+
+    <span class="n">heating_network_1</span> <span class="o">=</span> <span class="n">example_district</span><span class="o">.</span><span class="n">create_subgraphs</span><span class="p">(</span>
+        <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">,</span> <span class="n">all_buildings</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Creates a list with edges of the network and sorts the entries in</span>
+    <span class="c1"># ascending order.</span>
+
+    <span class="n">edgelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
+    <span class="n">edgelist_tuples_sorted</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edgelist</span><span class="p">:</span>
+        <span class="n">edgelist_tuples_sorted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">edge</span><span class="p">))</span>
+    <span class="n">edgelist_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">edgelist_tuples_sorted</span><span class="p">)</span>
+
+    <span class="c1"># Put some random mass flow rates to the edge data.</span>
+
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edgelist_sorted</span><span class="p">:</span>
+        <span class="n">flow</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;mass_flow&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flow</span>
+
+    <span class="c1"># Creates a list of nodes of the heating network and sorts the entries in</span>
+    <span class="c1"># ascending order.</span>
+
+    <span class="n">nodelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">heating_network_1</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
+    <span class="n">nodelist_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nodelist</span><span class="p">)</span>
+
+    <span class="c1"># Put some random temperatures to the node data.</span>
+
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodelist_sorted</span><span class="p">:</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">heating_network_1</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;temperature_supply&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span>
+
+    <span class="c1"># Below the parameters add_edge_temperatures are used</span>
+    <span class="c1"># to plot the temperature to the network.</span>
+
+    <span class="n">scaling_factor</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">heating_network_1</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span>
+        <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span>
+        <span class="n">add_edge_temperatures</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">label_size</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot generic intensive size</span>
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_15_2_generic_intensive_size.png&quot;</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span>
+        <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span>
+        <span class="n">generic_intensive_size</span><span class="o">=</span> <span class="s2">&quot;temperature_supply&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;temperature [°C]&quot;</span><span class="p">,</span>
+        <span class="n">label_size</span><span class="o">=</span><span class="mi">30</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot markers</span>
+    <span class="c1"># Markers are highlighting certain nodes and edges.</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_16_markers.png&quot;</span><span class="p">)</span>
+
+    <span class="c1"># A subgraph is created containing the heating network.</span>
+
+    <span class="n">heating_network_1</span> <span class="o">=</span> <span class="n">example_district</span><span class="o">.</span><span class="n">create_subgraphs</span><span class="p">(</span>
+        <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">,</span> <span class="n">all_buildings</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Creates a list with edges of the network and sorts the entries in</span>
+    <span class="c1"># ascending order.</span>
+
+    <span class="n">edgelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">heating_network_1</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
+    <span class="n">edgelist_tuples_sorted</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edgelist</span><span class="p">:</span>
+        <span class="n">edgelist_tuples_sorted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">edge</span><span class="p">))</span>
+    <span class="n">edgelist_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">edgelist_tuples_sorted</span><span class="p">)</span>
+
+    <span class="c1"># The first edge in the list is picked to be highlighted.</span>
+
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edgelist_sorted</span><span class="p">:</span>
+        <span class="n">edge_to_mark</span> <span class="o">=</span> <span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">break</span>
+
+    <span class="c1"># Creates a list of nodes of the heating network and sorts the entries in</span>
+    <span class="c1"># ascending order.</span>
+
+    <span class="n">nodelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">heating_network_1</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
+    <span class="n">nodelist_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nodelist</span><span class="p">)</span>
+
+    <span class="c1"># The second node in the list is picked to be highlighted.</span>
+
+    <span class="n">node_to_mark</span> <span class="o">=</span> <span class="n">nodelist_sorted</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="c1"># Below the parameters node_markers and edge_markers contain lists of nodes</span>
+    <span class="c1"># and edges which should be marked in the plot.</span>
+
+    <span class="n">scaling_factor</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">heating_network_1</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span>
+        <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span>
+        <span class="n">node_markers</span><span class="o">=</span><span class="p">[</span><span class="n">node_to_mark</span><span class="p">],</span>
+        <span class="n">edge_markers</span><span class="o">=</span><span class="p">[</span><span class="n">edge_to_mark</span><span class="p">],</span>
+        <span class="n">labels</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="n">label_size</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot real 3d</span>
+    <span class="c1"># Shows an explosion plot of stacked networks in 3d view using</span>
+    <span class="c1"># show_3d function. There are five parameter available.</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e7_17_3D.png&quot;</span><span class="p">)</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">12345</span><span class="p">)</span>
+
+    <span class="c1"># A subgraph is created containing the heating network.</span>
+
+    <span class="n">heating_network_1</span> <span class="o">=</span> <span class="n">example_district</span><span class="o">.</span><span class="n">create_subgraphs</span><span class="p">(</span>
+        <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">,</span> <span class="n">all_buildings</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Creates a list of nodes of the heating network and sorts the entries in</span>
+    <span class="c1"># ascending order.</span>
+
+    <span class="n">nodelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">heating_network_1</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
+    <span class="n">nodelist_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nodelist</span><span class="p">)</span>
+
+    <span class="c1"># Put some random pressure values to the node data.</span>
+
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodelist_sorted</span><span class="p">:</span>
+        <span class="n">pressure</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">2e5</span><span class="p">,</span> <span class="mf">3e5</span><span class="p">)</span>
+        <span class="n">heating_network_1</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;pressure&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pressure</span>
+
+    <span class="c1"># The network is plotted using the show_3d function.</span>
+
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">heating_network_1</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">vis</span><span class="o">.</span><span class="n">show_3d</span><span class="p">(</span><span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label_size</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span></div>
+
+
+<span class="c1"># Main function</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Strating plots ***&quot;</span><span class="p">)</span>
+    <span class="n">main</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Done ***&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Rahul Karuvingal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -430,14 +430,73 @@ If False, prompts for confirmation before overwriting (default)</p>
 </dd></dl>
 
 </section>
-<section id="uesgraphs-examples-e2-simple-dhc-example-module">
-<h2>uesgraphs.examples.e2_simple_dhc_example module<a class="headerlink" href="#uesgraphs-examples-e2-simple-dhc-example-module" title="Permalink to this heading"></a></h2>
+<section id="module-uesgraphs.examples.e2_simple_dhc_example">
+<span id="uesgraphs-examples-e2-simple-dhc-example-module"></span><h2>uesgraphs.examples.e2_simple_dhc_example module<a class="headerlink" href="#module-uesgraphs.examples.e2_simple_dhc_example" title="Permalink to this heading"></a></h2>
+<p>Creating and Visualizing a more sophisticated Network with uesgraphs including heating and cooling</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e2_simple_dhc_example.main">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e2_simple_dhc_example.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e2_simple_dhc_example.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e2_simple_dhc_example.main" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e2_simple_dhc_example.simple_dhc_model">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e2_simple_dhc_example.</span></span><span class="sig-name descname"><span class="pre">simple_dhc_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e2_simple_dhc_example.html#simple_dhc_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e2_simple_dhc_example.simple_dhc_model" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes an UESGraph object, adds 2 heating and cooling networks each</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>example_district</strong> – An UESGraph containing 4 buildings connected to 2 heating supplies and
+2 cooling supplies via 2 heating and cooling networks each</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>uesgraphs.uesgraph.UESGraph object</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="uesgraphs-examples-e3-add-network-example-module">
-<h2>uesgraphs.examples.e3_add_network_example module<a class="headerlink" href="#uesgraphs-examples-e3-add-network-example-module" title="Permalink to this heading"></a></h2>
+<section id="module-uesgraphs.examples.e3_add_network_example">
+<span id="uesgraphs-examples-e3-add-network-example-module"></span><h2>uesgraphs.examples.e3_add_network_example module<a class="headerlink" href="#module-uesgraphs.examples.e3_add_network_example" title="Permalink to this heading"></a></h2>
+<p>Extend the e2_simple_dhc model for an electric grid and visualize</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e3_add_network_example.main">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e3_add_network_example.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e3_add_network_example.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e3_add_network_example.main" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e3_add_network_example.add_more_networks">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e3_add_network_example.</span></span><span class="sig-name descname"><span class="pre">add_more_networks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">example_district</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e3_add_network_example.html#add_more_networks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e3_add_network_example.add_more_networks" title="Permalink to this definition"></a></dt>
+<dd><p>Adds an electric grid to the simple_dhc_model example</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>example_district</strong> (<em>uesgraphs.uesgraph.UESGraph object</em>) – An UESGraph containing 4 buildings connected to 2 heating supplies and
+2 cooling supplies via 2 heating and cooling networks each from
+<cite>simple_dhc_model()</cite></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>example_district</strong> – An UESGraph containing 8 buildings and various supplies and networks
+to illustrate UESGraph use</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>uesgraphs.uesgraph.UESGraph object</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="uesgraphs-examples-e4-save-uesgraphs-example-module">
-<h2>uesgraphs.examples.e4_save_uesgraphs_example module<a class="headerlink" href="#uesgraphs-examples-e4-save-uesgraphs-example-module" title="Permalink to this heading"></a></h2>
+<section id="module-uesgraphs.examples.e4_save_uesgraphs_example">
+<span id="uesgraphs-examples-e4-save-uesgraphs-example-module"></span><h2>uesgraphs.examples.e4_save_uesgraphs_example module<a class="headerlink" href="#module-uesgraphs.examples.e4_save_uesgraphs_example" title="Permalink to this heading"></a></h2>
+<p>“”Write example district heating cooling network to JSON file.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e4_save_uesgraphs_example.main">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e4_save_uesgraphs_example.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e4_save_uesgraphs_example.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e4_save_uesgraphs_example.main" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e4_save_uesgraphs_example.to_json">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e4_save_uesgraphs_example.</span></span><span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e4_save_uesgraphs_example.html#to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e4_save_uesgraphs_example.to_json" title="Permalink to this definition"></a></dt>
+<dd><p>Demos the output of an uesgraph to JSON</p>
+</dd></dl>
+
 </section>
 <section id="module-uesgraphs.examples.e5_add_street_nodes_example">
 <span id="uesgraphs-examples-e5-add-street-nodes-example-module"></span><h2>uesgraphs.examples.e5_add_street_nodes_example module<a class="headerlink" href="#module-uesgraphs.examples.e5_add_street_nodes_example" title="Permalink to this heading"></a></h2>
@@ -475,8 +534,21 @@ of also adding additional attributes to edges/nodes/buildings</p>
 </dd></dl>
 
 </section>
-<section id="uesgraphs-examples-e7-plot-uesgraphs-example-module">
-<h2>uesgraphs.examples.e7_plot_uesgraphs_example module<a class="headerlink" href="#uesgraphs-examples-e7-plot-uesgraphs-example-module" title="Permalink to this heading"></a></h2>
+<section id="module-uesgraphs.examples.e7_plot_uesgraphs_example">
+<span id="uesgraphs-examples-e7-plot-uesgraphs-example-module"></span><h2>uesgraphs.examples.e7_plot_uesgraphs_example module<a class="headerlink" href="#module-uesgraphs.examples.e7_plot_uesgraphs_example" title="Permalink to this heading"></a></h2>
+<p>Creating advanced plots of uesgraphs. Its worth to take a look at the different
+outputs and how they’re generated. The plots are saved in the workspace folder.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e7_plot_uesgraphs_example.main">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e7_plot_uesgraphs_example.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e7_plot_uesgraphs_example.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e7_plot_uesgraphs_example.main" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e7_plot_uesgraphs_example.plot_example_networks">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e7_plot_uesgraphs_example.</span></span><span class="sig-name descname"><span class="pre">plot_example_networks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e7_plot_uesgraphs_example.html#plot_example_networks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e7_plot_uesgraphs_example.plot_example_networks" title="Permalink to this definition"></a></dt>
+<dd><p>Plots example networks to demo uesgraphs</p>
+</dd></dl>
+
 </section>
 <section id="module-uesgraphs.examples.e8_load_uesgraphs_example">
 <span id="uesgraphs-examples-e8-load-uesgraphs-example-module"></span><h2>uesgraphs.examples.e8_load_uesgraphs_example module<a class="headerlink" href="#module-uesgraphs.examples.e8_load_uesgraphs_example" title="Permalink to this heading"></a></h2>
