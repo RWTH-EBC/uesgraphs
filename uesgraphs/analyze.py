@@ -61,8 +61,8 @@ def process_parquet_file(file_path: str, filter_list: List[str],
     """
     # Read parquet file metadata to get columns
     parquet_file = pq.ParquetFile(file_path,
-                                  thrift_string_size_limit=500_000_000,
-                                  thrift_container_size_limit=500_000_000)
+                                  thrift_string_size_limit=2_000_000_000,
+                                  thrift_container_size_limit=2_000_000_000)
     all_columns = parquet_file.schema.names
     
     # Pre-filter columns based on filter_list to reduce memory usage
