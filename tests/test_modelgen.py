@@ -9,7 +9,7 @@ import pytest
 import os
 
 from uesgraphs.systemmodels import systemmodelheating as smh
-from uesgraphs.examples import e11_model_generation as exm
+from uesgraphs.examples import e11_model_generation_example as exm
 from uesgraphs.systemmodels.utilities import *
 
 
@@ -200,7 +200,7 @@ def test_doc_string():
     now = datetime.datetime.now()
     doc_string_time = dparser.parse(model.doc_string, fuzzy=True)
 
-    assert "Model automatically generated with uesmodels" in model.doc_string
+    assert "Model automatically generated with uesgraphs" in model.doc_string
     assert doc_string_time - now < datetime.timedelta(milliseconds=1)
 
     for length in [75, 76]:

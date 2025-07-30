@@ -9,8 +9,8 @@ import sys
 
 import uesgraphs as ug
 
-from uesgraphs.examples import e2_simple_dhc as e2
-from uesgraphs.examples import e3_add_network as e3
+from uesgraphs.examples import e2_simple_dhc_example as e2
+from uesgraphs.examples import e3_add_network_example as e3
 import matplotlib.pyplot as plt
 
 import pytest
