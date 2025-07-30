@@ -14,6 +14,70 @@ import warnings
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 
+def set_up_terminal_logger(name: str, level: int = logging.INFO) -> logging.Logger:
+    """
+    Set up a simple console-only logger for small functions.
+
+    Args:
+        name: Logger name
+        level: Logging level (default: INFO)
+
+    Returns:
+        Configured console logger
+    """
+    logger = logging.getLogger(name)
+
+    # Avoid duplicate handlers if called multiple times
+    if logger.handlers:
+        return logger
+
+    logger.setLevel(level)
+
+    # Console handler only
+    console_handler = logging.StreamHandler()
+    formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+
+    # Prevent propagation to root logger to avoid double messages
+    logger.propagate = False
+
+    return logger
+
+def set_up_file_logger(name: str, log_dir: Optional[str] = None, level: int = logging.ERROR) -> logging.Logger:
+    """
+    Set up a full file+console logger for major functions.
+
+    Args:
+        name: Logger name
+        log_dir: Directory for log files (default: temp directory)
+        level: Logging level (default: ERROR)
+
+    Returns:
+        Configured file+console logger
+    """
+    logger = logging.getLogger(name)
+
+   # if logger.handlers:
+    #    return logger
+
+    logger.setLevel(level)
+    if log_dir is None:
+        log_dir = tempfile.gettempdir()
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = os.path.join(log_dir, f"{name}{timestamp}.log")
+    print(f"Logfile findable here: {log_file}")
+
+    # File handler
+    file_handler = logging.FileHandler(log_file)
+    file_formatter = logging.Formatter('%(asctime)s - %(name)s - [%(filename)s:%(lineno)d] - %(levelname)s - %(message)s')
+    file_handler.setFormatter(file_formatter)
+    logger.addHandler(file_handler)
+
+    logger.propagate = False
+
+    return logger
 
 
 def set_up_logger(name, log_dir=None, level=int(logging.INFO)):  # Changed to INFO for more details
@@ -159,7 +223,6 @@ def prepare_graph(
 
     return graph
 
-
 def create_model(
     name,
     save_at,
@@ -185,7 +248,8 @@ def create_model(
     pressure_control_ti=None,
     t_ground_prescribed=None,
     short_pipes_static=None,
-    meta_data=None
+    meta_data=None,
+    logger=None
 ):
     """Generic model generation for setup defined through the parameters
 
@@ -244,7 +308,20 @@ def create_model(
         than the value for `short_pipes_static`, a static pipe model will be used for it.
     meta_data : dict
         Dictionary with meta data
+    logger : logging.Logger, optional
+        Logger instance for debugging
     """
+    # Set up logging
+    if logger is None:
+        logger = set_up_file_logger(f"{__name__}.create_model", level=logging.DEBUG)
+    
+    # Entry logging with critical parameters
+    logger.info(f"=== Starting create_model for '{name}' ===")
+    logger.info(f"Target directory: {save_at}")
+    logger.info(f"Network type: {graph.graph.get('network_type', 'unknown')}")
+    logger.debug(f"Model parameters - supply: {model_supply}, demand: {model_demand}, pipe: {model_pipe}")
+    logger.debug(f"Simulation setup - stop_time: {stop_time}, timestep: {timestep}")
+    
     assert not name[0].isdigit(), "Model name cannot start with a digit"
 
     if params_kusuda is None:
@@ -255,22 +332,29 @@ def create_model(
             "alpha": 0.04,
             "D": 1,
         }
+        logger.debug("Using default Kusuda parameters")
 
-    new_model = sysmh.SystemModelHeating(network_type=graph.graph["network_type"])
+    logger.info("Creating SystemModelHeating instance")
+    new_model = sysmh.SystemModelHeating(network_type=graph.graph["network_type"],logger=logger)
     new_model.stop_time = stop_time
     new_model.timestep = timestep
-    new_model.import_from_uesgraph(graph)
-    new_model.set_connection(remove_network_nodes=True)
+    
+    logger.info("Importing UESGraph")
+    new_model.import_from_uesgraph(graph, logger=logger)
+    new_model.set_connection(remove_network_nodes=True,logger=logger)
 
     if solver:
+        logger.debug(f"Setting solver: {solver}")
         new_model.solver = solver
 
+    logger.debug("Configuring basic model parameters")
     new_model.add_return_network = True
     new_model.medium = model_medium
     new_model.T_nominal = T_nominal
     new_model.p_nominal = p_nominal
 
     if pressure_control_supply is not None:
+        logger.info(f"Setting up pressure control with supply: {pressure_control_supply}")
         msg = "All or none of the pressure_control variables must be set"
         assert pressure_control_dp is not None, msg
         assert pressure_control_building is not None, msg
@@ -285,41 +369,79 @@ def create_model(
         )
 
     if fraction_glycol is not None:
+        logger.debug(f"Setting glycol fraction: {fraction_glycol}")
         msg = "The medium model for glycol only supports fractions of glycol between 0.0 and 0.6"
         assert fraction_glycol >= 0 and fraction_glycol <= 0.6, msg
         new_model.fraction_glycol = fraction_glycol
 
     if model_ground == "t_ground_table":
+        logger.debug("Using t_ground_table for ground model")
         new_model.ground_model = "t_ground_table"
     elif model_ground == "t_ground_kusuda":
+        logger.debug("Using t_ground_kusuda for ground model")
         new_model.ground_model = "t_ground_kusuda"
         new_model.params_kusuda = params_kusuda
 
     if t_ground_prescribed is not None:
+        logger.debug(f"Setting prescribed ground temperatures (length: {len(t_ground_prescribed)})")
         new_model.graph["T_ground"] = t_ground_prescribed
 
     new_model.tolerance = tolerance
 
+    # ===== CRITICAL SECTION: comp_model assignment =====
+    logger.info("=== Starting comp_model assignment for buildings ===")
+    logger.debug(f"Building nodes count: {len(new_model.nodelist_building)}")
+    logger.debug(f"model_supply for assignment: '{model_supply}'")
+    logger.debug(f"model_demand for assignment: '{model_demand}'")
+    
     for node in new_model.nodelist_building:
         is_supply = "is_supply_{}".format(new_model.network_type)
-        if new_model.nodes[node][is_supply]:
+        is_supply_value = new_model.nodes[node][is_supply]
+        
+        logger.debug(f"Processing building node '{node}': {is_supply}={is_supply_value}")
+        
+        if is_supply_value:
+            logger.debug(f"  → Assigning SUPPLY model: '{model_supply}'")
             new_model.nodes[node]["comp_model"] = model_supply
         else:
+            logger.debug(f"  → Assigning DEMAND model: '{model_demand}'")
             new_model.nodes[node]["comp_model"] = model_demand
+        
+        # Validate assignment
+        assigned_value = new_model.nodes[node]["comp_model"]
+        logger.debug(f"  ✓ comp_model assigned: '{assigned_value}'")
+        
+        # Check if assignment looks like a template path (potential problem!)
+        if assigned_value and ('\\' in assigned_value or '/' in assigned_value):
+            logger.warning(f"  ⚠️  comp_model looks like a path, not a model name: '{assigned_value}'")
 
+    # Pipe model assignment
+    logger.info("=== Starting comp_model assignment for pipes ===")
+    logger.debug(f"Pipe nodes count: {len(new_model.nodelist_pipe)}")
+    logger.debug(f"model_pipe for assignment: '{model_pipe}'")
+    
     for node in new_model.nodelist_pipe:
+        logger.debug(f"Processing pipe node '{node}'")
         new_model.nodes[node]["comp_model"] = model_pipe
+        
         if short_pipes_static is not None:
             length = new_model.nodes[node]["length"]
+            logger.debug(f"  Pipe length: {length}, short_pipes_static threshold: {short_pipes_static}")
             if length < short_pipes_static:
-                new_model.nodes[node][
-                    "comp_model"
-                ] = "AixLib.Fluid.DistrictHeatingCooling.Pipes.StaticPipe"
+                static_model = "AixLib.Fluid.DistrictHeatingCooling.Pipes.StaticPipe"
+                logger.debug(f"  → Using static pipe model: '{static_model}'")
+                new_model.nodes[node]["comp_model"] = static_model
 
+    # Final model setup
     name = name[0].upper() + name[1:]
+    logger.info(f"Setting final model name: '{name}'")
     new_model.model_name = name
     new_model.meta_data = meta_data
+    
+    logger.info(f"Writing Modelica package to: {save_at}")
     new_model.write_modelica_package(save_at=save_at)
+    
+    logger.info(f"=== create_model completed successfully for '{name}' ===")
     return new_model
 
 def estimate_fac(graph, u_form_distance=25, n_gate_valve=2.0):
