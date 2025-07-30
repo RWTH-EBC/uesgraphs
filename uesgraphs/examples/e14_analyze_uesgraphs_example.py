@@ -74,57 +74,58 @@ import os
 from datetime import datetime
 
 def main():
-    workspace = e1.workspace_example("e14")
-    
-    dir_ues = os.path.dirname(os.path.dirname(workspace))
-    pinola_json = os.path.join(dir_ues, "workspace", "e11", "inputs","test_modelgen", "Pinola", "nodes.json")
-    pinola_sim_data = os.path.join(dir_ues,"uesgraphs","data","Pinola_low_temp_network_inputs.mat")
-
-    if not os.path.exists(pinola_json):
-        raise FileNotFoundError(f"File {pinola_json} not found."
-                                "Please run example e11 to generate network topology.")
-
-    graph = ug.UESGraph()
-    graph.from_json(path = pinola_json, network_type="heating")
-    graph.graph["name"] = "pinola"
-    graph.graph["supply_type"] = "supply"
-
-    start_date=datetime(2024, 1, 1) 
-    end_date=datetime(2024, 1, 7)
-    
-    graph = analyze.assign_data_to_uesgraphs(graph,sim_data = pinola_sim_data,
-                                             start_date=start_date,
-                                             end_date=end_date,
-                                             aixlib_version="2.1.0") #aixlib version is needed to assign data properly
-    
-    ### Plotting
-    #Visuals cant handle series data, so we just take the mean values, but single time points are possible
-    vis = ug.Visuals(graph)
-    for edge in graph.edges:
-        graph.edges[edge]["m_flow_mean"] = graph.edges[edge]["m_flow"].mean()
-    vis.show_network(show_plot=False,
-                           scaling_factor=1,
-                           scaling_factor_diameter=50,
-                           label_size=15,
-                           ylabel="Mean mass flow [kg/s]",
-                           generic_extensive_size="m_flow_mean",
-                           save_as=os.path.join(workspace, "m_flow.png"),
-                           timestamp=f"{graph.graph["name"]}: Mean mass flow"
-                           )
-    
-    for node in graph.nodes:
-        graph.nodes[node]["press_flow_mean"] = graph.nodes[node]["press_flow"].mean()
-    vis.show_network(show_plot=False,
-                           scaling_factor=1,
-                           scaling_factor_diameter=50,
-                           ylabel="Mean pressure [Pa]",
-                           label_size=15,
-                           generic_intensive_size="press_flow_mean",
-                           save_as=os.path.join(workspace, "press_flow.png"),
-                           timestamp=f"{graph.graph["name"]}: Mean pressure flow"
-                           )
-    
-    df = analyze.pump_power_analysis(graph, True, r"D:\rka-lko\work\2025_04_analysis\3")
+    print("hello-world")
+    # workspace = e1.workspace_example("e14")
+    #
+    # dir_ues = os.path.dirname(os.path.dirname(workspace))
+    # pinola_json = os.path.join(dir_ues, "workspace", "e11", "inputs","test_modelgen", "Pinola", "nodes.json")
+    # pinola_sim_data = os.path.join(dir_ues,"uesgraphs","data","Pinola_low_temp_network_inputs.mat")
+    #
+    # if not os.path.exists(pinola_json):
+    #     raise FileNotFoundError(f"File {pinola_json} not found."
+    #                             "Please run example e11 to generate network topology.")
+    #
+    # graph = ug.UESGraph()
+    # graph.from_json(path = pinola_json, network_type="heating")
+    # graph.graph["name"] = "pinola"
+    # graph.graph["supply_type"] = "supply"
+    #
+    # start_date=datetime(2024, 1, 1)
+    # end_date=datetime(2024, 1, 7)
+    #
+    # graph = analyze.assign_data_to_uesgraphs(graph,sim_data = pinola_sim_data,
+    #                                          start_date=start_date,
+    #                                          end_date=end_date,
+    #                                          aixlib_version="2.1.0") #aixlib version is needed to assign data properly
+    #
+    # ### Plotting
+    # #Visuals cant handle series data, so we just take the mean values, but single time points are possible
+    # vis = ug.Visuals(graph)
+    # for edge in graph.edges:
+    #     graph.edges[edge]["m_flow_mean"] = graph.edges[edge]["m_flow"].mean()
+    # vis.show_network(show_plot=False,
+    #                        scaling_factor=1,
+    #                        scaling_factor_diameter=50,
+    #                        label_size=15,
+    #                        ylabel="Mean mass flow [kg/s]",
+    #                        generic_extensive_size="m_flow_mean",
+    #                        save_as=os.path.join(workspace, "m_flow.png"),
+    #                        timestamp=f"{graph.graph["name"]}: Mean mass flow"
+    #                        )
+    #
+    # for node in graph.nodes:
+    #     graph.nodes[node]["press_flow_mean"] = graph.nodes[node]["press_flow"].mean()
+    # vis.show_network(show_plot=False,
+    #                        scaling_factor=1,
+    #                        scaling_factor_diameter=50,
+    #                        ylabel="Mean pressure [Pa]",
+    #                        label_size=15,
+    #                        generic_intensive_size="press_flow_mean",
+    #                        save_as=os.path.join(workspace, "press_flow.png"),
+    #                        timestamp=f"{graph.graph["name"]}: Mean pressure flow"
+    #                        )
+    #
+    # df = analyze.pump_power_analysis(graph, True, r"D:\rka-lko\work\2025_04_analysis\3")
 
 if __name__ == "__main__":
     main()
