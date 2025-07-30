@@ -75,7 +75,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.systemmodels.systemmodelheating.html">uesgraphs.systemmodels.systemmodelheating</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.systemmodels.utilities.html">uesgraphs.systemmodels.utilities</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.examples.html">uesgraphs.examples</a></li>
@@ -260,8 +262,128 @@ between the IBPSA model and the Larock 424 example</p>
 </dd></dl>
 
 </section>
-<section id="uesgraphs-examples-e11-model-generation-example-module">
-<h2>uesgraphs.examples.e11_model_generation_example module<a class="headerlink" href="#uesgraphs-examples-e11-model-generation-example-module" title="Permalink to this heading"></a></h2>
+<section id="module-uesgraphs.examples.e11_model_generation_example">
+<span id="uesgraphs-examples-e11-model-generation-example-module"></span><h2>uesgraphs.examples.e11_model_generation_example module<a class="headerlink" href="#module-uesgraphs.examples.e11_model_generation_example" title="Permalink to this heading"></a></h2>
+<section id="modelica-model-generation-using-uesgraphs">
+<h3>Modelica Model Generation using UESGraphs<a class="headerlink" href="#modelica-model-generation-using-uesgraphs" title="Permalink to this heading"></a></h3>
+<p>This module demonstrates the automated generation of Modelica models for district heating
+networks. The generated models can be directly simulated in Dymola, but require exactly
+AixLib version 2.1.0. Other versions are not compatible and will cause simulation errors.</p>
+<section id="model-variants">
+<h4>Model Variants:<a class="headerlink" href="#model-variants" title="Permalink to this heading"></a></h4>
+<p>For each network (Pinola and IBPSA), three model variants are generated:</p>
+<ol class="arabic simple">
+<li><p>Open Loop with Variable Supply Temperature (suffix: _open_loop_dT_var)
+- High temperature network (80°C supply / 50°C return)
+- Table-based ground temperature
+- Direct heating substations</p></li>
+<li><p>Variable Ground Temperature Model (suffix: _t_ground_var)
+- Same as variant 1 but uses Kusuda ground temperature model
+- More detailed soil temperature calculation</p></li>
+<li><p>Low Temperature Network (suffix: _low_temp_network)
+- Low temperature regime (20°C supply / 10°C return)
+- Heat pump substations (Carnot-based)
+- Includes substation parameters (COP, nominal temperatures)</p></li>
+</ol>
+</section>
+<section id="id1">
+<h4>Functions:<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
+<dl class="simple">
+<dt>model_generation_pinola(dir_source, dir_dest):</dt><dd><p>Generates three variants of Modelica models for the Pinola network</p>
+</dd>
+<dt>model_generation_ibpsa(dir_source, dir_dest):</dt><dd><p>Generates three variants of Modelica models for the IBPSA network</p>
+</dd>
+<dt>create_dirs(dir_project):</dt><dd><p>Creates standardized directory structure for model files and results</p>
+</dd>
+</dl>
+</section>
+<section id="model-parameters">
+<h4>Model Parameters:<a class="headerlink" href="#model-parameters" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>Simulation time: 603900 seconds</p></li>
+<li><p>Time step: 900 seconds</p></li>
+<li><p>Nominal pressure: 5e5 Pa</p></li>
+<li><p>Heat pump COP (nominal): 4.5</p></li>
+<li><p>Network pressure difference: 4e5 Pa (supply-return)</p></li>
+</ul>
+</section>
+<section id="components-used">
+<h4>Components Used:<a class="headerlink" href="#components-used" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>Supply: AixLib.Fluid.DistrictHeatingCooling.Supplies.OpenLoop.SourceIdeal</p></li>
+<li><dl class="simple">
+<dt>Demand: AixLib.Fluid.DistrictHeatingCooling.Demands.OpenLoop.VarTSupplyDp</dt><dd><p>AixLib.Fluid.DistrictHeatingCooling.Demands.OpenLoop.HeatPumpCarnot</p>
+</dd>
+</dl>
+</li>
+<li><p>Pipes: AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded</p></li>
+<li><p>Medium: AixLib.Media.Specialized.Water.ConstantProperties_pT</p></li>
+</ul>
+</section>
+<section id="id2">
+<h4>Notes:<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>All models use plug flow pipe models with embedded heat losses</p></li>
+<li><p>Ground coupling can be either table-based or using the Kusuda model</p></li>
+<li><p>Directory structure is automatically created for inputs, models, and results</p></li>
+<li><p>Models are exported in Modelica format (.mo files)</p></li>
+<li><p>Direct simulation in Dymola is possible, but strictly requires AixLib v2.1.0</p></li>
+</ul>
+</section>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e11_model_generation_example.main">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e11_model_generation_example.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e11_model_generation_example.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e11_model_generation_example.main" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e11_model_generation_example.model_generation_pinola">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e11_model_generation_example.</span></span><span class="sig-name descname"><span class="pre">model_generation_pinola</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_dest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e11_model_generation_example.html#model_generation_pinola"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e11_model_generation_example.model_generation_pinola" title="Permalink to this definition"></a></dt>
+<dd><p>Run example model generation for Pinola network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dir_source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Source directory with nodes.json</p></li>
+<li><p><strong>dir_dest</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Directory to store generated models</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e11_model_generation_example.model_generation_ibpsa">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e11_model_generation_example.</span></span><span class="sig-name descname"><span class="pre">model_generation_ibpsa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_dest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e11_model_generation_example.html#model_generation_ibpsa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e11_model_generation_example.model_generation_ibpsa" title="Permalink to this definition"></a></dt>
+<dd><p>Run example model generation for Ibpsa network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dir_source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Source directory with nodes.json</p></li>
+<li><p><strong>dir_dest</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Directory to store generated models</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e11_model_generation_example.create_dirs">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e11_model_generation_example.</span></span><span class="sig-name descname"><span class="pre">create_dirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e11_model_generation_example.html#create_dirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e11_model_generation_example.create_dirs" title="Permalink to this definition"></a></dt>
+<dd><p>Creates <cite>input</cite>, <cite>model</cite>, <cite>result</cite> and <cite>visualization</cite> directories</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dir_project</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Base directory of the example where the directories will be created</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>dir_input</strong> (<em>str</em>) – Directory for input files</p></li>
+<li><p><strong>dir_model</strong> (<em>str</em>) – Directory for model files</p></li>
+<li><p><strong>dir_result</strong> (<em>str</em>) – Directory for result files</p></li>
+<li><p><strong>dir_visualization</strong> (<em>str</em>) – Directory for plots</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-uesgraphs.examples.e12_template_generation_example">
 <span id="uesgraphs-examples-e12-template-generation-example-module"></span><h2>uesgraphs.examples.e12_template_generation_example module<a class="headerlink" href="#module-uesgraphs.examples.e12_template_generation_example" title="Permalink to this heading"></a></h2>
@@ -317,8 +439,8 @@ AixLib v2.1.0 components.</p>
 <li><p>Shapely for geometric operations</p></li>
 </ul>
 </section>
-<section id="id1">
-<h4>Notes:<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
+<section id="id3">
+<h4>Notes:<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h4>
 <ul class="simple">
 <li><p>Templates are saved with .mako extension</p></li>
 <li><p>Generated Modelica code is printed to console for verification</p></li>
@@ -374,8 +496,8 @@ If False, prompts for confirmation before overwriting (default)</p>
 </pre></div>
 </div>
 </section>
-<section id="id2">
-<h4>Notes:<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
+<section id="id4">
+<h4>Notes:<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h4>
 <ul class="simple">
 <li><p>Process might take considerable time depending on number of components</p></li>
 <li><p>Requires AixLib installation with correct version</p></li>
@@ -472,8 +594,8 @@ simulation data to creating network visualizations with key performance indicato
 </li>
 </ol>
 </section>
-<section id="id3">
-<h4>Notes:<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h4>
+<section id="id5">
+<h4>Notes:<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h4>
 <ul class="simple">
 <li><p>Simulation period can be specified (default: one week)</p></li>
 <li><p>Visualization uses time-averaged values for certain properties</p></li>
@@ -699,8 +821,8 @@ Note: Only building 1121 is removed in this example</p>
 <li><p>os</p></li>
 </ul>
 </section>
-<section id="id4">
-<h3>Author<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
+<section id="id6">
+<h3>Author<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h3>
 <p>MichaMans</p>
 </section>
 <section id="review">
@@ -722,7 +844,7 @@ Note: Only building 1121 is removed in this example</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="uesgraphs.examples.e9_generate_ues_from_osm_example.remove_small_buildings">
 <span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e9_generate_ues_from_osm_example.</span></span><span class="sig-name descname"><span class="pre">remove_small_buildings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_area</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e9_generate_ues_from_osm_example.html#remove_small_buildings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e9_generate_ues_from_osm_example.remove_small_buildings" title="Permalink to this definition"></a></dt>
-<dd><p>Remove all buildings from the graph that have area less than <a href="#id5"><span class="problematic" id="id6">`</span></a>min_area´.</p>
+<dd><p>Remove all buildings from the graph that have area less than <a href="#id7"><span class="problematic" id="id8">`</span></a>min_area´.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
