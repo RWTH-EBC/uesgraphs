@@ -61,7 +61,7 @@ from shapely.geometry import Point
 from uesgraphs.uesgraph import UESGraph
 import uesgraphs.utilities as ut
 
-from uesgraphs.examples import e1_example_readme as e1
+from uesgraphs.examples import e1_readme_example as e1
 
 def main():
     start_time = datetime.datetime.now()

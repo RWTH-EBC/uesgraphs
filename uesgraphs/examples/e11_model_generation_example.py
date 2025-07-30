@@ -69,8 +69,8 @@ from uesgraphs.uesgraph import UESGraph
 import uesgraphs.utilities as ut
 
 
-from uesgraphs.examples import e1_example_readme as e1
-from uesgraphs.examples import e10_networks as e10
+from uesgraphs.examples import e1_readme_example as e1
+from uesgraphs.examples import e10_networks_example as e10
 def main():
     start_time = datetime.datetime.now()
 

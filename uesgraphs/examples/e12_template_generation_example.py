@@ -65,7 +65,7 @@ import os
 import tkinter as tk
 import tkinter.filedialog as filedialog
 
-from uesgraphs.examples import e1_example_readme as e1
+from uesgraphs.examples import e1_readme_example as e1
 
 def main():
 
