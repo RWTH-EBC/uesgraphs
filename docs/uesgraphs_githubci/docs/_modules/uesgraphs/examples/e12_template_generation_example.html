@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.examples.e12_template_generation_example &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../code/modules.html">uesgraphs</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.UESGraph.html">uesgraphs.UESGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.Visuals.html">uesgraphs.Visuals</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.template_generation.html">uesgraphs.template_generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.examples.html">uesgraphs.examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.examples.e12_template_generation_example</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.examples.e12_template_generation_example</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Mako Template Generation for UESGraphs Modelica Components</span>
+<span class="sd">====================================================</span>
+
+<span class="sd">This module demonstrates the generation of Mako templates for different AixLib </span>
+<span class="sd">component types, which are required for automated Modelica code generation using </span>
+<span class="sd">UESGraphs. Templates are generated for demands, pipes, and supplies based on </span>
+<span class="sd">AixLib v2.1.0 components.</span>
+
+<span class="sd">Component Types:</span>
+<span class="sd">-------------</span>
+<span class="sd">1. Demand Models:</span>
+<span class="sd">   - Variable supply temperature model</span>
+<span class="sd">   - Heat pump model with Carnot cycle</span>
+<span class="sd">   - Templates include parameters for temperature differences and nominal conditions</span>
+
+<span class="sd">2. Pipe Models:</span>
+<span class="sd">   - Static pipe model</span>
+<span class="sd">   - Plug flow pipe model</span>
+<span class="sd">   - Plug flow pipe with zeta value</span>
+<span class="sd">   - Templates include thermal and geometric parameters</span>
+
+<span class="sd">3. Supply Models:</span>
+<span class="sd">   - Ideal source model for open-loop systems</span>
+<span class="sd">   - Templates include pressure and temperature parameters</span>
+
+<span class="sd">Template Generation Process:</span>
+<span class="sd">-------------------------</span>
+<span class="sd">For each component type (demand, pipe, supply):</span>
+<span class="sd">1. Creates a UESTemplates instance for the specific model</span>
+<span class="sd">2. Generates a new template from AixLib library</span>
+<span class="sd">3. Tests the template with sample data</span>
+<span class="sd">4. Generates corresponding Modelica code</span>
+
+<span class="sd">Generated templates follow the Mako syntax and include:</span>
+<span class="sd">- Component-specific parameters</span>
+<span class="sd">- Geometric information</span>
+<span class="sd">- Operating conditions</span>
+<span class="sd">- Connection specifications</span>
+
+<span class="sd">Test Cases:</span>
+<span class="sd">---------</span>
+<span class="sd">- Demand: Building with defined heat demand and temperature levels</span>
+<span class="sd">- Pipe: Standard pipe with insulation parameters</span>
+<span class="sd">- Supply: Ideal source with return conditions</span>
+
+<span class="sd">Requirements:</span>
+<span class="sd">-----------</span>
+<span class="sd">- AixLib v2.1.0 library must be installed and path must be provided</span>
+<span class="sd">- UESGraphs package with systemmodels module</span>
+<span class="sd">- Shapely for geometric operations</span>
+
+<span class="sd">Notes:</span>
+<span class="sd">-----</span>
+<span class="sd">- Templates are saved with .mako extension</span>
+<span class="sd">- Generated Modelica code is printed to console for verification</span>
+<span class="sd">- Template paths are customizable for demonstration purposes</span>
+<span class="sd">- Default template storage is in uesgraphs/data/templates</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels.templates</span><span class="w"> </span><span class="kn">import</span> <span class="n">UESTemplates</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tkinter</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tk</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tkinter.filedialog</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">filedialog</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.examples</span><span class="w"> </span><span class="kn">import</span> <span class="n">e1_readme_example</span> <span class="k">as</span> <span class="n">e1</span>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+
+    <span class="c1"># Hide the root Tkinter window</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Tk</span><span class="p">()</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">withdraw</span><span class="p">()</span>
+    
+    <span class="c1"># Open a file dialog to select the package.mo file</span>
+    <span class="n">path_aixlib</span> <span class="o">=</span> <span class="n">filedialog</span><span class="o">.</span><span class="n">askopenfilename</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Select AixLib package.mo file&quot;</span><span class="p">,</span>
+        <span class="n">filetypes</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;Modelica package file&quot;</span><span class="p">,</span> <span class="s2">&quot;package.mo&quot;</span><span class="p">)]</span>
+    <span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">path_aixlib</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;You have selected: </span><span class="si">{</span><span class="n">path_aixlib</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Now you can use path_aixlib in your code</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No file selected.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Create e12 directory in the workspace</span>
+    <span class="n">workspace</span> <span class="o">=</span> <span class="n">e1</span><span class="o">.</span><span class="n">workspace_example</span><span class="p">(</span><span class="s2">&quot;e12&quot;</span><span class="p">)</span>
+
+    <span class="n">demand_models</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Demands.OpenLoop.VarTSupplyDp&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Demands.OpenLoop.HeatPumpCarnot&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="c1"># create and test demand models</span>
+    <span class="k">for</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">demand_models</span><span class="p">:</span>
+        <span class="n">template_gen</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;Demand&quot;</span><span class="p">)</span>
+        
+        <span class="c1">#Path usually set to uesgraphs/data/templates, will be overwritten for demonstration</span>
+        <span class="n">template_gen</span><span class="o">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">model_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.mako&quot;</span><span class="p">)</span>
+        
+        <span class="n">template_gen</span><span class="o">.</span><span class="n">generate_new_template</span><span class="p">(</span><span class="n">path_library</span><span class="o">=</span><span class="n">path_aixlib</span><span class="p">)</span>
+
+        <span class="n">test_demand</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;B1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="p">:</span> <span class="s2">&quot;building&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">sg</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mf">64.76</span><span class="p">,</span> <span class="mf">217.14</span><span class="p">),</span>
+            <span class="s2">&quot;is_supply_heating&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_cooling&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_electricity&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_gas&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_other&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;has_table&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;dTDesign&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+            <span class="s2">&quot;dTBuilding&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;TSupplyBuilding&quot;</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span>
+            <span class="s2">&quot;m_flow_nominal&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;m_flo_bypass&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>    <span class="c1"># for Bypass Template</span>
+            <span class="s2">&quot;Q_flow_nominal&quot;</span><span class="p">:</span> <span class="mf">22719.1187448</span><span class="p">,</span>
+            <span class="s2">&quot;TReturn&quot;</span><span class="p">:</span> <span class="mf">323.15</span><span class="p">,</span>
+            <span class="s2">&quot;_dp_start&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+            <span class="s2">&quot;comp_model&quot;</span><span class="p">:</span> <span class="n">model_name</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">template_gen</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">test_demand</span><span class="p">[</span><span class="s2">&quot;comp_model&quot;</span><span class="p">],</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;Demand&quot;</span><span class="p">)</span>
+        <span class="n">mo</span> <span class="o">=</span> <span class="n">template_gen</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">node_data</span><span class="o">=</span><span class="n">test_demand</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">number_of_instances</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">mo</span><span class="p">)</span>
+
+    <span class="c1"># Names of Pipe models</span>
+    <span class="n">pipe_models</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Pipes.StaticPipe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AixLib.Fluid.FixedResistances.PlugFlowPipe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeZeta&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="c1"># create and test pipe models</span>
+    <span class="k">for</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">pipe_models</span><span class="p">:</span>
+        <span class="n">template_gen</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;Pipe&quot;</span><span class="p">)</span>
+
+        <span class="c1">#Path usually set to uesgraphs/data/templates, will be overwritten for demonstration</span>
+        <span class="n">template_gen</span><span class="o">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">model_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.mako&quot;</span><span class="p">)</span>
+
+        <span class="n">template_gen</span><span class="o">.</span><span class="n">generate_new_template</span><span class="p">(</span><span class="n">path_library</span><span class="o">=</span><span class="n">path_aixlib</span><span class="p">)</span>
+
+        <span class="n">test_pipe</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;P1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="p">:</span> <span class="s2">&quot;pipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">sg</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mf">64.76</span><span class="p">,</span> <span class="mf">217.14</span><span class="p">),</span>
+            <span class="s2">&quot;m_flow_nominal&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mi">666</span><span class="p">,</span>
+            <span class="s2">&quot;dIns&quot;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+            <span class="s2">&quot;kIns&quot;</span><span class="p">:</span> <span class="mf">0.0032</span><span class="p">,</span>
+            <span class="s2">&quot;nPorts&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;comp_model&quot;</span><span class="p">:</span> <span class="n">model_name</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">template_gen</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">test_pipe</span><span class="p">[</span><span class="s2">&quot;comp_model&quot;</span><span class="p">],</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;Pipe&quot;</span><span class="p">)</span>
+        <span class="n">mo</span> <span class="o">=</span> <span class="n">template_gen</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">node_data</span><span class="o">=</span><span class="n">test_pipe</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">number_of_instances</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">mo</span><span class="p">)</span>
+
+    <span class="c1"># Names of Supply models</span>
+    <span class="n">supply_models</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Supplies.OpenLoop.SourceIdeal&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="c1"># create and test supply models</span>
+    <span class="k">for</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">supply_models</span><span class="p">:</span>
+        <span class="n">template_gen</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;Supply&quot;</span><span class="p">)</span>
+
+        <span class="c1">#Path usually set to uesgraphs/data/templates, will be overwritten for demonstration</span>
+        <span class="n">template_gen</span><span class="o">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">model_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.mako&quot;</span><span class="p">)</span>
+        
+        <span class="n">template_gen</span><span class="o">.</span><span class="n">generate_new_template</span><span class="p">(</span><span class="n">path_library</span><span class="o">=</span><span class="n">path_aixlib</span><span class="p">)</span>
+
+        <span class="n">test_supply</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;S1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="p">:</span> <span class="s2">&quot;building&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">sg</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mf">64.76</span><span class="p">,</span> <span class="mf">217.14</span><span class="p">),</span>
+            <span class="s2">&quot;is_supply_heating&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_cooling&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_electricity&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_gas&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_other&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;has_table&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;pReturn&quot;</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span>
+            <span class="s2">&quot;TReturn&quot;</span><span class="p">:</span> <span class="mf">293.15</span><span class="p">,</span>
+            <span class="s2">&quot;comp_model&quot;</span><span class="p">:</span> <span class="n">model_name</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">template_gen</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">test_supply</span><span class="p">[</span><span class="s2">&quot;comp_model&quot;</span><span class="p">],</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;Supply&quot;</span><span class="p">)</span>
+        <span class="n">mo</span> <span class="o">=</span> <span class="n">template_gen</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">node_data</span><span class="o">=</span><span class="n">test_supply</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">number_of_instances</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">mo</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Rahul Karuvingal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
