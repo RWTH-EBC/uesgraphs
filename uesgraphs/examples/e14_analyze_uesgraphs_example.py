@@ -67,7 +67,7 @@ Notes:
 import uesgraphs as ug
 
 import uesgraphs.analyze as analyze
-from uesgraphs.examples import e1_example_readme as e1
+from uesgraphs.examples import e1_readme_example as e1
 
 import os
 

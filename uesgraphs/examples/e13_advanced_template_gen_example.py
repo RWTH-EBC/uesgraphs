@@ -51,7 +51,7 @@ rka-lko
 import uesgraphs as ug
 from uesgraphs import template_generation
 
-from uesgraphs.examples import e1_example_readme as e1
+from uesgraphs.examples import e1_readme_example as e1
 
 def main():
     print("*** Generating templates for multiple models (could take a lot of time) ***")

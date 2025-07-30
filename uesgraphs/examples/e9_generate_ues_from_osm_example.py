@@ -58,7 +58,7 @@ import uesgraphs.uesmodels.utilities.uesgenerator as uesgen
 import uesgraphs.uesmodels.utilities.utilities as utils
 
 
-from uesgraphs.examples import e1_example_readme as e1
+from uesgraphs.examples import e1_readme_example as e1
 
 
 def main():

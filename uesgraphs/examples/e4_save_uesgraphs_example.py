@@ -3,8 +3,8 @@
 import os
 import uesgraphs as ug
 
-from uesgraphs.examples import e1_example_readme as e1
-from uesgraphs.examples import e2_simple_dhc as e2
+from uesgraphs.examples import e1_readme_example as e1
+from uesgraphs.examples import e2_simple_dhc_example as e2
 
 
 
