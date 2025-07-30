@@ -1,0 +1,188 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.examples.e13_advanced_template_gen_example &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../code/modules.html">uesgraphs</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.UESGraph.html">uesgraphs.UESGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.Visuals.html">uesgraphs.Visuals</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.template_generation.html">uesgraphs.template_generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.systemmodels.systemmodelheating.html">uesgraphs.systemmodels.systemmodelheating</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.systemmodels.utilities.html">uesgraphs.systemmodels.utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.examples.html">uesgraphs.examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.examples.e13_advanced_template_gen_example</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.examples.e13_advanced_template_gen_example</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Bulk Template Generation for AixLib Components</span>
+<span class="sd">===========================================</span>
+
+<span class="sd">This module provides functionality for automated bulk generation of Mako templates</span>
+<span class="sd">for multiple AixLib components. It processes component specifications from a </span>
+<span class="sd">central configuration file and generates corresponding templates for use with </span>
+<span class="sd">UESGraphs.</span>
+
+<span class="sd">Configuration:</span>
+<span class="sd">------------</span>
+<span class="sd">- Component specifications are read from &#39;uesgraphs/data/template_aixlib_components.json&#39;</span>
+<span class="sd">- AixLib library path can be specified via &#39;AIXLIB_LIBRARY_PATH&#39; environment variable</span>
+<span class="sd">- Templates are generated in the specified workspace directory</span>
+
+<span class="sd">Features:</span>
+<span class="sd">--------Y</span>
+<span class="sd">- Batch processing of multiple component templates</span>
+<span class="sd">- Automatic template generation for new AixLib versions</span>
+<span class="sd">- Support for all component types (demands, supplies, pipes)</span>
+<span class="sd">- Configurable rigorous mode for automated overwriting</span>
+
+<span class="sd">Parameters:</span>
+<span class="sd">----------</span>
+<span class="sd">workspace : str</span>
+<span class="sd">    Directory where generated templates will be stored</span>
+<span class="sd">rigorous : bool, optional</span>
+<span class="sd">    If True, automatically overwrites existing templates without confirmation</span>
+<span class="sd">    If False, prompts for confirmation before overwriting (default)</span>
+
+<span class="sd">Usage Example:</span>
+<span class="sd">------------</span>
+<span class="sd">&gt;&gt;&gt; from uesgraphs import template_generation</span>
+<span class="sd">&gt;&gt;&gt; template_generation.main(workspace=&quot;./templates&quot;)</span>
+<span class="sd">&gt;&gt;&gt; # For automated overwriting:</span>
+<span class="sd">&gt;&gt;&gt; template_generation.main(rigorous=True, workspace=&quot;./templates&quot;)</span>
+
+<span class="sd">Notes:</span>
+<span class="sd">-----</span>
+<span class="sd">- Process might take considerable time depending on number of components</span>
+<span class="sd">- Requires AixLib installation with correct version</span>
+<span class="sd">- Generated templates are used for automated Modelica code generation</span>
+<span class="sd">- Useful when updating to new AixLib versions or adding new components</span>
+
+<span class="sd">Author:</span>
+<span class="sd">-------</span>
+<span class="sd">rka-lko</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ug</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="kn">import</span> <span class="n">template_generation</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.examples</span><span class="w"> </span><span class="kn">import</span> <span class="n">e1_readme_example</span> <span class="k">as</span> <span class="n">e1</span>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e13_advanced_template_gen_example.main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Generating templates for multiple models (could take a lot of time) ***&quot;</span><span class="p">)</span>
+    <span class="c1">#Standard is current system aixlib library specified with system variable &quot;AIXLIB_LIBRARY_PATH&quot;</span>
+    <span class="c1">#Models are loaded from the JSON file &quot;data/template_aixlib_components.json&quot;</span>
+    <span class="n">workspace</span> <span class="o">=</span> <span class="n">e1</span><span class="o">.</span><span class="n">workspace_example</span><span class="p">(</span><span class="s2">&quot;e13&quot;</span><span class="p">)</span>
+    <span class="n">template_generation</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">workspace</span><span class="o">=</span><span class="n">workspace</span><span class="p">)</span>
+    <span class="c1">#set rigorous to True to avoid confirmation of overwriting templates:</span>
+    <span class="n">template_generation</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">rigorous</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">workspace</span><span class="o">=</span><span class="n">workspace</span><span class="p">)</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Done ***&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Rahul Karuvingal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

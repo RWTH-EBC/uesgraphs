@@ -1,0 +1,34 @@
+uesgraphs.systemmodels package
+==============================
+
+.. automodule:: uesgraphs.systemmodels
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+uesgraphs.systemmodels.systemmodelheating module
+------------------------------------------------
+
+.. automodule:: uesgraphs.systemmodels.systemmodelheating
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.systemmodels.templates module
+---------------------------------------
+
+.. automodule:: uesgraphs.systemmodels.templates
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.systemmodels.utilities module
+---------------------------------------
+
+.. automodule:: uesgraphs.systemmodels.utilities
+   :members:
+   :undoc-members:
+   :show-inheritance:
