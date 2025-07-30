@@ -112,308 +112,38 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-uesgraphs.examples.e10_networks">
-<span id="uesgraphs-examples-e10-networks-module"></span><h2>uesgraphs.examples.e10_networks module<a class="headerlink" href="#module-uesgraphs.examples.e10_networks" title="Permalink to this heading"></a></h2>
-<section id="example-network-generator-for-uesgraphs">
-<h3>Example Network Generator for UESGraphs<a class="headerlink" href="#example-network-generator-for-uesgraphs" title="Permalink to this heading"></a></h3>
-<p>This module provides functionality to generate example district
-heating networks. It includes predefined network topologies that
-can be used for testing, demonstration, and validation purposes.</p>
-<section id="main-features">
-<h4>Main Features:<a class="headerlink" href="#main-features" title="Permalink to this heading"></a></h4>
-<ul class="simple">
-<li><p>Generation of two example networks: ‘Pinola’ and ‘IBPSA’</p></li>
-<li><p>Coordinate transformation for Modelica compatibility</p></li>
-<li><p>Time series data generation for temperatures and heat inputs</p></li>
-<li><p>Network topology creation with detailed pipe specifications</p></li>
-</ul>
+<section id="uesgraphs-examples-e10-networks-example-module">
+<h2>uesgraphs.examples.e10_networks_example module<a class="headerlink" href="#uesgraphs-examples-e10-networks-example-module" title="Permalink to this heading"></a></h2>
 </section>
-<section id="example-networks">
-<h4>Example Networks:<a class="headerlink" href="#example-networks" title="Permalink to this heading"></a></h4>
-<ol class="arabic simple">
-<li><p>IBPSA Network:
-- Based on the <cite>PlugFlowAIT</cite> model from the IBPSA Library
-- Contains 1 supply building, 3 demand buildings, and 2 heating network nodes
-- Includes realistic pipe parameters and thermal properties
-- Reference: doi: 10.1016/j.enconman.2017.08.072</p></li>
-<li><p>Pinola Network:
-- Hybrid network combining IBPSA model and Larock 424 example
-- Features 2 supply buildings, 3 demand buildings, and 3 heating network nodes
-- Complete with pipe specifications and thermal parameters</p></li>
-</ol>
+<section id="uesgraphs-examples-e11-model-generation-example-module">
+<h2>uesgraphs.examples.e11_model_generation_example module<a class="headerlink" href="#uesgraphs-examples-e11-model-generation-example-module" title="Permalink to this heading"></a></h2>
 </section>
-<section id="functions">
-<h4>Functions:<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h4>
-<dl class="simple">
-<dt>make_network_ibpsa(dir_dest):</dt><dd><p>Creates the IBPSA example network with predefined topology</p>
-</dd>
-<dt>make_network_pinola(dir_dest):</dt><dd><p>Creates the Pinola example network with predefined topology</p>
-</dd>
-<dt>convert_positions(ues_network, width_set):</dt><dd><p>Transforms network coordinates for Modelica compatibility</p>
-</dd>
-<dt>get_temperature_ground():</dt><dd><p>Returns ground temperature time series data</p>
-</dd>
-<dt>get_temperature_supply():</dt><dd><p>Returns supply temperature time series data</p>
-</dd>
-<dt>get_input_heat():</dt><dd><p>Returns heat input time series data for demand buildings</p>
-</dd>
-</dl>
+<section id="uesgraphs-examples-e12-template-generation-example-module">
+<h2>uesgraphs.examples.e12_template_generation_example module<a class="headerlink" href="#uesgraphs-examples-e12-template-generation-example-module" title="Permalink to this heading"></a></h2>
 </section>
-<section id="notes">
-<h4>Notes:<a class="headerlink" href="#notes" title="Permalink to this heading"></a></h4>
-<ul class="simple">
-<li><p>All networks are exported with complete metadata for simulation purposes</p></li>
-<li><p>Time series data uses 900-second time steps</p></li>
-<li><p>Coordinates are automatically adjusted for Modelica model generation</p></li>
-<li><p>Network parameters are based on realistic district heating system values</p></li>
-</ul>
+<section id="uesgraphs-examples-e13-advanced-template-gen-example-module">
+<h2>uesgraphs.examples.e13_advanced_template_gen_example module<a class="headerlink" href="#uesgraphs-examples-e13-advanced-template-gen-example-module" title="Permalink to this heading"></a></h2>
 </section>
+<section id="uesgraphs-examples-e14-analyze-uesgraphs-example-module">
+<h2>uesgraphs.examples.e14_analyze_uesgraphs_example module<a class="headerlink" href="#uesgraphs-examples-e14-analyze-uesgraphs-example-module" title="Permalink to this heading"></a></h2>
 </section>
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e10_networks.main">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e10_networks.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e10_networks.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e10_networks.main" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e10_networks.convert_positions">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e10_networks.</span></span><span class="sig-name descname"><span class="pre">convert_positions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ues_network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e10_networks.html#convert_positions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e10_networks.convert_positions" title="Permalink to this definition"></a></dt>
-<dd><p>Translate node positions onto a Modelica-ready canvas</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ues_network</strong> (<em>uesgraphs.uesgraph.UESGraph object</em>) – An uesgraphs representation of the cooling network</p></li>
-<li><p><strong>width_set</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Width of the Modelica-ready canvas after translation</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ues_network</strong> – An uesgraphs representation of the cooling network</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>uesgraphs.uesgraph.UESGraph object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e10_networks.make_network_ibpsa">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e10_networks.</span></span><span class="sig-name descname"><span class="pre">make_network_ibpsa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_dest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e10_networks.html#make_network_ibpsa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e10_networks.make_network_ibpsa" title="Permalink to this definition"></a></dt>
-<dd><p>Creates a graph corresponding to the <cite>PlugFlowAIT</cite> model in IBPSA</p>
-<p>The Modelica IBPSA Library (and thus AixLib, too) contains a benchmark
-network that was also used in the following paper:
-doi: 10.1016/j.enconman.2017.08.072</p>
-<p>The model is at
-AixLib.Fluid.FixedResistances.Validation.PlugFlowPipes.PlugFlowAIT</p>
-<p>This function returns the UESGraph representing the network</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dir_dest</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Path where a <cite>nodes.json</cite> export of the network will be stored</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>graph_network</strong> – Graph of the network</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph">uesgraphs.uesgraph.UESGraph</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e10_networks.make_network_pinola">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e10_networks.</span></span><span class="sig-name descname"><span class="pre">make_network_pinola</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_dest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e10_networks.html#make_network_pinola"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e10_networks.make_network_pinola" title="Permalink to this definition"></a></dt>
-<dd><p>Creates a graph of the “Pinola” network</p>
-<p>The Modelica IBPSA Library (and thus AixLib, too) contains a benchmark
-network that was also used in the following paper:
-doi: 10.1016/j.enconman.2017.08.072</p>
-<p>The model is at
-AixLib.Fluid.FixedResistances.Validation.PlugFlowPipes.PlugFlowAIT</p>
-<p>This function returns the UESGraph representing a network that is a mix
-between the IBPSA model and the Larock 424 example</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dir_dest</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Path where a <cite>nodes.json</cite> export of the network will be stored</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>graph_network</strong> – Graph of the network</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph">uesgraphs.uesgraph.UESGraph</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e10_networks.get_temperature_ground">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e10_networks.</span></span><span class="sig-name descname"><span class="pre">get_temperature_ground</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e10_networks.html#get_temperature_ground"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e10_networks.get_temperature_ground" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a time series of ground temperature from IBPSA example</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e10_networks.get_temperature_supply">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e10_networks.</span></span><span class="sig-name descname"><span class="pre">get_temperature_supply</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e10_networks.html#get_temperature_supply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e10_networks.get_temperature_supply" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a time series of supply temperature from IBPSA example</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e10_networks.get_input_heat">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e10_networks.</span></span><span class="sig-name descname"><span class="pre">get_input_heat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e10_networks.html#get_input_heat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e10_networks.get_input_heat" title="Permalink to this definition"></a></dt>
-<dd><p>Return the map for heat input</p>
-</dd></dl>
-
-</section>
-<section id="uesgraphs-examples-e11-model-generation-module">
-<h2>uesgraphs.examples.e11_model_generation module<a class="headerlink" href="#uesgraphs-examples-e11-model-generation-module" title="Permalink to this heading"></a></h2>
-</section>
-<section id="module-uesgraphs.examples.e12_template_generation">
-<span id="uesgraphs-examples-e12-template-generation-module"></span><h2>uesgraphs.examples.e12_template_generation module<a class="headerlink" href="#module-uesgraphs.examples.e12_template_generation" title="Permalink to this heading"></a></h2>
-<section id="mako-template-generation-for-uesgraphs-modelica-components">
-<h3>Mako Template Generation for UESGraphs Modelica Components<a class="headerlink" href="#mako-template-generation-for-uesgraphs-modelica-components" title="Permalink to this heading"></a></h3>
-<p>This module demonstrates the generation of Mako templates for different AixLib
-component types, which are required for automated Modelica code generation using
-UESGraphs. Templates are generated for demands, pipes, and supplies based on
-AixLib v2.1.0 components.</p>
-<section id="component-types">
-<h4>Component Types:<a class="headerlink" href="#component-types" title="Permalink to this heading"></a></h4>
-<ol class="arabic simple">
-<li><p>Demand Models:
-- Variable supply temperature model
-- Heat pump model with Carnot cycle
-- Templates include parameters for temperature differences and nominal conditions</p></li>
-<li><p>Pipe Models:
-- Static pipe model
-- Plug flow pipe model
-- Plug flow pipe with zeta value
-- Templates include thermal and geometric parameters</p></li>
-<li><p>Supply Models:
-- Ideal source model for open-loop systems
-- Templates include pressure and temperature parameters</p></li>
-</ol>
-</section>
-<section id="template-generation-process">
-<h4>Template Generation Process:<a class="headerlink" href="#template-generation-process" title="Permalink to this heading"></a></h4>
-<p>For each component type (demand, pipe, supply):
-1. Creates a UESTemplates instance for the specific model
-2. Generates a new template from AixLib library
-3. Tests the template with sample data
-4. Generates corresponding Modelica code</p>
-<p>Generated templates follow the Mako syntax and include:
-- Component-specific parameters
-- Geometric information
-- Operating conditions
-- Connection specifications</p>
-</section>
-<section id="test-cases">
-<h4>Test Cases:<a class="headerlink" href="#test-cases" title="Permalink to this heading"></a></h4>
-<ul class="simple">
-<li><p>Demand: Building with defined heat demand and temperature levels</p></li>
-<li><p>Pipe: Standard pipe with insulation parameters</p></li>
-<li><p>Supply: Ideal source with return conditions</p></li>
-</ul>
-</section>
-<section id="requirements">
-<h4>Requirements:<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h4>
-<ul class="simple">
-<li><p>AixLib v2.1.0 library must be installed and path must be provided</p></li>
-<li><p>UESGraphs package with systemmodels module</p></li>
-<li><p>Shapely for geometric operations</p></li>
-</ul>
-</section>
-<section id="id1">
-<h4>Notes:<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
-<ul class="simple">
-<li><p>Templates are saved with .mako extension</p></li>
-<li><p>Generated Modelica code is printed to console for verification</p></li>
-<li><p>Template paths are customizable for demonstration purposes</p></li>
-<li><p>Default template storage is in uesgraphs/data/templates</p></li>
-</ul>
-</section>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e12_template_generation.main">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e12_template_generation.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e12_template_generation.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e12_template_generation.main" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</section>
-<section id="module-uesgraphs.examples.e13_advanced_template_gen">
-<span id="uesgraphs-examples-e13-advanced-template-gen-module"></span><h2>uesgraphs.examples.e13_advanced_template_gen module<a class="headerlink" href="#module-uesgraphs.examples.e13_advanced_template_gen" title="Permalink to this heading"></a></h2>
-<section id="bulk-template-generation-for-aixlib-components">
-<h3>Bulk Template Generation for AixLib Components<a class="headerlink" href="#bulk-template-generation-for-aixlib-components" title="Permalink to this heading"></a></h3>
-<p>This module provides functionality for automated bulk generation of Mako templates
-for multiple AixLib components. It processes component specifications from a
-central configuration file and generates corresponding templates for use with
-UESGraphs.</p>
-<section id="configuration">
-<h4>Configuration:<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h4>
-<ul class="simple">
-<li><p>Component specifications are read from ‘uesgraphs/data/template_aixlib_components.json’</p></li>
-<li><p>AixLib library path can be specified via ‘AIXLIB_LIBRARY_PATH’ environment variable</p></li>
-<li><p>Templates are generated in the specified workspace directory</p></li>
-</ul>
-<p>Features:
-——–Y
-- Batch processing of multiple component templates
-- Automatic template generation for new AixLib versions
-- Support for all component types (demands, supplies, pipes)
-- Configurable rigorous mode for automated overwriting</p>
-</section>
-<section id="parameters">
-<h4>Parameters:<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h4>
-<dl class="simple">
-<dt>workspace<span class="classifier">str</span></dt><dd><p>Directory where generated templates will be stored</p>
-</dd>
-<dt>rigorous<span class="classifier">bool, optional</span></dt><dd><p>If True, automatically overwrites existing templates without confirmation
-If False, prompts for confirmation before overwriting (default)</p>
-</dd>
-</dl>
-</section>
-<section id="usage-example">
-<h4>Usage Example:<a class="headerlink" href="#usage-example" title="Permalink to this heading"></a></h4>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="kn">import</span> <span class="n">template_generation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">template_generation</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">workspace</span><span class="o">=</span><span class="s2">&quot;./templates&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># For automated overwriting:</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">template_generation</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">rigorous</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">workspace</span><span class="o">=</span><span class="s2">&quot;./templates&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="id2">
-<h4>Notes:<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
-<ul class="simple">
-<li><p>Process might take considerable time depending on number of components</p></li>
-<li><p>Requires AixLib installation with correct version</p></li>
-<li><p>Generated templates are used for automated Modelica code generation</p></li>
-<li><p>Useful when updating to new AixLib versions or adding new components</p></li>
-</ul>
-</section>
-<section id="author">
-<h4>Author:<a class="headerlink" href="#author" title="Permalink to this heading"></a></h4>
-<p>rka-lko</p>
-</section>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e13_advanced_template_gen.main">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e13_advanced_template_gen.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e13_advanced_template_gen.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e13_advanced_template_gen.main" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</section>
-<section id="uesgraphs-examples-e14-analyze-uesgraphs-module">
-<h2>uesgraphs.examples.e14_analyze_uesgraphs module<a class="headerlink" href="#uesgraphs-examples-e14-analyze-uesgraphs-module" title="Permalink to this heading"></a></h2>
-</section>
-<section id="module-uesgraphs.examples.e1_example_readme">
-<span id="uesgraphs-examples-e1-example-readme-module"></span><h2>uesgraphs.examples.e1_example_readme module<a class="headerlink" href="#module-uesgraphs.examples.e1_example_readme" title="Permalink to this heading"></a></h2>
+<section id="module-uesgraphs.examples.e1_readme_example">
+<span id="uesgraphs-examples-e1-readme-example-module"></span><h2>uesgraphs.examples.e1_readme_example module<a class="headerlink" href="#module-uesgraphs.examples.e1_readme_example" title="Permalink to this heading"></a></h2>
 <p>Creating and Visualizing a Simple Heating Network from the readme.md with uesgraphs</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e1_example_readme.main">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e1_example_readme.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e1_example_readme.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e1_example_readme.main" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="uesgraphs.examples.e1_readme_example.main">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e1_readme_example.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e1_readme_example.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e1_readme_example.main" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e1_example_readme.example_readme">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e1_example_readme.</span></span><span class="sig-name descname"><span class="pre">example_readme</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e1_example_readme.html#example_readme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e1_example_readme.example_readme" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="uesgraphs.examples.e1_readme_example.example_readme">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e1_readme_example.</span></span><span class="sig-name descname"><span class="pre">example_readme</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e1_readme_example.html#example_readme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e1_readme_example.example_readme" title="Permalink to this definition"></a></dt>
 <dd><p>The example given in the README.md file</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e1_example_readme.workspace_example">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e1_example_readme.</span></span><span class="sig-name descname"><span class="pre">workspace_example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_workspace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e1_example_readme.html#workspace_example"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e1_example_readme.workspace_example" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="uesgraphs.examples.e1_readme_example.workspace_example">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e1_readme_example.</span></span><span class="sig-name descname"><span class="pre">workspace_example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_workspace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e1_readme_example.html#workspace_example"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e1_readme_example.workspace_example" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a local workspace with given name</p>
 <p>If no name is given, the general workspace directory will be used</p>
 <dl class="field-list simple">
@@ -430,100 +160,29 @@ If False, prompts for confirmation before overwriting (default)</p>
 </dd></dl>
 
 </section>
-<section id="module-uesgraphs.examples.e2_simple_dhc">
-<span id="uesgraphs-examples-e2-simple-dhc-module"></span><h2>uesgraphs.examples.e2_simple_dhc module<a class="headerlink" href="#module-uesgraphs.examples.e2_simple_dhc" title="Permalink to this heading"></a></h2>
-<p>Creating and Visualizing a more sophisticated Network with uesgraphs including heating and cooling</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e2_simple_dhc.main">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e2_simple_dhc.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e2_simple_dhc.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e2_simple_dhc.main" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e2_simple_dhc.simple_dhc_model">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e2_simple_dhc.</span></span><span class="sig-name descname"><span class="pre">simple_dhc_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e2_simple_dhc.html#simple_dhc_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e2_simple_dhc.simple_dhc_model" title="Permalink to this definition"></a></dt>
-<dd><p>Initializes an UESGraph object, adds 2 heating and cooling networks each</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>example_district</strong> – An UESGraph containing 4 buildings connected to 2 heating supplies and
-2 cooling supplies via 2 heating and cooling networks each</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>uesgraphs.uesgraph.UESGraph object</p>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="uesgraphs-examples-e2-simple-dhc-example-module">
+<h2>uesgraphs.examples.e2_simple_dhc_example module<a class="headerlink" href="#uesgraphs-examples-e2-simple-dhc-example-module" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-uesgraphs.examples.e3_add_network">
-<span id="uesgraphs-examples-e3-add-network-module"></span><h2>uesgraphs.examples.e3_add_network module<a class="headerlink" href="#module-uesgraphs.examples.e3_add_network" title="Permalink to this heading"></a></h2>
-<p>Extend the e2_simple_dhc model for an electric grid and visualize</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e3_add_network.main">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e3_add_network.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e3_add_network.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e3_add_network.main" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e3_add_network.add_more_networks">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e3_add_network.</span></span><span class="sig-name descname"><span class="pre">add_more_networks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">example_district</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e3_add_network.html#add_more_networks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e3_add_network.add_more_networks" title="Permalink to this definition"></a></dt>
-<dd><p>Adds an electric grid to the simple_dhc_model example</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>example_district</strong> (<em>uesgraphs.uesgraph.UESGraph object</em>) – An UESGraph containing 4 buildings connected to 2 heating supplies and
-2 cooling supplies via 2 heating and cooling networks each from
-<cite>simple_dhc_model()</cite></p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>example_district</strong> – An UESGraph containing 8 buildings and various supplies and networks
-to illustrate UESGraph use</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>uesgraphs.uesgraph.UESGraph object</p>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="uesgraphs-examples-e3-add-network-example-module">
+<h2>uesgraphs.examples.e3_add_network_example module<a class="headerlink" href="#uesgraphs-examples-e3-add-network-example-module" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-uesgraphs.examples.e4_save_uesgraphs">
-<span id="uesgraphs-examples-e4-save-uesgraphs-module"></span><h2>uesgraphs.examples.e4_save_uesgraphs module<a class="headerlink" href="#module-uesgraphs.examples.e4_save_uesgraphs" title="Permalink to this heading"></a></h2>
-<p>“”Write example district heating cooling network to JSON file.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e4_save_uesgraphs.main">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e4_save_uesgraphs.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e4_save_uesgraphs.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e4_save_uesgraphs.main" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e4_save_uesgraphs.to_json">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e4_save_uesgraphs.</span></span><span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e4_save_uesgraphs.html#to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e4_save_uesgraphs.to_json" title="Permalink to this definition"></a></dt>
-<dd><p>Demos the output of an uesgraph to JSON</p>
-</dd></dl>
-
+<section id="uesgraphs-examples-e4-save-uesgraphs-example-module">
+<h2>uesgraphs.examples.e4_save_uesgraphs_example module<a class="headerlink" href="#uesgraphs-examples-e4-save-uesgraphs-example-module" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-uesgraphs.examples.e5_add_street_nodes">
-<span id="uesgraphs-examples-e5-add-street-nodes-module"></span><h2>uesgraphs.examples.e5_add_street_nodes module<a class="headerlink" href="#module-uesgraphs.examples.e5_add_street_nodes" title="Permalink to this heading"></a></h2>
-<p>Usage of street nodes</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e5_add_street_nodes.main">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e5_add_street_nodes.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e5_add_street_nodes.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e5_add_street_nodes.main" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e5_add_street_nodes.street_nodes">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e5_add_street_nodes.</span></span><span class="sig-name descname"><span class="pre">street_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e5_add_street_nodes.html#street_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e5_add_street_nodes.street_nodes" title="Permalink to this definition"></a></dt>
-<dd><p>Tests the street nodes implementation</p>
-</dd></dl>
-
+<section id="uesgraphs-examples-e5-add-street-nodes-example-module">
+<h2>uesgraphs.examples.e5_add_street_nodes_example module<a class="headerlink" href="#uesgraphs-examples-e5-add-street-nodes-example-module" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-uesgraphs.examples.e6_additional_building_attributes">
-<span id="uesgraphs-examples-e6-additional-building-attributes-module"></span><h2>uesgraphs.examples.e6_additional_building_attributes module<a class="headerlink" href="#module-uesgraphs.examples.e6_additional_building_attributes" title="Permalink to this heading"></a></h2>
+<section id="module-uesgraphs.examples.e6_additional_building_attributes_example">
+<span id="uesgraphs-examples-e6-additional-building-attributes-example-module"></span><h2>uesgraphs.examples.e6_additional_building_attributes_example module<a class="headerlink" href="#module-uesgraphs.examples.e6_additional_building_attributes_example" title="Permalink to this heading"></a></h2>
 <p>Demonstration for adding additional attributes to building nodes (only terminal output)</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e6_additional_building_attributes.main">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e6_additional_building_attributes.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e6_additional_building_attributes.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e6_additional_building_attributes.main" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="uesgraphs.examples.e6_additional_building_attributes_example.main">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e6_additional_building_attributes_example.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e6_additional_building_attributes_example.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e6_additional_building_attributes_example.main" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e6_additional_building_attributes.additional_attrib">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e6_additional_building_attributes.</span></span><span class="sig-name descname"><span class="pre">additional_attrib</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e6_additional_building_attributes.html#additional_attrib"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e6_additional_building_attributes.additional_attrib" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="uesgraphs.examples.e6_additional_building_attributes_example.additional_attrib">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e6_additional_building_attributes_example.</span></span><span class="sig-name descname"><span class="pre">additional_attrib</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e6_additional_building_attributes_example.html#additional_attrib"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e6_additional_building_attributes_example.additional_attrib" title="Permalink to this definition"></a></dt>
 <dd><p>Demonstration for adding additional attributes to building nodes</p>
 <p>This approach can be used to enhance the functionality of an uesgraph
 with additional attributes, e.g. assigning a building object to a
@@ -534,151 +193,14 @@ of also adding additional attributes to edges/nodes/buildings</p>
 </dd></dl>
 
 </section>
-<section id="module-uesgraphs.examples.e7_plot_uesgraphs">
-<span id="uesgraphs-examples-e7-plot-uesgraphs-module"></span><h2>uesgraphs.examples.e7_plot_uesgraphs module<a class="headerlink" href="#module-uesgraphs.examples.e7_plot_uesgraphs" title="Permalink to this heading"></a></h2>
-<p>Creating advanced plots of uesgraphs. Its worth to take a look at the different
-outputs and how they’re generated. The plots are saved in the workspace folder.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e7_plot_uesgraphs.main">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e7_plot_uesgraphs.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e7_plot_uesgraphs.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e7_plot_uesgraphs.main" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e7_plot_uesgraphs.plot_example_networks">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e7_plot_uesgraphs.</span></span><span class="sig-name descname"><span class="pre">plot_example_networks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e7_plot_uesgraphs.html#plot_example_networks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e7_plot_uesgraphs.plot_example_networks" title="Permalink to this definition"></a></dt>
-<dd><p>Plots example networks to demo uesgraphs</p>
-</dd></dl>
-
+<section id="uesgraphs-examples-e7-plot-uesgraphs-example-module">
+<h2>uesgraphs.examples.e7_plot_uesgraphs_example module<a class="headerlink" href="#uesgraphs-examples-e7-plot-uesgraphs-example-module" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-uesgraphs.examples.e8_load_uesgraphs">
-<span id="uesgraphs-examples-e8-load-uesgraphs-module"></span><h2>uesgraphs.examples.e8_load_uesgraphs module<a class="headerlink" href="#module-uesgraphs.examples.e8_load_uesgraphs" title="Permalink to this heading"></a></h2>
-<p>How to load UESGraphs from JSON and OSM files.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e8_load_uesgraphs.main">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e8_load_uesgraphs.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e8_load_uesgraphs.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e8_load_uesgraphs.main" title="Permalink to this definition"></a></dt>
-<dd><p>Main function.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e8_load_uesgraphs.load_json">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e8_load_uesgraphs.</span></span><span class="sig-name descname"><span class="pre">load_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e8_load_uesgraphs.html#load_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e8_load_uesgraphs.load_json" title="Permalink to this definition"></a></dt>
-<dd><p>Loads a nodes.json and plots it.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e8_load_uesgraphs.load_osm">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e8_load_uesgraphs.</span></span><span class="sig-name descname"><span class="pre">load_osm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e8_load_uesgraphs.html#load_osm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e8_load_uesgraphs.load_osm" title="Permalink to this definition"></a></dt>
-<dd><p>Loads an osm file and plots it.</p>
-</dd></dl>
-
+<section id="uesgraphs-examples-e8-load-uesgraphs-example-module">
+<h2>uesgraphs.examples.e8_load_uesgraphs_example module<a class="headerlink" href="#uesgraphs-examples-e8-load-uesgraphs-example-module" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-uesgraphs.examples.e9_generate_ues_from_osm">
-<span id="uesgraphs-examples-e9-generate-ues-from-osm-module"></span><h2>uesgraphs.examples.e9_generate_ues_from_osm module<a class="headerlink" href="#module-uesgraphs.examples.e9_generate_ues_from_osm" title="Permalink to this heading"></a></h2>
-<p>Generate complex Urban Energy System (UES) Graph from OpenStreetMap (OSM) data.</p>
-<p>This script processes OSM data to create and visualize district heating networks. It performs
-building clustering, street network analysis, and generates various visualization outputs.</p>
-<section id="output-files">
-<h3>Output Files<a class="headerlink" href="#output-files" title="Permalink to this heading"></a></h3>
-<dl class="simple">
-<dt>e9_simple_melaten_osm.png</dt><dd><p>Basic network visualization without detailed features</p>
-</dd>
-<dt>e9_example_melaten_osm.png</dt><dd><p>Network layout including street labels</p>
-</dd>
-<dt>e9_example_melaten_osm_bldgs.png</dt><dd><p>Network layout with building identifiers</p>
-</dd>
-<dt>e9_example_melaten_osm_wo_large_bldgs.png</dt><dd><p>Network layout after removing large buildings
-Note: Only building 1121 is removed in this example</p>
-</dd>
-<dt>e9_simple_melaten_osm_wo_large_bldgs.png</dt><dd><p>Simplified network view without building 1121</p>
-</dd>
-<dt>e9_melaten_dhc_network.png</dt><dd><p>District heating network visualization after:
-- Street crossing detection
-- Building clustering
-- Supply node integration
-- Network optimization</p>
-</dd>
-<dt>e9_melaten_dhc_network_detail.png</dt><dd><p>Detailed view of the final district heating network</p>
-</dd>
-</dl>
-</section>
-<section id="dependencies">
-<h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading"></a></h3>
-<ul class="simple">
-<li><p>uesgraphs</p></li>
-<li><p>os</p></li>
-</ul>
-</section>
-<section id="id3">
-<h3>Author<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
-<p>MichaMans</p>
-</section>
-<section id="review">
-<h3>Review<a class="headerlink" href="#review" title="Permalink to this heading"></a></h3>
-<p>rka-lko</p>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e9_generate_ues_from_osm.main">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e9_generate_ues_from_osm.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e9_generate_ues_from_osm.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e9_generate_ues_from_osm.main" title="Permalink to this definition"></a></dt>
-<dd><p>Main function.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e9_generate_ues_from_osm.generate_ues">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e9_generate_ues_from_osm.</span></span><span class="sig-name descname"><span class="pre">generate_ues</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e9_generate_ues_from_osm.html#generate_ues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e9_generate_ues_from_osm.generate_ues" title="Permalink to this definition"></a></dt>
-<dd><p>Loads an osm file and plots it.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e9_generate_ues_from_osm.remove_small_buildings">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e9_generate_ues_from_osm.</span></span><span class="sig-name descname"><span class="pre">remove_small_buildings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_area</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e9_generate_ues_from_osm.html#remove_small_buildings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e9_generate_ues_from_osm.remove_small_buildings" title="Permalink to this definition"></a></dt>
-<dd><p>Remove all buildings from the graph that have area less than <a href="#id4"><span class="problematic" id="id5">`</span></a>min_area´.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_graph</strong> (<em>uesgraphs.uesgraph.UESGraph object</em>) – An UESGraph that will be analysed for data</p></li>
-<li><p><strong>min_area</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Minimum area for a building to remain in the graph</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>input_graph</strong> – An UESGraph that will be analysed for data</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>uesgraphs.uesgraph.UESGraph object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e9_generate_ues_from_osm.add_district_heating_buildings">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e9_generate_ues_from_osm.</span></span><span class="sig-name descname"><span class="pre">add_district_heating_buildings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supply_id_osm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e9_generate_ues_from_osm.html#add_district_heating_buildings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e9_generate_ues_from_osm.add_district_heating_buildings" title="Permalink to this definition"></a></dt>
-<dd><p>Set the given osm id as supply and remaining buildings as demand.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_graph</strong> (<em>uesgraphs.uesgraph.UESGraph object</em>) – An UESGraph that will be analysed for data</p></li>
-<li><p><strong>supply_id_osm</strong> – The osm id of the building which is used as the supply node</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e9_generate_ues_from_osm.area_list">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e9_generate_ues_from_osm.</span></span><span class="sig-name descname"><span class="pre">area_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e9_generate_ues_from_osm.html#area_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e9_generate_ues_from_osm.area_list" title="Permalink to this definition"></a></dt>
-<dd><p>List the average area of small, medium and large buildings</p>
-<p>Small: &lt; 200 m²
-Medium: 200 m² &lt; 1000 m²
-Large: &gt; 1000 m²</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>input_graph</strong> (<em>uesgraphs.uesgraph.UESGraph object</em>) – An UESGraph that will be analysed for data</p>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="uesgraphs-examples-e9-generate-ues-from-osm-example-module">
+<h2>uesgraphs.examples.e9_generate_ues_from_osm_example module<a class="headerlink" href="#uesgraphs-examples-e9-generate-ues-from-osm-example-module" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 
