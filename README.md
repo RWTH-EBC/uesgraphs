@@ -3,7 +3,7 @@
 # uesgraphs
 
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
-[![Documentation](https://raw.githubusercontent.com/RWTH-EBC/uesgraphs/gh-pages/docs/master/docs/doc.svg)](https://rwth-ebc.github.io/uesgraphs/docs/master/docs/)
+[![Documentation](https://raw.githubusercontent.com/RWTH-EBC/uesgraphs/gh-pages/docs/master/docs/doc.svg)](https://rwth-ebc.github.io//uesgraphs/master/docs/)
 [![CI](https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml)
 [![Coverage](https://raw.githubusercontent.com/RWTH-EBC/uesgraphs/gh-pages/docs/master/coverage/badge.svg)](https://rwth-ebc.github.io/uesgraphs/docs/master/coverage/)
 
