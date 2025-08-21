@@ -138,7 +138,7 @@ def map_system_model_to_uesgraph(graph_sysm,uesgraph):
         uesgraph (uesgraphs.uesgraph.UESGraph): The UES graph where pipes are edges and 
                                                 connections are nodes
     
-    eturns:
+    Returns:
         dict: Mapping from UES graph node IDs to lists of corresponding system model ports
         
     Raises:
