@@ -70,7 +70,7 @@ def set_up_file_logger(name: str, log_dir: Optional[str] = None, level: int = lo
     print(f"Logfile findable here: {log_file}")
 
     # File handler
-    file_handler = logging.FileHandler(log_file)
+    file_handler = logging.FileHandler(log_file, encoding='utf-8')
     file_formatter = logging.Formatter('%(asctime)s - %(name)s - [%(filename)s:%(lineno)d] - %(levelname)s - %(message)s')
     file_handler.setFormatter(file_formatter)
     logger.addHandler(file_handler)
