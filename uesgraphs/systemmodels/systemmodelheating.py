@@ -660,7 +660,7 @@ class SystemModelHeating(UESGraph):
                         self.nodes[other_node]["position"],
                         output="degrees",
                     )
-                    self.logger.debug(f"edge node {edge_node} other node {other_node} with Rotation {self.nodes[edge_node]["rotation"]} Angle: {angle}")
+                    self.logger.debug(f"edge node {edge_node} other node {other_node} with Rotation {self.nodes[edge_node]['rotation']} Angle: {angle}")
                     if abs(self.nodes[edge_node]["rotation"] - angle) < 90:
                         con = "pipe" + str(self.nodes[edge_node]["name"]) + ".port_b"
                         con_R = (

@@ -3,13 +3,13 @@ This module contains unit tests for uesgraphs module
 """
 
 import uesgraphs as ug
-from uesgraphs.examples import e2_simple_dhc as e2
-from uesgraphs.examples import e3_add_network as e3
-from uesgraphs.examples import e4_save_uesgraphs as e4
-from uesgraphs.examples import e6_additional_building_attributes as e6
-from uesgraphs.examples import e7_plot_uesgraphs as e7
-from uesgraphs.examples import e8_load_uesgraphs as e8
-from uesgraphs.examples import e9_generate_ues_from_osm as e9
+from uesgraphs.examples import e2_simple_dhc_example as e2
+from uesgraphs.examples import e3_add_network_example as e3
+from uesgraphs.examples import e4_save_uesgraphs_example as e4
+from uesgraphs.examples import e6_additional_building_attributes_example as e6
+from uesgraphs.examples import e7_plot_uesgraphs_example as e7
+from uesgraphs.examples import e8_load_uesgraphs_example as e8
+from uesgraphs.examples import e9_generate_ues_from_osm_example as e9
 import math
 import shapely.geometry as sg
 
