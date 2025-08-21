@@ -1,5 +1,5 @@
 model Pinola_open_loop_dT_var
-  "Model automatically generated with uesmodels at 2024-11-12 13:29:12.783153"
+  "Model automatically generated with uesgraphs version 2.1.1 at 2025-08-21 10:54:36.389046"
 
   package Medium = AixLib.Media.Specialized.Water.ConstantProperties_pT(
     T_nominal=353.15,
@@ -459,10 +459,10 @@ equation
     uses(AixLib),
     Documentation(
       info="<html>
-      <p>Network model generated with uesmodels</p>
+      <p>Network model generated with uesgraphs</p>
       </html>", revisions="<html>
       <ul>
-        <li><i>November 12, 2024&nbsp;</i> uesmodels v0.8.3:<br/>Auto-generated.</li>
+        <li><i>August 21, 2025&nbsp;</i> uesgraphs v2.1.1:<br/>Auto-generated.</li>
       </ul>
       </html>"
     ),
