@@ -1,5 +1,5 @@
 model Ibpsa_low_temp_network
-  "Model automatically generated with uesmodels at 2025-01-27 13:51:52.527504"
+  "Model automatically generated with uesgraphs version 2.1.1 at 2025-08-21 10:54:38.499819"
 
   package Medium = AixLib.Media.Specialized.Water.ConstantProperties_pT(
     T_nominal=288.15,
@@ -11,6 +11,9 @@ model Ibpsa_low_temp_network
     p_nominal=300000.0,
     T_default=303.15
   );
+
+  package MediumAir = Modelica.Media.Air.SimpleAir; 
+ 
   AixLib.Fluid.DistrictHeatingCooling.Supplies.OpenLoop.SourceIdeal supplysupply(
     redeclare package Medium = Medium,
     pReturn = 200000.0,
@@ -376,10 +379,10 @@ equation
     uses(AixLib),
     Documentation(
       info="<html>
-      <p>Network model generated with uesmodels</p>
+      <p>Network model generated with uesgraphs</p>
       </html>", revisions="<html>
       <ul>
-        <li><i>January 27, 2025&nbsp;</i> uesmodels v0.8.3:<br/>Auto-generated.</li>
+        <li><i>August 21, 2025&nbsp;</i> uesgraphs v2.1.1:<br/>Auto-generated.</li>
       </ul>
       </html>"
     ),
