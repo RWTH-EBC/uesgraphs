@@ -1,0 +1,180 @@
+# AixLib Simulation Variable Masks Configuration
+# This file defines how to map AixLib simulation variables to UESGraph attributes
+# 
+# Structure:
+# - Each AixLib version has its own configuration
+# - Variables are categorized as 'edge_variables' (assigned to graph edges) or 'node_variables' (assigned to graph nodes)
+# - Each variable defines simulation patterns, units, and assignment strategies
+
+'2.1.0':
+  # AixLib 2.1.0 introduced direct port access (port_b.p instead of ports_b[1].p)
+  # This is the recommended version for new simulations
+  
+  component_discovery:
+    # Future feature: Smart component detection from simulation data or system model
+    enabled: false
+    pipe_pattern: 'networkModel\.pipe(\d+)([R]?)\.'
+    consumer_pattern: 'networkModel\.consumer(\d+)\.'  # Future extension
+    source_pattern: 'networkModel\.source(\d+)\.'     # Future extension
+  
+  edge_variables:
+    # Variables that are assigned to graph edges (pipes)
+    
+    mass_flow:
+      simulation_pattern: 'networkModel.pipe{pipe_code}{type}.port_a.m_flow'
+      unit: 'kg/s'
+      description: 'Mass flow rate through the pipe'
+      validation_range: [0, 1000]  # Reasonable range for district heating
+    
+    pressure_drop:
+      simulation_pattern: 'networkModel.pipe{pipe_code}{type}.dp'
+      unit: 'Pa'
+      description: 'Pressure drop across the pipe'
+      validation_range: [0, 50000]  # Up to 50 kPa pressure drop
+    
+    pressure_inlet:
+      simulation_pattern: 'networkModel.pipe{pipe_code}{type}.port_a.p'
+      unit: 'Pa'
+      description: 'Pressure at pipe inlet'
+      validation_range: [50000, 1000000]  # 0.5-10 bar typical for DH
+    
+    pressure_outlet:
+      simulation_pattern: 'networkModel.pipe{pipe_code}{type}.port_b.p'
+      unit: 'Pa' 
+      description: 'Pressure at pipe outlet'
+      validation_range: [50000, 1000000]
+    
+    temperature_inlet:
+      simulation_pattern: 'networkModel.pipe{pipe_code}{type}.sta_a.T'
+      unit: 'K'
+      description: 'Temperature at pipe inlet'
+      validation_range: [273.15, 473.15]  # 0-200°C
+    
+    temperature_outlet:
+      simulation_pattern: 'networkModel.pipe{pipe_code}{type}.sta_b.T'
+      unit: 'K'
+      description: 'Temperature at pipe outlet' 
+      validation_range: [273.15, 473.15]
+    
+    # Future extensions - easy to add new variables
+    enthalpy_inlet:
+      simulation_pattern: 'networkModel.pipe{pipe_code}{type}.port_a.h'
+      unit: 'J/kg'
+      description: 'Specific enthalpy at pipe inlet'
+      optional: true  # Won't cause failure if missing
+    
+    enthalpy_outlet:
+      simulation_pattern: 'networkModel.pipe{pipe_code}{type}.port_b.h'
+      unit: 'J/kg'
+      description: 'Specific enthalpy at pipe outlet'
+      optional: true
+  
+  node_variables:
+    # Variables that are assigned to graph nodes (junctions)
+    
+    temperature:
+      source_patterns: ['sta_{port}.T']  # Pattern to find temperature at node ports
+      unit: 'K'
+      description: 'Node temperature from connected pipes'
+      assignment_strategy: 'consistent_value'  # All ports must give same value
+      validation_range: [273.15, 473.15]
+    
+    pressure:
+      source_patterns: ['port_{port}.p']
+      unit: 'Pa'
+      description: 'Node pressure from connected pipes'
+      assignment_strategy: 'consistent_value'
+      validation_range: [50000, 1000000]
+    
+    # Example of multiple fallback patterns
+    enthalpy:
+      source_patterns: ['port_{port}.h', 'sta_{port}.h']  # Try port first, then sta
+      unit: 'J/kg'
+      description: 'Specific enthalpy at node'
+      assignment_strategy: 'first_available'  # Use first pattern that works
+      optional: true
+      validation_range: [100000, 1000000]  # Typical range for water/steam
+    
+    density:
+      source_patterns: ['port_{port}.rho', 'sta_{port}.rho']
+      unit: 'kg/m³'
+      description: 'Fluid density at node'
+      assignment_strategy: 'average'  # Average if multiple values found
+      optional: true
+      validation_range: [900, 1100]  # Water density range
+
+'2.0.0':
+  # AixLib 2.0.0 and earlier versions use array indexing for ports_b
+  # Legacy support for older simulations
+  
+  component_discovery:
+    enabled: false
+    pipe_pattern: 'networkModel\.pipe(\d+)([R]?)\.'
+  
+  edge_variables:
+    mass_flow:
+      simulation_pattern: 'networkModel.pipe{pipe_code}{type}.port_a.m_flow'
+      unit: 'kg/s'
+      description: 'Mass flow rate through the pipe'
+      validation_range: [0, 1000]
+    
+    # Note: No pressure_drop available in 2.0.0 (dp variable not present)
+    
+    pressure_inlet:
+      simulation_pattern: 'networkModel.pipe{pipe_code}{type}.port_a.p'
+      unit: 'Pa'
+      description: 'Pressure at pipe inlet'
+      validation_range: [50000, 1000000]
+    
+    pressure_outlet:
+      simulation_pattern: 'networkModel.pipe{pipe_code}{type}.ports_b[1].p'  # Array indexing!
+      unit: 'Pa'
+      description: 'Pressure at pipe outlet' 
+      validation_range: [50000, 1000000]
+    
+    temperature_inlet:
+      simulation_pattern: 'networkModel.pipe{pipe_code}{type}.sta_a.T'
+      unit: 'K'
+      description: 'Temperature at pipe inlet'
+      validation_range: [273.15, 473.15]
+    
+    temperature_outlet:
+      simulation_pattern: 'networkModel.pipe{pipe_code}{type}.sta_b[1].T'  # Array indexing!
+      unit: 'K'
+      description: 'Temperature at pipe outlet'
+      validation_range: [273.15, 473.15]
+  
+  node_variables:
+    temperature:
+      source_patterns: ['sta_{port}[1].T']  # Array indexing for 2.0.0
+      unit: 'K'
+      description: 'Node temperature from connected pipes'
+      assignment_strategy: 'consistent_value'
+      validation_range: [273.15, 473.15]
+    
+    pressure:
+      # Multiple patterns for robustness in 2.0.0
+      source_patterns: ['port_{port}.p', 'ports_{port}[1].p']
+      unit: 'Pa'
+      description: 'Node pressure from connected pipes'
+      assignment_strategy: 'consistent_value'
+      validation_range: [50000, 1000000]
+
+# Future version template (easy to extend)
+# '2.2.0':
+#   component_discovery:
+#     enabled: true  # Future smart discovery
+#     discovery_source: 'system_model'
+#   
+#   edge_variables:
+#     # New variables in 2.2.0
+#     heat_loss:
+#       simulation_pattern: 'networkModel.pipe{pipe_code}{type}.Q_loss'
+#       unit: 'W'
+#       description: 'Heat loss from pipe'
+#       optional: true
+#   
+#   node_variables:
+#     # Inherit from 2.1.0 but with modifications
+#     temperature:
+#       source_patterns: ['thermal_{port}.T']  # New naming in 2.2.0
