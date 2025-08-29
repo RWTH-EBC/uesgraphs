@@ -4,67 +4,62 @@ UESGraphs Analysis Module
 
 Enhanced analysis capabilities for district heating networks.
 
-This module provides tools for:
-- Processing simulation data from Dymola/Modelica
-- Assigning time series data to network components  
-- Hydraulic and thermal analysis
-- Performance calculations and visualizations
-
 Main Functions:
---------------
-- assign_simulation_data(): Main API for data assignment
-- process_simulation_result(): Process parquet/mat files
-- prepare_DataFrame(): Add datetime index and filtering
+- assign_data_pipeline(): Full pipeline for simulation data assignment
+- process_simulation_result(): Process .mat/.parquet files
+- prepare_DataFrame(): Add datetime indexing and filtering
 
-Example Usage:
--------------
+Quick Start:
 ```python
-import uesgraphs as ug
-from uesgraphs.analysis import assign_simulation_data, process_simulation_result
+from uesgraphs.analysis import assign_data_pipeline
+from datetime import datetime
 
-# Load network
-graph = ug.UESGraph()
-graph.from_json("network.json", network_type="heating")
-
-# Process simulation data
-graph_with_data = assign_simulation_data(
-    graph, 
-    "simulation_results.mat",
+# Assign simulation data to network
+graph_with_data = assign_data_pipeline(
+    graph=graph,
+    simulation_data_path="results.mat",
     start_date=datetime(2024, 1, 1),
-    end_date=datetime(2024, 1, 7)
+    end_date=datetime(2024, 1, 7),
+    time_interval="15min",
+    system_model_path="system_model.json"
 )
 ```
 """
 
-# Import main functions from data_handling
+# Main pipeline function
 from .data_handling.data_handling import (
-    # File processing
+    assign_data_pipeline,
     process_simulation_result,
     prepare_DataFrame,
-    assign_data_pipeline,
-
-    # Main API (TODO: implement)
-    # assign_simulation_data,
-    
-    # Logger setup
     set_up_terminal_logger,
     set_up_file_logger,
 )
 
+# MAT file handling
+from .data_handling.mat_handler import (
+    loadsim,
+    mat_to_pandas,
+    mat_to_parquet,
+)
+
+# System model mapping
+from .data_handling.graph_transformation import (
+    map_system_model_to_uesgraph,
+)
+
 # Version info
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __author__ = "Leon Kopka (leon.kopka@rwth-aachen.de)"
 
-# Define public API
+# Public API - main functions users need
 __all__ = [
-    # Main API
-    # "assign_simulation_data",  # TODO: uncomment when implemented
-    
-    # Core functions
-    "process_simulation_result",
+    "assign_data_pipeline",
+    "process_simulation_result", 
     "prepare_DataFrame",
-    "assign_data_pipeline"
-    # Utilities
-    "set_up_terminal_logger", 
+    "loadsim",
+    "mat_to_pandas",
+    "mat_to_parquet",
+    "map_system_model_to_uesgraph",
+    "set_up_terminal_logger",
     "set_up_file_logger",
 ]
