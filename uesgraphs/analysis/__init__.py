@@ -41,7 +41,6 @@ from .data_handling.data_handling import (
     # File processing
     process_simulation_result,
     prepare_DataFrame,
-    assign_simulation_data,
     assign_data_pipeline,
 
     # Main API (TODO: implement)
@@ -64,7 +63,6 @@ __all__ = [
     # Core functions
     "process_simulation_result",
     "prepare_DataFrame",
-    "assign_simulation_data",
     "assign_data_pipeline"
     # Utilities
     "set_up_terminal_logger", 
