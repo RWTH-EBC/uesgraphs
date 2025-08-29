@@ -580,17 +580,16 @@ def assign_edge_data(graph, MASK, df):
         
 ##### Validation functions
 
-def validate_graph_attributes(graph, mask, reference_df, logger=None):
+def validate_edge_attributes(graph, edge_attributes, reference_df, logger=None):
     """
-    Validates graph edge and node attributes against a reference DataFrame.
+    Validates graph edge attributes against a reference DataFrame.
     
-    Checks if the length of attribute arrays in edges and nodes matches the 
+    Checks if the length of attribute arrays in edges matches the 
     number of rows in the reference DataFrame.
     
     Args:
         graph: uesgraphs
-        mask (dict): Dictionary with "edge" and "node" keys containing 
-                    attributes to validate
+        edge_attributes (dict): Dictionary containing edge attributes to validate
         reference_df (pd.DataFrame): Reference DataFrame for length comparison
         logger (logging.Logger, optional): Logger instance. If None, a 
                                          terminal logger will be created.
@@ -602,9 +601,9 @@ def validate_graph_attributes(graph, mask, reference_df, logger=None):
         ValueError: For critical validation errors
     """
     if logger is None:
-        logger = set_up_terminal_logger(f"{__name__}.validate_graph_attributes")
+        logger = set_up_terminal_logger(f"{__name__}.validate_edge_attributes")
     
-    logger.info("Starting graph attribute validation...")
+    logger.info("Starting edge attribute validation...")
     
     expected_length = reference_df.shape[0]
     validation_passed = True
@@ -613,9 +612,9 @@ def validate_graph_attributes(graph, mask, reference_df, logger=None):
     # Validate edge attributes
     logger.info(f"Validating edge attributes for {len(graph.edges)} edges...")
     
-    if "edge" in mask:
+    if edge_attributes:
         for edge_idx, edge in enumerate(graph.edges):
-            for edge_attr in mask["edge"].keys():
+            for edge_attr in edge_attributes.keys():
                 if edge_attr in graph.edges[edge]:
                     actual_length = len(graph.edges[edge][edge_attr])
                     
@@ -636,14 +635,55 @@ def validate_graph_attributes(graph, mask, reference_df, logger=None):
                     warning_msg = f"Edge {edge} - Attribute '{edge_attr}' not found"
                     logger.warning(warning_msg)
     else:
-        logger.warning("No edge attributes defined in MASK")
+        logger.warning("No edge attributes provided for validation")
+    
+    # Validation summary
+    if validation_passed:
+        logger.info("✓ Edge attribute validation completed successfully")
+    else:
+        logger.error(f"✗ Edge attribute validation failed: {len(errors)} errors")
+        for error in errors[:5]:  # Show maximum 5 errors in summary
+            logger.error(f"  - {error}")
+        if len(errors) > 5:
+            logger.error(f"  ... and {len(errors) - 5} more errors")
+    
+    return validation_passed
+
+def validate_node_attributes(graph, node_attributes, reference_df, logger=None):
+    """
+    Validates graph node attributes against a reference DataFrame.
+    
+    Checks if the length of attribute arrays in nodes matches the 
+    number of rows in the reference DataFrame.
+    
+    Args:
+        graph: uesgraphs
+        node_attributes (dict): Dictionary containing node attributes to validate
+        reference_df (pd.DataFrame): Reference DataFrame for length comparison
+        logger (logging.Logger, optional): Logger instance. If None, a 
+                                         terminal logger will be created.
+    
+    Returns:
+        bool: True if all validations pass, False otherwise
+        
+    Raises:
+        ValueError: For critical validation errors
+    """
+    if logger is None:
+        logger = set_up_terminal_logger(f"{__name__}.validate_node_attributes")
+    
+    logger.info("Starting node attribute validation...")
+    
+    expected_length = reference_df.shape[0]
+    validation_passed = True
+    errors = []
     
     # Validate node attributes
     logger.info(f"Validating node attributes for {len(graph.nodes)} nodes...")
     
-    if "node" in mask:
+    if node_attributes:
         for node_idx, node in enumerate(graph.nodes):
-            for node_attr in mask["node"].keys():
+            for node_attr in node_attributes.keys():
                 if node_attr in graph.nodes[node]:
                     actual_length = len(graph.nodes[node][node_attr])
                     
@@ -664,13 +704,13 @@ def validate_graph_attributes(graph, mask, reference_df, logger=None):
                     warning_msg = f"Node {node} - Attribute '{node_attr}' not found"
                     logger.warning(warning_msg)
     else:
-        logger.warning("No node attributes defined in MASK")
+        logger.warning("No node attributes provided for validation")
     
     # Validation summary
     if validation_passed:
-        logger.info(" Graph attribute validation completed successfully")
+        logger.info("✓ Node attribute validation completed successfully")
     else:
-        logger.error(f" Graph attribute validation failed: {len(errors)} errors")
+        logger.error(f"✗ Node attribute validation failed: {len(errors)} errors")
         for error in errors[:5]:  # Show maximum 5 errors in summary
             logger.error(f"  - {error}")
         if len(errors) > 5:
@@ -679,29 +719,161 @@ def validate_graph_attributes(graph, mask, reference_df, logger=None):
     return validation_passed
 
 
-def _validate_edge_only_assignment(
-    graph: ug.UESGraph, 
-    MASK: Dict[str, str], 
-    df: Any, 
-    logger: logging.Logger
-) -> None:
+def assess_dp_quality(graph, 
+                      negligible_abs_threshold=1.0, 
+                      negligible_rel_threshold=0.001,
+                      acceptable_abs_threshold=10.0, 
+                      acceptable_rel_threshold=0.01):
     """
-    Basic validation for edge-only assignment mode.
+    Assesses the quality of node assignments based on pressure and pressure difference
     
-    Checks that mass flow data was successfully assigned to all edges.
+    Parameters:
+    -----------
+    graph : uesgraph
+        The district heating network graph object
+    negligible_abs_threshold : float, default=1.0
+        Absolute threshold for negligible deviations (Pa)
+    negligible_rel_threshold : float, default=0.001
+        Relative threshold for negligible deviations (0.1%)
+    acceptable_abs_threshold : float, default=10.0
+        Absolute threshold for acceptable deviations (Pa)
+    acceptable_rel_threshold : float, default=0.01
+        Relative threshold for acceptable deviations (1%)
+    
+    Returns:
+    --------
+    dict
+        Dictionary with categories 'negligible', 'acceptable', 'investigate'
+        and corresponding edges with timestamp information
     """
-    missing_edges = []
+    stats = {
+        'negligible': [],
+        'acceptable': [], 
+        'investigate': []
+    }
     
     for edge in graph.edges:
-        if "m_flow" not in graph.edges[edge]:
-            missing_edges.append(edge)
+        node1, node2 = list(edge)
+        p1 = graph.nodes[node1]["pressure"]
+        p2 = graph.nodes[node2]["pressure"]
+        dp_calc = p1 - p2
+        dp_sim = graph.edges[edge]["dp"]
+        
+        # Check for each timestamp
+        for i in range(len(p1)):
+            timestamp = p1.index[i] if hasattr(p1, 'index') else i
+            
+            abs_diff = abs(dp_calc.iloc[i] - dp_sim.iloc[i])
+            rel_error = (abs_diff / abs(dp_sim.iloc[i]) 
+                        if dp_sim.iloc[i] != 0 else float('inf'))
+            
+            edge_info = {
+                'edge': edge,
+                'timestamp': timestamp,
+                'abs_diff': abs_diff,
+                'rel_error': rel_error,
+                'dp_calculated': dp_calc.iloc[i],
+                'dp_simulated': dp_sim.iloc[i]
+            }
+            
+            # Categorization based on thresholds
+            if (abs_diff < negligible_abs_threshold or 
+                rel_error < negligible_rel_threshold):
+                stats['negligible'].append(edge_info)
+                
+            elif (abs_diff < acceptable_abs_threshold and 
+                  rel_error < acceptable_rel_threshold):
+                stats['acceptable'].append(edge_info)
+                
+            else:
+                stats['investigate'].append(edge_info)
     
-    if missing_edges:
-        logger.error(f"Mass flow data missing for {len(missing_edges)} edges: {missing_edges}")
-        raise ValueError(f"Edge data assignment incomplete for {len(missing_edges)} edges")
-    
-    logger.info(f"✓ All {len(graph.edges)} edges have mass flow data assigned")
+    return stats
 
+def _format_dp_quality_summary(stats):
+    """
+    Formats a comprehensive summary of the pressure difference quality assessment as string.
+    
+    Parameters:
+    -----------
+    stats : dict
+        Result from assess_dp_quality()
+        
+    Returns:
+    --------
+    str
+        Formatted summary string ready for logging or printing
+    """
+    total_measurements = (len(stats['negligible']) + 
+                         len(stats['acceptable']) + 
+                         len(stats['investigate']))
+    
+    lines = []
+    lines.append("=== Pressure Difference Quality Assessment ===")
+    lines.append(f"Total measurements: {total_measurements}")
+    lines.append(f"Negligible: {len(stats['negligible'])} ({len(stats['negligible'])/total_measurements*100:.1f}%)")
+    lines.append(f"Acceptable: {len(stats['acceptable'])} ({len(stats['acceptable'])/total_measurements*100:.1f}%)")
+    lines.append(f"Investigate: {len(stats['investigate'])} ({len(stats['investigate'])/total_measurements*100:.1f}%)")
+    
+    if stats['investigate']:
+        lines.append("")
+        lines.append("--- Critical Deviations (Top 5) ---")
+        # Sort by absolute error
+        worst_cases = sorted(stats['investigate'], 
+                           key=lambda x: x['abs_diff'], reverse=True)[:5]
+        
+        for case in worst_cases:
+            lines.append(f"Edge {case['edge']}, Time {case['timestamp']}: "
+                        f"dp_sim={case['dp_simulated']:.2f} Pa, "
+                        f"dp_calc={case['dp_calculated']:.2f} Pa, "
+                        f"Diff={case['abs_diff']:.2f} Pa ({case['rel_error']*100:.2f}%)")
+    
+    return "\n".join(lines)
+
+
+def _check_dp_quality_warnings(stats, logger=None):
+    """
+    Checks for critical pressure difference deviations and issues warnings.
+    This may indicate faulty assignments in the network model.
+    
+    Parameters:
+    -----------
+    stats : dict
+        Result from assess_dp_quality()
+    logger : logging.Logger, optional
+        Logger instance to use for warnings. If None, uses print statements.
+        
+    Returns:
+    --------
+    bool
+        True if critical deviations were found, False otherwise
+    """
+    critical_count = len(stats['investigate'])
+    
+    if critical_count == 0:
+        return False
+        
+    # Sort critical cases by severity (absolute difference)
+    critical_cases = sorted(stats['investigate'], 
+                          key=lambda x: x['abs_diff'], reverse=True)
+    
+    warning_msg = (f"WARNING: Found {critical_count} critical pressure difference deviations! "
+                  f"This may indicate faulty network assignments or modeling errors.")
+    
+    if logger:
+        logger.warning(warning_msg)
+        logger.warning("Most severe cases:")
+        for case in critical_cases[:3]:  # Show top 3
+            logger.warning(f"  Edge {case['edge']} at {case['timestamp']}: "
+                         f"{case['abs_diff']:.2f} Pa deviation ({case['rel_error']*100:.1f}%)")
+    else:
+        print(f" {warning_msg}")
+        print("Most severe cases:")
+        for case in critical_cases[:3]:
+            print(f"  • Edge {case['edge']} at {case['timestamp']}: "
+                  f"{case['abs_diff']:.2f} Pa deviation ({case['rel_error']*100:.1f}%)")
+    
+    return True
 
 ## Final pipeline function
 
@@ -906,13 +1078,20 @@ def assign_data_pipeline(
         # Step 6: Validate results
         logger.info("Step 6/6: Validating assignment results")
         
+        validate_edge_attributes(graph, MASK["edge"], df, logger=logger)
+        logger.info("✓ Edge validation completed successfully")
+
         if assignment_mode == "full":
-            validate_graph_attributes(graph, MASK, df, logger=logger)
-            logger.info("✓ Full validation completed successfully")
-        else:
-            # Basic validation for edge-only assignment
-            _validate_edge_only_assignment(graph, MASK, df, logger)
-            logger.info("✓ Edge-only validation completed successfully")
+            validate_node_attributes(graph,MASK["node"],df, logger=logger)
+
+            ## Additional test to asses node assignment based on pressures
+            stats = assess_dp_quality(graph) 
+            has_critical = _check_dp_quality_warnings(stats, logger)
+            if has_critical:
+                logger.warning("⚠️  Critical pressure difference deviations found!")
+            else:
+                logger.info("✓ Full validation completed successfully")
+
         
         logger.info("="*70)
         logger.info("PIPELINE COMPLETED SUCCESSFULLY")
