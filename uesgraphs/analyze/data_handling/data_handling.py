@@ -216,7 +216,9 @@ def process_simulation_result(file_path: str, filter_list: List[str],
     
     try:
         # Read parquet file metadata to get columns
-        parquet_file = pq.ParquetFile(file_path)
+        parquet_file = pq.ParquetFile(file_path,
+                                  thrift_string_size_limit=2_000_000_000,
+                                  thrift_container_size_limit=2_000_000_000)
         chunks = []
         total_rows = 0
        
