@@ -442,7 +442,199 @@ def create_model(
     new_model.write_modelica_package(save_at=save_at)
     
     logger.info(f"=== create_model completed successfully for '{name}' ===")
+
+    # Save the model to JSON for later use
+    json_path = save_system_model_to_json(new_model, save_at + "/model.json")
+    print(f"Model JSON saved at {json_path}")
+
     return new_model
+
+
+def save_system_model_to_json(model, filepath):
+    """
+    Save a SystemModelHeating object to a JSON file with comprehensive attribute capturing.
+    
+    Parameters:
+        model: SystemModelHeating - The model to save
+        filepath: str - Path where the JSON file should be saved
+    
+    Returns:
+        str - Path to the saved file
+    """
+    import json
+    # Create a dictionary to store all model data
+    model_data = {
+        # Store class information
+        "class_info": {
+            "type": model.__class__.__name__,
+            "module": model.__class__.__module__
+        },
+        
+        # Constructor parameters (only these will be used for initialization)
+        "init_params": {
+            "model_name": getattr(model, "model_name", "Test"),
+            "network_type": getattr(model, "network_type", "heating")
+        },
+        
+        # Store all other attributes separately
+        "attributes": {},
+        
+        # Store graph structure
+        "graph": {
+            "nodes": [],
+            "edges": []
+        }
+    }
+    
+    # Save all instance attributes (excluding built-in attributes)
+    for attr_name in dir(model):
+        # Skip private attributes, methods, and constructor parameters
+        if (attr_name.startswith('_') or callable(getattr(model, attr_name)) or 
+            attr_name in model_data["init_params"]):
+            continue
+            
+        try:
+            attr_value = getattr(model, attr_name)
+            # Try to make it JSON serializable
+            try:
+                json.dumps(attr_value)
+                model_data["attributes"][attr_name] = attr_value
+            except (TypeError, OverflowError):
+                # If not serializable, convert to string representation
+                model_data["attributes"][attr_name] = str(attr_value)
+        except Exception as e:
+            # Skip attributes that cannot be accessed or serialized
+            print(f"Skipping attribute {attr_name}: {e}")
+    
+    # Save all node data
+    for node in model.nodes():
+        node_data = {
+            "id": node,
+            "attributes": {}
+        }
+        
+        # Copy all serializable attributes
+        for key, value in model.nodes[node].items():
+            if key == "position" and hasattr(value, "x") and hasattr(value, "y"):
+                # Special handling for shapely Point objects
+                node_data["attributes"]["position"] = {
+                    "x": value.x,
+                    "y": value.y
+                }
+            else:
+                # Try to make the value JSON serializable
+                try:
+                    json.dumps(value)
+                    node_data["attributes"][key] = value
+                except (TypeError, OverflowError):
+                    # If not serializable, convert to string
+                    node_data["attributes"][key] = str(value)
+        
+        model_data["graph"]["nodes"].append(node_data)
+    
+    # Save all edge data
+    for u, v in model.edges():
+        edge_data = {
+            "source": u,
+            "target": v,
+            "attributes": {}
+        }
+        
+        # Copy all serializable attributes
+        for key, value in model.edges[u, v].items():
+            try:
+                json.dumps(value)
+                edge_data["attributes"][key] = value
+            except (TypeError, OverflowError):
+                edge_data["attributes"][key] = str(value)
+        
+        model_data["graph"]["edges"].append(edge_data)
+    
+    # Save to file with pretty printing for readability
+    with open(filepath, 'w', encoding='utf-8') as f:
+        json.dump(model_data, f, indent=2)
+    
+    print(f"Model saved to {filepath}")
+    return filepath
+
+
+def load_system_model_from_json(filepath):
+    """
+    Load a SystemModelHeating object from a JSON file, respecting the constructor's signature.
+    
+    Parameters:
+        filepath: str - Path to the JSON file
+    
+    Returns:
+        SystemModelHeating - The reconstructed model
+    """
+    # Import required modules
+    import importlib
+    import json
+    import shapely.geometry as sg
+    
+    # Load the JSON data
+    with open(filepath, 'r', encoding='utf-8') as f:
+        model_data = json.load(f)
+    
+    # Get the class information
+    class_info = model_data.get("class_info", {})
+    class_name = class_info.get("type", "UESGraph")
+    module_name = class_info.get("module", "uesgraphs.uesgraph")
+    
+    try:
+        # Dynamically import the module and get the class
+        module = importlib.import_module(module_name)
+        ModelClass = getattr(module, class_name)
+        
+        # Get only the initialization parameters
+        init_params = model_data.get("init_params", {})
+        
+        # Create a new instance with only the constructor parameters
+        model = ModelClass(**init_params)
+        
+        # Set all other attributes manually after initialization
+        for attr_name, attr_value in model_data.get("attributes", {}).items():
+            try:
+                setattr(model, attr_name, attr_value)
+            except Exception as e:
+                print(f"Warning: Could not set attribute {attr_name}: {e}")
+        
+    except (ImportError, AttributeError) as e:
+        # Fallback to UESGraph if the specific class can't be imported
+        print(f"Warning: Could not create {class_name} ({e}). Creating UESGraph instead.")
+        model = UESGraph()
+    
+    # Add nodes with all attributes
+    for node_data in model_data["graph"]["nodes"]:
+        node_id = node_data["id"]
+        
+        # Add the node to the graph
+        model.add_node(node_id)
+        
+        # Set node attributes
+        for key, value in node_data["attributes"].items():
+            if key == "position" and isinstance(value, dict) and "x" in value and "y" in value:
+                # Reconstruct shapely Point objects
+                model.nodes[node_id][key] = sg.Point(value["x"], value["y"])
+            else:
+                model.nodes[node_id][key] = value
+    
+    # Add edges with all attributes
+    for edge_data in model_data["graph"]["edges"]:
+        source = edge_data["source"]
+        target = edge_data["target"]
+        
+        # Add the edge to the graph
+        model.add_edge(source, target)
+        
+        # Set edge attributes
+        for key, value in edge_data["attributes"].items():
+            model.edges[source, target][key] = value
+    
+    print(f"Model loaded from {filepath}")
+    return model
+ 
 
 def estimate_fac(graph, u_form_distance=25, n_gate_valve=2.0):
     """Calculate fac for all pipes based on m_flow_nominal
