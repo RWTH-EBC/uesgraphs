@@ -14,7 +14,7 @@ from datetime import datetime
 
 import uesgraphs as ug
 from uesgraphs.systemmodels import utilities as ut
-from uesgraphs.analysis.data_handling import graph_transformation
+from uesgraphs.analyze.data_handling import graph_transformation
 
 
 #### Global Variables ####
