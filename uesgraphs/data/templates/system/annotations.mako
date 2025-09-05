@@ -4,7 +4,7 @@ annotation (
     <p>System model connecting the network model with table inputs</p>
     </html>", revisions="<html>
     <ul>
-      <li><i>${now.strftime("%B %d, %Y")}&nbsp;</i> uesmodels ${version}:<br/>Auto-generated.</li>
+      <li><i>${now.strftime("%B %d, %Y")}&nbsp;</i> uesgraphs ${version}:<br/>Auto-generated.</li>
     </ul>
     </html>"
     ),

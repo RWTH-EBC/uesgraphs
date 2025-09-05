@@ -310,7 +310,8 @@ class Visuals(object):
         generic_intensive_size=None,
         generic_extensive_size=None,
         minmax = False,
-        zero_alpha = 1
+        zero_alpha = 1,
+        cmap = "viridis",
     ):
         """Creates the plot setup, that can be shown or saved to file
 
@@ -370,7 +371,11 @@ class Visuals(object):
         zero_alpha: float
             Alpha value to paint certain edges transparent. Look at docstring
             of paint_edges_extensive_sizes for more information
-
+        cmap : str, optional
+            Name of the colormap to use for visualization (default='viridis').
+            Common options include 'viridis', 'coolwarm', 'RdYlGn', 'plasma', 
+            'Blues'. For temperature data, 'coolwarm' or 'RdYlGn' provide 
+            intuitive red=hot, blue=cold color semantics.
         Returns
         -------
         ax : maplotlib ax object
@@ -741,7 +746,8 @@ class Visuals(object):
                 key="mass_flow",
                 minmax=minmaxmflow,
                 scaling_factor_diameter=scaling_factor_diameter,
-                zero_alpha=zero_alpha
+                zero_alpha=zero_alpha,
+                cmap = cmap
             )
         
         if show_press_drop_flows is True:
@@ -750,7 +756,8 @@ class Visuals(object):
                 key="press_drop_flow",
                 minmax=minmaxmpressdrop,
                 scaling_factor_diameter=scaling_factor_diameter,
-                zero_alpha=zero_alpha
+                zero_alpha=zero_alpha,
+                cmap = cmap
             )
         
         if show_temperature_drop is True:   
@@ -759,7 +766,8 @@ class Visuals(object):
                 key="temperature_drop",
                 minmax=minmaxmtempdrop,
                 scaling_factor_diameter=scaling_factor_diameter,
-                zero_alpha=zero_alpha
+                zero_alpha=zero_alpha,
+                cmap = cmap
             )
 
         if show_velocity is True:
@@ -768,7 +776,8 @@ class Visuals(object):
                 key="velocity",
                 minmax=minmaxmvelocity,
                 scaling_factor_diameter=scaling_factor_diameter,
-                zero_alpha=zero_alpha
+                zero_alpha=zero_alpha,
+                cmap = cmap
             )
 
         #Plotting of intensive sizes
@@ -777,14 +786,16 @@ class Visuals(object):
                 ax,
                 "temperature_supply",
                 scaling_factor_diameter=scaling_factor_diameter,
-                minmax=minmaxtemp
+                minmax=minmaxtemp,
+                cmap = cmap
             )
         if show_press_flows is True:
             self._paint_edges_intensive_sizes(
                 ax,
                 key="press_flow",
                 scaling_factor_diameter=scaling_factor_diameter,
-                minmax=minmaxmpress
+                minmax=minmaxmpress,
+                cmap = cmap
             )
 
         if show_diameters is True:
@@ -797,7 +808,8 @@ class Visuals(object):
                 ax,
                 key = generic_intensive_size,
                 scaling_factor_diameter=scaling_factor_diameter,
-                minmax=minmax
+                minmax=minmax,
+                cmap = cmap
             )
         if generic_extensive_size is not None:
             self._paint_edges_extensive_sizes(
@@ -805,7 +817,8 @@ class Visuals(object):
                 key = generic_extensive_size,
                 minmax=minmax,
                 scaling_factor_diameter=scaling_factor_diameter,
-                zero_alpha=zero_alpha
+                zero_alpha=zero_alpha,
+                cmap = cmap
             )
         
        
@@ -987,7 +1000,8 @@ class Visuals(object):
         generic_extensive_size=None,
         minmax = None,
         ylabel = None,
-        zero_alpha = 1
+        zero_alpha = 1,
+        cmap = "viridis"
     ):
         """Shows a plot of the network
 
@@ -1071,6 +1085,11 @@ class Visuals(object):
         zero_alpha: float
             Alpha value to paint certain edges transparent. Look at docstring
             of paint_edges_extensive_sizes for more information
+        cmap : str, optional
+            Name of the colormap to use for visualization (default='viridis').
+            Common options include 'viridis', 'coolwarm', 'RdYlGn', 'plasma', 
+            'Blues'. For temperature data, 'coolwarm' or 'RdYlGn' provide 
+            intuitive red=hot, blue=cold color semantics.
 
         Returns
         -------
@@ -1159,7 +1178,8 @@ class Visuals(object):
                 generic_intensive_size=generic_intensive_size,
                 generic_extensive_size=generic_extensive_size,
                 minmax=minmax,
-                zero_alpha=zero_alpha
+                zero_alpha=zero_alpha,
+                cmap=cmap,
             )
         else:
             ax = self.create_plot_simple(ax, scaling_factor=scaling_factor)
@@ -1230,7 +1250,7 @@ class Visuals(object):
             cond = None
         if cond is not None:
             ax1 = plt.subplot(gs[1])
-            self._add_color_scale(ax1,minmax,ylabel, label_size=label_size)
+            self._add_color_scale(ax1,minmax,ylabel, label_size=label_size,cmap=cmap)
 
         if timestamp:
             ax.text(0.0, 
@@ -1896,10 +1916,10 @@ class Visuals(object):
             width=None,
         )
         return ax
-    def _add_color_scale(self, ax1,minmax,ylabel, label_size):
+    def _add_color_scale(self, ax1,minmax,ylabel, label_size,cmap = "viridis"):
         # ax1 = plt.subplot(gs[1])
         norm = Normalize(minmax[0],minmax[1])
-        cb1 = mpl.colorbar.ColorbarBase(ax1, cmap=plt.get_cmap("viridis"), norm=norm, orientation="vertical")
+        cb1 = mpl.colorbar.ColorbarBase(ax1, cmap=plt.get_cmap(cmap), norm=norm, orientation="vertical")
         cb1.ax.set_ylabel(ylabel, labelpad=15)
         text = cb1.ax.yaxis.label
         font = mpl.font_manager.FontProperties(size=label_size)
@@ -1907,7 +1927,7 @@ class Visuals(object):
         cb1.ax.tick_params(labelsize=label_size)
         
 
-    def _paint_edges_extensive_sizes(self, ax,key,minmax,scaling_factor_diameter=25,zero_alpha=1):
+    def _paint_edges_extensive_sizes(self, ax,key,minmax,scaling_factor_diameter=25,zero_alpha=1,cmap = "viridis"):
         """
         Add the progression of extensive variables (e.g., mass flow) in color to the edges.
 
@@ -1931,6 +1951,11 @@ class Visuals(object):
             Useful to make pipes with same values transparent. For example if velocity deviations shall
             be plotted, the pipes with zero deviation can be made transparent to highlight smaller pipes
             with high deviations
+        cmap : str, optional
+            Name of the colormap to use for visualization (default='viridis').
+            Common options include 'viridis', 'coolwarm', 'RdYlGn', 'plasma', 
+            'Blues'. For temperature data, 'coolwarm' or 'RdYlGn' provide 
+            intuitive red=hot, blue=cold color semantics.
 
         Returns
         -------
@@ -1966,14 +1991,14 @@ class Visuals(object):
                 raise KeyError(f"Edge {edge} has no {key}. Check assignment of {key} to edges")
             self.logger.debug(f"{key} found for {edge}: {value}")
         
-        #3 Choose color from "viridis"-palette for the certain mass flow of the edge
+        #3 Choose color from colormap-palette for the certain mass flow of the edge
             #3.1 Define alpha channel to make the color transparent if the value is close to zero
             eps = 1e-6
             if value < minmax[0] + eps:
                 alpha_channel = zero_alpha
             else:
                 alpha_channel = 1
-            color = plt.get_cmap("viridis")(Normalize(minmax[0],minmax[1])(abs(value)),alpha_channel)
+            color = plt.get_cmap(cmap)(Normalize(minmax[0],minmax[1])(abs(value)),alpha_channel)
         
         #4 Summarize color and geometry to a LineCollection
             lc = LineCollection([line], colors=[color], linewidths=linewidth*scaling_factor_diameter)
@@ -2021,7 +2046,7 @@ class Visuals(object):
         #             fontsize=4,
         #         )
 
-    def _paint_edges_intensive_sizes(self, ax, key, minmax,scaling_factor_diameter=25):
+    def _paint_edges_intensive_sizes(self, ax, key, minmax,scaling_factor_diameter=25,cmap = "viridis"):
         """
         Add the progression of intensive variables (e.g., temperature) in color to the edges.
 
@@ -2040,6 +2065,11 @@ class Visuals(object):
             Format: [minimum, maximum]
         scaling_factor_diameter : float
             Scaling factor for the edge diameter.
+        cmap : str, optional
+            Name of the colormap to use for visualization (default='viridis').
+            Common options include 'viridis', 'coolwarm', 'RdYlGn', 'plasma', 
+            'Blues'. For temperature data, 'coolwarm' or 'RdYlGn' provide 
+            intuitive red=hot, blue=cold color semantics.
 
         Returns
         -------
@@ -2106,7 +2136,7 @@ class Visuals(object):
                 #LineCollection with min-max values gets defined
             lc = LineCollection(
                     segments,
-                    cmap=plt.get_cmap("viridis"),
+                    cmap=plt.get_cmap(cmap),
                     norm=Normalize(minmax[0], minmax[1]),
                 )
                 #Values like temperature get assigned to LineCollection which results 

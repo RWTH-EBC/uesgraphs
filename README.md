@@ -3,7 +3,10 @@
 # uesgraphs
 
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
-[![Build Status](https://travis-ci.com/RWTH-EBC/uesgraphs.svg?token=ssfy4ps1Qm5kvs5yAxfm&branch=master)](https://travis-ci.com/RWTH-EBC/uesgraphs)
+[![Documentation](https://raw.githubusercontent.com/RWTH-EBC/uesgraphs/gh-pages/docs/master/docs/doc.svg)](https://rwth-ebc.github.io//uesgraphs/master/docs/)
+[![CI](https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml)
+![Coverage](https://raw.githubusercontent.com/RWTH-EBC/uesgraphs/gh-pages/docs/master/coverage/badge.svg)
+
 
 **uesgraphs** is a Python package for describing Urban Energy Systems, managing their data within a Python graph structure, and enabling the automatic generation of dynamic district simulation models. We extend the
 [networkx](https://networkx.github.io/) Graph class and add basic methods to
@@ -21,6 +24,8 @@ systems or generate simulation models. **Version 2** has been updated with the f
 **uesgraphs** is being developed at [RWTH Aachen University, E.ON Energy
 Research Center, Institute for Energy Efficient Buildings and Indoor
 Climate](https://www.ebc.eonerc.rwth-aachen.de/cms/~dmzz/E-ON-ERC-EBC/?lidx=1).
+
+If you have any questions regarding the tool, feel free to contact us at [ebc-tools@eonerc.rwth-aachen.de](mailto:ebc-tools@eonerc.rwth-aachen.de).
 
 ## :rocket: Quick start
 
@@ -189,11 +194,18 @@ graph.nodes[demand]['heat_load_kW'] = 200
 
 This can be used as a foundation to analyze networks or to generate models.
 
+## Version Information
+
+The package version can be accessed programmatically:
+
+```python
+import uesgraphs
+print(f"uesgraphs version: {uesgraphs.__version__}")
+```
+
 ## :herb: Branch strategy
 
-Main branch: `development`
-
-Fixing issues: `issues\issueXXX_lilDescription`
+Main branch: `master`
 
 ## :memo: Documentation
 

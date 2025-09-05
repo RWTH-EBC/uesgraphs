@@ -9,7 +9,7 @@ import pytest
 import os
 
 from uesgraphs.systemmodels import systemmodelheating as smh
-from uesgraphs.examples import e11_model_generation as exm
+from uesgraphs.examples import e11_model_generation_example as exm
 from uesgraphs.systemmodels.utilities import *
 
 
@@ -77,8 +77,8 @@ def test_network_model_open_loop_dt_var(datadir):
                 lines_created = created.read().split("\n")
 
             for line_ref, line_created in zip(lines_ref, lines_created):
-                description = "Model automatically generated with uesmodels at"
-                doc = "&nbsp;</i> uesmodels "
+                description = "Model automatically generated with uesgraphs"
+                doc = "&nbsp;</i> uesgraphs "
                 if (
                     description not in line_ref
                     and doc not in line_ref
@@ -129,8 +129,8 @@ def test_network_model_t_ground_var(datadir):
                 lines_created = created.read().split("\n")
 
             for line_ref, line_created in zip(lines_ref, lines_created):
-                description = "Model automatically generated with uesmodels at"
-                doc = "&nbsp;</i> uesmodels "
+                description = "Model automatically generated with uesgraphs"
+                doc = "&nbsp;</i> uesgraphs "
                 if (
                     description not in line_ref
                     and doc not in line_ref
@@ -181,8 +181,8 @@ def test_network_model_low_temp(datadir):
                 lines_created = created.read().split("\n")
 
             for line_ref, line_created in zip(lines_ref, lines_created):
-                description = "Model automatically generated with uesmodels at"
-                doc = "&nbsp;</i> uesmodels "
+                description = "Model automatically generated with uesgraphs"
+                doc = "&nbsp;</i> uesgraphs "
                 if (
                     description not in line_ref
                     and doc not in line_ref
@@ -191,27 +191,25 @@ def test_network_model_low_temp(datadir):
                 ):
                     assert line_ref == line_created, "Lines not matching"
 
-
 def test_doc_string():
-    """Test the getter and setter of doc-string in UESModel
-    """
+    """Test doc-string generation and setter"""
     model = smh.SystemModelHeating()
-
-    now = datetime.datetime.now()
-    doc_string_time = dparser.parse(model.doc_string, fuzzy=True)
-
-    assert "Model automatically generated with uesmodels" in model.doc_string
-    assert doc_string_time - now < datetime.timedelta(milliseconds=1)
-
-    for length in [75, 76]:
-        new_doc_string = "a" * length
-        model.doc_string = new_doc_string
-        assert model.doc_string == new_doc_string
-
+    
+    # Test auto-generated format (simple but robust)
+    doc_string = model.doc_string
+    assert "Model automatically generated with uesgraphs version" in doc_string
+    assert str(datetime.now().year) in doc_string
+    
+    # Test setter functionality  
+    model.doc_string = "a" * 75  # OK
+    assert model.doc_string == "a" * 75
+    
+    model.doc_string = "a" * 76  # Still OK
+    assert model.doc_string == "a" * 76
+    
+    # Test length limit
     with pytest.raises(ValueError):
-        new_doc_string = "a" * 77
-        model.doc_string = new_doc_string
-
+        model.doc_string = "a" * 77
 
 def test_medium():
     """Test the getter and setter of medium in UESModel

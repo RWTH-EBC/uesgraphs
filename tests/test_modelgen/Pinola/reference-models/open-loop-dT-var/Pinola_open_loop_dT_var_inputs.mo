@@ -198,7 +198,7 @@ annotation (
     <p>System model connecting the network model with table inputs</p>
     </html>", revisions="<html>
     <ul>
-      <li><i>November 12, 2024&nbsp;</i> uesmodels 0.8.3:<br/>Auto-generated.</li>
+      <li><i>August 21, 2025&nbsp;</i> uesgraphs 2.1.1:<br/>Auto-generated.</li>
     </ul>
     </html>"
     ),
