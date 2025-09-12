@@ -210,7 +210,6 @@ def create_dirs(dir_project):
         'input': os.path.join(dir_project, "input"),
         'model': os.path.join(dir_project, "model"), 
         'result': os.path.join(dir_project, "result"),
-        'visualization': os.path.join(dir_project, "visualization")
     }
     
     # Create all directories
@@ -575,11 +574,6 @@ def setup_building_parameters(uesgraph, params_dict):
     Note: This function could be moved to uesgraphs core in the future
     as part of a general component configuration system.
     """
-    
-    # Common parameters for all buildings
-    common_params = {
-        'allowFlowReversal': params_dict['allowFlowReversal']
-    }
     
     # Specific parameters for demand buildings
     demand_params = {
