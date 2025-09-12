@@ -33,14 +33,6 @@ uesgraphs.examples.e12\_template\_generation\_example module
    :undoc-members:
    :show-inheritance:
 
-uesgraphs.examples.e13\_advanced\_template\_gen\_example module
----------------------------------------------------------------
-
-.. automodule:: uesgraphs.examples.e13_advanced_template_gen_example
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 uesgraphs.examples.e14\_analyze\_uesgraphs\_example module
 ----------------------------------------------------------
 

@@ -12,27 +12,12 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   uesgraphs.analyze
    uesgraphs.examples
    uesgraphs.systemmodels
 
 Submodules
 ----------
-
-uesgraphs.analyze module
-------------------------
-
-.. automodule:: uesgraphs.analyze
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-uesgraphs.template\_generation module
--------------------------------------
-
-.. automodule:: uesgraphs.template_generation
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 uesgraphs.uesgraph module
 -------------------------

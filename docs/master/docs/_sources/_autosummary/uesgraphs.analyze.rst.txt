@@ -9,30 +9,6 @@
 
    
    
-   .. rubric:: Functions
-
-   .. autosummary::
-   
-      assign_data_to_uesgraphs
-      calculate_accumulated_pressure_drop
-      calculate_central_pump_power
-      calculate_pump_energy
-      check_input_file
-      check_supply_type
-      find_source_nodes
-      get_MASKS
-      get_graph_at_time
-      get_mostfrequent_value
-      get_node_values
-      get_peripheral_value
-      plot_network
-      plot_pump_energy
-      prepare_DataFrame
-      process_parquet_file
-      process_simulation_result
-      pump_power_analysis
-      set_up_logger
-   
    
 
    

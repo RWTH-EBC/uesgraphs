@@ -54,7 +54,6 @@
 <li class="toctree-l1"><a class="reference internal" href="uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="uesgraphs.visuals.html">uesgraphs.visuals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="uesgraphs.analyze.html">uesgraphs.analyze</a></li>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.template_generation.html">uesgraphs.template_generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="uesgraphs.utilities.html">uesgraphs.utilities</a></li>
 </ul>
 <ul class="current">
@@ -70,6 +69,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.templates.UESTemplates.call_function"><code class="docutils literal notranslate"><span class="pre">UESTemplates.call_function()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.templates.UESTemplates.generate_new_template"><code class="docutils literal notranslate"><span class="pre">UESTemplates.generate_new_template()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.templates.UESTemplates.render"><code class="docutils literal notranslate"><span class="pre">UESTemplates.render()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.templates.UESTemplates.generate_bulk"><code class="docutils literal notranslate"><span class="pre">UESTemplates.generate_bulk()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.templates.UESTemplates.generate_from_config"><code class="docutils literal notranslate"><span class="pre">UESTemplates.generate_from_config()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.templates.Parameter"><code class="docutils literal notranslate"><span class="pre">Parameter</span></code></a><ul>
@@ -258,6 +259,57 @@ of the given class
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.templates.UESTemplates.generate_bulk">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_bulk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">models_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rigorous</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/templates.html#UESTemplates.generate_bulk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.templates.UESTemplates.generate_bulk" title="Permalink to this definition"></a></dt>
+<dd><p>Generate multiple templates in bulk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>models_dict</strong> – Dictionary mapping model types to lists of model names.
+Example: {“Demand”: [“Model1”, “Model2”], “Pipe”: [“Model3”]}</p></li>
+<li><p><strong>library_path</strong> – Path to Modelica library or list of library paths</p></li>
+<li><p><strong>workspace</strong> – Directory for generated templates (optional)</p></li>
+<li><p><strong>rigorous</strong> – If True, auto-overwrite existing templates without confirmation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping model names to their template paths or error messages</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="o">.</span><span class="n">generate_bulk</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s2">&quot;Demand&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;AixLib.Fluid.SomeModel&quot;</span><span class="p">]},</span>
+<span class="gp">... </span>    <span class="s2">&quot;/path/to/aixlib&quot;</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.templates.UESTemplates.generate_from_config">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_from_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/templates.html#UESTemplates.generate_from_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.templates.UESTemplates.generate_from_config" title="Permalink to this definition"></a></dt>
+<dd><p>Generate templates from JSON configuration file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_file</strong> – Path to JSON configuration file</p></li>
+<li><p><strong>library_path</strong> – Path to Modelica library, list of paths, or None for auto-detection</p></li>
+<li><p><strong>**kwargs</strong> – Additional arguments passed to generate_bulk (workspace, rigorous, etc.)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping model names to template paths or error messages</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="o">.</span><span class="n">generate_from_config</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="s2">&quot;data/templates/template_aixlib_components.json&quot;</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>

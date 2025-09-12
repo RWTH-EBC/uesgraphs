@@ -51,7 +51,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.template_generation.html">uesgraphs.template_generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
 </ul>
 <ul>
@@ -162,7 +161,7 @@
     <span class="n">workspace</span> <span class="o">=</span> <span class="n">e1</span><span class="o">.</span><span class="n">workspace_example</span><span class="p">(</span><span class="s2">&quot;e10&quot;</span><span class="p">)</span>
     <span class="n">dir_tests</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;tests&quot;</span><span class="p">)</span>
     <span class="n">dir_modelgen</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_tests</span><span class="p">,</span> <span class="s2">&quot;test_modelgen&quot;</span><span class="p">)</span>
-
+    <span class="nb">print</span><span class="p">(</span><span class="n">workspace</span><span class="p">)</span>
     <span class="c1"># Make Pinola network</span>
     <span class="n">dir_pinola</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_modelgen</span><span class="p">,</span> <span class="s2">&quot;Pinola&quot;</span><span class="p">)</span>
     <span class="n">dir_pinola</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">dir_pinola</span><span class="p">)</span>

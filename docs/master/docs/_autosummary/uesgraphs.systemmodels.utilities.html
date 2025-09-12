@@ -54,7 +54,6 @@
 <li class="toctree-l1"><a class="reference internal" href="uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="uesgraphs.visuals.html">uesgraphs.visuals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="uesgraphs.analyze.html">uesgraphs.analyze</a></li>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.template_generation.html">uesgraphs.template_generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="uesgraphs.utilities.html">uesgraphs.utilities</a></li>
 </ul>
 <ul class="current">
@@ -66,6 +65,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.prepare_graph"><code class="docutils literal notranslate"><span class="pre">prepare_graph()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.create_model"><code class="docutils literal notranslate"><span class="pre">create_model()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.save_system_model_to_json"><code class="docutils literal notranslate"><span class="pre">save_system_model_to_json()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.load_system_model_from_json"><code class="docutils literal notranslate"><span class="pre">load_system_model_from_json()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.estimate_fac"><code class="docutils literal notranslate"><span class="pre">estimate_fac()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.estimate_m_flow_nominal"><code class="docutils literal notranslate"><span class="pre">estimate_m_flow_nominal()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.estimate_m_flow_nominal_tablebased"><code class="docutils literal notranslate"><span class="pre">estimate_m_flow_nominal_tablebased()</span></code></a></li>
@@ -135,8 +136,14 @@
 <tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.load_pipe_catalog" title="uesgraphs.systemmodels.utilities.load_pipe_catalog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_pipe_catalog</span></code></a>([catalog_name, custom_path])</p></td>
 <td><p>Load pipe catalog data from CSV file in the data/pipe_catalogs directory.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.prepare_graph" title="uesgraphs.systemmodels.utilities.prepare_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepare_graph</span></code></a>(graph, T_supply, p_supply, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.load_system_model_from_json" title="uesgraphs.systemmodels.utilities.load_system_model_from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_system_model_from_json</span></code></a>(filepath)</p></td>
+<td><p>Load a SystemModelHeating object from a JSON file, respecting the constructor's signature.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.prepare_graph" title="uesgraphs.systemmodels.utilities.prepare_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepare_graph</span></code></a>(graph, T_supply, p_supply, ...)</p></td>
 <td><p>Adds data for model generation to the uesgraph</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.save_system_model_to_json" title="uesgraphs.systemmodels.utilities.save_system_model_to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_system_model_to_json</span></code></a>(model, filepath)</p></td>
+<td><p>Save a SystemModelHeating object to a JSON file with comprehensive attribute capturing.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.set_up_file_logger" title="uesgraphs.systemmodels.utilities.set_up_file_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_file_logger</span></code></a>(name[, log_dir, level])</p></td>
 <td><p>Set up a full file+console logger for major functions.</p></td>
@@ -272,6 +279,37 @@ than the value for <cite>short_pipes_static</cite>, a static pipe model will be 
 <li><p><strong>meta_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Dictionary with meta data</p></li>
 <li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger instance for debugging</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.utilities.save_system_model_to_json">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.utilities.</span></span><span class="sig-name descname"><span class="pre">save_system_model_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/utilities.html#save_system_model_to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.utilities.save_system_model_to_json" title="Permalink to this definition"></a></dt>
+<dd><p>Save a SystemModelHeating object to a JSON file with comprehensive attribute capturing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – SystemModelHeating - The model to save</p></li>
+<li><p><strong>filepath</strong> – str - Path where the JSON file should be saved</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>str - Path to the saved file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.utilities.load_system_model_from_json">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.utilities.</span></span><span class="sig-name descname"><span class="pre">load_system_model_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/utilities.html#load_system_model_from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.utilities.load_system_model_from_json" title="Permalink to this definition"></a></dt>
+<dd><p>Load a SystemModelHeating object from a JSON file, respecting the constructor’s signature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepath</strong> – str - Path to the JSON file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>SystemModelHeating - The reconstructed model</p>
 </dd>
 </dl>
 </dd></dl>

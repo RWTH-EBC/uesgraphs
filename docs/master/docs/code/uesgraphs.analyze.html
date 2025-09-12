@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>uesgraphs.analyze &mdash; uesgraphs v2.1.1</title>
+  <title>uesgraphs.analyze package &mdash; uesgraphs v2.1.1</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -19,8 +19,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="uesgraphs.utilities" href="uesgraphs.utilities.html" />
-    <link rel="prev" title="uesgraphs.visuals" href="uesgraphs.visuals.html" /> 
+    <link rel="next" title="uesgraphs.examples package" href="uesgraphs.examples.html" />
+    <link rel="prev" title="uesgraphs package" href="uesgraphs.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,41 +43,42 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../code/modules.html">uesgraphs</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.UESGraph.html">uesgraphs.UESGraph</a></li>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.Visuals.html">uesgraphs.Visuals</a></li>
-</ul>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.visuals.html">uesgraphs.visuals</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">uesgraphs.analyze</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs-analysis-module">UESGraphs Analysis Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id5">)</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">uesgraphs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="uesgraphs.html">uesgraphs package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.get_versioning_info"><code class="docutils literal notranslate"><span class="pre">get_versioning_info()</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="uesgraphs.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">uesgraphs.analyze package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html">uesgraphs.examples package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html">uesgraphs.systemmodels package</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.assign_data_pipeline"><code class="docutils literal notranslate"><span class="pre">assign_data_pipeline()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.process_simulation_result"><code class="docutils literal notranslate"><span class="pre">process_simulation_result()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.prepare_DataFrame"><code class="docutils literal notranslate"><span class="pre">prepare_DataFrame()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.loadsim"><code class="docutils literal notranslate"><span class="pre">loadsim()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.mat_to_pandas"><code class="docutils literal notranslate"><span class="pre">mat_to_pandas()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.mat_to_parquet"><code class="docutils literal notranslate"><span class="pre">mat_to_parquet()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.map_system_model_to_uesgraph"><code class="docutils literal notranslate"><span class="pre">map_system_model_to_uesgraph()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.set_up_terminal_logger"><code class="docutils literal notranslate"><span class="pre">set_up_terminal_logger()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.analyze.set_up_file_logger"><code class="docutils literal notranslate"><span class="pre">set_up_file_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#module-uesgraphs.uesgraph">uesgraphs.uesgraph module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#module-uesgraphs.utilities">uesgraphs.utilities module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#module-uesgraphs.visuals">uesgraphs.visuals module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.utilities.html">uesgraphs.utilities</a></li>
+</ul>
+</li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.systemmodels.systemmodelheating.html">uesgraphs.systemmodels.systemmodelheating</a></li>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.systemmodels.utilities.html">uesgraphs.systemmodels.utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html">uesgraphs.UESGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.Visuals.html">uesgraphs.Visuals</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.examples.html">uesgraphs.examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.systemmodels.systemmodelheating.html">uesgraphs.systemmodels.systemmodelheating</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.systemmodels.utilities.html">uesgraphs.systemmodels.utilities</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.examples.html">uesgraphs.examples</a></li>
 </ul>
 
         </div>
@@ -94,9 +95,11 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">uesgraphs.analyze</li>
+          <li class="breadcrumb-item"><a href="modules.html">uesgraphs</a></li>
+          <li class="breadcrumb-item"><a href="uesgraphs.html">uesgraphs package</a></li>
+      <li class="breadcrumb-item active">uesgraphs.analyze package</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/_autosummary/uesgraphs.analyze.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/code/uesgraphs.analyze.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -105,7 +108,7 @@
            <div itemprop="articleBody">
              
   <section id="module-uesgraphs.analyze">
-<span id="uesgraphs-analyze"></span><h1>uesgraphs.analyze<a class="headerlink" href="#module-uesgraphs.analyze" title="Permalink to this heading"></a></h1>
+<span id="uesgraphs-analyze-package"></span><h1>uesgraphs.analyze package<a class="headerlink" href="#module-uesgraphs.analyze" title="Permalink to this heading"></a></h1>
 <section id="uesgraphs-analysis-module">
 <h2>UESGraphs Analysis Module<a class="headerlink" href="#uesgraphs-analysis-module" title="Permalink to this heading"></a></h2>
 <p>Enhanced analysis capabilities for district heating networks.</p>
@@ -133,7 +136,7 @@ system_model_path=”system_model.json”</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="uesgraphs.analyze.assign_data_pipeline">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">assign_data_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><span class="pre">UESGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation_data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><span class="pre">datetime</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><span class="pre">datetime</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">MASK</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aixlib_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'2.1.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_to_port_mapping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><span class="pre">UESGraph</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/analyze/data_handling/data_handling.html#assign_data_pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.assign_data_pipeline" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.analyze.</span></span><span class="sig-name descname"><span class="pre">assign_data_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><span class="pre">UESGraph</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation_data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><span class="pre">datetime</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><span class="pre">datetime</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">MASK</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aixlib_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'2.1.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_to_port_mapping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><span class="pre">UESGraph</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/analyze/data_handling/data_handling.html#assign_data_pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.analyze.assign_data_pipeline" title="Permalink to this definition"></a></dt>
 <dd><p>Assign simulation data to a UESGraph network.</p>
 <p>This function processes simulation results and assigns time series data
 to network components (nodes and edges). It supports two modes:</p>
@@ -332,12 +335,12 @@ needed, it may save resources to set <em>constants_only</em> to <em>True</em>.</
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>graph_sysm</strong> (<a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating" title="uesgraphs.systemmodels.systemmodelheating.SystemModelHeating"><em>uesgraphs.systemmodels.systemmodelheating.SystemModelHeating</em></a>) – <dl class="simple">
+<li><p><strong>graph_sysm</strong> (<a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating" title="uesgraphs.systemmodels.systemmodelheating.SystemModelHeating"><em>uesgraphs.systemmodels.systemmodelheating.SystemModelHeating</em></a>) – <dl class="simple">
 <dt>The system model graph where pipes are nodes and</dt><dd><p>connections are edges</p>
 </dd>
 </dl>
 </p></li>
-<li><p><strong>uesgraph</strong> (<a class="reference internal" href="../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><em>uesgraphs.uesgraph.UESGraph</em></a>) – The UES graph where pipes are edges and
+<li><p><strong>uesgraph</strong> (<a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><em>uesgraphs.uesgraph.UESGraph</em></a>) – The UES graph where pipes are edges and
 connections are nodes</p></li>
 </ul>
 </dd>
@@ -394,8 +397,8 @@ connections are nodes</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="uesgraphs.visuals.html" class="btn btn-neutral float-left" title="uesgraphs.visuals" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="uesgraphs.utilities.html" class="btn btn-neutral float-right" title="uesgraphs.utilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="uesgraphs.html" class="btn btn-neutral float-left" title="uesgraphs package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="uesgraphs.examples.html" class="btn btn-neutral float-right" title="uesgraphs.examples package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

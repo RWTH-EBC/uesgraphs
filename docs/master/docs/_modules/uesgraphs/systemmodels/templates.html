@@ -51,7 +51,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.template_generation.html">uesgraphs.template_generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
 </ul>
 <ul>
@@ -108,7 +107,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
 <span class="c1"># For type declaration in methods</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_versioning_info</span>
 
@@ -570,7 +569,171 @@
 
         <span class="n">mo</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render_unicode</span><span class="p">(</span><span class="o">**</span><span class="n">write_params</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">mo</span></div></div>
+        <span class="k">return</span> <span class="n">mo</span></div>
+
+<div class="viewcode-block" id="UESTemplates.generate_bulk"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.generate_bulk">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_bulk</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> 
+                      <span class="n">models_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> 
+                      <span class="n">library_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> 
+                      <span class="n">workspace</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                      <span class="n">rigorous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate multiple templates in bulk.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            models_dict: Dictionary mapping model types to lists of model names.</span>
+<span class="sd">                        Example: {&quot;Demand&quot;: [&quot;Model1&quot;, &quot;Model2&quot;], &quot;Pipe&quot;: [&quot;Model3&quot;]}</span>
+<span class="sd">            library_path: Path to Modelica library or list of library paths</span>
+<span class="sd">            workspace: Directory for generated templates (optional)</span>
+<span class="sd">            rigorous: If True, auto-overwrite existing templates without confirmation</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary mapping model names to their template paths or error messages</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; results = UESTemplates.generate_bulk(</span>
+<span class="sd">            ...     {&quot;Demand&quot;: [&quot;AixLib.Fluid.SomeModel&quot;]}, </span>
+<span class="sd">            ...     &quot;/path/to/aixlib&quot;</span>
+<span class="sd">            ... )</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">libs</span> <span class="o">=</span> <span class="n">library_path</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">library_path</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">library_path</span><span class="p">]</span>
+        
+        <span class="k">for</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">model_names</span> <span class="ow">in</span> <span class="n">models_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">model_names</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating template for </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">template</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="n">model_type</span><span class="p">)</span>
+                    <span class="n">template</span><span class="o">.</span><span class="n">rigorous</span> <span class="o">=</span> <span class="n">rigorous</span>
+                    
+                    <span class="k">if</span> <span class="n">workspace</span><span class="p">:</span>
+                        <span class="n">template</span><span class="o">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="n">workspace</span><span class="p">,</span> 
+                            <span class="n">model_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.mako&quot;</span>
+                        <span class="p">)</span>
+                    
+                    <span class="n">template</span><span class="o">.</span><span class="n">generate_new_template</span><span class="p">(</span><span class="n">path_library</span><span class="o">=</span><span class="n">libs</span><span class="p">)</span>
+                    <span class="n">results</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">save_path</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Successfully generated template for </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;ERROR: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✗ Error generating template for </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">results</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_msg</span>
+        
+        <span class="k">return</span> <span class="n">results</span></div>
+
+<div class="viewcode-block" id="UESTemplates.generate_from_config"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.generate_from_config">[docs]</a>    <span class="nd">@classmethod</span>  
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> 
+                            <span class="n">config_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                            <span class="n">library_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate templates from JSON configuration file.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            config_file: Path to JSON configuration file</span>
+<span class="sd">            library_path: Path to Modelica library, list of paths, or None for auto-detection</span>
+<span class="sd">            **kwargs: Additional arguments passed to generate_bulk (workspace, rigorous, etc.)</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary mapping model names to template paths or error messages</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; results = UESTemplates.generate_from_config(</span>
+<span class="sd">            ...     &quot;data/templates/template_aixlib_components.json&quot;</span>
+<span class="sd">            ... )</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">models_dict</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_load_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">models_dict</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+        
+        <span class="k">if</span> <span class="n">library_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">library_path</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_auto_detect_aixlib</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">generate_bulk</span><span class="p">(</span><span class="n">models_dict</span><span class="p">,</span> <span class="n">library_path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load and parse JSON configuration file.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            config_file: Path to JSON configuration file</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary with model configuration or empty dict if error</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+        
+        <span class="c1"># Handle both absolute and relative paths</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
+            <span class="c1"># Relative to uesgraphs package directory</span>
+            <span class="n">dir_uesgraphs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+            <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_uesgraphs</span><span class="p">,</span> <span class="n">config_file</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">config_path</span> <span class="o">=</span> <span class="n">config_file</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            
+            <span class="n">base_paths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;base_paths&#39;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="n">models</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;models&#39;</span><span class="p">,</span> <span class="p">{})</span>
+            
+            <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">model_type</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">model_type</span> <span class="ow">in</span> <span class="n">base_paths</span><span class="p">:</span>
+                    <span class="c1"># Build full model names by combining base paths with model names</span>
+                    <span class="n">full_model_names</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">[</span><span class="n">model_type</span><span class="p">]:</span>
+                        <span class="n">full_name</span> <span class="o">=</span> <span class="n">base_paths</span><span class="p">[</span><span class="n">model_type</span><span class="p">]</span> <span class="o">+</span> <span class="n">model</span>
+                        <span class="n">full_model_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span>
+                    <span class="n">result</span><span class="p">[</span><span class="n">model_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_model_names</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># No base path - assume model names are already complete</span>
+                    <span class="n">result</span><span class="p">[</span><span class="n">model_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="n">model_type</span><span class="p">]</span>
+            
+            <span class="k">return</span> <span class="n">result</span>
+            
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: Configuration file not found: </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: Invalid JSON in configuration file: </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: Missing key </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2"> in configuration file: </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error loading configuration: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="nd">@classmethod</span> 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_auto_detect_aixlib</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Auto-detect AixLib library path from environment variable.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Path to AixLib package.mo file</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            KeyError: If AIXLIB_LIBRARY_PATH environment variable is not set</span>
+<span class="sd">            FileNotFoundError: If the detected path doesn&#39;t exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;AIXLIB_LIBRARY_PATH&#39;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Error: The environment variable AIXLIB_LIBRARY_PATH is not set.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;Please set the path to the AixLib library in the environment variables.&quot;</span><span class="p">)</span>
+        
+        <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/package.mo&quot;</span><span class="p">):</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/package.mo&quot;</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AixLib package.mo not found at: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">path</span></div>
 
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>

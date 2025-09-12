@@ -51,7 +51,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.template_generation.html">uesgraphs.template_generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
 </ul>
 <ul>
@@ -533,7 +532,199 @@
     <span class="n">new_model</span><span class="o">.</span><span class="n">write_modelica_package</span><span class="p">(</span><span class="n">save_at</span><span class="o">=</span><span class="n">save_at</span><span class="p">)</span>
     
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;=== create_model completed successfully for &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; ===&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Save the model to JSON for later use</span>
+    <span class="n">json_path</span> <span class="o">=</span> <span class="n">save_system_model_to_json</span><span class="p">(</span><span class="n">new_model</span><span class="p">,</span> <span class="n">save_at</span> <span class="o">+</span> <span class="s2">&quot;/model.json&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model JSON saved at </span><span class="si">{</span><span class="n">json_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">new_model</span></div>
+
+
+<div class="viewcode-block" id="save_system_model_to_json"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.save_system_model_to_json">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">save_system_model_to_json</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save a SystemModelHeating object to a JSON file with comprehensive attribute capturing.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">        model: SystemModelHeating - The model to save</span>
+<span class="sd">        filepath: str - Path where the JSON file should be saved</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        str - Path to the saved file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+    <span class="c1"># Create a dictionary to store all model data</span>
+    <span class="n">model_data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="c1"># Store class information</span>
+        <span class="s2">&quot;class_info&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span>
+        <span class="p">},</span>
+        
+        <span class="c1"># Constructor parameters (only these will be used for initialization)</span>
+        <span class="s2">&quot;init_params&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;model_name&quot;</span><span class="p">,</span> <span class="s2">&quot;Test&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;network_type&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;network_type&quot;</span><span class="p">,</span> <span class="s2">&quot;heating&quot;</span><span class="p">)</span>
+        <span class="p">},</span>
+        
+        <span class="c1"># Store all other attributes separately</span>
+        <span class="s2">&quot;attributes&quot;</span><span class="p">:</span> <span class="p">{},</span>
+        
+        <span class="c1"># Store graph structure</span>
+        <span class="s2">&quot;graph&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;nodes&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;edges&quot;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c1"># Save all instance attributes (excluding built-in attributes)</span>
+    <span class="k">for</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+        <span class="c1"># Skip private attributes, methods, and constructor parameters</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">attr_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">))</span> <span class="ow">or</span> 
+            <span class="n">attr_name</span> <span class="ow">in</span> <span class="n">model_data</span><span class="p">[</span><span class="s2">&quot;init_params&quot;</span><span class="p">]):</span>
+            <span class="k">continue</span>
+            
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">attr_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">)</span>
+            <span class="c1"># Try to make it JSON serializable</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">attr_value</span><span class="p">)</span>
+                <span class="n">model_data</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">][</span><span class="n">attr_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">attr_value</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">OverflowError</span><span class="p">):</span>
+                <span class="c1"># If not serializable, convert to string representation</span>
+                <span class="n">model_data</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">][</span><span class="n">attr_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">attr_value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Skip attributes that cannot be accessed or serialized</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping attribute </span><span class="si">{</span><span class="n">attr_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Save all node data</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="p">():</span>
+        <span class="n">node_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">node</span><span class="p">,</span>
+            <span class="s2">&quot;attributes&quot;</span><span class="p">:</span> <span class="p">{}</span>
+        <span class="p">}</span>
+        
+        <span class="c1"># Copy all serializable attributes</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;position&quot;</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">):</span>
+                <span class="c1"># Special handling for shapely Point objects</span>
+                <span class="n">node_data</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">][</span><span class="s2">&quot;position&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                    <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">y</span>
+                <span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Try to make the value JSON serializable</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                    <span class="n">node_data</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">OverflowError</span><span class="p">):</span>
+                    <span class="c1"># If not serializable, convert to string</span>
+                    <span class="n">node_data</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        
+        <span class="n">model_data</span><span class="p">[</span><span class="s2">&quot;graph&quot;</span><span class="p">][</span><span class="s2">&quot;nodes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_data</span><span class="p">)</span>
+    
+    <span class="c1"># Save all edge data</span>
+    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
+        <span class="n">edge_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">u</span><span class="p">,</span>
+            <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span>
+            <span class="s2">&quot;attributes&quot;</span><span class="p">:</span> <span class="p">{}</span>
+        <span class="p">}</span>
+        
+        <span class="c1"># Copy all serializable attributes</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">edge_data</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">OverflowError</span><span class="p">):</span>
+                <span class="n">edge_data</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        
+        <span class="n">model_data</span><span class="p">[</span><span class="s2">&quot;graph&quot;</span><span class="p">][</span><span class="s2">&quot;edges&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge_data</span><span class="p">)</span>
+    
+    <span class="c1"># Save to file with pretty printing for readability</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">model_data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model saved to </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">filepath</span></div>
+
+
+<div class="viewcode-block" id="load_system_model_from_json"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.load_system_model_from_json">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_system_model_from_json</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a SystemModelHeating object from a JSON file, respecting the constructor&#39;s signature.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">        filepath: str - Path to the JSON file</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        SystemModelHeating - The reconstructed model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Import required modules</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sg</span>
+    
+    <span class="c1"># Load the JSON data</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">model_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    
+    <span class="c1"># Get the class information</span>
+    <span class="n">class_info</span> <span class="o">=</span> <span class="n">model_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;class_info&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">class_name</span> <span class="o">=</span> <span class="n">class_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;UESGraph&quot;</span><span class="p">)</span>
+    <span class="n">module_name</span> <span class="o">=</span> <span class="n">class_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="s2">&quot;uesgraphs.uesgraph&quot;</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Dynamically import the module and get the class</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+        <span class="n">ModelClass</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)</span>
+        
+        <span class="c1"># Get only the initialization parameters</span>
+        <span class="n">init_params</span> <span class="o">=</span> <span class="n">model_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;init_params&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        
+        <span class="c1"># Create a new instance with only the constructor parameters</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">ModelClass</span><span class="p">(</span><span class="o">**</span><span class="n">init_params</span><span class="p">)</span>
+        
+        <span class="c1"># Set all other attributes manually after initialization</span>
+        <span class="k">for</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">attr_value</span> <span class="ow">in</span> <span class="n">model_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;attributes&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">attr_value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Could not set attribute </span><span class="si">{</span><span class="n">attr_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># Fallback to UESGraph if the specific class can&#39;t be imported</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Could not create </span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">). Creating UESGraph instead.&quot;</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">UESGraph</span><span class="p">()</span>
+    
+    <span class="c1"># Add nodes with all attributes</span>
+    <span class="k">for</span> <span class="n">node_data</span> <span class="ow">in</span> <span class="n">model_data</span><span class="p">[</span><span class="s2">&quot;graph&quot;</span><span class="p">][</span><span class="s2">&quot;nodes&quot;</span><span class="p">]:</span>
+        <span class="n">node_id</span> <span class="o">=</span> <span class="n">node_data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        
+        <span class="c1"># Add the node to the graph</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node_id</span><span class="p">)</span>
+        
+        <span class="c1"># Set node attributes</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">node_data</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;position&quot;</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;x&quot;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s2">&quot;y&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="c1"># Reconstruct shapely Point objects</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_id</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">sg</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">value</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_id</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    
+    <span class="c1"># Add edges with all attributes</span>
+    <span class="k">for</span> <span class="n">edge_data</span> <span class="ow">in</span> <span class="n">model_data</span><span class="p">[</span><span class="s2">&quot;graph&quot;</span><span class="p">][</span><span class="s2">&quot;edges&quot;</span><span class="p">]:</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">edge_data</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">edge_data</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span>
+        
+        <span class="c1"># Add the edge to the graph</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+        
+        <span class="c1"># Set edge attributes</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">edge_data</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model loaded from </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span></div>
+ 
 
 <div class="viewcode-block" id="estimate_fac"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.estimate_fac">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">estimate_fac</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">u_form_distance</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">n_gate_valve</span><span class="o">=</span><span class="mf">2.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate fac for all pipes based on m_flow_nominal</span>

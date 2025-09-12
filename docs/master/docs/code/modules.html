@@ -57,7 +57,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.template_generation.html">uesgraphs.template_generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
 </ul>
 <ul>
@@ -100,12 +99,24 @@
 <li class="toctree-l1"><a class="reference internal" href="uesgraphs.html">uesgraphs package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="uesgraphs.html#uesgraphs.get_versioning_info"><code class="docutils literal notranslate"><span class="pre">get_versioning_info()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="uesgraphs.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.analyze.html">uesgraphs.analyze package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs-analysis-module">UESGraphs Analysis Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.assign_data_pipeline"><code class="docutils literal notranslate"><span class="pre">assign_data_pipeline()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.process_simulation_result"><code class="docutils literal notranslate"><span class="pre">process_simulation_result()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.prepare_DataFrame"><code class="docutils literal notranslate"><span class="pre">prepare_DataFrame()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.loadsim"><code class="docutils literal notranslate"><span class="pre">loadsim()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.mat_to_pandas"><code class="docutils literal notranslate"><span class="pre">mat_to_pandas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.mat_to_parquet"><code class="docutils literal notranslate"><span class="pre">mat_to_parquet()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.map_system_model_to_uesgraph"><code class="docutils literal notranslate"><span class="pre">map_system_model_to_uesgraph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.set_up_terminal_logger"><code class="docutils literal notranslate"><span class="pre">set_up_terminal_logger()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.set_up_file_logger"><code class="docutils literal notranslate"><span class="pre">set_up_file_logger()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html">uesgraphs.examples package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e10_networks_example">uesgraphs.examples.e10_networks_example module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e11_model_generation_example">uesgraphs.examples.e11_model_generation_example module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e12_template_generation_example">uesgraphs.examples.e12_template_generation_example module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e13_advanced_template_gen_example">uesgraphs.examples.e13_advanced_template_gen_example module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs-examples-e14-analyze-uesgraphs-example-module">uesgraphs.examples.e14_analyze_uesgraphs_example module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e1_readme_example">uesgraphs.examples.e1_readme_example module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e2_simple_dhc_example">uesgraphs.examples.e2_simple_dhc_example module</a></li>
@@ -128,35 +139,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="uesgraphs.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uesgraphs.html#module-uesgraphs.analyze">uesgraphs.analyze module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.process_parquet_file"><code class="docutils literal notranslate"><span class="pre">process_parquet_file()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.check_input_file"><code class="docutils literal notranslate"><span class="pre">check_input_file()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.process_simulation_result"><code class="docutils literal notranslate"><span class="pre">process_simulation_result()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.prepare_DataFrame"><code class="docutils literal notranslate"><span class="pre">prepare_DataFrame()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.get_mostfrequent_value"><code class="docutils literal notranslate"><span class="pre">get_mostfrequent_value()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.get_peripheral_value"><code class="docutils literal notranslate"><span class="pre">get_peripheral_value()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.get_node_values"><code class="docutils literal notranslate"><span class="pre">get_node_values()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.check_supply_type"><code class="docutils literal notranslate"><span class="pre">check_supply_type()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.get_MASKS"><code class="docutils literal notranslate"><span class="pre">get_MASKS()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.assign_data_to_uesgraphs"><code class="docutils literal notranslate"><span class="pre">assign_data_to_uesgraphs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.pump_power_analysis"><code class="docutils literal notranslate"><span class="pre">pump_power_analysis()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.calculate_central_pump_power"><code class="docutils literal notranslate"><span class="pre">calculate_central_pump_power()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.find_source_nodes"><code class="docutils literal notranslate"><span class="pre">find_source_nodes()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.get_graph_at_time"><code class="docutils literal notranslate"><span class="pre">get_graph_at_time()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.calculate_accumulated_pressure_drop"><code class="docutils literal notranslate"><span class="pre">calculate_accumulated_pressure_drop()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.calculate_pump_energy"><code class="docutils literal notranslate"><span class="pre">calculate_pump_energy()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.plot_pump_energy"><code class="docutils literal notranslate"><span class="pre">plot_pump_energy()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.analyze.plot_network"><code class="docutils literal notranslate"><span class="pre">plot_network()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="uesgraphs.html#module-uesgraphs.template_generation">uesgraphs.template_generation module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.template_generation.custom_models"><code class="docutils literal notranslate"><span class="pre">custom_models</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.template_generation.set_aixlib_path"><code class="docutils literal notranslate"><span class="pre">set_aixlib_path()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.template_generation.load_models"><code class="docutils literal notranslate"><span class="pre">load_models()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.template_generation.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="uesgraphs.html#module-uesgraphs.uesgraph">uesgraphs.uesgraph module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph"><code class="docutils literal notranslate"><span class="pre">UESGraph</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph.name"><code class="docutils literal notranslate"><span class="pre">UESGraph.name</span></code></a></li>

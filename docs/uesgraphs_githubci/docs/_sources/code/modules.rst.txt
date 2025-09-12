@@ -1,7 +1,0 @@
-uesgraphs
-=========
-
-.. toctree::
-   :maxdepth: 4
-
-   uesgraphs
