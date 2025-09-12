@@ -71,7 +71,7 @@ def main():
     workspace = e1.workspace_example("e10")
     dir_tests = os.path.join(workspace, "tests")
     dir_modelgen = os.path.join(dir_tests, "test_modelgen")
-
+    print(workspace)
     # Make Pinola network
     dir_pinola = os.path.join(dir_modelgen, "Pinola")
     dir_pinola = os.path.abspath(dir_pinola)

@@ -17,7 +17,7 @@ import keyword
 import re
 
 # For type declaration in methods
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Dict, Union, Optional
 
 from uesgraphs import get_versioning_info
 
@@ -480,6 +480,170 @@ class UESTemplates:
         mo = template.render_unicode(**write_params)
 
         return mo
+
+    @classmethod
+    def generate_bulk(cls, 
+                      models_dict: Dict[str, List[str]], 
+                      library_path: Union[str, List[str]], 
+                      workspace: Optional[str] = None,
+                      rigorous: bool = False) -> Dict[str, str]:
+        """
+        Generate multiple templates in bulk.
+        
+        Args:
+            models_dict: Dictionary mapping model types to lists of model names.
+                        Example: {"Demand": ["Model1", "Model2"], "Pipe": ["Model3"]}
+            library_path: Path to Modelica library or list of library paths
+            workspace: Directory for generated templates (optional)
+            rigorous: If True, auto-overwrite existing templates without confirmation
+            
+        Returns:
+            Dictionary mapping model names to their template paths or error messages
+            
+        Example:
+            >>> results = UESTemplates.generate_bulk(
+            ...     {"Demand": ["AixLib.Fluid.SomeModel"]}, 
+            ...     "/path/to/aixlib"
+            ... )
+        """
+        results = {}
+        libs = library_path if isinstance(library_path, list) else [library_path]
+        
+        for model_type, model_names in models_dict.items():
+            for model_name in model_names:
+                try:
+                    print(f"Generating template for {model_type}: {model_name}")
+                    template = cls(model_name=model_name, model_type=model_type)
+                    template.rigorous = rigorous
+                    
+                    if workspace:
+                        template.save_path = os.path.join(
+                            workspace, 
+                            model_name.replace(".", "_") + ".mako"
+                        )
+                    
+                    template.generate_new_template(path_library=libs)
+                    results[model_name] = template.save_path
+                    print(f"✓ Successfully generated template for {model_name}")
+                    
+                except Exception as e:
+                    error_msg = f"ERROR: {e}"
+                    print(f"✗ Error generating template for {model_name}: {e}")
+                    results[model_name] = error_msg
+        
+        return results
+
+    @classmethod  
+    def generate_from_config(cls, 
+                            config_file: str,
+                            library_path: Union[str, List[str], None] = None,
+                            **kwargs) -> Dict[str, str]:
+        """
+        Generate templates from JSON configuration file.
+        
+        Args:
+            config_file: Path to JSON configuration file
+            library_path: Path to Modelica library, list of paths, or None for auto-detection
+            **kwargs: Additional arguments passed to generate_bulk (workspace, rigorous, etc.)
+            
+        Returns:
+            Dictionary mapping model names to template paths or error messages
+            
+        Example:
+            >>> results = UESTemplates.generate_from_config(
+            ...     "data/templates/template_aixlib_components.json"
+            ... )
+        """
+        models_dict = cls._load_config(config_file)
+        
+        if not models_dict:
+            return {}
+        
+        if library_path is None:
+            library_path = cls._auto_detect_aixlib()
+        
+        return cls.generate_bulk(models_dict, library_path, **kwargs)
+
+    @classmethod
+    def _load_config(cls, config_file: str) -> Dict[str, List[str]]:
+        """
+        Load and parse JSON configuration file.
+        
+        Args:
+            config_file: Path to JSON configuration file
+            
+        Returns:
+            Dictionary with model configuration or empty dict if error
+        """
+        import json
+        
+        # Handle both absolute and relative paths
+        if not os.path.isabs(config_file):
+            # Relative to uesgraphs package directory
+            dir_uesgraphs = os.path.dirname(os.path.dirname(__file__))
+            config_path = os.path.join(dir_uesgraphs, config_file)
+        else:
+            config_path = config_file
+        
+        try:
+            with open(config_path, 'r') as file:
+                config = json.load(file)
+            
+            base_paths = config.get('base_paths', {})
+            models = config.get('models', {})
+            
+            result = {}
+            for model_type in models:
+                if model_type in base_paths:
+                    # Build full model names by combining base paths with model names
+                    full_model_names = []
+                    for model in models[model_type]:
+                        full_name = base_paths[model_type] + model
+                        full_model_names.append(full_name)
+                    result[model_type] = full_model_names
+                else:
+                    # No base path - assume model names are already complete
+                    result[model_type] = models[model_type]
+            
+            return result
+            
+        except FileNotFoundError:
+            print(f"Error: Configuration file not found: {config_path}")
+        except json.JSONDecodeError:
+            print(f"Error: Invalid JSON in configuration file: {config_path}")
+        except KeyError as e:
+            print(f"Error: Missing key {e} in configuration file: {config_path}")
+        except Exception as e:
+            print(f"Error loading configuration: {e}")
+        
+        return {}
+
+    @classmethod 
+    def _auto_detect_aixlib(cls) -> str:
+        """
+        Auto-detect AixLib library path from environment variable.
+        
+        Returns:
+            Path to AixLib package.mo file
+            
+        Raises:
+            KeyError: If AIXLIB_LIBRARY_PATH environment variable is not set
+            FileNotFoundError: If the detected path doesn't exist
+        """
+        try:
+            path = os.environ['AIXLIB_LIBRARY_PATH']
+        except KeyError:
+            raise KeyError("Error: The environment variable AIXLIB_LIBRARY_PATH is not set.\n"
+                           "Please set the path to the AixLib library in the environment variables.")
+        
+        path = path.replace("\\", "/")
+        if not path.endswith("/package.mo"):
+            path = path + "/package.mo"
+        
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"AixLib package.mo not found at: {path}")
+        
+        return path
 
 
 import logging
