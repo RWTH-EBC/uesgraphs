@@ -62,6 +62,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.default_json_path"><code class="docutils literal notranslate"><span class="pre">default_json_path()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.make_workspace"><code class="docutils literal notranslate"><span class="pre">make_workspace()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.name_uesgraph"><code class="docutils literal notranslate"><span class="pre">name_uesgraph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.set_up_terminal_logger"><code class="docutils literal notranslate"><span class="pre">set_up_terminal_logger()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.set_up_file_logger"><code class="docutils literal notranslate"><span class="pre">set_up_file_logger()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-uesgraphs.visuals">uesgraphs.visuals module</a><ul>
@@ -198,7 +200,7 @@
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs-examples-e14-analyze-uesgraphs-example-module">uesgraphs.examples.e14_analyze_uesgraphs_example module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs-examples-e13-analyze-uesgraphs-example-module">uesgraphs.examples.e13_analyze_uesgraphs_example module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e1_readme_example">uesgraphs.examples.e1_readme_example module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e1_readme_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e1_readme_example.example_readme"><code class="docutils literal notranslate"><span class="pre">example_readme()</span></code></a></li>
@@ -259,7 +261,6 @@
 <li class="toctree-l2"><a class="reference internal" href="uesgraphs.systemmodels.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="uesgraphs.systemmodels.html#module-uesgraphs.systemmodels.systemmodelheating">uesgraphs.systemmodels.systemmodelheating module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.set_up_terminal_logger"><code class="docutils literal notranslate"><span class="pre">set_up_terminal_logger()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.nodelist_pipe"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.nodelist_pipe</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.network_type"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.network_type</span></code></a></li>
@@ -342,8 +343,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="uesgraphs.systemmodels.html#module-uesgraphs.systemmodels.utilities">uesgraphs.systemmodels.utilities module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.set_up_terminal_logger"><code class="docutils literal notranslate"><span class="pre">set_up_terminal_logger()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.set_up_file_logger"><code class="docutils literal notranslate"><span class="pre">set_up_file_logger()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.prepare_graph"><code class="docutils literal notranslate"><span class="pre">prepare_graph()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.create_model"><code class="docutils literal notranslate"><span class="pre">create_model()</span></code></a></li>
@@ -1177,6 +1176,41 @@ attribute key, either from all nodes or all edges depending on the specified mod
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.utilities.set_up_terminal_logger">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_terminal_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/utilities.html#set_up_terminal_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.utilities.set_up_terminal_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Set up a simple console-only logger for small functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Logger name</p></li>
+<li><p><strong>level</strong> – Logging level (default: INFO)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured console logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.utilities.set_up_file_logger">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_file_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/utilities.html#set_up_file_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.utilities.set_up_file_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Set up a full file+console logger for major functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Logger name</p></li>
+<li><p><strong>log_dir</strong> – Directory for log files (default: temp directory)</p></li>
+<li><p><strong>level</strong> – Logging level (default: ERROR)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured file+console logger</p>
 </dd>
 </dl>
 </dd></dl>

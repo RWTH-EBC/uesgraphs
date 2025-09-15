@@ -59,7 +59,6 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">uesgraphs.systemmodels.systemmodelheating</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.set_up_terminal_logger"><code class="docutils literal notranslate"><span class="pre">set_up_terminal_logger()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.nodelist_pipe"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.nodelist_pipe</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.network_type"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.network_type</span></code></a></li>
@@ -141,9 +140,6 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.set_up_logger" title="uesgraphs.systemmodels.systemmodelheating.set_up_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_logger</span></code></a>(name[, log_dir, level])</p></td>
 <td><p>Sets up a configured logger with file handler.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.set_up_terminal_logger" title="uesgraphs.systemmodels.systemmodelheating.set_up_terminal_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_terminal_logger</span></code></a>(name[, level])</p></td>
-<td><p>Set up a simple console-only logger for small functions.</p></td>
-</tr>
 </tbody>
 </table>
 <p class="rubric">Classes</p>
@@ -188,23 +184,6 @@ Defaults to logging.ERROR</p></li>
 <li><p>Log filename format: {name}_{YYYYMMDD_HHMMSS}.log</p></li>
 <li><p>Log entry format: time - logger_name - [<a class="reference external" href="file:line">file:line</a>] - level - message</p></li>
 </ul>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.systemmodels.systemmodelheating.set_up_terminal_logger">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.systemmodelheating.</span></span><span class="sig-name descname"><span class="pre">set_up_terminal_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/systemmodelheating.html#set_up_terminal_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.systemmodelheating.set_up_terminal_logger" title="Permalink to this definition"></a></dt>
-<dd><p>Set up a simple console-only logger for small functions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – Logger name</p></li>
-<li><p><strong>level</strong> – Logging level (default: INFO)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Configured console logger</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py class">

@@ -190,8 +190,8 @@
     <span class="c1"># function. There are two parameters needed. The source directory with</span>
     <span class="c1"># nodes.json &#39;dir_source&#39; and the directory to store generated models</span>
     <span class="c1"># &#39;dir_dest&#39;.</span>
-    <span class="n">model_generation_pinola</span><span class="p">(</span><span class="n">dir_modelgen_pinola</span><span class="p">,</span> <span class="n">dir_model</span><span class="p">)</span>
-
+    <span class="n">sysm_graph_pinola</span> <span class="o">=</span> <span class="n">model_generation_pinola</span><span class="p">(</span><span class="n">dir_modelgen_pinola</span><span class="p">,</span> <span class="n">dir_model</span><span class="p">)</span>
+    <span class="n">sysut</span><span class="o">.</span><span class="n">save_system_model_to_json</span><span class="p">(</span><span class="n">sysm_graph_pinola</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_model</span><span class="si">}</span><span class="s2">_sysm_graph_pinola.json&quot;</span><span class="p">)</span>
     <span class="c1"># Ibpsa Network</span>
     <span class="n">network_ibpsa</span> <span class="o">=</span> <span class="s2">&quot;Ibpsa&quot;</span>
 
@@ -210,7 +210,9 @@
     <span class="c1"># function. There are two parameters needed. The source directory with</span>
     <span class="c1"># nodes.json &#39;dir_source&#39; and the directory to store generated models</span>
     <span class="c1"># &#39;dir_dest&#39;.</span>
-    <span class="n">model_generation_ibpsa</span><span class="p">(</span><span class="n">dir_modelgen_ibpsa</span><span class="p">,</span> <span class="n">dir_model</span><span class="p">)</span>
+    <span class="n">sysm_graph_ibpsa</span> <span class="o">=</span> <span class="n">model_generation_ibpsa</span><span class="p">(</span><span class="n">dir_modelgen_ibpsa</span><span class="p">,</span> <span class="n">dir_model</span><span class="p">)</span>
+    <span class="n">sysut</span><span class="o">.</span><span class="n">save_system_model_to_json</span><span class="p">(</span><span class="n">sysm_graph_ibpsa</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_model</span><span class="si">}</span><span class="s2">_sysm_graph_ibpsa.json&quot;</span><span class="p">)</span>
+
 
     <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
     <span class="n">runtime</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
@@ -299,7 +301,7 @@
         <span class="n">T_eva_nominal</span><span class="o">=</span><span class="mf">273.15</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">sysut</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span>
+    <span class="n">sysm_graph</span> <span class="o">=</span> <span class="n">sysut</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Pinola_low_temp_network&quot;</span><span class="p">,</span>
         <span class="n">save_at</span><span class="o">=</span><span class="n">dir_dest</span><span class="p">,</span>
         <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span>
@@ -312,8 +314,9 @@
         <span class="n">model_ground</span><span class="o">=</span><span class="s2">&quot;t_ground_kusuda&quot;</span><span class="p">,</span>
         <span class="n">T_nominal</span><span class="o">=</span><span class="mf">273.15</span> <span class="o">+</span> <span class="mi">15</span><span class="p">,</span>
         <span class="n">p_nominal</span><span class="o">=</span><span class="mf">5e5</span><span class="p">,</span>
-    <span class="p">)</span></div>
-
+    <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">sysm_graph</span></div>
 
 <div class="viewcode-block" id="model_generation_ibpsa"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.model_generation_ibpsa">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">model_generation_ibpsa</span><span class="p">(</span><span class="n">dir_source</span><span class="p">,</span> <span class="n">dir_dest</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run example model generation for Ibpsa network</span>
@@ -393,7 +396,7 @@
         <span class="n">T_eva_nominal</span><span class="o">=</span><span class="mf">273.15</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">sysut</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span>
+    <span class="n">sysm_graph</span> <span class="o">=</span> <span class="n">sysut</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Ibpsa_low_temp_network&quot;</span><span class="p">,</span>
         <span class="n">save_at</span><span class="o">=</span><span class="n">dir_dest</span><span class="p">,</span>
         <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span>
@@ -406,7 +409,9 @@
         <span class="n">model_ground</span><span class="o">=</span><span class="s2">&quot;t_ground_kusuda&quot;</span><span class="p">,</span>
         <span class="n">T_nominal</span><span class="o">=</span><span class="mf">273.15</span> <span class="o">+</span> <span class="mi">15</span><span class="p">,</span>
         <span class="n">p_nominal</span><span class="o">=</span><span class="mf">5e5</span><span class="p">,</span>
-    <span class="p">)</span></div>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">sysm_graph</span></div>
+
 
 
 <div class="viewcode-block" id="create_dirs"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.create_dirs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">create_dirs</span><span class="p">(</span><span class="n">dir_project</span><span class="p">):</span>
@@ -448,6 +453,7 @@
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">dir_design</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">dir_input</span><span class="p">,</span> <span class="n">dir_model</span><span class="p">,</span> <span class="n">dir_result</span><span class="p">,</span> <span class="n">dir_visualization</span></div>
+    
 
 
 <span class="c1"># Main function</span>

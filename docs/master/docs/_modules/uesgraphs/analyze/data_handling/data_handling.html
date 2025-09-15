@@ -105,78 +105,14 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ug</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">utilities</span> <span class="k">as</span> <span class="n">ut</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.analyze.data_handling</span><span class="w"> </span><span class="kn">import</span> <span class="n">graph_transformation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.analyze.data_handling.mat_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">mat_to_parquet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_up_terminal_logger</span><span class="p">,</span> <span class="n">set_up_file_logger</span>
 
 
 <span class="c1">#### Global Variables ####</span>
 <span class="n">AIXLIB_MASKS</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Dictionary to store masks for column names</span>
 
 
-<div class="viewcode-block" id="set_up_terminal_logger"><a class="viewcode-back" href="../../../../code/uesgraphs.analyze.html#uesgraphs.analyze.set_up_terminal_logger">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_up_terminal_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Set up a simple console-only logger for small functions.</span>
-<span class="sd">    </span>
-<span class="sd">    Args:</span>
-<span class="sd">        name: Logger name</span>
-<span class="sd">        level: Logging level (default: INFO)</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">        Configured console logger</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-    
-    <span class="c1"># Avoid duplicate handlers if called multiple times</span>
-    <span class="k">if</span> <span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">logger</span>
-        
-    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
-    
-    <span class="c1"># Console handler only</span>
-    <span class="n">console_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
-    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">console_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">console_handler</span><span class="p">)</span>
-    
-    <span class="c1"># Prevent propagation to root logger to avoid double messages</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
-    
-    <span class="k">return</span> <span class="n">logger</span></div>
-
-
-<div class="viewcode-block" id="set_up_file_logger"><a class="viewcode-back" href="../../../../code/uesgraphs.analyze.html#uesgraphs.analyze.set_up_file_logger">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_up_file_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Set up a full file+console logger for major functions.</span>
-<span class="sd">    </span>
-<span class="sd">    Args:</span>
-<span class="sd">        name: Logger name</span>
-<span class="sd">        log_dir: Directory for log files (default: temp directory)</span>
-<span class="sd">        level: Logging level (default: ERROR)</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">        Configured file+console logger</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-    
-   <span class="c1"># if logger.handlers:</span>
-    <span class="c1">#    return logger</span>
-        
-    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">log_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">log_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
-    
-    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
-    <span class="n">log_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">log_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.log&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Logfile findable here: </span><span class="si">{</span><span class="n">log_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    
-    <span class="c1"># File handler</span>
-    <span class="n">file_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
-    <span class="n">file_formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - [</span><span class="si">%(filename)s</span><span class="s1">:</span><span class="si">%(lineno)d</span><span class="s1">] - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">file_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">file_formatter</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
-    
-    <span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
-    
-    <span class="k">return</span> <span class="n">logger</span></div>
 
 <span class="c1">#### Functions 2: Data Aquisition ####</span>
 
@@ -293,20 +229,20 @@
     <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_terminal_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.process_parquet_file&quot;</span><span class="p">)</span>
     
-    <span class="c1"># Step 1: Check if file exists and is valid</span>
-    <span class="n">check_input_file</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="c1"># Step 1: Check if file exists and convert .mat if needed</span>
+    <span class="n">processed_file_path</span> <span class="o">=</span> <span class="n">check_input_file</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
     <span class="c1"># Step 1: Validate all columns exist (will raise KeyError if missing)</span>
-    <span class="n">available_columns</span> <span class="o">=</span> <span class="n">validate_columns_exist</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">required_columns</span><span class="o">=</span><span class="n">filter_list</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">available_columns</span> <span class="o">=</span> <span class="n">validate_columns_exist</span><span class="p">(</span><span class="n">processed_file_path</span><span class="p">,</span> <span class="n">required_columns</span><span class="o">=</span><span class="n">filter_list</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
     
     <span class="c1"># Step 2: Check if any columns match the filter_list</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting parquet file processing: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting parquet file processing: </span><span class="si">{</span><span class="n">processed_file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filter patterns: </span><span class="si">{</span><span class="n">filter_list</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chunk size: </span><span class="si">{</span><span class="n">chunk_size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     
     <span class="k">try</span><span class="p">:</span>
         <span class="c1"># Read parquet file metadata to get columns</span>
-        <span class="n">parquet_file</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">ParquetFile</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span>
+        <span class="n">parquet_file</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">ParquetFile</span><span class="p">(</span><span class="n">processed_file_path</span><span class="p">,</span>
                                   <span class="n">thrift_string_size_limit</span><span class="o">=</span><span class="mi">2_000_000_000</span><span class="p">,</span>
                                   <span class="n">thrift_container_size_limit</span><span class="o">=</span><span class="mi">2_000_000_000</span><span class="p">)</span>
         <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
@@ -331,7 +267,7 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DataFrame memory usage: </span><span class="si">{</span><span class="n">result_df</span><span class="o">.</span><span class="n">memory_usage</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="o">**</span><span class="mi">2</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result_df</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing parquet file </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing parquet file </span><span class="si">{</span><span class="n">processed_file_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">e</span></div>
 
 
@@ -882,90 +818,6 @@
     
     <span class="k">return</span> <span class="n">stats</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_format_dp_quality_summary</span><span class="p">(</span><span class="n">stats</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Formats a comprehensive summary of the pressure difference quality assessment as string.</span>
-<span class="sd">    </span>
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
-<span class="sd">    stats : dict</span>
-<span class="sd">        Result from assess_dp_quality()</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
-<span class="sd">    str</span>
-<span class="sd">        Formatted summary string ready for logging or printing</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">total_measurements</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;negligible&#39;</span><span class="p">])</span> <span class="o">+</span> 
-                         <span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;acceptable&#39;</span><span class="p">])</span> <span class="o">+</span> 
-                         <span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;investigate&#39;</span><span class="p">]))</span>
-    
-    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;=== Pressure Difference Quality Assessment ===&quot;</span><span class="p">)</span>
-    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total measurements: </span><span class="si">{</span><span class="n">total_measurements</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Negligible: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;negligible&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;negligible&#39;</span><span class="p">])</span><span class="o">/</span><span class="n">total_measurements</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
-    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Acceptable: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;acceptable&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;acceptable&#39;</span><span class="p">])</span><span class="o">/</span><span class="n">total_measurements</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
-    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Investigate: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;investigate&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;investigate&#39;</span><span class="p">])</span><span class="o">/</span><span class="n">total_measurements</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;investigate&#39;</span><span class="p">]:</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--- Critical Deviations (Top 5) ---&quot;</span><span class="p">)</span>
-        <span class="c1"># Sort by absolute error</span>
-        <span class="n">worst_cases</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;investigate&#39;</span><span class="p">],</span> 
-                           <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;abs_diff&#39;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span>
-        
-        <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">worst_cases</span><span class="p">:</span>
-            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Edge </span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">&#39;edge&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, Time </span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;dp_sim=</span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">&#39;dp_simulated&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> Pa, &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;dp_calc=</span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">&#39;dp_calculated&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> Pa, &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;Diff=</span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">&#39;abs_diff&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> Pa (</span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">&#39;rel_error&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_check_dp_quality_warnings</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Checks for critical pressure difference deviations and issues warnings.</span>
-<span class="sd">    This may indicate faulty assignments in the network model.</span>
-<span class="sd">    </span>
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
-<span class="sd">    stats : dict</span>
-<span class="sd">        Result from assess_dp_quality()</span>
-<span class="sd">    logger : logging.Logger, optional</span>
-<span class="sd">        Logger instance to use for warnings. If None, uses print statements.</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
-<span class="sd">    bool</span>
-<span class="sd">        True if critical deviations were found, False otherwise</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">critical_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;investigate&#39;</span><span class="p">])</span>
-    
-    <span class="k">if</span> <span class="n">critical_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
-        
-    <span class="c1"># Sort critical cases by severity (absolute difference)</span>
-    <span class="n">critical_cases</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;investigate&#39;</span><span class="p">],</span> 
-                          <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;abs_diff&#39;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    
-    <span class="n">warning_msg</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: Found </span><span class="si">{</span><span class="n">critical_count</span><span class="si">}</span><span class="s2"> critical pressure difference deviations! &quot;</span>
-                  <span class="sa">f</span><span class="s2">&quot;This may indicate faulty network assignments or modeling errors.&quot;</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="n">logger</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">warning_msg</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Most severe cases:&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">critical_cases</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>  <span class="c1"># Show top 3</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Edge </span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">&#39;edge&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: &quot;</span>
-                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">&#39;abs_diff&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> Pa deviation (</span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">&#39;rel_error&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">warning_msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Most severe cases:&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">critical_cases</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  • Edge </span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">&#39;edge&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: &quot;</span>
-                  <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">&#39;abs_diff&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> Pa deviation (</span><span class="si">{</span><span class="n">case</span><span class="p">[</span><span class="s1">&#39;rel_error&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="kc">True</span>
 
 <span class="c1">## Final pipeline function</span>
 
@@ -1119,17 +971,21 @@
         <span class="c1"># Step 3: Process simulation data</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Step 3/6: Processing simulation data&quot;</span><span class="p">)</span>
         
-        <span class="c1"># Validate simulation data file exists</span>
+        <span class="c1"># Check if simulation data file exists and convert .mat files if needed</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">simulation_data_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulation data file not found: </span><span class="si">{</span><span class="n">simulation_data_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Convert .mat to .gzip if needed and get the processed file path</span>
+        <span class="n">processed_simulation_path</span> <span class="o">=</span> <span class="n">check_input_file</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">simulation_data_path</span><span class="p">),</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Using processed simulation file: </span><span class="si">{</span><span class="n">processed_simulation_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         
         <span class="c1"># Build filter list for required variables</span>
         <span class="n">filter_list</span> <span class="o">=</span> <span class="n">build_filter_list_pipe</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">MASK</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Built filter list with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">filter_list</span><span class="p">)</span><span class="si">}</span><span class="s2"> variables&quot;</span><span class="p">)</span>
         
-        <span class="c1"># Validate that all required columns exist</span>
+        <span class="c1"># Validate that all required columns exist in the processed file</span>
         <span class="n">column_validation</span> <span class="o">=</span> <span class="n">validate_columns_exist</span><span class="p">(</span>
-            <span class="n">file_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">simulation_data_path</span><span class="p">),</span> 
+            <span class="n">file_path</span><span class="o">=</span><span class="n">processed_simulation_path</span><span class="p">,</span> 
             <span class="n">required_columns</span><span class="o">=</span><span class="n">filter_list</span><span class="p">,</span>
             <span class="n">logger</span><span class="o">=</span><span class="n">logger</span>
         <span class="p">)</span>
@@ -1138,7 +994,7 @@
         
         <span class="c1"># Load and process simulation results</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">process_simulation_result</span><span class="p">(</span>
-            <span class="n">file_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">simulation_data_path</span><span class="p">),</span> 
+            <span class="n">file_path</span><span class="o">=</span><span class="n">processed_simulation_path</span><span class="p">,</span> 
             <span class="n">filter_list</span><span class="o">=</span><span class="n">filter_list</span><span class="p">,</span> 
             <span class="n">logger</span><span class="o">=</span><span class="n">logger</span>
         <span class="p">)</span>
@@ -1178,8 +1034,7 @@
 
             <span class="c1">## Additional test to asses node assignment based on pressures</span>
             <span class="n">stats</span> <span class="o">=</span> <span class="n">assess_dp_quality</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span> 
-            <span class="n">has_critical</span> <span class="o">=</span> <span class="n">_check_dp_quality_warnings</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">has_critical</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;investigate&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️  Critical pressure difference deviations found!&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;✓ Full validation completed successfully&quot;</span><span class="p">)</span>
@@ -1231,41 +1086,6 @@
     <span class="n">supply_type</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;supply_type&quot;</span><span class="p">,</span> <span class="s2">&quot;supply&quot;</span><span class="p">)</span>
     <span class="n">supply_type_prefix</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;supply&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;return&quot;</span><span class="p">:</span> <span class="s2">&quot;R&quot;</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">supply_type_prefix</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">supply_type</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">check_supply_type</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Check and validate the supply type of the graph.</span>
-<span class="sd">    </span>
-<span class="sd">    Args:</span>
-<span class="sd">        graph: UESGraph instance</span>
-<span class="sd">        logger: Logger instance (optional)</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Supply type (&quot;supply&quot; or &quot;return&quot;)</span>
-<span class="sd">        </span>
-<span class="sd">    Raises:</span>
-<span class="sd">        ValueError: If supply_type is missing or invalid</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_terminal_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.check_supply_type&quot;</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="s2">&quot;supply_type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="p">:</span>
-        <span class="n">error_msg</span> <span class="o">=</span> <span class="s2">&quot;The graph does not have a supply_type attribute&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
-    
-    <span class="n">supply_type</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;supply_type&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">supply_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;supply&quot;</span><span class="p">,</span> <span class="s2">&quot;return&quot;</span><span class="p">]:</span>
-        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;The graph supply_type attribute must be either &#39;supply&#39; or &#39;return&#39;, got: </span><span class="si">{</span><span class="n">supply_type</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
-    
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Graph supply type: </span><span class="si">{</span><span class="n">supply_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">supply_type</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">list_supported_versions</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;List all supported AixLib versions.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">AIXLIB_MASKS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 </pre></div>
 
            </div>

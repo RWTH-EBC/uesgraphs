@@ -14,7 +14,6 @@
    .. autosummary::
    
       set_up_logger
-      set_up_terminal_logger
    
    
 

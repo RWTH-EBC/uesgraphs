@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Coverage for uesgraphs/systemmodels/templates.py: 37%</title>
+    <title>Coverage for uesgraphs/systemmodels/templates.py: 35%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="coverage_html.js" defer></script>
@@ -12,7 +12,7 @@
     <div class="content">
         <h1>
             <span class="text">Coverage for </span><b>uesgraphs/systemmodels/templates.py</b>:
-            <span class="pc_cov">37%</span>
+            <span class="pc_cov">35%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -55,8 +55,8 @@
         </aside>
         <h2>
             <span class="text">355 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">132<span class="text"> run</span></button>
-            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">223<span class="text"> missing</span></button>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">126<span class="text"> run</span></button>
+            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">229<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">1<span class="text"> excluded</span></button>
         </h2>
         <p class="text">
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_eb68c8f6debeba98_utilities_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2025-09-12 09:37 +0000
+            created at 2025-09-15 20:41 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -470,7 +470,7 @@
     <p class="mis show_mis"><span class="n"><a id="t388" href="#t388">388</a></span><span class="t">        <span class="key">return</span> <span class="nam">end_str</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t389" href="#t389">389</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t390" href="#t390">390</a></span><span class="t">    <span class="key">def</span> <span class="nam">_save_to_mako</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">template_str</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t391" href="#t391">391</a></span><span class="t">        <span class="key">if</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">isfile</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">save_path</span><span class="op">)</span> <span class="key">and</span> <span class="nam">self</span><span class="op">.</span><span class="nam">rigorous</span> <span class="op">==</span> <span class="key">False</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t391" href="#t391">391</a></span><span class="t">        <span class="key">if</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">isfile</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">save_path</span><span class="op">)</span> <span class="key">and</span> <span class="nam">self</span><span class="op">.</span><span class="nam">rigorous</span> <span class="op">==</span> <span class="key">False</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t392" href="#t392">392</a></span><span class="t">            <span class="nam">print</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t393" href="#t393">393</a></span><span class="t">                <span class="str">"Template for class %s already exists. Do you want to replace it"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t394" href="#t394">394</a></span><span class="t">                <span class="str">" with new template? Please enter"</span>&nbsp;</span><span class="r"></span></p>
@@ -488,14 +488,14 @@
     <p class="pln"><span class="n"><a id="t406" href="#t406">406</a></span><span class="t">                <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t407" href="#t407">407</a></span><span class="t">                    <span class="nam">sys</span><span class="op">.</span><span class="nam">stdout</span><span class="op">.</span><span class="nam">write</span><span class="op">(</span><span class="str">"Please respond with 'Y' or 'N'"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t408" href="#t408">408</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t409" href="#t409">409</a></span><span class="t">        <span class="key">if</span> <span class="key">not</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">isfile</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">save_path</span><span class="op">)</span> <span class="key">or</span> <span class="nam">self</span><span class="op">.</span><span class="nam">rigorous</span> <span class="op">==</span> <span class="key">True</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t410" href="#t410">410</a></span><span class="t">            <span class="nam">print</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t409" href="#t409">409</a></span><span class="t">        <span class="key">if</span> <span class="key">not</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">isfile</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">save_path</span><span class="op">)</span> <span class="key">or</span> <span class="nam">self</span><span class="op">.</span><span class="nam">rigorous</span> <span class="op">==</span> <span class="key">True</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t410" href="#t410">410</a></span><span class="t">            <span class="nam">print</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t411" href="#t411">411</a></span><span class="t">                <span class="str">"Write template for %s %s to %s"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t412" href="#t412">412</a></span><span class="t">                <span class="op">%</span> <span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">model_type</span><span class="op">,</span> <span class="nam">self</span><span class="op">.</span><span class="nam">model_name</span><span class="op">,</span> <span class="nam">self</span><span class="op">.</span><span class="nam">save_path</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t413" href="#t413">413</a></span><span class="t">            <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t414" href="#t414">414</a></span><span class="t">            <span class="key">with</span> <span class="nam">open</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">save_path</span><span class="op">,</span> <span class="str">"w+"</span><span class="op">)</span> <span class="key">as</span> <span class="nam">text_file</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t415" href="#t415">415</a></span><span class="t">                <span class="nam">text_file</span><span class="op">.</span><span class="nam">write</span><span class="op">(</span><span class="nam">template_str</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t416" href="#t416">416</a></span><span class="t">        <span class="key">return</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t414" href="#t414">414</a></span><span class="t">            <span class="key">with</span> <span class="nam">open</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">save_path</span><span class="op">,</span> <span class="str">"w+"</span><span class="op">)</span> <span class="key">as</span> <span class="nam">text_file</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t415" href="#t415">415</a></span><span class="t">                <span class="nam">text_file</span><span class="op">.</span><span class="nam">write</span><span class="op">(</span><span class="nam">template_str</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t416" href="#t416">416</a></span><span class="t">        <span class="key">return</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t417" href="#t417">417</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t418" href="#t418">418</a></span><span class="t">    <span class="key">def</span> <span class="nam">render</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">node_data</span><span class="op">,</span> <span class="nam">i</span><span class="op">=</span><span class="key">None</span><span class="op">,</span> <span class="nam">number_of_instances</span><span class="op">=</span><span class="key">None</span><span class="op">,</span> <span class="nam">package_name</span><span class="op">=</span><span class="key">None</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t419" href="#t419">419</a></span><span class="t">        <span class="str">"""Write Modelica code for Demands.OpenLoop.HeatPumpCarnot</span>&nbsp;</span><span class="r"></span></p>
@@ -1041,7 +1041,7 @@
             <a id="nextFileLink" class="nav" href="d_eb68c8f6debeba98_utilities_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2025-09-12 09:37 +0000
+            created at 2025-09-15 20:41 +0000
         </p>
     </div>
 </footer>

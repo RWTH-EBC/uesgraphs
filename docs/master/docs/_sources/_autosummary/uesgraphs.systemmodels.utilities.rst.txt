@@ -24,9 +24,7 @@
       load_system_model_from_json
       prepare_graph
       save_system_model_to_json
-      set_up_file_logger
       set_up_logger
-      set_up_terminal_logger
       size_hydronic_network
    
    

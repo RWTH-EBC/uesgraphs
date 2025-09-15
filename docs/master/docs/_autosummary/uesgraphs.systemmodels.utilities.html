@@ -60,8 +60,6 @@
 <li class="toctree-l1"><a class="reference internal" href="uesgraphs.systemmodels.systemmodelheating.html">uesgraphs.systemmodels.systemmodelheating</a></li>
 <li class="toctree-l1"><a class="reference internal" href="uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">uesgraphs.systemmodels.utilities</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.set_up_terminal_logger"><code class="docutils literal notranslate"><span class="pre">set_up_terminal_logger()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.set_up_file_logger"><code class="docutils literal notranslate"><span class="pre">set_up_file_logger()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.prepare_graph"><code class="docutils literal notranslate"><span class="pre">prepare_graph()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.create_model"><code class="docutils literal notranslate"><span class="pre">create_model()</span></code></a></li>
@@ -145,55 +143,14 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.save_system_model_to_json" title="uesgraphs.systemmodels.utilities.save_system_model_to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_system_model_to_json</span></code></a>(model, filepath)</p></td>
 <td><p>Save a SystemModelHeating object to a JSON file with comprehensive attribute capturing.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.set_up_file_logger" title="uesgraphs.systemmodels.utilities.set_up_file_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_file_logger</span></code></a>(name[, log_dir, level])</p></td>
-<td><p>Set up a full file+console logger for major functions.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.set_up_logger" title="uesgraphs.systemmodels.utilities.set_up_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_logger</span></code></a>(name[, log_dir, level])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.set_up_logger" title="uesgraphs.systemmodels.utilities.set_up_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_logger</span></code></a>(name[, log_dir, level])</p></td>
 <td><p>Set up a file-based logger with timestamp and detailed formatting.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.set_up_terminal_logger" title="uesgraphs.systemmodels.utilities.set_up_terminal_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_terminal_logger</span></code></a>(name[, level])</p></td>
-<td><p>Set up a simple console-only logger for small functions.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.size_hydronic_network" title="uesgraphs.systemmodels.utilities.size_hydronic_network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">size_hydronic_network</span></code></a>(graph[, m_flow_key, ...])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.systemmodels.utilities.set_up_terminal_logger">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_terminal_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/utilities.html#set_up_terminal_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.utilities.set_up_terminal_logger" title="Permalink to this definition"></a></dt>
-<dd><p>Set up a simple console-only logger for small functions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – Logger name</p></li>
-<li><p><strong>level</strong> – Logging level (default: INFO)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Configured console logger</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.systemmodels.utilities.set_up_file_logger">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_file_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/utilities.html#set_up_file_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.utilities.set_up_file_logger" title="Permalink to this definition"></a></dt>
-<dd><p>Set up a full file+console logger for major functions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – Logger name</p></li>
-<li><p><strong>log_dir</strong> – Directory for log files (default: temp directory)</p></li>
-<li><p><strong>level</strong> – Logging level (default: ERROR)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Configured file+console logger</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="uesgraphs.systemmodels.utilities.set_up_logger">
 <span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/utilities.html#set_up_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.utilities.set_up_logger" title="Permalink to this definition"></a></dt>

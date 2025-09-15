@@ -16,6 +16,8 @@
       default_json_path
       make_workspace
       name_uesgraph
+      set_up_file_logger
+      set_up_terminal_logger
    
    
 

@@ -58,6 +58,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.utilities.default_json_path"><code class="docutils literal notranslate"><span class="pre">default_json_path()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.utilities.make_workspace"><code class="docutils literal notranslate"><span class="pre">make_workspace()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#uesgraphs.utilities.name_uesgraph"><code class="docutils literal notranslate"><span class="pre">name_uesgraph()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.utilities.set_up_terminal_logger"><code class="docutils literal notranslate"><span class="pre">set_up_terminal_logger()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.utilities.set_up_file_logger"><code class="docutils literal notranslate"><span class="pre">set_up_file_logger()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -108,6 +110,12 @@
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.utilities.name_uesgraph" title="uesgraphs.utilities.name_uesgraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_uesgraph</span></code></a>([name_workspace])</p></td>
 <td><p>Gives the uesgraph a name</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.utilities.set_up_file_logger" title="uesgraphs.utilities.set_up_file_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_file_logger</span></code></a>(name[, log_dir, level])</p></td>
+<td><p>Set up a full file+console logger for major functions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.utilities.set_up_terminal_logger" title="uesgraphs.utilities.set_up_terminal_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_terminal_logger</span></code></a>(name[, level])</p></td>
+<td><p>Set up a simple console-only logger for small functions.</p></td>
 </tr>
 </tbody>
 </table>
@@ -163,6 +171,41 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.utilities.set_up_terminal_logger">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_terminal_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/utilities.html#set_up_terminal_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.utilities.set_up_terminal_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Set up a simple console-only logger for small functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Logger name</p></li>
+<li><p><strong>level</strong> – Logging level (default: INFO)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured console logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.utilities.set_up_file_logger">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_file_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/utilities.html#set_up_file_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.utilities.set_up_file_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Set up a full file+console logger for major functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Logger name</p></li>
+<li><p><strong>log_dir</strong> – Directory for log files (default: temp directory)</p></li>
+<li><p><strong>level</strong> – Logging level (default: ERROR)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured file+console logger</p>
 </dd>
 </dl>
 </dd></dl>
