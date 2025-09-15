@@ -728,90 +728,6 @@ def assess_dp_quality(graph,
     
     return stats
 
-def _format_dp_quality_summary(stats):
-    """
-    Formats a comprehensive summary of the pressure difference quality assessment as string.
-    
-    Parameters:
-    -----------
-    stats : dict
-        Result from assess_dp_quality()
-        
-    Returns:
-    --------
-    str
-        Formatted summary string ready for logging or printing
-    """
-    total_measurements = (len(stats['negligible']) + 
-                         len(stats['acceptable']) + 
-                         len(stats['investigate']))
-    
-    lines = []
-    lines.append("=== Pressure Difference Quality Assessment ===")
-    lines.append(f"Total measurements: {total_measurements}")
-    lines.append(f"Negligible: {len(stats['negligible'])} ({len(stats['negligible'])/total_measurements*100:.1f}%)")
-    lines.append(f"Acceptable: {len(stats['acceptable'])} ({len(stats['acceptable'])/total_measurements*100:.1f}%)")
-    lines.append(f"Investigate: {len(stats['investigate'])} ({len(stats['investigate'])/total_measurements*100:.1f}%)")
-    
-    if stats['investigate']:
-        lines.append("")
-        lines.append("--- Critical Deviations (Top 5) ---")
-        # Sort by absolute error
-        worst_cases = sorted(stats['investigate'], 
-                           key=lambda x: x['abs_diff'], reverse=True)[:5]
-        
-        for case in worst_cases:
-            lines.append(f"Edge {case['edge']}, Time {case['timestamp']}: "
-                        f"dp_sim={case['dp_simulated']:.2f} Pa, "
-                        f"dp_calc={case['dp_calculated']:.2f} Pa, "
-                        f"Diff={case['abs_diff']:.2f} Pa ({case['rel_error']*100:.2f}%)")
-    
-    return "\n".join(lines)
-
-
-def _check_dp_quality_warnings(stats, logger=None):
-    """
-    Checks for critical pressure difference deviations and issues warnings.
-    This may indicate faulty assignments in the network model.
-    
-    Parameters:
-    -----------
-    stats : dict
-        Result from assess_dp_quality()
-    logger : logging.Logger, optional
-        Logger instance to use for warnings. If None, uses print statements.
-        
-    Returns:
-    --------
-    bool
-        True if critical deviations were found, False otherwise
-    """
-    critical_count = len(stats['investigate'])
-    
-    if critical_count == 0:
-        return False
-        
-    # Sort critical cases by severity (absolute difference)
-    critical_cases = sorted(stats['investigate'], 
-                          key=lambda x: x['abs_diff'], reverse=True)
-    
-    warning_msg = (f"WARNING: Found {critical_count} critical pressure difference deviations! "
-                  f"This may indicate faulty network assignments or modeling errors.")
-    
-    if logger:
-        logger.warning(warning_msg)
-        logger.warning("Most severe cases:")
-        for case in critical_cases[:3]:  # Show top 3
-            logger.warning(f"  Edge {case['edge']} at {case['timestamp']}: "
-                         f"{case['abs_diff']:.2f} Pa deviation ({case['rel_error']*100:.1f}%)")
-    else:
-        print(f" {warning_msg}")
-        print("Most severe cases:")
-        for case in critical_cases[:3]:
-            print(f"  • Edge {case['edge']} at {case['timestamp']}: "
-                  f"{case['abs_diff']:.2f} Pa deviation ({case['rel_error']*100:.1f}%)")
-    
-    return True
 
 ## Final pipeline function
 
@@ -1028,8 +944,7 @@ def assign_data_pipeline(
 
             ## Additional test to asses node assignment based on pressures
             stats = assess_dp_quality(graph) 
-            has_critical = _check_dp_quality_warnings(stats, logger)
-            if has_critical:
+            if len(stats['investigate']) > 1:
                 logger.warning("⚠️  Critical pressure difference deviations found!")
             else:
                 logger.info("✓ Full validation completed successfully")
@@ -1081,38 +996,3 @@ def get_supply_type_prefix(graph):
     supply_type = graph.graph.get("supply_type", "supply")
     supply_type_prefix = {"supply": "", "return": "R"}
     return supply_type_prefix.get(supply_type, "")
-
-def check_supply_type(graph, logger: Optional[logging.Logger] = None):
-    """
-    Check and validate the supply type of the graph.
-    
-    Args:
-        graph: UESGraph instance
-        logger: Logger instance (optional)
-        
-    Returns:
-        str: Supply type ("supply" or "return")
-        
-    Raises:
-        ValueError: If supply_type is missing or invalid
-    """
-    if logger is None:
-        logger = set_up_terminal_logger(f"{__name__}.check_supply_type")
-    
-    if "supply_type" not in graph.graph:
-        error_msg = "The graph does not have a supply_type attribute"
-        logger.error(error_msg)
-        raise ValueError(error_msg)
-    
-    supply_type = graph.graph["supply_type"]
-    if supply_type not in ["supply", "return"]:
-        error_msg = f"The graph supply_type attribute must be either 'supply' or 'return', got: {supply_type}"
-        logger.error(error_msg)
-        raise ValueError(error_msg)
-    
-    logger.info(f"Graph supply type: {supply_type}")
-    return supply_type
-
-def list_supported_versions():
-    """List all supported AixLib versions."""
-    return list(AIXLIB_MASKS.keys())
