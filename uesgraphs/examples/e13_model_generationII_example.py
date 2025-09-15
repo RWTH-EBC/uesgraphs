@@ -143,13 +143,11 @@ def main():
     from uesgraphs.examples import e1_readme_example as e1
     workspace = e1.workspace_example("e13")
     
-    # Create Seestadt-specific workspace
-    seestadt_workspace = os.path.join(workspace, "Seestadt")
     
     # Create directory structure for model files and results
-    dir_input, dir_model, dir_result, dir_visualization = create_dirs(seestadt_workspace)
+    dir_input, dir_model, dir_result, dir_visualization = create_dirs(workspace)
     
-    print(f"Workspace created at: {seestadt_workspace}")
+    print(f"Workspace created at: {workspace}")
     print(f"Model files will be saved to: {dir_model}")
     print()
     
