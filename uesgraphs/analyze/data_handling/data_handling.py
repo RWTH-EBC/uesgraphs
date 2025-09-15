@@ -15,6 +15,7 @@ from datetime import datetime
 import uesgraphs as ug
 from uesgraphs.systemmodels import utilities as ut
 from uesgraphs.analyze.data_handling import graph_transformation
+from uesgraphs.analyze.data_handling.mat_handler import mat_to_parquet
 
 
 #### Global Variables ####
@@ -203,20 +204,20 @@ def process_simulation_result(file_path: str, filter_list: List[str],
     if logger is None:
         logger = set_up_terminal_logger(f"{__name__}.process_parquet_file")
     
-    # Step 1: Check if file exists and is valid
-    check_input_file(file_path=file_path, logger=logger)
+    # Step 1: Check if file exists and convert .mat if needed
+    processed_file_path = check_input_file(file_path=file_path, logger=logger)
 
     # Step 1: Validate all columns exist (will raise KeyError if missing)
-    available_columns = validate_columns_exist(file_path, required_columns=filter_list, logger=logger)
+    available_columns = validate_columns_exist(processed_file_path, required_columns=filter_list, logger=logger)
     
     # Step 2: Check if any columns match the filter_list
-    logger.info(f"Starting parquet file processing: {file_path}")
+    logger.info(f"Starting parquet file processing: {processed_file_path}")
     logger.debug(f"Filter patterns: {filter_list}")
     logger.debug(f"Chunk size: {chunk_size}")
     
     try:
         # Read parquet file metadata to get columns
-        parquet_file = pq.ParquetFile(file_path,
+        parquet_file = pq.ParquetFile(processed_file_path,
                                   thrift_string_size_limit=2_000_000_000,
                                   thrift_container_size_limit=2_000_000_000)
         chunks = []
@@ -241,7 +242,7 @@ def process_simulation_result(file_path: str, filter_list: List[str],
         logger.debug(f"DataFrame memory usage: {result_df.memory_usage(deep=True).sum() / 1024**2:.2f} MB")
         return result_df
     except Exception as e:
-        logger.error(f"Error processing parquet file {file_path}: {str(e)}")
+        logger.error(f"Error processing parquet file {processed_file_path}: {str(e)}")
         raise e
 
 
@@ -1029,17 +1030,21 @@ def assign_data_pipeline(
         # Step 3: Process simulation data
         logger.info("Step 3/6: Processing simulation data")
         
-        # Validate simulation data file exists
+        # Check if simulation data file exists and convert .mat files if needed
         if not simulation_data_path.exists():
             raise FileNotFoundError(f"Simulation data file not found: {simulation_data_path}")
+        
+        # Convert .mat to .gzip if needed and get the processed file path
+        processed_simulation_path = check_input_file(file_path=str(simulation_data_path), logger=logger)
+        logger.info(f"✓ Using processed simulation file: {processed_simulation_path}")
         
         # Build filter list for required variables
         filter_list = build_filter_list_pipe(graph, mask=MASK, logger=logger)
         logger.info(f"✓ Built filter list with {len(filter_list)} variables")
         
-        # Validate that all required columns exist
+        # Validate that all required columns exist in the processed file
         column_validation = validate_columns_exist(
-            file_path=str(simulation_data_path), 
+            file_path=processed_simulation_path, 
             required_columns=filter_list,
             logger=logger
         )
@@ -1048,7 +1053,7 @@ def assign_data_pipeline(
         
         # Load and process simulation results
         df = process_simulation_result(
-            file_path=str(simulation_data_path), 
+            file_path=processed_simulation_path, 
             filter_list=filter_list, 
             logger=logger
         )
