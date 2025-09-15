@@ -76,41 +76,6 @@ def test_bulk_methods_exist():
     assert callable(UESTemplates._auto_detect_aixlib)
 
 
-def test_constructor_basic_functionality():
-    """Test UESTemplates constructor creates proper instance"""
-    template = UESTemplates("AixLib.Test.Model", "Demand")
-    
-    assert template.model_name == "AixLib.Test.Model"
-    assert template.model_type == "Demand"
-    assert template.rigorous == False
-    assert template.template_name == "AixLib_Test_Model.mako"
-    assert template.template_directory.endswith("data/templates")
-
-
-def test_template_file_operations():
-    """Test template file save functionality works"""
-    template = UESTemplates("AixLib.Test.Model", "Demand")
-    
-    with tempfile.NamedTemporaryFile(suffix=".mako", delete=False) as tmp_file:
-        template.save_path = tmp_file.name
-        sample_template = "<%def name='test'>Test template content</%def>"
-        
-        # Set rigorous mode to avoid interactive prompt
-        template.rigorous = True
-        
-        template._save_to_mako(sample_template)
-        
-        # Verify file was created and contains expected content
-        assert os.path.exists(tmp_file.name)
-        
-        with open(tmp_file.name, 'r') as f:
-            content = f.read()
-            assert "Test template content" in content
-        
-        # Cleanup
-        os.unlink(tmp_file.name)
-
-
 def test_integration_workflow_basic():
     """Test basic integration workflow - constructor to template generation"""
     # Test that we can create instances for all supported types

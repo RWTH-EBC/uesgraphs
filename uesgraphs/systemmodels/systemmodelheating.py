@@ -18,6 +18,7 @@ from uesgraphs.uesgraph import UESGraph
 from uesgraphs.systemmodels.templates import UESTemplates
 
 from uesgraphs import get_versioning_info
+from uesgraphs.utilities import set_up_terminal_logger, set_up_file_logger
 
 
 #For logging
@@ -64,37 +65,6 @@ def set_up_logger(name,log_dir = None,level=int(logging.ERROR)):
     logger.addHandler(handler)
 
     return logger   
-
-def set_up_terminal_logger(name: str, level: int = logging.INFO) -> logging.Logger:
-    """
-    Set up a simple console-only logger for small functions.
-
-    Args:
-        name: Logger name
-        level: Logging level (default: INFO)
-
-    Returns:
-        Configured console logger
-    """
-    logger = logging.getLogger(name)
-
-    # Avoid duplicate handlers if called multiple times
-    if logger.handlers:
-        return logger
-
-    logger.setLevel(level)
-
-    # Console handler only
-    console_handler = logging.StreamHandler()
-    formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
-    console_handler.setFormatter(formatter)
-    logger.addHandler(console_handler)
-
-    # Prevent propagation to root logger to avoid double messages
-    logger.propagate = False
-
-    return logger
-
 
 class SystemModelHeating(UESGraph):
     """Writes Modelica code for system models from uesgraphs information

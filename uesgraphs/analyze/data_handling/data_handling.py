@@ -15,78 +15,14 @@ from datetime import datetime
 import uesgraphs as ug
 from uesgraphs.systemmodels import utilities as ut
 from uesgraphs.analyze.data_handling import graph_transformation
+from uesgraphs.analyze.data_handling.mat_handler import mat_to_parquet
+from uesgraphs.utilities import set_up_terminal_logger, set_up_file_logger
 
 
 #### Global Variables ####
 AIXLIB_MASKS = None  # Dictionary to store masks for column names
 
 
-def set_up_terminal_logger(name: str, level: int = logging.INFO) -> logging.Logger:
-    """
-    Set up a simple console-only logger for small functions.
-    
-    Args:
-        name: Logger name
-        level: Logging level (default: INFO)
-        
-    Returns:
-        Configured console logger
-    """
-    logger = logging.getLogger(name)
-    
-    # Avoid duplicate handlers if called multiple times
-    if logger.handlers:
-        return logger
-        
-    logger.setLevel(level)
-    
-    # Console handler only
-    console_handler = logging.StreamHandler()
-    formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
-    console_handler.setFormatter(formatter)
-    logger.addHandler(console_handler)
-    
-    # Prevent propagation to root logger to avoid double messages
-    logger.propagate = False
-    
-    return logger
-
-
-def set_up_file_logger(name: str, log_dir: Optional[str] = None, level: int = logging.ERROR) -> logging.Logger:
-    """
-    Set up a full file+console logger for major functions.
-    
-    Args:
-        name: Logger name
-        log_dir: Directory for log files (default: temp directory)
-        level: Logging level (default: ERROR)
-        
-    Returns:
-        Configured file+console logger
-    """
-    logger = logging.getLogger(name)
-    
-   # if logger.handlers:
-    #    return logger
-        
-    logger.setLevel(level)
-
-    if log_dir is None:
-        log_dir = tempfile.gettempdir()
-    
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_file = os.path.join(log_dir, f"{name}_{timestamp}.log")
-    print(f"Logfile findable here: {log_file}")
-    
-    # File handler
-    file_handler = logging.FileHandler(log_file)
-    file_formatter = logging.Formatter('%(asctime)s - %(name)s - [%(filename)s:%(lineno)d] - %(levelname)s - %(message)s')
-    file_handler.setFormatter(file_formatter)
-    logger.addHandler(file_handler)
-    
-    logger.propagate = False
-    
-    return logger
 
 #### Functions 2: Data Aquisition ####
 
@@ -203,20 +139,20 @@ def process_simulation_result(file_path: str, filter_list: List[str],
     if logger is None:
         logger = set_up_terminal_logger(f"{__name__}.process_parquet_file")
     
-    # Step 1: Check if file exists and is valid
-    check_input_file(file_path=file_path, logger=logger)
+    # Step 1: Check if file exists and convert .mat if needed
+    processed_file_path = check_input_file(file_path=file_path, logger=logger)
 
     # Step 1: Validate all columns exist (will raise KeyError if missing)
-    available_columns = validate_columns_exist(file_path, required_columns=filter_list, logger=logger)
+    available_columns = validate_columns_exist(processed_file_path, required_columns=filter_list, logger=logger)
     
     # Step 2: Check if any columns match the filter_list
-    logger.info(f"Starting parquet file processing: {file_path}")
+    logger.info(f"Starting parquet file processing: {processed_file_path}")
     logger.debug(f"Filter patterns: {filter_list}")
     logger.debug(f"Chunk size: {chunk_size}")
     
     try:
         # Read parquet file metadata to get columns
-        parquet_file = pq.ParquetFile(file_path,
+        parquet_file = pq.ParquetFile(processed_file_path,
                                   thrift_string_size_limit=2_000_000_000,
                                   thrift_container_size_limit=2_000_000_000)
         chunks = []
@@ -241,7 +177,7 @@ def process_simulation_result(file_path: str, filter_list: List[str],
         logger.debug(f"DataFrame memory usage: {result_df.memory_usage(deep=True).sum() / 1024**2:.2f} MB")
         return result_df
     except Exception as e:
-        logger.error(f"Error processing parquet file {file_path}: {str(e)}")
+        logger.error(f"Error processing parquet file {processed_file_path}: {str(e)}")
         raise e
 
 
@@ -792,90 +728,6 @@ def assess_dp_quality(graph,
     
     return stats
 
-def _format_dp_quality_summary(stats):
-    """
-    Formats a comprehensive summary of the pressure difference quality assessment as string.
-    
-    Parameters:
-    -----------
-    stats : dict
-        Result from assess_dp_quality()
-        
-    Returns:
-    --------
-    str
-        Formatted summary string ready for logging or printing
-    """
-    total_measurements = (len(stats['negligible']) + 
-                         len(stats['acceptable']) + 
-                         len(stats['investigate']))
-    
-    lines = []
-    lines.append("=== Pressure Difference Quality Assessment ===")
-    lines.append(f"Total measurements: {total_measurements}")
-    lines.append(f"Negligible: {len(stats['negligible'])} ({len(stats['negligible'])/total_measurements*100:.1f}%)")
-    lines.append(f"Acceptable: {len(stats['acceptable'])} ({len(stats['acceptable'])/total_measurements*100:.1f}%)")
-    lines.append(f"Investigate: {len(stats['investigate'])} ({len(stats['investigate'])/total_measurements*100:.1f}%)")
-    
-    if stats['investigate']:
-        lines.append("")
-        lines.append("--- Critical Deviations (Top 5) ---")
-        # Sort by absolute error
-        worst_cases = sorted(stats['investigate'], 
-                           key=lambda x: x['abs_diff'], reverse=True)[:5]
-        
-        for case in worst_cases:
-            lines.append(f"Edge {case['edge']}, Time {case['timestamp']}: "
-                        f"dp_sim={case['dp_simulated']:.2f} Pa, "
-                        f"dp_calc={case['dp_calculated']:.2f} Pa, "
-                        f"Diff={case['abs_diff']:.2f} Pa ({case['rel_error']*100:.2f}%)")
-    
-    return "\n".join(lines)
-
-
-def _check_dp_quality_warnings(stats, logger=None):
-    """
-    Checks for critical pressure difference deviations and issues warnings.
-    This may indicate faulty assignments in the network model.
-    
-    Parameters:
-    -----------
-    stats : dict
-        Result from assess_dp_quality()
-    logger : logging.Logger, optional
-        Logger instance to use for warnings. If None, uses print statements.
-        
-    Returns:
-    --------
-    bool
-        True if critical deviations were found, False otherwise
-    """
-    critical_count = len(stats['investigate'])
-    
-    if critical_count == 0:
-        return False
-        
-    # Sort critical cases by severity (absolute difference)
-    critical_cases = sorted(stats['investigate'], 
-                          key=lambda x: x['abs_diff'], reverse=True)
-    
-    warning_msg = (f"WARNING: Found {critical_count} critical pressure difference deviations! "
-                  f"This may indicate faulty network assignments or modeling errors.")
-    
-    if logger:
-        logger.warning(warning_msg)
-        logger.warning("Most severe cases:")
-        for case in critical_cases[:3]:  # Show top 3
-            logger.warning(f"  Edge {case['edge']} at {case['timestamp']}: "
-                         f"{case['abs_diff']:.2f} Pa deviation ({case['rel_error']*100:.1f}%)")
-    else:
-        print(f" {warning_msg}")
-        print("Most severe cases:")
-        for case in critical_cases[:3]:
-            print(f"  • Edge {case['edge']} at {case['timestamp']}: "
-                  f"{case['abs_diff']:.2f} Pa deviation ({case['rel_error']*100:.1f}%)")
-    
-    return True
 
 ## Final pipeline function
 
@@ -1029,17 +881,21 @@ def assign_data_pipeline(
         # Step 3: Process simulation data
         logger.info("Step 3/6: Processing simulation data")
         
-        # Validate simulation data file exists
+        # Check if simulation data file exists and convert .mat files if needed
         if not simulation_data_path.exists():
             raise FileNotFoundError(f"Simulation data file not found: {simulation_data_path}")
+        
+        # Convert .mat to .gzip if needed and get the processed file path
+        processed_simulation_path = check_input_file(file_path=str(simulation_data_path), logger=logger)
+        logger.info(f"✓ Using processed simulation file: {processed_simulation_path}")
         
         # Build filter list for required variables
         filter_list = build_filter_list_pipe(graph, mask=MASK, logger=logger)
         logger.info(f"✓ Built filter list with {len(filter_list)} variables")
         
-        # Validate that all required columns exist
+        # Validate that all required columns exist in the processed file
         column_validation = validate_columns_exist(
-            file_path=str(simulation_data_path), 
+            file_path=processed_simulation_path, 
             required_columns=filter_list,
             logger=logger
         )
@@ -1048,7 +904,7 @@ def assign_data_pipeline(
         
         # Load and process simulation results
         df = process_simulation_result(
-            file_path=str(simulation_data_path), 
+            file_path=processed_simulation_path, 
             filter_list=filter_list, 
             logger=logger
         )
@@ -1088,8 +944,7 @@ def assign_data_pipeline(
 
             ## Additional test to asses node assignment based on pressures
             stats = assess_dp_quality(graph) 
-            has_critical = _check_dp_quality_warnings(stats, logger)
-            if has_critical:
+            if len(stats['investigate']) > 1:
                 logger.warning("⚠️  Critical pressure difference deviations found!")
             else:
                 logger.info("✓ Full validation completed successfully")
@@ -1141,38 +996,3 @@ def get_supply_type_prefix(graph):
     supply_type = graph.graph.get("supply_type", "supply")
     supply_type_prefix = {"supply": "", "return": "R"}
     return supply_type_prefix.get(supply_type, "")
-
-def check_supply_type(graph, logger: Optional[logging.Logger] = None):
-    """
-    Check and validate the supply type of the graph.
-    
-    Args:
-        graph: UESGraph instance
-        logger: Logger instance (optional)
-        
-    Returns:
-        str: Supply type ("supply" or "return")
-        
-    Raises:
-        ValueError: If supply_type is missing or invalid
-    """
-    if logger is None:
-        logger = set_up_terminal_logger(f"{__name__}.check_supply_type")
-    
-    if "supply_type" not in graph.graph:
-        error_msg = "The graph does not have a supply_type attribute"
-        logger.error(error_msg)
-        raise ValueError(error_msg)
-    
-    supply_type = graph.graph["supply_type"]
-    if supply_type not in ["supply", "return"]:
-        error_msg = f"The graph supply_type attribute must be either 'supply' or 'return', got: {supply_type}"
-        logger.error(error_msg)
-        raise ValueError(error_msg)
-    
-    logger.info(f"Graph supply type: {supply_type}")
-    return supply_type
-
-def list_supported_versions():
-    """List all supported AixLib versions."""
-    return list(AIXLIB_MASKS.keys())

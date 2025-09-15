@@ -1,6 +1,10 @@
 """Utilies: Collection of all utility functions that are useful in several classes."""
 
 import os
+import logging
+import tempfile
+from datetime import datetime
+from typing import Optional
 
 
 def default_json_path():
@@ -79,3 +83,71 @@ def name_uesgraph(name_workspace=None):
     name_uesgraph = make_workspace.name_workspace
 
     return name_uesgraph
+
+
+def set_up_terminal_logger(name: str, level: int = logging.INFO) -> logging.Logger:
+    """
+    Set up a simple console-only logger for small functions.
+    
+    Args:
+        name: Logger name
+        level: Logging level (default: INFO)
+        
+    Returns:
+        Configured console logger
+    """
+    logger = logging.getLogger(name)
+    
+    # Avoid duplicate handlers if called multiple times
+    if logger.handlers:
+        return logger
+        
+    logger.setLevel(level)
+    
+    # Console handler only
+    console_handler = logging.StreamHandler()
+    formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+    
+    # Prevent propagation to root logger to avoid double messages
+    logger.propagate = False
+    
+    return logger
+
+
+def set_up_file_logger(name: str, log_dir: Optional[str] = None, level: int = logging.ERROR) -> logging.Logger:
+    """
+    Set up a full file+console logger for major functions.
+    
+    Args:
+        name: Logger name
+        log_dir: Directory for log files (default: temp directory)
+        level: Logging level (default: ERROR)
+        
+    Returns:
+        Configured file+console logger
+    """
+    logger = logging.getLogger(name)
+    
+    # if logger.handlers:
+    #    return logger
+        
+    logger.setLevel(level)
+
+    if log_dir is None:
+        log_dir = tempfile.gettempdir()
+    
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = os.path.join(log_dir, f"{name}_{timestamp}.log")
+    print(f"Logfile findable here: {log_file}")
+    
+    # File handler
+    file_handler = logging.FileHandler(log_file)
+    file_formatter = logging.Formatter('%(asctime)s - %(name)s - [%(filename)s:%(lineno)d] - %(levelname)s - %(message)s')
+    file_handler.setFormatter(file_formatter)
+    logger.addHandler(file_handler)
+    
+    logger.propagate = False
+    
+    return logger
