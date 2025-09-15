@@ -31,7 +31,7 @@ If you have any questions regarding the tool, feel free to contact us at [ebc-to
 
 ### :wrench: Install uesgraphs
 
-We recommend using **Conda** or **Anaconda** for installing **uesgraphs**.
+We recommend using **Conda** or **Anaconda** for installing **uesgraphs**. Usage of `python venv` has shown to cause trouble in the installation process.
 
 Follow these steps to install **uesgraphs** using Conda:
 
