@@ -74,7 +74,7 @@ import os
 from datetime import datetime
 
 def main():
-    workspace = e1.workspace_example("e14")
+    workspace = e1.workspace_example("e13")
     
     dir_ues = os.path.dirname(os.path.dirname(workspace))
     pinola_json = os.path.join(dir_ues, "workspace", "e11", "inputs","test_modelgen", "Pinola", "nodes.json")
