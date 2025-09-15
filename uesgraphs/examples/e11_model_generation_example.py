@@ -100,8 +100,8 @@ def main():
     # function. There are two parameters needed. The source directory with
     # nodes.json 'dir_source' and the directory to store generated models
     # 'dir_dest'.
-    model_generation_pinola(dir_modelgen_pinola, dir_model)
-
+    sysm_graph_pinola = model_generation_pinola(dir_modelgen_pinola, dir_model)
+    sysut.save_system_model_to_json(sysm_graph_pinola, f"{dir_model}_sysm_graph_pinola.json")
     # Ibpsa Network
     network_ibpsa = "Ibpsa"
 
@@ -120,7 +120,9 @@ def main():
     # function. There are two parameters needed. The source directory with
     # nodes.json 'dir_source' and the directory to store generated models
     # 'dir_dest'.
-    model_generation_ibpsa(dir_modelgen_ibpsa, dir_model)
+    sysm_graph_ibpsa = model_generation_ibpsa(dir_modelgen_ibpsa, dir_model)
+    sysut.save_system_model_to_json(sysm_graph_ibpsa, f"{dir_model}_sysm_graph_ibpsa.json")
+
 
     end_time = datetime.datetime.now()
     runtime = end_time - start_time
@@ -223,8 +225,8 @@ def model_generation_pinola(dir_source, dir_dest):
         T_nominal=273.15 + 15,
         p_nominal=5e5,
     )
-    sysut.save_system_model_to_json(sysm_graph,r"/home/leon/git/uesgraphs/workspace/pinola_sysm.json")
-
+    
+    return sysm_graph
 
 def model_generation_ibpsa(dir_source, dir_dest):
     """Run example model generation for Ibpsa network
@@ -304,7 +306,7 @@ def model_generation_ibpsa(dir_source, dir_dest):
         T_eva_nominal=273.15 + 10,
     )
 
-    sysut.create_model(
+    sysm_graph = sysut.create_model(
         name="Ibpsa_low_temp_network",
         save_at=dir_dest,
         graph=graph,
@@ -318,6 +320,9 @@ def model_generation_ibpsa(dir_source, dir_dest):
         T_nominal=273.15 + 15,
         p_nominal=5e5,
     )
+    return sysm_graph
+
+
 
 def create_dirs(dir_project):
     """Creates `input`, `model`, `result` and `visualization` directories
@@ -358,7 +363,7 @@ def create_dirs(dir_project):
         os.mkdir(dir_design)
 
     return dir_input, dir_model, dir_result, dir_visualization
-
+    
 
 
 # Main function
