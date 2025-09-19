@@ -119,7 +119,7 @@ def validate_columns_exist(file_path: str, required_columns: List[str],
         first_missing = missing_list[0]
         raise KeyError(first_missing)
     
-    logger.info("✅ All required columns found in data file")
+    logger.info("SUCCESS: All required columns found in data file")
     return available_columns
 
 def process_simulation_result(file_path: str, filter_list: List[str], 
@@ -240,7 +240,7 @@ def prepare_DataFrame(df, base_date=datetime(2024, 1, 1), time_interval="15min",
         
         # Log filtering results if any filtering was applied
         if len(df) != original_length:
-            logger.info(f"Date filtering applied: {original_length} → {len(df)} rows ({len(df)/original_length*100:.1f}% retained)")
+            logger.info(f"Date filtering applied: {original_length} -> {len(df)} rows ({len(df)/original_length*100:.1f}% retained)")
             if len(df) == 0:
                 logger.warning("Date filtering resulted in empty DataFrame - check date range parameters")
         else:
@@ -577,9 +577,9 @@ def validate_edge_attributes(graph, edge_attributes, reference_df, logger=None):
     
     # Validation summary
     if validation_passed:
-        logger.info("✓ Edge attribute validation completed successfully")
+        logger.info("SUCCESS: Edge attribute validation completed successfully")
     else:
-        logger.error(f"✗ Edge attribute validation failed: {len(errors)} errors")
+        logger.error(f"FAILED: Edge attribute validation failed: {len(errors)} errors")
         for error in errors[:5]:  # Show maximum 5 errors in summary
             logger.error(f"  - {error}")
         if len(errors) > 5:
@@ -646,9 +646,9 @@ def validate_node_attributes(graph, node_attributes, reference_df, logger=None):
     
     # Validation summary
     if validation_passed:
-        logger.info("✓ Node attribute validation completed successfully")
+        logger.info("SUCCESS: Node attribute validation completed successfully")
     else:
-        logger.error(f"✗ Node attribute validation failed: {len(errors)} errors")
+        logger.error(f"FAILED: Node attribute validation failed: {len(errors)} errors")
         for error in errors[:5]:  # Show maximum 5 errors in summary
             logger.error(f"  - {error}")
         if len(errors) > 5:
@@ -852,9 +852,9 @@ def assign_data_pipeline(
         logger.info("Step 1/6: Setting up variable masks")
         if MASK is None:
             MASK = AIXLIB_MASKS[aixlib_version]
-            logger.info(f"✓ Using AixLib {aixlib_version} standard masks")
+            logger.info(f"SUCCESS: Using AixLib {aixlib_version} standard masks")
         else:
-            logger.info("✓ Using custom variable masks")
+            logger.info("SUCCESS: Using custom variable masks")
         
         # Step 2: Create or use port mapping (if available)
         port_mapping = None
@@ -863,7 +863,7 @@ def assign_data_pipeline(
             
             if node_to_port_mapping is not None:
                 port_mapping = node_to_port_mapping
-                logger.info("✓ Using provided node-to-port mapping")
+                logger.info("SUCCESS: Using provided node-to-port mapping")
                 
             elif system_model_path is not None:
                 system_model_path = Path(system_model_path)
@@ -872,11 +872,11 @@ def assign_data_pipeline(
                 
                 sysm_graph = ut.load_system_model_from_json(str(system_model_path))
                 port_mapping = graph_transformation.map_system_model_to_uesgraph(sysm_graph, graph)
-                logger.info(f"✓ Created port mapping from system model ({len(port_mapping)} components)")
+                logger.info(f"SUCCESS: Created port mapping from system model ({len(port_mapping)} components)")
                 
         elif assignment_mode == "edges_only":
             logger.info("Step 2/6: Skipping port mapping - edge-only assignment mode")
-            logger.warning("⚠️  No node data will be assigned (temperatures, pressures)")
+            logger.warning("WARNING: No node data will be assigned (temperatures, pressures)")
         
         # Step 3: Process simulation data
         logger.info("Step 3/6: Processing simulation data")
@@ -887,11 +887,11 @@ def assign_data_pipeline(
         
         # Convert .mat to .gzip if needed and get the processed file path
         processed_simulation_path = check_input_file(file_path=str(simulation_data_path), logger=logger)
-        logger.info(f"✓ Using processed simulation file: {processed_simulation_path}")
+        logger.info(f"SUCCESS: Using processed simulation file: {processed_simulation_path}")
         
         # Build filter list for required variables
         filter_list = build_filter_list_pipe(graph, mask=MASK, logger=logger)
-        logger.info(f"✓ Built filter list with {len(filter_list)} variables")
+        logger.info(f"SUCCESS: Built filter list with {len(filter_list)} variables")
         
         # Validate that all required columns exist in the processed file
         column_validation = validate_columns_exist(
@@ -908,7 +908,7 @@ def assign_data_pipeline(
             filter_list=filter_list, 
             logger=logger
         )
-        logger.info(f"✓ Loaded simulation data: {df.shape[0]} timesteps")
+        logger.info(f"SUCCESS: Loaded simulation data: {df.shape[0]} timesteps")
         
         # Step 4: Prepare DataFrame
         logger.info("Step 4/6: Preparing time series data")
@@ -919,7 +919,7 @@ def assign_data_pipeline(
             time_interval=time_interval, 
             logger=logger
         )
-        logger.info(f"✓ Prepared DataFrame: {df.shape[0]} timesteps after filtering")
+        logger.info(f"SUCCESS: Prepared DataFrame: {df.shape[0]} timesteps after filtering")
         
         # Step 5: Assign data to graph components
         logger.info("Step 5/6: Assigning data to graph components")
@@ -927,17 +927,17 @@ def assign_data_pipeline(
         if assignment_mode == "full":
             # Assign values to nodes (temperature and pressure)
             assign_node_values(graph, df, port_mapping, MASK, logger=logger)
-            logger.info(f"✓ Assigned node data (temperature, pressure) to {len(graph.nodes)} nodes")
+            logger.info(f"SUCCESS: Assigned node data (temperature, pressure) to {len(graph.nodes)} nodes")
         
         # Assign values to edges (mass flow, pressure drop) - always done
         assign_edge_data(graph, MASK, df)
-        logger.info(f"✓ Assigned edge data (mass flow, pressure drop) to {len(graph.edges)} edges")
+        logger.info(f"SUCCESS: Assigned edge data (mass flow, pressure drop) to {len(graph.edges)} edges")
         
         # Step 6: Validate results
         logger.info("Step 6/6: Validating assignment results")
         
         validate_edge_attributes(graph, MASK["edge"], df, logger=logger)
-        logger.info("✓ Edge validation completed successfully")
+        logger.info("SUCCESS: Edge validation completed successfully")
 
         if assignment_mode == "full":
             validate_node_attributes(graph,MASK["node"],df, logger=logger)
@@ -945,17 +945,17 @@ def assign_data_pipeline(
             ## Additional test to asses node assignment based on pressures
             stats = assess_dp_quality(graph) 
             if len(stats['investigate']) > 1:
-                logger.warning("⚠️  Critical pressure difference deviations found!")
+                logger.warning("WARNING: Critical pressure difference deviations found!")
             else:
-                logger.info("✓ Full validation completed successfully")
+                logger.info("SUCCESS: Full validation completed successfully")
 
         
         logger.info("="*70)
         logger.info("PIPELINE COMPLETED SUCCESSFULLY")
-        logger.info(f"✓ Network '{network_name}' ready for analysis")
-        logger.info(f"✓ Data period: {df.index.min()} to {df.index.max()}")
-        logger.info(f"✓ Time resolution: {time_interval}")
-        logger.info(f"✓ Assignment mode: {assignment_mode}")
+        logger.info(f"SUCCESS: Network '{network_name}' ready for analysis")
+        logger.info(f"SUCCESS: Data period: {df.index.min()} to {df.index.max()}")
+        logger.info(f"SUCCESS: Time resolution: {time_interval}")
+        logger.info(f"SUCCESS: Assignment mode: {assignment_mode}")
         logger.info("="*70)
         
         return graph

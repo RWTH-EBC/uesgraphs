@@ -396,7 +396,7 @@ def plot_example_networks():
         show_plot=False,
         scaling_factor=scaling_factor,
         generic_intensive_size= "temperature_supply",
-        ylabel = "temperature [°C]",
+        ylabel = "temperature [deg C]",
         label_size=30
     )
 
