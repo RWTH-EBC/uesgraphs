@@ -368,6 +368,7 @@ def get_aixlib_path():
     """Get AixLib library path via file dialog"""
     print("\n--- AixLib Library Path Selection ---")
     
+    print(" A file dialog will open to select the AixLib 'package.mo' file. If you cant see it, check all open windows.")
     # Hide the root Tkinter window
     root = tk.Tk()
     root.withdraw()
