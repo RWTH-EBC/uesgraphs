@@ -1224,7 +1224,7 @@ class Visuals(object):
             minmax = minmaxtemp
             if minmax is False or minmax is None:
                 minmax = self.uesgraph.get_min_max(key= "temperature_supply", mode = "node")
-            ylabel = "Temperature in °C"
+            ylabel = "Temperature in deg C"
         elif add_temperature_drop:
             minmax = minmaxmtempdrop
             if minmax is False or minmax is None:

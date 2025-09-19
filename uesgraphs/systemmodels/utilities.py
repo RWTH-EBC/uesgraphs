@@ -336,19 +336,19 @@ def create_model(
         logger.debug(f"Processing building node '{node}': {is_supply}={is_supply_value}")
         
         if is_supply_value:
-            logger.debug(f"  → Assigning SUPPLY model: '{model_supply}'")
+            logger.debug(f"  -> Assigning SUPPLY model: '{model_supply}'")
             new_model.nodes[node]["comp_model"] = model_supply
         else:
-            logger.debug(f"  → Assigning DEMAND model: '{model_demand}'")
+            logger.debug(f"  -> Assigning DEMAND model: '{model_demand}'")
             new_model.nodes[node]["comp_model"] = model_demand
         
         # Validate assignment
         assigned_value = new_model.nodes[node]["comp_model"]
-        logger.debug(f"  ✓ comp_model assigned: '{assigned_value}'")
+        logger.debug(f"  SUCCESS: comp_model assigned: '{assigned_value}'")
         
         # Check if assignment looks like a template path (potential problem!)
         if assigned_value and ('\\' in assigned_value or '/' in assigned_value):
-            logger.warning(f"  ⚠️  comp_model looks like a path, not a model name: '{assigned_value}'")
+            logger.warning(f"  WARNING: comp_model looks like a path, not a model name: '{assigned_value}'")
 
     # Pipe model assignment
     logger.info("=== Starting comp_model assignment for pipes ===")
@@ -364,7 +364,7 @@ def create_model(
             logger.debug(f"  Pipe length: {length}, short_pipes_static threshold: {short_pipes_static}")
             if length < short_pipes_static:
                 static_model = "AixLib.Fluid.DistrictHeatingCooling.Pipes.StaticPipe"
-                logger.debug(f"  → Using static pipe model: '{static_model}'")
+                logger.debug(f"  -> Using static pipe model: '{static_model}'")
                 new_model.nodes[node]["comp_model"] = static_model
 
     # Final model setup
@@ -1191,7 +1191,7 @@ def _aggregate_edge_flows_robust(
         for edge, conflicts in supply_conflicts.items():
             flows = [f"{supply}: {flow:.6f}" for supply, flow in conflicts]
             max_flow = final_edge_flows[edge]
-            logger.debug(f"Edge {edge} - Supplies: [{', '.join(flows)}] → "
+            logger.debug(f"Edge {edge} - Supplies: [{', '.join(flows)}] -> "
                         f"Selected: {max_flow:.6f} kg/s")
     
     # Step 4: Apply calculated flows to all graph edges

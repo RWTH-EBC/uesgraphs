@@ -173,7 +173,7 @@ def demonstrate_manual_generation(path_aixlib: str, workspace: str):
             print(f"Step 3: Generating new template from AixLib library...")
             try:
                 template_gen.generate_new_template(path_library=path_aixlib)
-                print(f"✓ Template generated successfully")
+                print(f"SUCCESS: Template generated successfully")
                 
                 # Immediate testing (advantage of manual approach)
                 print(f"Step 4: Testing template with sample data...")
@@ -185,16 +185,16 @@ def demonstrate_manual_generation(path_aixlib: str, workspace: str):
                     mo = render_gen.render(node_data=test_data, i=1, number_of_instances=1)
                     
                     # Show full generated code (educational value)
-                    print(f"✓ Template test successful!")
+                    print(f"SUCCESS: Template test successful!")
                     print(f"Generated Modelica code ({len(mo)} characters):")
                     print("-" * 50)
                     print(mo[:300] + "..." if len(mo) > 300 else mo)
                     print("-" * 50)
                 else:
-                    print(f"⚠ No test data available for {model_type}")
+                    print(f"WARNING: No test data available for {model_type}")
                     
             except Exception as e:
-                print(f"✗ Error generating template: {e}")
+                print(f"FAILED: Error generating template: {e}")
     
     print(f"\nManual generation complete. Templates saved in: {workspace}")
 
@@ -246,13 +246,13 @@ def demonstrate_bulk_generation(path_aixlib: str, workspace: str):
     print(f"Successfully generated: {successful}/{total_models} templates")
     
     if successful > 0:
-        print("\n✓ Successful templates:")
+        print("\nSUCCESS: Successful templates:")
         for model_name, result in results.items():
             if not result.startswith("ERROR"):
                 print(f"  • {model_name}")
     
     if successful < total_models:
-        print("\n✗ Failed templates:")
+        print("\nFAILED: Failed templates:")
         for model_name, result in results.items():
             if result.startswith("ERROR"):
                 print(f"  • {model_name}: {result}")
@@ -269,9 +269,9 @@ def demonstrate_bulk_generation(path_aixlib: str, workspace: str):
                         template_gen = UESTemplates(model_name=model_name, model_type=model_type)
                         mo = template_gen.render(node_data=test_data, i=1, number_of_instances=1)
                         tested += 1
-                        print(f"✓ {model_name} - Rendered {len(mo)} characters")
+                        print(f"SUCCESS: {model_name} - Rendered {len(mo)} characters")
                     except Exception as e:
-                        print(f"✗ {model_name} - Render error: {e}")
+                        print(f"FAILED: {model_name} - Render error: {e}")
     
     print(f"\nBulk generation complete. {tested} templates tested successfully.")
 
@@ -293,10 +293,10 @@ def demonstrate_config_generation(workspace: str):
     # Check for environment variable (production approach)
     aixlib_env = os.environ.get('AIXLIB_LIBRARY_PATH')
     if aixlib_env:
-        print(f"✓ Found AIXLIB_LIBRARY_PATH environment variable: {aixlib_env}")
+        print(f"SUCCESS: Found AIXLIB_LIBRARY_PATH environment variable: {aixlib_env}")
         path_info = "environment variable"
     else:
-        print("⚠ AIXLIB_LIBRARY_PATH not set - will use interactive file selection")
+        print("WARNING: AIXLIB_LIBRARY_PATH not set - will use interactive file selection")
         path_info = "interactive selection"
     
     config_file = "data/templates/template_aixlib_components.json"
@@ -322,13 +322,13 @@ def demonstrate_config_generation(workspace: str):
         print(f"AixLib path source: {path_info}")
         
         if successful > 0:
-            print(f"\n✓ Successfully generated templates:")
+            print(f"\nSUCCESS: Successfully generated templates:")
             for model_name, template_path in results_rigorous.items():
                 if not template_path.startswith("ERROR"):
                     print(f"  • {model_name}")
         
         if successful < total:
-            print(f"\n✗ Failed templates:")
+            print(f"\nFAILED: Failed templates:")
             for model_name, result in results_rigorous.items():
                 if result.startswith("ERROR"):
                     print(f"  • {model_name}: {result}")
@@ -336,7 +336,7 @@ def demonstrate_config_generation(workspace: str):
         print(f"\nConfiguration-driven generation complete.")
         
     except Exception as e:
-        print(f"✗ Configuration generation failed: {e}")
+        print(f"FAILED: Configuration generation failed: {e}")
         print("This might happen if the JSON config file is not found or AixLib path is invalid.")
 
 
@@ -368,6 +368,7 @@ def get_aixlib_path():
     """Get AixLib library path via file dialog"""
     print("\n--- AixLib Library Path Selection ---")
     
+    print(" A file dialog will open to select the AixLib 'package.mo' file. If you cant see it, check all open windows.")
     # Hide the root Tkinter window
     root = tk.Tk()
     root.withdraw()
@@ -379,10 +380,10 @@ def get_aixlib_path():
     )
     
     if path_aixlib:
-        print(f"✓ Selected AixLib path: {path_aixlib}")
+        print(f"SUCCESS: Selected AixLib path: {path_aixlib}")
         return path_aixlib
     else:
-        print("✗ No file selected.")
+        print("FAILED: No file selected.")
         return None
 
 
@@ -396,7 +397,7 @@ def main():
     
     # Create workspace
     workspace = e1.workspace_example("e12")
-    print(f"✓ Created workspace: {workspace}")
+    print(f"SUCCESS: Created workspace: {workspace}")
     
     # Get AixLib path for methods that need it
     path_aixlib = None
@@ -428,8 +429,8 @@ def main():
         print("• Bulk: Best for moderate-scale generation")  
         print("• Config: Best for production and automation")
     
-    print(f"\n✓ All templates saved to: {workspace}")
-    print("✓ Demonstration complete!")
+    print(f"\nSUCCESS: All templates saved to: {workspace}")
+    print("SUCCESS: Demonstration complete!")
 
 
 if __name__ == "__main__":
