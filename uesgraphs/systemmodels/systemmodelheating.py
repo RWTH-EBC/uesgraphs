@@ -150,7 +150,7 @@ class SystemModelHeating(UESGraph):
         self.control_pressure = {}
 
         self.graph["T_ground"] = [273.15 + 10]  # Default ground temperature
-        logger.debug(f"Default ground temperature: {self.graph['T_ground'][0] - 273.15:.2f}°C")
+        logger.debug(f"Default ground temperature: {self.graph['T_ground'][0] - 273.15:.2f} deg C")
 
         self.with_heat_flow_output = False
         self.with_heat_loss_output = False
@@ -163,7 +163,7 @@ class SystemModelHeating(UESGraph):
         
         # Verify template directory exists
         if os.path.exists(self.template_directory):
-            logger.debug(f"✓ Template directory exists")
+            logger.debug(f"SUCCESS: Template directory exists")
             # List available templates for debugging
             try:
                 template_files = [f for f in os.listdir(self.template_directory) if f.endswith('.mako')]
@@ -253,7 +253,7 @@ class SystemModelHeating(UESGraph):
             original_name = name_node
             if name_node[0].isdigit():
                 name_node = self.model_name[0] + name_node
-                logger.debug(f"  Renamed node: '{original_name}' → '{name_node}' (starts with digit)")
+                logger.debug(f"  Renamed node: '{original_name}' -> '{name_node}' (starts with digit)")
 
             # Log supply status - CRITICAL for comp_model assignment later!
             supply_status = {
@@ -286,7 +286,7 @@ class SystemModelHeating(UESGraph):
                     
                     # Special attention to potential template/model attributes
                     if 'template' in attrib.lower() or 'model' in attrib.lower():
-                        logger.info(f"  ⚠️  Template/Model attribute found: {attrib} = {uesgraph_input.node[node][attrib]}")
+                        logger.info(f"  WARNING: Template/Model attribute found: {attrib} = {uesgraph_input.node[node][attrib]}")
                     else:
                         logger.debug(f"    Attribute: {attrib}")
             
@@ -377,7 +377,7 @@ class SystemModelHeating(UESGraph):
         logger.debug(f"  Added to nodelist_pipe, total pipes: {len(self.nodelist_pipe)}")
 
         self.nodes_by_name[name] = node_number
-        logger.debug(f"  Added to nodes_by_name mapping: '{name}' → {node_number}")
+        logger.debug(f"  Added to nodes_by_name mapping: '{name}' -> {node_number}")
 
         logger.debug(f"Pipe node created successfully: {node_number} ('{name}')")
         return node_number
@@ -464,7 +464,7 @@ class SystemModelHeating(UESGraph):
 
             curr_edge_node_0 = self.nodes_by_name[name_node_0]
             curr_edge_node_1 = self.nodes_by_name[name_node_1]
-            logger.debug(f"  Connected nodes: {curr_edge_node_0} ↔ {curr_edge_node_1}")
+            logger.debug(f"  Connected nodes: {curr_edge_node_0} <-> {curr_edge_node_1}")
 
             # Find position for new pipe node between both neighbors
             new_position = sg.LineString(
@@ -490,7 +490,7 @@ class SystemModelHeating(UESGraph):
                     
                     # Pay attention to important pipe attributes
                     if attrib in ['length', 'diameter', 'comp_model', 'template_path']:
-                        logger.info(f"    ⚠️  Important pipe attribute: {attrib} = {value}")
+                        logger.info(f"    WARNING: Important pipe attribute: {attrib} = {value}")
                     else:
                         logger.debug(f"    Attribute: {attrib} = {value}")
 
@@ -502,7 +502,7 @@ class SystemModelHeating(UESGraph):
                 output="degrees",
             )
             self.nodes[curr_pipe]["rotation"] = rotation_angle
-            logger.debug(f"  Pipe rotation: {rotation_angle:.1f}°")
+            logger.debug(f"  Pipe rotation: {rotation_angle:.1f} deg")
 
             assert curr_edge_node_0 in self.nodes()
             assert curr_edge_node_1 in self.nodes()
@@ -510,9 +510,9 @@ class SystemModelHeating(UESGraph):
             # Create connections
             self.add_edge(curr_pipe, curr_edge_node_0)
             self.add_edge(curr_pipe, curr_edge_node_1)
-            logger.debug(f"  Created edges: {curr_pipe}↔{curr_edge_node_0}, {curr_pipe}↔{curr_edge_node_1}")
+            logger.debug(f"  Created edges: {curr_pipe}<->{curr_edge_node_0}, {curr_pipe}<->{curr_edge_node_1}")
             
-            logger.debug(f"  Pipe '{pipe_name}' processed: {attribute_count} attributes, rotation {rotation_angle:.1f}°")
+            logger.debug(f"  Pipe '{pipe_name}' processed: {attribute_count} attributes, rotation {rotation_angle:.1f} deg")
             pipe_count += 1
 
         logger.info(f"Pipe import completed: {pipe_count} pipes processed")
@@ -828,7 +828,7 @@ class SystemModelHeating(UESGraph):
         edge_count = 0
         for curr_edge in self.edges(data=True):
             edge_count += 1
-            logger.debug(f"Processing edge {edge_count}: {curr_edge[0]} ↔ {curr_edge[1]}")
+            logger.debug(f"Processing edge {edge_count}: {curr_edge[0]} <-> {curr_edge[1]}")
             
             for edge_node in curr_edge:
                 if edge_node == curr_edge[0]:
@@ -859,7 +859,7 @@ class SystemModelHeating(UESGraph):
                         clusters[edge_node].append(curr_edge[1])
                     elif edge_node == curr_edge[1]:
                         clusters[edge_node].append(curr_edge[0])
-                    logger.debug(f"    → Added to cluster, connections: {len(clusters[edge_node])}")
+                    logger.debug(f"    -> Added to cluster, connections: {len(clusters[edge_node])}")
                     
                 # Pipe nodes
                 elif edge_node in self.nodelist_pipe:
@@ -875,7 +875,7 @@ class SystemModelHeating(UESGraph):
                     if abs(pipe_rotation - angle) < 90:
                         con = "pipe" + str(pipe_name) + ".port_b"
                         con_R = "pipe" + str(pipe_name) + "R." + "port_b"
-                        logger.debug(f"    → Port B connections: {con}, {con_R}")
+                        logger.debug(f"    -> Port B connections: {con}, {con_R}")
                     else:
                         con = "pipe" + str(pipe_name) + ".port_a"
                         con_R = "pipe" + str(pipe_name) + "R." + "port_a"
@@ -928,7 +928,7 @@ class SystemModelHeating(UESGraph):
                             con2R=ports[curr_node]["rtn"],
                         )
                         connection_count += 1
-                        logger.debug(f"  Created direct connection {connection_count}: {first_node} ↔ {curr_node}")
+                        logger.debug(f"  Created direct connection {connection_count}: {first_node} <-> {curr_node}")
                         
                     self.remove_network_node(network_node)
                     logger.debug(f"  Removed network node: {network_node}")
@@ -984,7 +984,7 @@ class SystemModelHeating(UESGraph):
                     occurrences_port[name_pipe] += 1
                     con1_new = "pipe{}.port_b".format(name_pipe)
                     self.edges[edge[0], edge[1]]["con1"] = con1_new
-                    logger.debug(f"  Updated con1: {con1} → {con1_new}")
+                    logger.debug(f"  Updated con1: {con1} -> {con1_new}")
                     supply_connections += 1
                     
             if "pipe" in con2:
@@ -993,7 +993,7 @@ class SystemModelHeating(UESGraph):
                     occurrences_port[name_pipe] += 1
                     con2_new = "pipe{}.port_b".format(name_pipe)
                     self.edges[edge[0], edge[1]]["con2"] = con2_new
-                    logger.debug(f"  Updated con2: {con2} → {con2_new}")
+                    logger.debug(f"  Updated con2: {con2} -> {con2_new}")
                     supply_connections += 1
 
         logger.debug(f"Supply network: {supply_connections} pipe connections updated")
@@ -1016,7 +1016,7 @@ class SystemModelHeating(UESGraph):
                     occurrences_port[name_pipe] += 1
                     con1R_new = "pipe{}R.port_b".format(name_pipe)
                     self.edges[edge[0], edge[1]]["con1R"] = con1R_new
-                    logger.debug(f"  Updated con1R: {con1R} → {con1R_new}")
+                    logger.debug(f"  Updated con1R: {con1R} -> {con1R_new}")
                     return_connections += 1
                     
             if "pipe" in con2R:
@@ -1025,7 +1025,7 @@ class SystemModelHeating(UESGraph):
                     occurrences_port[name_pipe] += 1
                     con2R_new = "pipe{}R.port_b".format(name_pipe)
                     self.edges[edge[0], edge[1]]["con2R"] = con2R_new
-                    logger.debug(f"  Updated con2R: {con2R} → {con2R_new}")
+                    logger.debug(f"  Updated con2R: {con2R} -> {con2R_new}")
                     return_connections += 1
 
         logger.debug(f"Return network: {return_connections} pipe connections updated")
