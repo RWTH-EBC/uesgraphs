@@ -8,15 +8,20 @@ import numpy as np
 import os
 import pandas as pd
 import shapely.geometry as sg
-import shapely.ops as ops
 from shapely import affinity
 from shapely.prepared import prep
+from shapely.geometry import Point, MultiLineString
+
 import uesgraphs.utilities as ut
 import uuid
 import warnings
 import xml.etree.ElementTree
 
+import geopandas as gp
+
+
 from uesgraphs.uesmodels.utilities import utilities as utils
+
 
 try:
     import pyproj
