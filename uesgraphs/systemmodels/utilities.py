@@ -1489,9 +1489,16 @@ def get_inner_diameter_from_DN(dn_value, catalog_name="isoplus",custom_path: Opt
     use get_pipe_catalog_DN_m_flow() instead.
     """
     catalog = load_pipe_catalog(catalog_name,custom_path=custom_path)
-    
-    # Direct match
-    matching = catalog[catalog['DN'] == dn_value]
+        # Convert DN value to match catalog format
+    # Handle both numeric (200) and string ("DN200", "200") inputs
+    if isinstance(dn_value, str):
+        if not dn_value.startswith('DN'):
+            search_key = f"DN{dn_value}"
+        else:
+            search_key = dn_value
+    else:
+        search_key = f"DN{int(dn_value)}"  # Convert 200 → "DN200"
+    matching = catalog[catalog['DN'] == search_key]
     if not matching.empty:
         return float(matching.iloc[0]['inner_diameter'])
 
