@@ -1488,8 +1488,16 @@ class UESGraph(nx.Graph):
 
         if folder_vis: # Generate visualization
             self._create_network_visualization(folder_vis, filename="4_coords_transformed")
-        
+
+        #Recalculate Pipe lengths after coordinate transformation and assign it as a main attribute        
+        for edge in self.edges():
+            pos_0 = self.nodes[edge[0]]["position"]
+            pos_1 = self.nodes[edge[1]]["position"]
+            self.edges[edge]["length"] = pos_1.distance(pos_0)
+
+
         self.network_length = self.calc_network_length("heating")
+
         print("Total network length (m): ", self.network_length)
 
         return True
