@@ -160,7 +160,7 @@ specified in the input uesgraph</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ax</strong> (<em>maplotlib ax object</em>) – </p></li>
-<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
+<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
 the edge widths</p></li>
 </ul>
 </dd>
@@ -181,7 +181,7 @@ the edge widths</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ax</strong> (<em>maplotlib ax object</em>) – </p></li>
-<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – If set to <cite>‘street’</cite>, node numbers of street nodes are shown in
+<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to <cite>‘street’</cite>, node numbers of street nodes are shown in
 plot</p></li>
 <li><p><strong>show_diameters</strong> (<em>boolean</em>) – True if edges of heating networks should show the relative diameter
 of the pipe, False if not</p></li>
@@ -191,9 +191,9 @@ through the pipe, False if not</p></li>
 through the pipe, False if not</p></li>
 <li><p><strong>show_press_drop_flows</strong> (<em>boolean</em>) – True if edges of heating networks should show the pressure drop
 through the pipe, False if not</p></li>
-<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Fontsize for optional labels</p></li>
-<li><p><strong>edge_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – A list of edges that should be marked in the plot</p></li>
-<li><p><strong>node_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – A list of nodes that should be marked in the plot</p></li>
+<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Fontsize for optional labels</p></li>
+<li><p><strong>edge_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of edges that should be marked in the plot</p></li>
+<li><p><strong>node_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of nodes that should be marked in the plot</p></li>
 <li><p><strong>add_edge_temperatures</strong> (<em>boolean</em>) – Plots edge temperatures on top of plot if True</p></li>
 <li><p><strong>add_edge_flows</strong> (<em>boolean</em>) – Plots edge width according to flow rates in the networks if True</p></li>
 <li><p><strong>add_edge_pressures</strong> (<em>boolean</em>) – Plots edge pressure on top of plot if True</p></li>
@@ -203,18 +203,18 @@ through the pipe, False if not</p></li>
 False, these arrows will show the initial assumed flow direction.
 If add_edge_flows is True, the arrows show the calculated flow
 direction.</p></li>
-<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
+<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
 the edge widths</p></li>
-<li><p><strong>scaling_factor_diameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Factor that scales the width of lines for show_diameters = True</p></li>
-<li><p><strong>generic_intensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
+<li><p><strong>scaling_factor_diameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the width of lines for show_diameters = True</p></li>
+<li><p><strong>generic_intensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
 values of the attribute with the given string</p></li>
-<li><p><strong>generic_extensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
+<li><p><strong>generic_extensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
 values of the attribute with the given string</p></li>
 <li><p><strong>minmax</strong> (<em>array</em>) – Contains the minimum and maximum values for the generic size
 in format [min, max]</p></li>
-<li><p><strong>zero_alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Alpha value to paint certain edges transparent. Look at docstring
+<li><p><strong>zero_alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Alpha value to paint certain edges transparent. Look at docstring
 of paint_edges_extensive_sizes for more information</p></li>
-<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the colormap to use for visualization (default=’viridis’).
+<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the colormap to use for visualization (default=’viridis’).
 Common options include ‘viridis’, ‘coolwarm’, ‘RdYlGn’, ‘plasma’,
 ‘Blues’. For temperature data, ‘coolwarm’ or ‘RdYlGn’ provide
 intuitive red=hot, blue=cold color semantics.</p></li>
@@ -237,11 +237,11 @@ intuitive red=hot, blue=cold color semantics.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ax</strong> (<em>maplotlib ax object</em>) – </p></li>
-<li><p><strong>z_attrib</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Keyword to control which attribute of nodes will be used for
+<li><p><strong>z_attrib</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Keyword to control which attribute of nodes will be used for
 the z-coordinate</p></li>
 <li><p><strong>show_flow</strong> (<em>boolean</em>) – Varies linewidth of the edges if True</p></li>
-<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – View angle for 3d plot</p></li>
-<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Fontsize for labels</p></li>
+<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – View angle for 3d plot</p></li>
+<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Fontsize for labels</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -260,11 +260,11 @@ the z-coordinate</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – optional parameter, string denoting full path and file name +
+<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – optional parameter, string denoting full path and file name +
 extension for saving the plot</p></li>
 <li><p><strong>show_plot</strong> (<em>boolean</em>) – True if the plot should be shown in the current Python instance,
 False if not</p></li>
-<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – If set to <cite>‘street’</cite>, node numbers of street nodes are shown in
+<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to <cite>‘street’</cite>, node numbers of street nodes are shown in
 plot</p></li>
 <li><p><strong>show_diameters</strong> (<em>boolean</em>) – True if edges of heating networks should show the relative diameter
 of the pipe, False if not</p></li>
@@ -274,9 +274,9 @@ through the pipe, False if not</p></li>
 through the pipe, False if not</p></li>
 <li><p><strong>show_press_drop_flows</strong> (<em>boolean</em>) – True if edges of heating networks should show the pressure drop
 through the pipe, False if not</p></li>
-<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Fontsize for optional labels</p></li>
-<li><p><strong>edge_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – A list of edges that should be marked in the plot</p></li>
-<li><p><strong>node_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – A list of nodes that should be marked in the plot</p></li>
+<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Fontsize for optional labels</p></li>
+<li><p><strong>edge_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of edges that should be marked in the plot</p></li>
+<li><p><strong>node_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of nodes that should be marked in the plot</p></li>
 <li><p><strong>add_edge_temperatures</strong> (<em>boolean</em>) – Plots edge temperatures on top of plot if True</p></li>
 <li><p><strong>add_edge_flows</strong> (<em>boolean</em>) – Plots edge width according to flow rates in the networks if True</p></li>
 <li><p><strong>add_edge_pressures</strong> (<em>boolean</em>) – Plots edge pressure on top of plot if True</p></li>
@@ -285,12 +285,12 @@ through the pipe, False if not</p></li>
 False, these arrows will show the initial assumed flow direction.
 If add_edge_flows is True, the arrows show the calculated flow
 direction.</p></li>
-<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
+<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
 the edge widths</p></li>
-<li><p><strong>scaling_factor_diameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Factor that scales the width of lines</p></li>
+<li><p><strong>scaling_factor_diameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the width of lines</p></li>
 <li><p><strong>simple</strong> (<em>boolean</em>) – For very large uesgraphs, the standard plotting may take too long
 (hours…). In these cases, <cite>simple=True</cite> gives faster results</p></li>
-<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Integer to overwrite the standard resolution of 150 dpi</p></li>
+<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Integer to overwrite the standard resolution of 150 dpi</p></li>
 <li><p><strong>minmaxtemp</strong> (<em>array</em>) – Array with minimum and maximum temperature value for the scaling
 of the plot. If not set the values will be calculated automatically</p></li>
 <li><p><strong>minmaxmflow</strong> (<em>array</em>) – Array with minimum and maximum temperature value for the scaling
@@ -300,16 +300,16 @@ of the plot. If not set the values will be calculated automatically</p></li>
 <li><p><strong>minmaxmpressdrop</strong> (<em>array</em>) – Array with minimum and maximum pressure drop value for the scaling
 of the plot. If not set the values will be calculated automatically</p></li>
 <li><p><strong>timestamp</strong> (<em>datetime</em>) – prints the actual timestamp on the plot</p></li>
-<li><p><strong>generic_intensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
+<li><p><strong>generic_intensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
 values of the attribute with the given string</p></li>
-<li><p><strong>generic_extensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
+<li><p><strong>generic_extensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
 values of the attribute with the given string</p></li>
 <li><p><strong>minmax</strong> (<em>array</em>) – Contains the minimum and maximum values for the generic size
 in format [min, max]</p></li>
-<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Label for the color scale when plotting generic size</p></li>
-<li><p><strong>zero_alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Alpha value to paint certain edges transparent. Look at docstring
+<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Label for the color scale when plotting generic size</p></li>
+<li><p><strong>zero_alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Alpha value to paint certain edges transparent. Look at docstring
 of paint_edges_extensive_sizes for more information</p></li>
-<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the colormap to use for visualization (default=’viridis’).
+<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the colormap to use for visualization (default=’viridis’).
 Common options include ‘viridis’, ‘coolwarm’, ‘RdYlGn’, ‘plasma’,
 ‘Blues’. For temperature data, ‘coolwarm’ or ‘RdYlGn’ provide
 intuitive red=hot, blue=cold color semantics.</p></li>
@@ -331,15 +331,15 @@ intuitive red=hot, blue=cold color semantics.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – optional parameter, string denoting full path and file name +
+<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – optional parameter, string denoting full path and file name +
 extension for saving the plot</p></li>
 <li><p><strong>show_plot</strong> (<em>boolean</em>) – True if the plot should be shown in the current Python instance,
 False if not</p></li>
 <li><p><strong>show_flow</strong> (<em>boolean</em>) – Varies linewidth of the edges if True</p></li>
-<li><p><strong>z_attrib</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Keyword to control which attribute of nodes will be used for
+<li><p><strong>z_attrib</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Keyword to control which attribute of nodes will be used for
 the z-coordinate</p></li>
-<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – View angle for 3d plot</p></li>
-<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Fontsize for optional labels</p></li>
+<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – View angle for 3d plot</p></li>
+<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Fontsize for optional labels</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -358,15 +358,15 @@ the z-coordinate</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – optional parameter, string denoting full path and file name +
+<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – optional parameter, string denoting full path and file name +
 extension for saving the plot</p></li>
 <li><p><strong>show_plot</strong> (<em>boolean</em>) – True if the plot should be shown in the current Python instance,
 False if not</p></li>
-<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – View angle for 3d plot</p></li>
-<li><p><strong>networks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – Instead of [‘all’], the networks list can specify which networks
+<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – View angle for 3d plot</p></li>
+<li><p><strong>networks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Instead of [‘all’], the networks list can specify which networks
 should be plotted. Accepted items are {‘heating’, ‘cooling’,
 ‘electricity’, ‘gas’, ‘others’}</p></li>
-<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
+<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
 the edge widths</p></li>
 <li><p><strong>dotted_lines</strong> (<em>boolean</em>) – Optional dotted lines between different levels of network
 explosion if set to True</p></li>
