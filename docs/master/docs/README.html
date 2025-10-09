@@ -110,8 +110,21 @@ pip<span class="w"> </span>install<span class="w"> </span>uesgraphs
 </section>
 <section id="structure-and-workflow">
 <h2>### Structure and Workflow<a class="headerlink" href="#structure-and-workflow" title="Permalink to this heading"></a></h2>
-<p><strong>uesgraphs</strong> is built with <cite>networkx</cite> as its core library. The typical workflow for the tool involves:</p>
-<a class="reference internal image-reference" href="_images/workflow_diagram.png"><img alt="Developed workflow using uesgraphs v 2.0.0" class="align-center" src="_images/workflow_diagram.png" style="width: 100%;" /></a>
+<p><strong>uesgraphs</strong> is built around the <a class="reference internal" href="_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><code class="xref py py-class docutils literal notranslate"><span class="pre">uesgraphs.UESGraph</span></code></a> object, which extends <cite>networkx</cite>. The typical workflow involves:
+.. image:: _static/workflow_diagram.png</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">alt<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Developed workflow using uesgraphs v 2.0.0</p>
+</dd>
+<dt class="field-even">align<span class="colon">:</span></dt>
+<dd class="field-even"><p>center</p>
+</dd>
+<dt class="field-odd">width<span class="colon">:</span></dt>
+<dd class="field-odd"><p>100%</p>
+</dd>
+</dl>
+</div></blockquote>
 <p>The comprehensive workflow is broken down into these five stages:</p>
 <ol class="arabic simple">
 <li><p><strong>Input</strong>: Data ingestion from various sources, including Open Street Map (OSM) based data, manual imports, and JSON imports. This forms the foundation of the system model.</p></li>
