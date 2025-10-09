@@ -1255,8 +1255,6 @@ def __normalize_edge(edge):
     """
     return tuple(sorted(edge))
 
-
-
 def get_pipe_catalog_DN_m_flow(
     graph,
     pipe_catalog: pd.DataFrame,
@@ -1376,7 +1374,6 @@ def get_pipe_catalog_DN_m_flow(
             edge, dn_key, dn_value, diameter_key, diameter_value, m_flow
         )
 
-
 def load_pipe_catalog(catalog_name: str = "isoplus",custom_path: Optional[str] = None) -> pd.DataFrame:
     """
     Load pipe catalog data from CSV file in the data/pipe_catalogs directory.
@@ -1465,5 +1462,38 @@ def load_pipe_catalog(catalog_name: str = "isoplus",custom_path: Optional[str] =
     except pd.errors.ParserError as e:
         raise ValueError(f"Error parsing catalog file '{catalog_name}': {str(e)}")
 
+def get_inner_diameter_from_DN(dn_value, catalog_name="isoplus",custom_path: Optional[str]=None):
+    """
+    Quick lookup for inner diameter based on DN value only.
+    
+    Simplified version for imports that only have DN information
+    (like GeoJSON) without mass flow data.
+    
+    Parameters
+    ----------
+    dn_value : int or float
+        Nominal diameter (DN)
+    catalog_name : str
+        Pipe catalog to use (default: "isoplus")
+    custom_path: str, optional
+        Custom path to the catalog file if not using the default location.
+        
+    Returns
+    -------
+    float
+        Inner diameter in meters, or None if not found
+        
+    Notes
+    -----
+    For more sophisticated selection based on mass flow, 
+    use get_pipe_catalog_DN_m_flow() instead.
+    """
+    catalog = load_pipe_catalog(catalog_name,custom_path=custom_path)
+    
+    # Direct match
+    matching = catalog[catalog['DN'] == dn_value]
+    if not matching.empty:
+        return float(matching.iloc[0]['inner_diameter'])
 
+    return None
 
