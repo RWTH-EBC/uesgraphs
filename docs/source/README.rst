@@ -48,7 +48,8 @@ The best way to start is by installing the package and checking out the :doc:`ex
 ### Structure and Workflow
 -------------------------
 
-**uesgraphs** is built around the :py:class:`uesgraphs.UESGraph` object, which extends `networkx`. The typical workflow involves:
+**uesgraphs** is built with `networkx` as its core library. The typical workflow for the tool involves:
+
 .. image:: _static/workflow_diagram.png
    :alt: Developed workflow using uesgraphs v 2.0.0
    :align: center
