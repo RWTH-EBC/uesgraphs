@@ -16,7 +16,7 @@ author = 'Rahul Karuvingal'
 release = '2.1.1'
 
 # The master toctree document
-master_doc = 'index'
+master_doc = 'README'
 
 # The name of the Pygments (syntax highlighting) style to use
 pygments_style = 'sphinx'
