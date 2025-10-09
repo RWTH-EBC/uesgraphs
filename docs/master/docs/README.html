@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to uesgraphs documentation! &mdash; uesgraphs v2.1.1</title>
+  <title>uesgraphs: Automated graph-based simulation model generation and analysis tool &mdash; uesgraphs v2.1.1</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
 
@@ -18,7 +18,8 @@
       <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="uesgraphs" href="code/modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -29,7 +30,7 @@
 
           
           
-          <a href="README.html" class="icon icon-home">
+          <a href="#" class="icon icon-home">
             uesgraphs
           </a>
 <div role="search">
@@ -65,17 +66,17 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="README.html">uesgraphs</a>
+          <a href="#">uesgraphs</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="README.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Welcome to uesgraphs documentation!</li>
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><strong>uesgraphs</strong>: Automated graph-based simulation model generation and analysis tool</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/README.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -83,42 +84,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="welcome-to-uesgraphs-documentation">
-<h1>Welcome to uesgraphs documentation!<a class="headerlink" href="#welcome-to-uesgraphs-documentation" title="Permalink to this heading"></a></h1>
-<p><strong>uesgraphs</strong> is a Python package for describing Urban Energy Systems, managing their data within a Python graph structure, and enabling the automatic generation of dynamic district simulation models.</p>
-<section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
-<p><strong>uesgraphs</strong> extends the <a class="reference external" href="https://networkx.github.io/">networkx</a> Graph class and adds basic methods to represent buildings and energy networks in the graph. It can be used as a foundation to:</p>
-<ul class="simple">
-<li><p>Analyze energy network structures</p></li>
-<li><p>Evaluate district energy systems</p></li>
-<li><p>Generate simulation models</p></li>
-</ul>
+  <img alt="EBC Logo" class="align-right" src="_images/EBC_Logo.png" />
+<img alt="UESGraphs Logo" src="_images/Logo_uesgraphs.png" />
+<section id="uesgraphs-automated-graph-based-simulation-model-generation-and-analysis-tool">
+<h1><strong>uesgraphs</strong>: Automated graph-based simulation model generation and analysis tool<a class="headerlink" href="#uesgraphs-automated-graph-based-simulation-model-generation-and-analysis-tool" title="Permalink to this heading"></a></h1>
+<a class="reference external image-reference" href="https://pypi.org/project/uesgraphs/"><img alt="PyPI Version" src="https://img.shields.io/pypi/v/uesgraphs.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/RWTH-EBC/uesgraphs/actions/workflows/test.yml"><img alt="CI Tests" src="https://github.com/RWTH-EBC/uesgraphs/actions/workflows/test.yml/badge.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/RWTH-EBC/uesgraphs/blob/master/LICENSE.txt"><img alt="License: MIT" src="http://img.shields.io/:license-mit-blue.svg" /></a>
+<p><strong>uesgraphs</strong> is a Python package developed at RWTH-EBC. It utilizes a graph structure to manage data for buildings, energy networks, and infrastructure, enabling the <strong>automated generation of dynamic district simulation models</strong>.</p>
+<section id="general-motivation">
+<h2>### General Motivation<a class="headerlink" href="#general-motivation" title="Permalink to this heading"></a></h2>
+<p>The decarbonization of energy supply demands <strong>integral approaches</strong> and <strong>automation</strong> to manage the increasing complexity of urban energy systems. <strong>uesgraphs</strong> addresses this by providing a flexible, model-neutral description of complex energy infrastructure that is ready for simulation workflows.</p>
 </section>
-<section id="features">
-<h2>Features<a class="headerlink" href="#features" title="Permalink to this heading"></a></h2>
-<p><strong>Version 2</strong> includes the following enhancements:</p>
-<ul class="simple">
-<li><p><strong>Simplified Installation</strong>: Easier installation with removal of unnecessary Python library dependencies</p></li>
-<li><p><strong>Enabled Logging Features</strong>: Logging functionality for better tracking and debugging</p></li>
-<li><p><strong>Enhanced Compatibility</strong>: Compatible with the latest versions of Modelica and the AixLib package</p></li>
-<li><p><strong>Improved Visualization</strong>: Enhanced visualization features for better representation of results</p></li>
-<li><p><strong>Addition of analyze.py</strong>: Post-processing and visualization for dynamic district simulations</p></li>
-<li><p><strong>Updated Model Template Generation</strong>: Automation of multiple models</p></li>
-<li><p><strong>Updated Examples</strong>: New examples clarifying template generation and analyze.py usage</p></li>
-</ul>
-</section>
-<section id="quick-start">
-<h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h2>
-<p>Install uesgraphs using conda:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>uesgraphs<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.13
-conda<span class="w"> </span>activate<span class="w"> </span>uesgraphs
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<section id="getting-started">
+<h2>### Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h2>
+<p>The best way to start is by installing the package and checking out the <span class="xref std std-doc">examples</span>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Create and activate a new virtual environment</span>
+conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>uesgraphs-env<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.13
+conda<span class="w"> </span>activate<span class="w"> </span>uesgraphs-env
+
+<span class="c1"># 2. Install uesgraphs</span>
+pip<span class="w"> </span>install<span class="w"> </span>uesgraphs
 </pre></div>
 </div>
 </section>
+<section id="structure-and-workflow">
+<h2>### Structure and Workflow<a class="headerlink" href="#structure-and-workflow" title="Permalink to this heading"></a></h2>
+<p><strong>uesgraphs</strong> is built with <cite>networkx</cite> as its core library. The typical workflow for the tool involves:</p>
+<a class="reference internal image-reference" href="_images/workflow_diagram.png"><img alt="Developed workflow using uesgraphs v 2.0.0" class="align-center" src="_images/workflow_diagram.png" style="width: 100%;" /></a>
+<p>The comprehensive workflow is broken down into these five stages:</p>
+<ol class="arabic simple">
+<li><p><strong>Input</strong>: Data ingestion from various sources, including Open Street Map (OSM) based data, manual imports, and JSON imports. This forms the foundation of the system model.</p></li>
+<li><p><strong>Graph preparation</strong>: This stage involves crucial preprocessing steps like hydronic sizing, topology clean-up, and network simplification to ensure a robust and accurate model structure within the <a class="reference internal" href="_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><code class="xref py py-class docutils literal notranslate"><span class="pre">uesgraphs.UESGraph</span></code></a>.</p></li>
+<li><p><strong>Simulation</strong>: The prepared graph is used to create dynamic simulation model for the district based on the graph generated which can be then simulated in using tools like <strong>Dymola</strong>. This process can also be automated.</p></li>
+<li><p><strong>Analysis</strong>: Post-simulation data (such as result <cite>.mat</cite> files) is handled for tasks including constraint analysis and Key Performance Indicator (KPI) evaluation.</p></li>
+<li><p><strong>Visualisation</strong>: The final stage focuses on presenting results effectively, offering features like color-coded plots, 3-D plots, and exploded views.</p></li>
+</ol>
+</section>
 <section id="api-documentation">
-<h2>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this heading"></a></h2>
+<h2>### API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -129,21 +133,8 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </ul>
 </div>
 </section>
-<section id="main-classes">
-<h2>Main Classes<a class="headerlink" href="#main-classes" title="Permalink to this heading"></a></h2>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.UESGraph</span></code></a>()</p></td>
-<td><p>A networkx Graph enhanced for use to describe urban energy systems.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/uesgraphs.Visuals.html#uesgraphs.Visuals" title="uesgraphs.Visuals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.Visuals</span></code></a>(uesgraph[, log_level])</p></td>
-<td><p>Visualizes a uesgraph by networkX graph drawing</p></td>
-</tr>
-</tbody>
-</table>
-</section>
 <section id="modules">
-<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h2>
+<h2>### Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h2>
 <section id="core-modules">
 <h3>Core Modules<a class="headerlink" href="#core-modules" title="Permalink to this heading"></a></h3>
 <table class="autosummary longtable docutils align-default">
@@ -208,7 +199,9 @@ UESGraphs Analysis Module
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="code/modules.html" class="btn btn-neutral float-right" title="uesgraphs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
