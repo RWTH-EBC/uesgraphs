@@ -223,6 +223,7 @@ class UESGraph(nx.Graph):
         is_supply_gas=False,
         is_supply_other=False,
         attr_dict=None,
+        replaced_node=None,
         **attr
     ):
         """Add a building node to the UESGraph.
@@ -287,6 +288,32 @@ class UESGraph(nx.Graph):
         self.nodelist_building.append(node_number)
 
         self.nodes_by_name[name] = node_number
+
+        if replaced_node:
+            edges_to_remove = []
+            edges = self.edges(replaced_node)
+            for edge in edges:
+                if edge[0] == edge[1]:
+                    pass
+                else:
+                    if edge[0] == replaced_node:
+                        n0 = node_number
+                        n1 = edge[1]
+                    else:
+                        n0 = edge[0]
+                        n1 = node_number
+
+                    edge_dict = self.edges[edge[0], edge[1]].get("attr_dict", {})
+                    if "diameter" in self.edges[edge[0], edge[1]].keys():
+                        diameter = self.edges[edge[0], edge[1]]["diameter"]
+                        self.add_edge(n0, n1, attr_dict=edge_dict, diameter=diameter)
+                    else:
+                        self.add_edge(n0, n1, attr_dict=edge_dict)
+                edges_to_remove.append(edge)
+                
+            for edge in edges_to_remove:
+                self.remove_edge(edge[0], edge[1])
+            self.remove_network_node(replaced_node)
 
         return node_number
 
