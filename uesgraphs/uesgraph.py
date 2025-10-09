@@ -143,11 +143,6 @@ class UESGraph(nx.Graph):
     def positions(self, value):
         self.__positions = value
 
-    # should be deleted
-    # def __str__(self):
-    #     description = '<uesgraphs.UESGraph object>'
-    #     return description
-
     def __repr__(self):
         """Return uesgraphs class description."""
         description = "<uesgraphs.UESGraph object>"
