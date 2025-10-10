@@ -151,3 +151,39 @@ def set_up_file_logger(name: str, log_dir: Optional[str] = None, level: int = lo
     logger.propagate = False
     
     return logger
+
+
+def get_attribute_case_insensitive(row, attribute_name):
+    """
+    Retrieve an attribute value from a dictionary, handling case insensitivity.
+    
+    This function tries to access the attribute with the original name first,
+    then attempts to access it with different capitalizations if the original
+    attempt fails.
+    
+    Parameters:
+        row (dict): The dictionary containing the data
+        attribute_name (str): The base name of the attribute to retrieve
+    
+    Returns:
+        The value associated with the attribute, or None if not found
+    """
+    # Try the original attribute name first
+    if attribute_name in row:
+        return row[attribute_name]
+    
+    # Try lowercase and uppercase variations
+    variations = [
+        attribute_name.lower(),
+        attribute_name.upper(),
+        attribute_name.capitalize(),
+        attribute_name.title()
+    ]
+    
+    # Check each variation
+    for variant in variations:
+        if variant in row:
+            return row[variant]
+    
+    # Return None if no matching attribute is found
+    return None

@@ -1,0 +1,11 @@
+{
+"type": "FeatureCollection",
+"name": "building_b1detailsim",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 12, "name": "W11_3" }, "geometry": { "type": "Point", "coordinates": [ 6.456071423170064, 51.197636373451537 ] } },
+{ "type": "Feature", "properties": { "id": 13, "name": "W11_2" }, "geometry": { "type": "Point", "coordinates": [ 6.455794062366889, 51.197958433443205 ] } },
+{ "type": "Feature", "properties": { "id": 14, "name": "W11_1" }, "geometry": { "type": "Point", "coordinates": [ 6.454619788048626, 51.197494234631733 ] } },
+{ "type": "Feature", "properties": { "id": 15, "name": "W11_4" }, "geometry": { "type": "Point", "coordinates": [ 6.45482641865004, 51.197163245989358 ] } }
+]
+}
