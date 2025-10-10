@@ -8,15 +8,20 @@ import numpy as np
 import os
 import pandas as pd
 import shapely.geometry as sg
-import shapely.ops as ops
 from shapely import affinity
 from shapely.prepared import prep
+from shapely.geometry import Point, MultiLineString
+
 import uesgraphs.utilities as ut
 import uuid
 import warnings
 import xml.etree.ElementTree
 
+import geopandas as gp
+
+
 from uesgraphs.uesmodels.utilities import utilities as utils
+
 
 try:
     import pyproj
@@ -138,11 +143,6 @@ class UESGraph(nx.Graph):
     def positions(self, value):
         self.__positions = value
 
-    # should be deleted
-    # def __str__(self):
-    #     description = '<uesgraphs.UESGraph object>'
-    #     return description
-
     def __repr__(self):
         """Return uesgraphs class description."""
         description = "<uesgraphs.UESGraph object>"
@@ -223,6 +223,7 @@ class UESGraph(nx.Graph):
         is_supply_gas=False,
         is_supply_other=False,
         attr_dict=None,
+        replaced_node=None,
         **attr
     ):
         """Add a building node to the UESGraph.
@@ -287,6 +288,32 @@ class UESGraph(nx.Graph):
         self.nodelist_building.append(node_number)
 
         self.nodes_by_name[name] = node_number
+
+        if replaced_node:
+            edges_to_remove = []
+            edges = self.edges(replaced_node)
+            for edge in edges:
+                if edge[0] == edge[1]:
+                    pass
+                else:
+                    if edge[0] == replaced_node:
+                        n0 = node_number
+                        n1 = edge[1]
+                    else:
+                        n0 = edge[0]
+                        n1 = node_number
+
+                    edge_dict = self.edges[edge[0], edge[1]].get("attr_dict", {})
+                    if "diameter" in self.edges[edge[0], edge[1]].keys():
+                        diameter = self.edges[edge[0], edge[1]]["diameter"]
+                        self.add_edge(n0, n1, attr_dict=edge_dict, diameter=diameter)
+                    else:
+                        self.add_edge(n0, n1, attr_dict=edge_dict)
+                edges_to_remove.append(edge)
+                
+            for edge in edges_to_remove:
+                self.remove_edge(edge[0], edge[1])
+            self.remove_network_node(replaced_node)
 
         return node_number
 
@@ -1361,6 +1388,397 @@ class UESGraph(nx.Graph):
         print("Finished import from OpenStreetMap data\n")
 
         return self
+
+    def from_geojson(
+            self,
+            network_path,
+            buildings_path,
+            supply_path,
+            name,
+            save_path=None,
+            generate_visualizations=False
+        ):
+        """
+        Import district heating network from GeoJSON files.
+        
+        Creates a complete UESGraph model from three GeoJSON input files containing
+        network topology, supply points, and building locations. All geometries must
+        use CRS84 coordinate system and will be automatically transformed to a local
+        coordinate system with distances in meters.
+        
+        The import process follows these steps:
+        1. Process network pipes to create nodes and edges
+        2. Add supply points as buildings with is_supply_heating=True
+        3. Connect buildings to network nodes
+        4. Transform to local coordinate system and calculate network length
+        
+        Parameters
+        ----------
+        network_path : str
+            Path to network GeoJSON file containing LineString or MultiLineString
+            geometries representing pipes. Optional DN property specifies nominal
+            diameter in mm.
+        buildings_path : str
+            Path to buildings GeoJSON file containing Point or Polygon geometries.
+            Must include 'name' property for each building.
+        supply_path : str
+            Path to supply points GeoJSON file containing Point geometries.
+            Must include 'name' property. Points must coincide with network nodes.
+        name : str
+            Name identifier for this network model
+        save_path : str, optional
+            Directory path for saving JSON output and visualizations.
+            If None, no files are saved.
+        generate_visualizations : bool, default False
+            Whether to generate and save network visualization PDFs at each
+            processing step. Requires save_path to be specified.
+        
+        Notes
+        -----
+        - Network nodes are created at pipe endpoints and junctions
+        - Buildings replace network nodes at matching locations
+        - Supply points must exactly match existing network node positions
+        - Edge lengths are calculated automatically in meters
+        - All custom properties from GeoJSON are preserved as edge attributes
+        
+        Examples
+        --------
+        >>> graph = UESGraph()
+        >>> graph.from_geojson(
+        ...     network_path='data/network.geojson',
+        ...     buildings_path='data/buildings.geojson',
+        ...     supply_path='data/supply.geojson',
+        ...     name='district_1',
+        ...     save_path='output/',
+        ...     generate_visualizations=True
+        ... )
+        >>> print(f"Total network length: {graph.network_length} m")
+        """
+
+        if generate_visualizations and save_path:
+            folder_vis = os.path.join(save_path, "visuals_of_uesgraph_creation")
+            os.makedirs(folder_vis, exist_ok=True)
+        elif generate_visualizations:
+            folder_vis=None
+            print("Visualizations will not be saved as no save path was provided.")
+        else:
+            folder_vis = None
+
+
+        # Build network topology from network geojson
+        self._process_network_from_geojson(network_path)
+
+        if folder_vis: # Generate visualization
+            self._create_network_visualization(folder_vis, filename="1_basic_uesgraph")
+        
+        # Process supply points
+        self._process_supply_points_from_geojson(supply_path)
+    
+        if folder_vis: # Generate visualization
+            self._create_network_visualization(folder_vis, filename="2_with_supply",labels="heat")
+
+        # Process buildings
+        self._process_buildings_from_geojson(buildings_path)
+        
+        if folder_vis: # Generate visualization
+            self._create_network_visualization(folder_vis, filename="3_with_bldg", labels="heat")
+
+        # Transform coordinate system
+        utils.transform_to_new_coordination_system(self)
+
+        if folder_vis: # Generate visualization
+            self._create_network_visualization(folder_vis, filename="4_coords_transformed")
+
+        #Recalculate Pipe lengths after coordinate transformation and assign it as a main attribute        
+        for edge in self.edges():
+            pos_0 = self.nodes[edge[0]]["position"]
+            pos_1 = self.nodes[edge[1]]["position"]
+            self.edges[edge]["length"] = pos_1.distance(pos_0)
+
+
+        self.network_length = self.calc_network_length("heating")
+
+        print("Total network length (m): ", self.network_length)
+
+        return True
+    
+    def _process_network_from_geojson(self, network_path):
+        """
+        Process network pipes from GeoJSON and add nodes/edges to the graph.
+        
+        Creates network nodes at pipe endpoints and junctions. Handles both
+        LineString and MultiLineString geometries. If DN (nominal diameter)
+        property exists, calculates inner diameter from ISO standards.
+        
+        Parameters
+        ----------
+        network_path : str
+            Path to network GeoJSON file with pipe geometries
+            
+        Notes
+        -----
+        - Network nodes use 1e-6 resolution to merge nearby endpoints
+        - All non-geometry properties are stored as edge attributes
+        - MultiLineString geometries are decomposed into individual segments
+        """
+
+        network_df = gp.read_file(network_path)
+        
+        for _, row in network_df.iterrows():
+            geometry = row["geometry"]
+            attributes = row.to_dict()
+            
+            # Check if DN exists in attributes
+            dn_value = attributes.get("DN", None)
+            
+            # Process geometry based on its type
+            if isinstance(geometry, MultiLineString):
+                for linestr in geometry.geoms:
+                    self.__process_linestring(linestr, attributes, dn_value)
+            else:  # Simple LineString
+                self.__process_linestring(geometry, attributes, dn_value)
+         
+    def __process_linestring(self, linestring, attributes, dn_value=None):
+        """
+        Process a single LineString geometry into network nodes and edges.
+        
+        Creates network nodes at each coordinate and edges between consecutive
+        points. For LineStrings with more than 2 coordinates, creates multiple
+        connected edges.
+        
+        Parameters
+        ----------
+        linestring : shapely.geometry.LineString
+            Pipe geometry to process
+        attributes : dict
+            Properties from GeoJSON feature to store as edge attributes.
+            'geometry' key is automatically excluded.
+        dn_value : int or float, optional
+            Nominal diameter in mm. If provided, inner diameter is calculated
+            from ISO standards.
+        """
+        # Remove geometry from attributes
+        edge_attributes = {k: v for k, v in attributes.items() if k != "geometry"}
+        
+        coords = list(linestring.coords)
+        
+        if len(coords) > 2:
+            # Handle multi-segment linestring
+            for i in range(1, len(coords)):
+                # Add nodes for segment endpoints
+                node1 = self.add_network_node(
+                    network_type="heating",
+                    position=Point(coords[i-1]),
+                    resolution=1e-6,
+                    check_overlap=True,
+                )
+                node2 = self.add_network_node(
+                    network_type="heating",
+                    position=Point(coords[i]),
+                    resolution=1e-6,
+                    check_overlap=True,
+                )
+                
+                # Add edge with appropriate attributes
+                self.__add_edge_with_attributes(node1, node2, edge_attributes, dn_value)
+        else:
+            # Handle simple linestring (two points)
+            node1 = self.add_network_node(
+                network_type="heating",
+                position=Point(coords[0]),
+                resolution=1e-6,
+                check_overlap=True,
+            )
+            node2 = self.add_network_node(
+                network_type="heating",
+                position=Point(coords[1]),
+                resolution=1e-6,
+                check_overlap=True,
+            )
+            
+            # Add edge with appropriate attributes
+            self.__add_edge_with_attributes(node1, node2, edge_attributes, dn_value)
+        
+    def __add_edge_with_attributes(self, node1, node2, attributes, dn_value=None):
+        """
+        Add an edge with DN-based diameter and other attributes.
+        
+        Parameters
+        ----------
+        node1 : int
+            First node ID
+        node2 : int
+            Second node ID
+        attributes : dict
+            Edge attributes from GeoJSON properties
+        dn_value : int or float, optional
+            Nominal diameter in mm for diameter calculation
+            
+        Notes
+        -----
+        Default insulation thickness (dIns) is set to 0.1 m for all edges.
+        """
+
+        from uesgraphs.systemmodels.utilities import get_inner_diameter_from_DN
+
+        if dn_value:
+            self.add_edge(
+                node1,
+                node2,
+                attr_dict=attributes,
+                diameter=get_inner_diameter_from_DN(dn_value),
+                dIns=0.1,
+            )
+        else:
+            self.add_edge(
+                node1,
+                node2,
+                attr_dict=attributes,
+                dIns=0.1,
+            )
+
+    def _process_supply_points_from_geojson(self, supply_path):
+        """
+        Process supply points and add them as building nodes with heating supply.
+        
+        Finds network nodes at supply point locations and replaces them with
+        building nodes marked as is_supply_heating=True. Supply points that
+        don't match any network node are skipped with a warning.
+        
+        Parameters
+        ----------
+        supply_path : str
+            Path to supply points GeoJSON file (Point geometries)
+            
+        Notes
+        -----
+        Supply point coordinates must exactly match an existing network node
+        position (within 1e-6 resolution).
+        """
+
+        supply_df = gp.read_file(supply_path)
+        
+        for _, row in supply_df.iterrows():
+            name_supply = row["name"]
+            pos_supply = row["geometry"]
+            
+            # Find node at supply position
+            repl_node = next(iter(self.get_node_by_position(pos_supply)), None)
+            
+            if repl_node:
+                # Add building marked as supply
+                self.add_building(
+                    name=name_supply,
+                    position=pos_supply,
+                    is_supply_heating=True,
+                    replaced_node=repl_node,
+                )
+        
+    def _process_buildings_from_geojson(self, buildings_path):
+        """
+        Process building geometries and connect them to the network.
+        
+        For Point geometries: building must coincide with a network node.
+        For Polygon geometries: any network node within the polygon is used.
+        The network node is replaced with a building node, reconnecting all edges.
+        
+        Parameters
+        ----------
+        buildings_path : str
+            Path to buildings GeoJSON file (Point or Polygon geometries)
+            
+        Notes
+        -----
+        Building names are converted to lowercase for consistency.
+        Buildings without matching network nodes are skipped.
+        """
+
+        bldg_df = gp.read_file(buildings_path)
+        
+        for _, row in bldg_df.iterrows():
+            bldg_name = ut.get_attribute_case_insensitive(row, "name")
+            polygon = row["geometry"]
+
+            # Find node within building polygon
+            repl_node = self.__find_node_in_polygon(polygon)
+            
+            if repl_node:
+                position = self.nodes[repl_node]["position"]
+                
+                # Add building
+                self.add_building(
+                    name=bldg_name.lower(),
+                    position=position,
+                    replaced_node=repl_node,
+                )
+    
+    def __find_node_in_polygon(self, polygon):
+        """
+        Find the first network node located within a building polygon.
+        
+        Parameters
+        ----------
+        polygon : shapely.geometry.Polygon
+            Building footprint to search within
+            
+        Returns
+        -------
+        int or None
+            Node ID if found within polygon, otherwise None
+            
+        Notes
+        -----
+        Returns only the first matching node. If multiple nodes exist
+        within the polygon, only one will be used for the building connection.
+        """
+        for node in self.nodes:
+            if polygon.contains(self.nodes[node]["position"]):
+                return node
+        
+        return None
+        
+    def _create_network_visualization(self, save_path, filename=None, scaling_factor=2, 
+                                    show_plot=False, labels="name", simple=False):
+        """
+        Create and save a PDF visualization of the network.
+        
+        Parameters
+        ----------
+        save_path : str
+            Directory where PDF file will be saved
+        filename : str, optional
+            Output filename without extension. Default is 'uesgraph_visualization'
+        scaling_factor : int, default 2
+            Scaling factor for node and edge sizes in visualization
+        show_plot : bool, default False
+            Whether to display plot interactively (in addition to saving)
+        labels : str, default "name"
+            Node label type: 'name', 'heat', or other node attributes
+        simple : bool, default False
+            If True, uses simplified visualization style
+            
+        Notes
+        -----
+        Visualization is saved as PDF
+        Useful for tracking network development through processing steps.
+        """
+        if filename is None:
+            filename = "uesgraph_visualization"
+        from uesgraphs.visuals import Visuals
+
+        
+        save_as = os.path.join(save_path, f"{filename}.pdf")
+        vis = Visuals(self)
+        vis.show_network(
+            save_as=save_as,
+            show_plot=show_plot,
+            scaling_factor=scaling_factor,
+            simple=simple,
+            labels=labels,
+        )
+        print(f"Saved visualization to {save_as}")
+        
+        return None
 
     def number_of_nodes(self, node_type):
         """
