@@ -19,6 +19,7 @@
       estimate_m_flow_demand_based
       estimate_m_flow_nominal
       estimate_m_flow_nominal_tablebased
+      get_inner_diameter_from_DN
       get_pipe_catalog_DN_m_flow
       load_pipe_catalog
       load_system_model_from_json

@@ -83,15 +83,20 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sg</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">shapely.ops</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ops</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">shapely</span><span class="w"> </span><span class="kn">import</span> <span class="n">affinity</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">shapely.prepared</span><span class="w"> </span><span class="kn">import</span> <span class="n">prep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span><span class="p">,</span> <span class="n">MultiLineString</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs.utilities</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ut</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xml.etree.ElementTree</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.uesmodels.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">utilities</span> <span class="k">as</span> <span class="n">utils</span>
+
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">pyproj</span>
@@ -213,11 +218,6 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">positions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__positions</span> <span class="o">=</span> <span class="n">value</span>
 
-    <span class="c1"># should be deleted</span>
-    <span class="c1"># def __str__(self):</span>
-    <span class="c1">#     description = &#39;&lt;uesgraphs.UESGraph object&gt;&#39;</span>
-    <span class="c1">#     return description</span>
-
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return uesgraphs class description.&quot;&quot;&quot;</span>
         <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&lt;uesgraphs.UESGraph object&gt;&quot;</span>
@@ -298,6 +298,7 @@
         <span class="n">is_supply_gas</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">is_supply_other</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">attr_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">replaced_node</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">attr</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a building node to the UESGraph.</span>
@@ -362,6 +363,32 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nodelist_building</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_number</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes_by_name</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">node_number</span>
+
+        <span class="k">if</span> <span class="n">replaced_node</span><span class="p">:</span>
+            <span class="n">edges_to_remove</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">replaced_node</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">replaced_node</span><span class="p">:</span>
+                        <span class="n">n0</span> <span class="o">=</span> <span class="n">node_number</span>
+                        <span class="n">n1</span> <span class="o">=</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">n0</span> <span class="o">=</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">n1</span> <span class="o">=</span> <span class="n">node_number</span>
+
+                    <span class="n">edge_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;attr_dict&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                    <span class="k">if</span> <span class="s2">&quot;diameter&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="n">diameter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;diameter&quot;</span><span class="p">]</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">n0</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">attr_dict</span><span class="o">=</span><span class="n">edge_dict</span><span class="p">,</span> <span class="n">diameter</span><span class="o">=</span><span class="n">diameter</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">n0</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">attr_dict</span><span class="o">=</span><span class="n">edge_dict</span><span class="p">)</span>
+                <span class="n">edges_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+                
+            <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edges_to_remove</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_network_node</span><span class="p">(</span><span class="n">replaced_node</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">node_number</span></div>
 
@@ -1436,6 +1463,397 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Finished import from OpenStreetMap data</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="UESGraph.from_geojson"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.from_geojson">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_geojson</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">network_path</span><span class="p">,</span>
+            <span class="n">buildings_path</span><span class="p">,</span>
+            <span class="n">supply_path</span><span class="p">,</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">generate_visualizations</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Import district heating network from GeoJSON files.</span>
+<span class="sd">        </span>
+<span class="sd">        Creates a complete UESGraph model from three GeoJSON input files containing</span>
+<span class="sd">        network topology, supply points, and building locations. All geometries must</span>
+<span class="sd">        use CRS84 coordinate system and will be automatically transformed to a local</span>
+<span class="sd">        coordinate system with distances in meters.</span>
+<span class="sd">        </span>
+<span class="sd">        The import process follows these steps:</span>
+<span class="sd">        1. Process network pipes to create nodes and edges</span>
+<span class="sd">        2. Add supply points as buildings with is_supply_heating=True</span>
+<span class="sd">        3. Connect buildings to network nodes</span>
+<span class="sd">        4. Transform to local coordinate system and calculate network length</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        network_path : str</span>
+<span class="sd">            Path to network GeoJSON file containing LineString or MultiLineString</span>
+<span class="sd">            geometries representing pipes. Optional DN property specifies nominal</span>
+<span class="sd">            diameter in mm.</span>
+<span class="sd">        buildings_path : str</span>
+<span class="sd">            Path to buildings GeoJSON file containing Point or Polygon geometries.</span>
+<span class="sd">            Must include &#39;name&#39; property for each building.</span>
+<span class="sd">        supply_path : str</span>
+<span class="sd">            Path to supply points GeoJSON file containing Point geometries.</span>
+<span class="sd">            Must include &#39;name&#39; property. Points must coincide with network nodes.</span>
+<span class="sd">        name : str</span>
+<span class="sd">            Name identifier for this network model</span>
+<span class="sd">        save_path : str, optional</span>
+<span class="sd">            Directory path for saving JSON output and visualizations.</span>
+<span class="sd">            If None, no files are saved.</span>
+<span class="sd">        generate_visualizations : bool, default False</span>
+<span class="sd">            Whether to generate and save network visualization PDFs at each</span>
+<span class="sd">            processing step. Requires save_path to be specified.</span>
+<span class="sd">        </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Network nodes are created at pipe endpoints and junctions</span>
+<span class="sd">        - Buildings replace network nodes at matching locations</span>
+<span class="sd">        - Supply points must exactly match existing network node positions</span>
+<span class="sd">        - Edge lengths are calculated automatically in meters</span>
+<span class="sd">        - All custom properties from GeoJSON are preserved as edge attributes</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; graph = UESGraph()</span>
+<span class="sd">        &gt;&gt;&gt; graph.from_geojson(</span>
+<span class="sd">        ...     network_path=&#39;data/network.geojson&#39;,</span>
+<span class="sd">        ...     buildings_path=&#39;data/buildings.geojson&#39;,</span>
+<span class="sd">        ...     supply_path=&#39;data/supply.geojson&#39;,</span>
+<span class="sd">        ...     name=&#39;district_1&#39;,</span>
+<span class="sd">        ...     save_path=&#39;output/&#39;,</span>
+<span class="sd">        ...     generate_visualizations=True</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; print(f&quot;Total network length: {graph.network_length} m&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">generate_visualizations</span> <span class="ow">and</span> <span class="n">save_path</span><span class="p">:</span>
+            <span class="n">folder_vis</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="s2">&quot;visuals_of_uesgraph_creation&quot;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">folder_vis</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">generate_visualizations</span><span class="p">:</span>
+            <span class="n">folder_vis</span><span class="o">=</span><span class="kc">None</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Visualizations will not be saved as no save path was provided.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">folder_vis</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+        <span class="c1"># Build network topology from network geojson</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process_network_from_geojson</span><span class="p">(</span><span class="n">network_path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">folder_vis</span><span class="p">:</span> <span class="c1"># Generate visualization</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_create_network_visualization</span><span class="p">(</span><span class="n">folder_vis</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;1_basic_uesgraph&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Process supply points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process_supply_points_from_geojson</span><span class="p">(</span><span class="n">supply_path</span><span class="p">)</span>
+    
+        <span class="k">if</span> <span class="n">folder_vis</span><span class="p">:</span> <span class="c1"># Generate visualization</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_create_network_visualization</span><span class="p">(</span><span class="n">folder_vis</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;2_with_supply&quot;</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="s2">&quot;heat&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Process buildings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process_buildings_from_geojson</span><span class="p">(</span><span class="n">buildings_path</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">folder_vis</span><span class="p">:</span> <span class="c1"># Generate visualization</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_create_network_visualization</span><span class="p">(</span><span class="n">folder_vis</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;3_with_bldg&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="s2">&quot;heat&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Transform coordinate system</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">transform_to_new_coordination_system</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">folder_vis</span><span class="p">:</span> <span class="c1"># Generate visualization</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_create_network_visualization</span><span class="p">(</span><span class="n">folder_vis</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;4_coords_transformed&quot;</span><span class="p">)</span>
+
+        <span class="c1">#Recalculate Pipe lengths after coordinate transformation and assign it as a main attribute        </span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
+            <span class="n">pos_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s2">&quot;position&quot;</span><span class="p">]</span>
+            <span class="n">pos_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;position&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos_1</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">pos_0</span><span class="p">)</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">network_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_network_length</span><span class="p">(</span><span class="s2">&quot;heating&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total network length (m): &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_length</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_network_from_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process network pipes from GeoJSON and add nodes/edges to the graph.</span>
+<span class="sd">        </span>
+<span class="sd">        Creates network nodes at pipe endpoints and junctions. Handles both</span>
+<span class="sd">        LineString and MultiLineString geometries. If DN (nominal diameter)</span>
+<span class="sd">        property exists, calculates inner diameter from ISO standards.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        network_path : str</span>
+<span class="sd">            Path to network GeoJSON file with pipe geometries</span>
+<span class="sd">            </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Network nodes use 1e-6 resolution to merge nearby endpoints</span>
+<span class="sd">        - All non-geometry properties are stored as edge attributes</span>
+<span class="sd">        - MultiLineString geometries are decomposed into individual segments</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">network_df</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">network_path</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">network_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">geometry</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;geometry&quot;</span><span class="p">]</span>
+            <span class="n">attributes</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+            
+            <span class="c1"># Check if DN exists in attributes</span>
+            <span class="n">dn_value</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DN&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            
+            <span class="c1"># Process geometry based on its type</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">MultiLineString</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">linestr</span> <span class="ow">in</span> <span class="n">geometry</span><span class="o">.</span><span class="n">geoms</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__process_linestring</span><span class="p">(</span><span class="n">linestr</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">dn_value</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Simple LineString</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__process_linestring</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">dn_value</span><span class="p">)</span>
+         
+    <span class="k">def</span><span class="w"> </span><span class="nf">__process_linestring</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">linestring</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">dn_value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process a single LineString geometry into network nodes and edges.</span>
+<span class="sd">        </span>
+<span class="sd">        Creates network nodes at each coordinate and edges between consecutive</span>
+<span class="sd">        points. For LineStrings with more than 2 coordinates, creates multiple</span>
+<span class="sd">        connected edges.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        linestring : shapely.geometry.LineString</span>
+<span class="sd">            Pipe geometry to process</span>
+<span class="sd">        attributes : dict</span>
+<span class="sd">            Properties from GeoJSON feature to store as edge attributes.</span>
+<span class="sd">            &#39;geometry&#39; key is automatically excluded.</span>
+<span class="sd">        dn_value : int or float, optional</span>
+<span class="sd">            Nominal diameter in mm. If provided, inner diameter is calculated</span>
+<span class="sd">            from ISO standards.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Remove geometry from attributes</span>
+        <span class="n">edge_attributes</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">attributes</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;geometry&quot;</span><span class="p">}</span>
+        
+        <span class="n">coords</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">linestring</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># Handle multi-segment linestring</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)):</span>
+                <span class="c1"># Add nodes for segment endpoints</span>
+                <span class="n">node1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_network_node</span><span class="p">(</span>
+                    <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">,</span>
+                    <span class="n">position</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+                    <span class="n">resolution</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
+                    <span class="n">check_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">node2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_network_node</span><span class="p">(</span>
+                    <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">,</span>
+                    <span class="n">position</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                    <span class="n">resolution</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
+                    <span class="n">check_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span>
+                
+                <span class="c1"># Add edge with appropriate attributes</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__add_edge_with_attributes</span><span class="p">(</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">edge_attributes</span><span class="p">,</span> <span class="n">dn_value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Handle simple linestring (two points)</span>
+            <span class="n">node1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_network_node</span><span class="p">(</span>
+                <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">,</span>
+                <span class="n">position</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="n">resolution</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
+                <span class="n">check_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">node2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_network_node</span><span class="p">(</span>
+                <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">,</span>
+                <span class="n">position</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">resolution</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
+                <span class="n">check_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+            
+            <span class="c1"># Add edge with appropriate attributes</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__add_edge_with_attributes</span><span class="p">(</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">edge_attributes</span><span class="p">,</span> <span class="n">dn_value</span><span class="p">)</span>
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">__add_edge_with_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">dn_value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add an edge with DN-based diameter and other attributes.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node1 : int</span>
+<span class="sd">            First node ID</span>
+<span class="sd">        node2 : int</span>
+<span class="sd">            Second node ID</span>
+<span class="sd">        attributes : dict</span>
+<span class="sd">            Edge attributes from GeoJSON properties</span>
+<span class="sd">        dn_value : int or float, optional</span>
+<span class="sd">            Nominal diameter in mm for diameter calculation</span>
+<span class="sd">            </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Default insulation thickness (dIns) is set to 0.1 m for all edges.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_inner_diameter_from_DN</span>
+
+        <span class="k">if</span> <span class="n">dn_value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span>
+                <span class="n">node1</span><span class="p">,</span>
+                <span class="n">node2</span><span class="p">,</span>
+                <span class="n">attr_dict</span><span class="o">=</span><span class="n">attributes</span><span class="p">,</span>
+                <span class="n">diameter</span><span class="o">=</span><span class="n">get_inner_diameter_from_DN</span><span class="p">(</span><span class="n">dn_value</span><span class="p">),</span>
+                <span class="n">dIns</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span>
+                <span class="n">node1</span><span class="p">,</span>
+                <span class="n">node2</span><span class="p">,</span>
+                <span class="n">attr_dict</span><span class="o">=</span><span class="n">attributes</span><span class="p">,</span>
+                <span class="n">dIns</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_supply_points_from_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">supply_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process supply points and add them as building nodes with heating supply.</span>
+<span class="sd">        </span>
+<span class="sd">        Finds network nodes at supply point locations and replaces them with</span>
+<span class="sd">        building nodes marked as is_supply_heating=True. Supply points that</span>
+<span class="sd">        don&#39;t match any network node are skipped with a warning.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        supply_path : str</span>
+<span class="sd">            Path to supply points GeoJSON file (Point geometries)</span>
+<span class="sd">            </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Supply point coordinates must exactly match an existing network node</span>
+<span class="sd">        position (within 1e-6 resolution).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">supply_df</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">supply_path</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">supply_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">name_supply</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+            <span class="n">pos_supply</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;geometry&quot;</span><span class="p">]</span>
+            
+            <span class="c1"># Find node at supply position</span>
+            <span class="n">repl_node</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_node_by_position</span><span class="p">(</span><span class="n">pos_supply</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">repl_node</span><span class="p">:</span>
+                <span class="c1"># Add building marked as supply</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_building</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">name_supply</span><span class="p">,</span>
+                    <span class="n">position</span><span class="o">=</span><span class="n">pos_supply</span><span class="p">,</span>
+                    <span class="n">is_supply_heating</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">replaced_node</span><span class="o">=</span><span class="n">repl_node</span><span class="p">,</span>
+                <span class="p">)</span>
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_buildings_from_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buildings_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process building geometries and connect them to the network.</span>
+<span class="sd">        </span>
+<span class="sd">        For Point geometries: building must coincide with a network node.</span>
+<span class="sd">        For Polygon geometries: any network node within the polygon is used.</span>
+<span class="sd">        The network node is replaced with a building node, reconnecting all edges.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        buildings_path : str</span>
+<span class="sd">            Path to buildings GeoJSON file (Point or Polygon geometries)</span>
+<span class="sd">            </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Building names are converted to lowercase for consistency.</span>
+<span class="sd">        Buildings without matching network nodes are skipped.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">bldg_df</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">buildings_path</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">bldg_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">bldg_name</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">get_attribute_case_insensitive</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">)</span>
+            <span class="n">polygon</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;geometry&quot;</span><span class="p">]</span>
+
+            <span class="c1"># Find node within building polygon</span>
+            <span class="n">repl_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__find_node_in_polygon</span><span class="p">(</span><span class="n">polygon</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">repl_node</span><span class="p">:</span>
+                <span class="n">position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">repl_node</span><span class="p">][</span><span class="s2">&quot;position&quot;</span><span class="p">]</span>
+                
+                <span class="c1"># Add building</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_building</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">bldg_name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+                    <span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
+                    <span class="n">replaced_node</span><span class="o">=</span><span class="n">repl_node</span><span class="p">,</span>
+                <span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">__find_node_in_polygon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polygon</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find the first network node located within a building polygon.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        polygon : shapely.geometry.Polygon</span>
+<span class="sd">            Building footprint to search within</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int or None</span>
+<span class="sd">            Node ID if found within polygon, otherwise None</span>
+<span class="sd">            </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Returns only the first matching node. If multiple nodes exist</span>
+<span class="sd">        within the polygon, only one will be used for the building connection.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">polygon</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;position&quot;</span><span class="p">]):</span>
+                <span class="k">return</span> <span class="n">node</span>
+        
+        <span class="k">return</span> <span class="kc">None</span>
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_network_visualization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+                                    <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">simple</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create and save a PDF visualization of the network.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        save_path : str</span>
+<span class="sd">            Directory where PDF file will be saved</span>
+<span class="sd">        filename : str, optional</span>
+<span class="sd">            Output filename without extension. Default is &#39;uesgraph_visualization&#39;</span>
+<span class="sd">        scaling_factor : int, default 2</span>
+<span class="sd">            Scaling factor for node and edge sizes in visualization</span>
+<span class="sd">        show_plot : bool, default False</span>
+<span class="sd">            Whether to display plot interactively (in addition to saving)</span>
+<span class="sd">        labels : str, default &quot;name&quot;</span>
+<span class="sd">            Node label type: &#39;name&#39;, &#39;heat&#39;, or other node attributes</span>
+<span class="sd">        simple : bool, default False</span>
+<span class="sd">            If True, uses simplified visualization style</span>
+<span class="sd">            </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Visualization is saved as PDF</span>
+<span class="sd">        Useful for tracking network development through processing steps.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;uesgraph_visualization&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.visuals</span><span class="w"> </span><span class="kn">import</span> <span class="n">Visuals</span>
+
+        
+        <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">)</span>
+        <span class="n">vis</span> <span class="o">=</span> <span class="n">Visuals</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+            <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span>
+            <span class="n">show_plot</span><span class="o">=</span><span class="n">show_plot</span><span class="p">,</span>
+            <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span>
+            <span class="n">simple</span><span class="o">=</span><span class="n">simple</span><span class="p">,</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved visualization to </span><span class="si">{</span><span class="n">save_as</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="UESGraph.number_of_nodes"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.number_of_nodes">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">number_of_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

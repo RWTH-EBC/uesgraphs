@@ -358,112 +358,115 @@ networkx drawing functions need this format.</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_subgraph</span></code>(edges)</p></td>
 <td><p>Returns the subgraph induced by the specified edges.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.from_json" title="uesgraphs.UESGraph.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(path, network_type[, check_overlap])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.from_geojson" title="uesgraphs.UESGraph.from_geojson"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_geojson</span></code></a>(network_path, buildings_path, ...)</p></td>
+<td><p>Import district heating network from GeoJSON files.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.from_json" title="uesgraphs.UESGraph.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(path, network_type[, check_overlap])</p></td>
 <td><p>Import network from json input.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.from_osm" title="uesgraphs.UESGraph.from_osm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_osm</span></code></a>(osm_file[, name, check_boundary, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.from_osm" title="uesgraphs.UESGraph.from_osm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_osm</span></code></a>(osm_file[, name, check_boundary, ...])</p></td>
 <td><p>Import buildings and streets from OpenStreetMap data in osm_file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.get_building_node" title="uesgraphs.UESGraph.get_building_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_building_node</span></code></a>(name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.get_building_node" title="uesgraphs.UESGraph.get_building_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_building_node</span></code></a>(name)</p></td>
 <td><p>Return the node number for a given building name.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_edge_data</span></code>(u, v[, default])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_edge_data</span></code>(u, v[, default])</p></td>
 <td><p>Returns the attribute dictionary associated with edge (u, v).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.get_min_max" title="uesgraphs.UESGraph.get_min_max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_min_max</span></code></a>(key, mode)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.get_min_max" title="uesgraphs.UESGraph.get_min_max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_min_max</span></code></a>(key, mode)</p></td>
 <td><p>Get minimum and maximum values for a specific attribute from nodes or edges.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.get_node_by_position" title="uesgraphs.UESGraph.get_node_by_position"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_node_by_position</span></code></a>(position[, resolution])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.get_node_by_position" title="uesgraphs.UESGraph.get_node_by_position"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_node_by_position</span></code></a>(position[, resolution])</p></td>
 <td><p>Return node name and node_nb for node(s) on input position.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_edge</span></code>(u, v)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_edge</span></code>(u, v)</p></td>
 <td><p>Returns True if the edge (u, v) is in the graph.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_node</span></code>(n)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_node</span></code>(n)</p></td>
 <td><p>Returns True if the graph contains the node n.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_directed</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_directed</span></code>()</p></td>
 <td><p>Returns True if graph is directed, False otherwise.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_multigraph</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_multigraph</span></code>()</p></td>
 <td><p>Returns True if graph is a multigraph, False otherwise.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">nbunch_iter</span></code>([nbunch])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">nbunch_iter</span></code>([nbunch])</p></td>
 <td><p>Returns an iterator over nodes contained in nbunch that are also in the graph.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">neighbors</span></code>(n)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">neighbors</span></code>(n)</p></td>
 <td><p>Returns an iterator over all neighbors of node n.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.network_simplification" title="uesgraphs.UESGraph.network_simplification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">network_simplification</span></code></a>(network_type[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.network_simplification" title="uesgraphs.UESGraph.network_simplification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">network_simplification</span></code></a>(network_type[, ...])</p></td>
 <td><p>Simplify a pipe network by replacing serial pipes.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.new_node_number" title="uesgraphs.UESGraph.new_node_number"><code class="xref py py-obj docutils literal notranslate"><span class="pre">new_node_number</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.new_node_number" title="uesgraphs.UESGraph.new_node_number"><code class="xref py py-obj docutils literal notranslate"><span class="pre">new_node_number</span></code></a>()</p></td>
 <td><p>Return a new 4 digits node number that is not yet used in graph.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_edges</span></code>([u, v])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_edges</span></code>([u, v])</p></td>
 <td><p>Returns the number of edges between two nodes.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.number_of_nodes" title="uesgraphs.UESGraph.number_of_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_nodes</span></code></a>(node_type)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.number_of_nodes" title="uesgraphs.UESGraph.number_of_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_nodes</span></code></a>(node_type)</p></td>
 <td><p>Return number of nodes for given <cite>node_type</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">order</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">order</span></code>()</p></td>
 <td><p>Returns the number of nodes in the graph.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_building" title="uesgraphs.UESGraph.remove_building"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_building</span></code></a>(node_number)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_building" title="uesgraphs.UESGraph.remove_building"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_building</span></code></a>(node_number)</p></td>
 <td><p>Remove the specified building node from the graph.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_dead_ends" title="uesgraphs.UESGraph.remove_dead_ends"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_dead_ends</span></code></a>(network_type[, network_id])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_dead_ends" title="uesgraphs.UESGraph.remove_dead_ends"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_dead_ends</span></code></a>(network_type[, network_id])</p></td>
 <td><p>Remove any nodes and edges that lead to dead ends in the network.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edge</span></code>(u, v)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edge</span></code>(u, v)</p></td>
 <td><p>Remove the edge between u and v.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edges_from</span></code>(ebunch)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edges_from</span></code>(ebunch)</p></td>
 <td><p>Remove all edges specified in ebunch.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_network_node" title="uesgraphs.UESGraph.remove_network_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_network_node</span></code></a>(node_number)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_network_node" title="uesgraphs.UESGraph.remove_network_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_network_node</span></code></a>(node_number)</p></td>
 <td><p>Remove the specified network node from the graph.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_node</span></code>(n)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_node</span></code>(n)</p></td>
 <td><p>Remove node n.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_nodes_from</span></code>(nodes)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_nodes_from</span></code>(nodes)</p></td>
 <td><p>Remove multiple nodes.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_self_edges" title="uesgraphs.UESGraph.remove_self_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_self_edges</span></code></a>(network_type[, network_id])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_self_edges" title="uesgraphs.UESGraph.remove_self_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_self_edges</span></code></a>(network_type[, network_id])</p></td>
 <td><p>Remove edges with length 0 m.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_street_node" title="uesgraphs.UESGraph.remove_street_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_street_node</span></code></a>(node_number)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_street_node" title="uesgraphs.UESGraph.remove_street_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_street_node</span></code></a>(node_number)</p></td>
 <td><p>Remove the specified street node from the graph.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_unconnected_nodes" title="uesgraphs.UESGraph.remove_unconnected_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_unconnected_nodes</span></code></a>(network_type[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_unconnected_nodes" title="uesgraphs.UESGraph.remove_unconnected_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_unconnected_nodes</span></code></a>(network_type[, ...])</p></td>
 <td><p>Remove any edges and network nodes not connected to a supply node.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.rotate" title="uesgraphs.UESGraph.rotate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate</span></code></a>(degrees)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.rotate" title="uesgraphs.UESGraph.rotate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate</span></code></a>(degrees)</p></td>
 <td><p>Rotate all nodes of the graph by <cite>degrees</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">size</span></code>([weight])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">size</span></code>([weight])</p></td>
 <td><p>Returns the number of edges or total of all edge weights.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">subgraph</span></code>(nodes)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">subgraph</span></code>(nodes)</p></td>
 <td><p>Returns a SubGraph view of the subgraph induced on <cite>nodes</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_directed</span></code>([as_view])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_directed</span></code>([as_view])</p></td>
 <td><p>Returns a directed representation of the graph.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_directed_class</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_directed_class</span></code>()</p></td>
 <td><p>Returns the class to use for empty directed copies.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.to_json" title="uesgraphs.UESGraph.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>([path, name, description, all_data, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.to_json" title="uesgraphs.UESGraph.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>([path, name, description, all_data, ...])</p></td>
 <td><p>Save UESGraph structure to json files.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected</span></code>([as_view])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected</span></code>([as_view])</p></td>
 <td><p>Returns an undirected copy of the graph.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected_class</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected_class</span></code>()</p></td>
 <td><p>Returns the class to use for empty undirected copies.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>([edges, nodes])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>([edges, nodes])</p></td>
 <td><p>Update the graph using nodes/edges/graphs as input.</p></td>
 </tr>
 </tbody>
@@ -542,7 +545,7 @@ networkx drawing functions need this format.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="uesgraphs.UESGraph.add_building">
-<span class="sig-name descname"><span class="pre">add_building</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_heating</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_cooling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_electricity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_gas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_other</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.add_building"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.UESGraph.add_building" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_building</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_heating</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_cooling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_electricity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_gas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_other</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replaced_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.add_building"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.UESGraph.add_building" title="Permalink to this definition"></a></dt>
 <dd><p>Add a building node to the UESGraph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -832,6 +835,60 @@ the OSM file.</p></li>
 <dd class="field-odd"><p>uesgraph object</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.UESGraph.from_geojson">
+<span class="sig-name descname"><span class="pre">from_geojson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buildings_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supply_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generate_visualizations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.from_geojson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.UESGraph.from_geojson" title="Permalink to this definition"></a></dt>
+<dd><p>Import district heating network from GeoJSON files.</p>
+<p>Creates a complete UESGraph model from three GeoJSON input files containing
+network topology, supply points, and building locations. All geometries must
+use CRS84 coordinate system and will be automatically transformed to a local
+coordinate system with distances in meters.</p>
+<p>The import process follows these steps:
+1. Process network pipes to create nodes and edges
+2. Add supply points as buildings with is_supply_heating=True
+3. Connect buildings to network nodes
+4. Transform to local coordinate system and calculate network length</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to network GeoJSON file containing LineString or MultiLineString
+geometries representing pipes. Optional DN property specifies nominal
+diameter in mm.</p></li>
+<li><p><strong>buildings_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to buildings GeoJSON file containing Point or Polygon geometries.
+Must include ‘name’ property for each building.</p></li>
+<li><p><strong>supply_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to supply points GeoJSON file containing Point geometries.
+Must include ‘name’ property. Points must coincide with network nodes.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name identifier for this network model</p></li>
+<li><p><strong>save_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Directory path for saving JSON output and visualizations.
+If None, no files are saved.</p></li>
+<li><p><strong>generate_visualizations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>default False</em>) – Whether to generate and save network visualization PDFs at each
+processing step. Requires save_path to be specified.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Network nodes are created at pipe endpoints and junctions</p></li>
+<li><p>Buildings replace network nodes at matching locations</p></li>
+<li><p>Supply points must exactly match existing network node positions</p></li>
+<li><p>Edge lengths are calculated automatically in meters</p></li>
+<li><p>All custom properties from GeoJSON are preserved as edge attributes</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span> <span class="o">=</span> <span class="n">UESGraph</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span><span class="o">.</span><span class="n">from_geojson</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">network_path</span><span class="o">=</span><span class="s1">&#39;data/network.geojson&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">buildings_path</span><span class="o">=</span><span class="s1">&#39;data/buildings.geojson&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">supply_path</span><span class="o">=</span><span class="s1">&#39;data/supply.geojson&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;district_1&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;output/&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">generate_visualizations</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total network length: </span><span class="si">{</span><span class="n">graph</span><span class="o">.</span><span class="n">network_length</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">

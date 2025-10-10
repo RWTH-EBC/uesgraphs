@@ -32,6 +32,7 @@
       ~UESGraph.copy
       ~UESGraph.create_subgraphs
       ~UESGraph.edge_subgraph
+      ~UESGraph.from_geojson
       ~UESGraph.from_json
       ~UESGraph.from_osm
       ~UESGraph.get_building_node

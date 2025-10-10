@@ -99,25 +99,28 @@
 <tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.estimate_m_flow_nominal_tablebased" title="uesgraphs.systemmodels.utilities.estimate_m_flow_nominal_tablebased"><code class="xref py py-obj docutils literal notranslate"><span class="pre">estimate_m_flow_nominal_tablebased</span></code></a>(graph, ...)</p></td>
 <td><p>Calculate m_flow_nominal based on the pipe diameter.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.get_pipe_catalog_DN_m_flow" title="uesgraphs.systemmodels.utilities.get_pipe_catalog_DN_m_flow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pipe_catalog_DN_m_flow</span></code></a>(graph, ...[, robust])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.get_inner_diameter_from_DN" title="uesgraphs.systemmodels.utilities.get_inner_diameter_from_DN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_inner_diameter_from_DN</span></code></a>(dn_value[, ...])</p></td>
+<td><p>Quick lookup for inner diameter based on DN value only.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.get_pipe_catalog_DN_m_flow" title="uesgraphs.systemmodels.utilities.get_pipe_catalog_DN_m_flow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pipe_catalog_DN_m_flow</span></code></a>(graph, ...[, robust])</p></td>
 <td><p>Assign pipe diameters to edges based on mass flow and catalog data.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.load_pipe_catalog" title="uesgraphs.systemmodels.utilities.load_pipe_catalog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_pipe_catalog</span></code></a>([catalog_name, custom_path])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.load_pipe_catalog" title="uesgraphs.systemmodels.utilities.load_pipe_catalog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_pipe_catalog</span></code></a>([catalog_name, custom_path])</p></td>
 <td><p>Load pipe catalog data from CSV file in the data/pipe_catalogs directory.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.load_system_model_from_json" title="uesgraphs.systemmodels.utilities.load_system_model_from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_system_model_from_json</span></code></a>(filepath)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.load_system_model_from_json" title="uesgraphs.systemmodels.utilities.load_system_model_from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_system_model_from_json</span></code></a>(filepath)</p></td>
 <td><p>Load a SystemModelHeating object from a JSON file, respecting the constructor's signature.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.prepare_graph" title="uesgraphs.systemmodels.utilities.prepare_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepare_graph</span></code></a>(graph, T_supply, p_supply, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.prepare_graph" title="uesgraphs.systemmodels.utilities.prepare_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepare_graph</span></code></a>(graph, T_supply, p_supply, ...)</p></td>
 <td><p>Adds data for model generation to the uesgraph</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.save_system_model_to_json" title="uesgraphs.systemmodels.utilities.save_system_model_to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_system_model_to_json</span></code></a>(model, filepath)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.save_system_model_to_json" title="uesgraphs.systemmodels.utilities.save_system_model_to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_system_model_to_json</span></code></a>(model, filepath)</p></td>
 <td><p>Save a SystemModelHeating object to a JSON file with comprehensive attribute capturing.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.set_up_logger" title="uesgraphs.systemmodels.utilities.set_up_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_logger</span></code></a>(name[, log_dir, level])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.set_up_logger" title="uesgraphs.systemmodels.utilities.set_up_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_logger</span></code></a>(name[, log_dir, level])</p></td>
 <td><p>Set up a file-based logger with timestamp and detailed formatting.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.size_hydronic_network" title="uesgraphs.systemmodels.utilities.size_hydronic_network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">size_hydronic_network</span></code></a>(graph[, m_flow_key, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.size_hydronic_network" title="uesgraphs.systemmodels.utilities.size_hydronic_network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">size_hydronic_network</span></code></a>(graph[, m_flow_key, ...])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -450,6 +453,32 @@ automatically ignored during loading. This allows for metadata and source
 information to be stored directly in the catalog files.</p>
 <p>The function expects the catalog files to be located at:
 {module_directory}/uesgraphs/data/pipe_catalogs/{catalog_name}.csv</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.utilities.get_inner_diameter_from_DN">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.utilities.</span></span><span class="sig-name descname"><span class="pre">get_inner_diameter_from_DN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catalog_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'isoplus'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/utilities.html#get_inner_diameter_from_DN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.utilities.get_inner_diameter_from_DN" title="Permalink to this definition"></a></dt>
+<dd><p>Quick lookup for inner diameter based on DN value only.</p>
+<p>Simplified version for imports that only have DN information
+(like GeoJSON) without mass flow data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dn_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Nominal diameter (DN)</p></li>
+<li><p><strong>catalog_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Pipe catalog to use (default: “isoplus”)</p></li>
+<li><p><strong>custom_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Custom path to the catalog file if not using the default location.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Inner diameter in meters, or None if not found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>For more sophisticated selection based on mass flow,
+use get_pipe_catalog_DN_m_flow() instead.</p>
 </dd></dl>
 
 </section>

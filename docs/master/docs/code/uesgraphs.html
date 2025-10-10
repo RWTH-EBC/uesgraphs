@@ -64,6 +64,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.name_uesgraph"><code class="docutils literal notranslate"><span class="pre">name_uesgraph()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.set_up_terminal_logger"><code class="docutils literal notranslate"><span class="pre">set_up_terminal_logger()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.set_up_file_logger"><code class="docutils literal notranslate"><span class="pre">set_up_file_logger()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.get_attribute_case_insensitive"><code class="docutils literal notranslate"><span class="pre">get_attribute_case_insensitive()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-uesgraphs.visuals">uesgraphs.visuals module</a><ul>
@@ -341,6 +342,7 @@
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.build_flow_paths"><code class="docutils literal notranslate"><span class="pre">build_flow_paths()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.get_pipe_catalog_DN_m_flow"><code class="docutils literal notranslate"><span class="pre">get_pipe_catalog_DN_m_flow()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.load_pipe_catalog"><code class="docutils literal notranslate"><span class="pre">load_pipe_catalog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.get_inner_diameter_from_DN"><code class="docutils literal notranslate"><span class="pre">get_inner_diameter_from_DN()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -620,7 +622,7 @@ networkx drawing functions need this format.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.add_building">
-<span class="sig-name descname"><span class="pre">add_building</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_heating</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_cooling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_electricity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_gas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_other</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.add_building"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.add_building" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_building</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_heating</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_cooling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_electricity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_gas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_other</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replaced_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.add_building"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.add_building" title="Permalink to this definition"></a></dt>
 <dd><p>Add a building node to the UESGraph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -913,6 +915,60 @@ the OSM file.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.from_geojson">
+<span class="sig-name descname"><span class="pre">from_geojson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buildings_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supply_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generate_visualizations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.from_geojson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.from_geojson" title="Permalink to this definition"></a></dt>
+<dd><p>Import district heating network from GeoJSON files.</p>
+<p>Creates a complete UESGraph model from three GeoJSON input files containing
+network topology, supply points, and building locations. All geometries must
+use CRS84 coordinate system and will be automatically transformed to a local
+coordinate system with distances in meters.</p>
+<p>The import process follows these steps:
+1. Process network pipes to create nodes and edges
+2. Add supply points as buildings with is_supply_heating=True
+3. Connect buildings to network nodes
+4. Transform to local coordinate system and calculate network length</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to network GeoJSON file containing LineString or MultiLineString
+geometries representing pipes. Optional DN property specifies nominal
+diameter in mm.</p></li>
+<li><p><strong>buildings_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to buildings GeoJSON file containing Point or Polygon geometries.
+Must include ‘name’ property for each building.</p></li>
+<li><p><strong>supply_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to supply points GeoJSON file containing Point geometries.
+Must include ‘name’ property. Points must coincide with network nodes.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name identifier for this network model</p></li>
+<li><p><strong>save_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Directory path for saving JSON output and visualizations.
+If None, no files are saved.</p></li>
+<li><p><strong>generate_visualizations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>default False</em>) – Whether to generate and save network visualization PDFs at each
+processing step. Requires save_path to be specified.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Network nodes are created at pipe endpoints and junctions</p></li>
+<li><p>Buildings replace network nodes at matching locations</p></li>
+<li><p>Supply points must exactly match existing network node positions</p></li>
+<li><p>Edge lengths are calculated automatically in meters</p></li>
+<li><p>All custom properties from GeoJSON are preserved as edge attributes</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span> <span class="o">=</span> <span class="n">UESGraph</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span><span class="o">.</span><span class="n">from_geojson</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">network_path</span><span class="o">=</span><span class="s1">&#39;data/network.geojson&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">buildings_path</span><span class="o">=</span><span class="s1">&#39;data/buildings.geojson&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">supply_path</span><span class="o">=</span><span class="s1">&#39;data/supply.geojson&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;district_1&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;output/&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">generate_visualizations</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total network length: </span><span class="si">{</span><span class="n">graph</span><span class="o">.</span><span class="n">network_length</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.number_of_nodes">
 <span class="sig-name descname"><span class="pre">number_of_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.number_of_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.number_of_nodes" title="Permalink to this definition"></a></dt>
 <dd><p>Return number of nodes for given <cite>node_type</cite>.</p>
@@ -1196,6 +1252,26 @@ attribute key, either from all nodes or all edges depending on the specified mod
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Configured file+console logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.utilities.get_attribute_case_insensitive">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.utilities.</span></span><span class="sig-name descname"><span class="pre">get_attribute_case_insensitive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/utilities.html#get_attribute_case_insensitive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.utilities.get_attribute_case_insensitive" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieve an attribute value from a dictionary, handling case insensitivity.</p>
+<p>This function tries to access the attribute with the original name first,
+then attempts to access it with different capitalizations if the original
+attempt fails.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – The dictionary containing the data</p></li>
+<li><p><strong>attribute_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The base name of the attribute to retrieve</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value associated with the attribute, or None if not found</p>
 </dd>
 </dl>
 </dd></dl>

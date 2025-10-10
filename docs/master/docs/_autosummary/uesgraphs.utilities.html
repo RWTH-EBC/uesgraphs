@@ -84,16 +84,19 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.utilities.default_json_path" title="uesgraphs.utilities.default_json_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_json_path</span></code></a>()</p></td>
 <td><p>Creates default output file UESgraphOutput in the user dictionary.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.utilities.make_workspace" title="uesgraphs.utilities.make_workspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_workspace</span></code></a>([name_workspace])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.utilities.get_attribute_case_insensitive" title="uesgraphs.utilities.get_attribute_case_insensitive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_attribute_case_insensitive</span></code></a>(row, ...)</p></td>
+<td><p>Retrieve an attribute value from a dictionary, handling case insensitivity.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.utilities.make_workspace" title="uesgraphs.utilities.make_workspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_workspace</span></code></a>([name_workspace])</p></td>
 <td><p>Creates a local workspace with given name</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.utilities.name_uesgraph" title="uesgraphs.utilities.name_uesgraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_uesgraph</span></code></a>([name_workspace])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.utilities.name_uesgraph" title="uesgraphs.utilities.name_uesgraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_uesgraph</span></code></a>([name_workspace])</p></td>
 <td><p>Gives the uesgraph a name</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.utilities.set_up_file_logger" title="uesgraphs.utilities.set_up_file_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_file_logger</span></code></a>(name[, log_dir, level])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.utilities.set_up_file_logger" title="uesgraphs.utilities.set_up_file_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_file_logger</span></code></a>(name[, log_dir, level])</p></td>
 <td><p>Set up a full file+console logger for major functions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.utilities.set_up_terminal_logger" title="uesgraphs.utilities.set_up_terminal_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_terminal_logger</span></code></a>(name[, level])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.utilities.set_up_terminal_logger" title="uesgraphs.utilities.set_up_terminal_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_terminal_logger</span></code></a>(name[, level])</p></td>
 <td><p>Set up a simple console-only logger for small functions.</p></td>
 </tr>
 </tbody>
@@ -185,6 +188,26 @@
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Configured file+console logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.utilities.get_attribute_case_insensitive">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.utilities.</span></span><span class="sig-name descname"><span class="pre">get_attribute_case_insensitive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/utilities.html#get_attribute_case_insensitive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.utilities.get_attribute_case_insensitive" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieve an attribute value from a dictionary, handling case insensitivity.</p>
+<p>This function tries to access the attribute with the original name first,
+then attempts to access it with different capitalizations if the original
+attempt fails.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – The dictionary containing the data</p></li>
+<li><p><strong>attribute_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The base name of the attribute to retrieve</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value associated with the attribute, or None if not found</p>
 </dd>
 </dl>
 </dd></dl>

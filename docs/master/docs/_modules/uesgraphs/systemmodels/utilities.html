@@ -1330,8 +1330,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">edge</span><span class="p">))</span>
 
-
-
 <div class="viewcode-block" id="get_pipe_catalog_DN_m_flow"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.get_pipe_catalog_DN_m_flow">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_pipe_catalog_DN_m_flow</span><span class="p">(</span>
     <span class="n">graph</span><span class="p">,</span>
     <span class="n">pipe_catalog</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
@@ -1451,7 +1449,6 @@
             <span class="n">edge</span><span class="p">,</span> <span class="n">dn_key</span><span class="p">,</span> <span class="n">dn_value</span><span class="p">,</span> <span class="n">diameter_key</span><span class="p">,</span> <span class="n">diameter_value</span><span class="p">,</span> <span class="n">m_flow</span>
         <span class="p">)</span></div>
 
-
 <div class="viewcode-block" id="load_pipe_catalog"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.load_pipe_catalog">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_pipe_catalog</span><span class="p">(</span><span class="n">catalog_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;isoplus&quot;</span><span class="p">,</span><span class="n">custom_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load pipe catalog data from CSV file in the data/pipe_catalogs directory.</span>
@@ -1540,7 +1537,47 @@
     <span class="k">except</span> <span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">ParserError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error parsing catalog file &#39;</span><span class="si">{</span><span class="n">catalog_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="get_inner_diameter_from_DN"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.get_inner_diameter_from_DN">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_inner_diameter_from_DN</span><span class="p">(</span><span class="n">dn_value</span><span class="p">,</span> <span class="n">catalog_name</span><span class="o">=</span><span class="s2">&quot;isoplus&quot;</span><span class="p">,</span><span class="n">custom_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quick lookup for inner diameter based on DN value only.</span>
+<span class="sd">    </span>
+<span class="sd">    Simplified version for imports that only have DN information</span>
+<span class="sd">    (like GeoJSON) without mass flow data.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dn_value : int or float</span>
+<span class="sd">        Nominal diameter (DN)</span>
+<span class="sd">    catalog_name : str</span>
+<span class="sd">        Pipe catalog to use (default: &quot;isoplus&quot;)</span>
+<span class="sd">    custom_path: str, optional</span>
+<span class="sd">        Custom path to the catalog file if not using the default location.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Inner diameter in meters, or None if not found</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For more sophisticated selection based on mass flow, </span>
+<span class="sd">    use get_pipe_catalog_DN_m_flow() instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">load_pipe_catalog</span><span class="p">(</span><span class="n">catalog_name</span><span class="p">,</span><span class="n">custom_path</span><span class="o">=</span><span class="n">custom_path</span><span class="p">)</span>
+        <span class="c1"># Convert DN value to match catalog format</span>
+    <span class="c1"># Handle both numeric (200) and string (&quot;DN200&quot;, &quot;200&quot;) inputs</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dn_value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dn_value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;DN&#39;</span><span class="p">):</span>
+            <span class="n">search_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;DN</span><span class="si">{</span><span class="n">dn_value</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">search_key</span> <span class="o">=</span> <span class="n">dn_value</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">search_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;DN</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">dn_value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># Convert 200 → &quot;DN200&quot;</span>
+    <span class="n">matching</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="n">catalog</span><span class="p">[</span><span class="s1">&#39;DN&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">search_key</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">matching</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">matching</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;inner_diameter&#39;</span><span class="p">])</span>
 
+    <span class="k">return</span> <span class="kc">None</span></div>
 
 </pre></div>
 

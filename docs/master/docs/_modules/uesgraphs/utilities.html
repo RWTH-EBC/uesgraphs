@@ -226,6 +226,42 @@
     <span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
     
     <span class="k">return</span> <span class="n">logger</span></div>
+
+
+<div class="viewcode-block" id="get_attribute_case_insensitive"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.analyze.get_attribute_case_insensitive">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_attribute_case_insensitive</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve an attribute value from a dictionary, handling case insensitivity.</span>
+<span class="sd">    </span>
+<span class="sd">    This function tries to access the attribute with the original name first,</span>
+<span class="sd">    then attempts to access it with different capitalizations if the original</span>
+<span class="sd">    attempt fails.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">        row (dict): The dictionary containing the data</span>
+<span class="sd">        attribute_name (str): The base name of the attribute to retrieve</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        The value associated with the attribute, or None if not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Try the original attribute name first</span>
+    <span class="k">if</span> <span class="n">attribute_name</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="n">attribute_name</span><span class="p">]</span>
+    
+    <span class="c1"># Try lowercase and uppercase variations</span>
+    <span class="n">variations</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">attribute_name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+        <span class="n">attribute_name</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+        <span class="n">attribute_name</span><span class="o">.</span><span class="n">capitalize</span><span class="p">(),</span>
+        <span class="n">attribute_name</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+    <span class="p">]</span>
+    
+    <span class="c1"># Check each variation</span>
+    <span class="k">for</span> <span class="n">variant</span> <span class="ow">in</span> <span class="n">variations</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">variant</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="n">variant</span><span class="p">]</span>
+    
+    <span class="c1"># Return None if no matching attribute is found</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
 </pre></div>
 
            </div>
