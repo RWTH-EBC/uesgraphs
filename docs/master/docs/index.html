@@ -44,20 +44,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="code/modules.html">uesgraphs</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels.systemmodelheating.html">uesgraphs.systemmodels.systemmodelheating</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels.utilities.html">uesgraphs.systemmodels.utilities</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="_autosummary/uesgraphs.examples.html">uesgraphs.examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_examples.html">Examples</a></li>
 </ul>
 
         </div>
@@ -85,12 +74,10 @@
            <div itemprop="articleBody">
              
   <img alt="EBC Logo" class="align-right" src="_images/EBC_Logo.png" />
-<img alt="UESGraphs Logo" src="_static/Logo_uesgraphs_1.png" />
 <section id="uesgraphs-automated-graph-based-simulation-model-generation-and-analysis-tool">
 <h1><strong>uesgraphs</strong>: Automated graph-based simulation model generation and analysis tool<a class="headerlink" href="#uesgraphs-automated-graph-based-simulation-model-generation-and-analysis-tool" title="Permalink to this heading"></a></h1>
-<a class="reference external image-reference" href="https://pypi.org/project/uesgraphs/"><img alt="PyPI Version" src="https://img.shields.io/pypi/v/uesgraphs.svg" /></a>
-<a class="reference external image-reference" href="https://github.com/RWTH-EBC/uesgraphs/actions/workflows/test.yml"><img alt="CI Tests" src="https://github.com/RWTH-EBC/uesgraphs/actions/workflows/test.yml/badge.svg" /></a>
-<a class="reference external image-reference" href="https://github.com/RWTH-EBC/uesgraphs/blob/master/LICENSE.txt"><img alt="License: MIT" src="http://img.shields.io/:license-mit-blue.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml"><img alt="CI Tests" src="https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml/badge.svg?branch=master" /></a>
+<img alt="License: MIT" src="http://img.shields.io/:license-mit-blue.svg:target:http://doge.mit-license.org" />
 <p><strong>uesgraphs</strong> is a Python package developed at RWTH-EBC. It utilizes a graph structure to manage data for buildings, energy networks, and infrastructure, enabling the <strong>automated generation of dynamic district simulation models</strong>.</p>
 <section id="general-motivation">
 <h2>### General Motivation<a class="headerlink" href="#general-motivation" title="Permalink to this heading"></a></h2>
@@ -121,8 +108,9 @@ pip<span class="w"> </span>install<span class="w"> </span>uesgraphs
 <li><p><strong>Visualisation</strong>: The final stage focuses on presenting results effectively, offering features like color-coded plots, 3-D plots, and exploded views.</p></li>
 </ol>
 </section>
+</section>
 <section id="api-documentation">
-<h2>### API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this heading"></a></h2>
+<h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -130,62 +118,36 @@ pip<span class="w"> </span>install<span class="w"> </span>uesgraphs
 <li class="toctree-l2"><a class="reference internal" href="code/uesgraphs.html">uesgraphs package</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="api_core_modules.html">Core Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_system_models.html">System Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels.systemmodelheating.html">uesgraphs.systemmodels.systemmodelheating</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels.utilities.html">uesgraphs.systemmodels.utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.examples.e1_readme_example.html">uesgraphs.examples.e1_readme_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.examples.e2_simple_dhc_example.html">uesgraphs.examples.e2_simple_dhc_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.examples.e3_add_network_example.html">uesgraphs.examples.e3_add_network_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.examples.e4_save_uesgraphs_example.html">uesgraphs.examples.e4_save_uesgraphs_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.examples.e5_add_street_nodes_example.html">uesgraphs.examples.e5_add_street_nodes_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.examples.e6_additional_building_attributes_example.html">uesgraphs.examples.e6_additional_building_attributes_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.examples.e7_plot_uesgraphs_example.html">uesgraphs.examples.e7_plot_uesgraphs_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.examples.e8_load_uesgraphs_example.html">uesgraphs.examples.e8_load_uesgraphs_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.examples.e9_generate_ues_from_osm_example.html">uesgraphs.examples.e9_generate_ues_from_osm_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.examples.e10_networks_example.html">uesgraphs.examples.e10_networks_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.examples.e11_model_generation_example.html">uesgraphs.examples.e11_model_generation_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.examples.e12_template_generation_example.html">uesgraphs.examples.e12_template_generation_example</a></li>
+</ul>
+</li>
 </ul>
 </div>
-</section>
-<section id="modules">
-<h2>### Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h2>
-<section id="core-modules">
-<h3>Core Modules<a class="headerlink" href="#core-modules" title="Permalink to this heading"></a></h3>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="code/uesgraphs.html#module-uesgraphs.uesgraph" title="uesgraphs.uesgraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.uesgraph</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="code/uesgraphs.html#module-uesgraphs.visuals" title="uesgraphs.visuals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.visuals</span></code></a></p></td>
-<td><p>This module contains visualization tools for uesgraphs</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="code/uesgraphs.analyze.html#module-uesgraphs.analyze" title="uesgraphs.analyze"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.analyze</span></code></a></p></td>
-<td><p>UESGraphs Analysis Module
-
-:2: (WARNING/2) Title underline too short.
-
-UESGraphs Analysis Module
-========================</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="code/uesgraphs.html#module-uesgraphs.utilities" title="uesgraphs.utilities"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.utilities</span></code></a></p></td>
-<td><p>Utilies: Collection of all utility functions that are useful in several classes.</p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="system-models">
-<h3>System Models<a class="headerlink" href="#system-models" title="Permalink to this heading"></a></h3>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="code/uesgraphs.systemmodels.html#module-uesgraphs.systemmodels.systemmodelheating" title="uesgraphs.systemmodels.systemmodelheating"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.systemmodels.systemmodelheating</span></code></a></p></td>
-<td><p>This module includes the UESModel graph to write Modelica code from uesgraphs</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="code/uesgraphs.systemmodels.html#module-uesgraphs.systemmodels.templates" title="uesgraphs.systemmodels.templates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.systemmodels.templates</span></code></a></p></td>
-<td><p>This module includes the UESModel graph to write Modelica code from uesgraphs</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="code/uesgraphs.systemmodels.html#module-uesgraphs.systemmodels.utilities" title="uesgraphs.systemmodels.utilities"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.systemmodels.utilities</span></code></a></p></td>
-<td><p>This module collects utilities and convenience functions for model generation</p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="examples">
-<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h3>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="code/uesgraphs.examples.html#module-uesgraphs.examples" title="uesgraphs.examples"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.examples</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
 </section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>

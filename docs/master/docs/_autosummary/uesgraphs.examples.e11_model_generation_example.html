@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.examples.e11_model_generation_example &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="uesgraphs.examples.e12_template_generation_example" href="uesgraphs.examples.e12_template_generation_example.html" />
+    <link rel="prev" title="uesgraphs.examples.e10_networks_example" href="uesgraphs.examples.e10_networks_example.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../code/modules.html">uesgraphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api_examples.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.e1_readme_example.html">uesgraphs.examples.e1_readme_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.e2_simple_dhc_example.html">uesgraphs.examples.e2_simple_dhc_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.e3_add_network_example.html">uesgraphs.examples.e3_add_network_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.e4_save_uesgraphs_example.html">uesgraphs.examples.e4_save_uesgraphs_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.e5_add_street_nodes_example.html">uesgraphs.examples.e5_add_street_nodes_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.e6_additional_building_attributes_example.html">uesgraphs.examples.e6_additional_building_attributes_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.e7_plot_uesgraphs_example.html">uesgraphs.examples.e7_plot_uesgraphs_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.e8_load_uesgraphs_example.html">uesgraphs.examples.e8_load_uesgraphs_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.e9_generate_ues_from_osm_example.html">uesgraphs.examples.e9_generate_ues_from_osm_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.e10_networks_example.html">uesgraphs.examples.e10_networks_example</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">uesgraphs.examples.e11_model_generation_example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#modelica-model-generation-using-uesgraphs">Modelica Model Generation using UESGraphs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#model-variants">Model Variants:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#functions">Functions:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#model-parameters">Model Parameters:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#components-used">Components Used:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#notes">Notes:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.examples.e11_model_generation_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.examples.e11_model_generation_example.model_generation_pinola"><code class="docutils literal notranslate"><span class="pre">model_generation_pinola()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.examples.e11_model_generation_example.model_generation_ibpsa"><code class="docutils literal notranslate"><span class="pre">model_generation_ibpsa()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.examples.e11_model_generation_example.create_dirs"><code class="docutils literal notranslate"><span class="pre">create_dirs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.e12_template_generation_example.html">uesgraphs.examples.e12_template_generation_example</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api_examples.html">Examples</a></li>
+      <li class="breadcrumb-item active">uesgraphs.examples.e11_model_generation_example</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/uesgraphs.examples.e11_model_generation_example.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-uesgraphs.examples.e11_model_generation_example">
+<span id="uesgraphs-examples-e11-model-generation-example"></span><h1>uesgraphs.examples.e11_model_generation_example<a class="headerlink" href="#module-uesgraphs.examples.e11_model_generation_example" title="Permalink to this heading"></a></h1>
+<section id="modelica-model-generation-using-uesgraphs">
+<h2>Modelica Model Generation using UESGraphs<a class="headerlink" href="#modelica-model-generation-using-uesgraphs" title="Permalink to this heading"></a></h2>
+<p>This module demonstrates the automated generation of Modelica models for district heating
+networks. The generated models can be directly simulated in Dymola, but require exactly
+AixLib version 2.1.0. Other versions are not compatible and will cause simulation errors.</p>
+<section id="model-variants">
+<h3>Model Variants:<a class="headerlink" href="#model-variants" title="Permalink to this heading"></a></h3>
+<p>For each network (Pinola and IBPSA), three model variants are generated:</p>
+<ol class="arabic simple">
+<li><p>Open Loop with Variable Supply Temperature (suffix: _open_loop_dT_var)
+- High temperature network (80°C supply / 50°C return)
+- Table-based ground temperature
+- Direct heating substations</p></li>
+<li><p>Variable Ground Temperature Model (suffix: _t_ground_var)
+- Same as variant 1 but uses Kusuda ground temperature model
+- More detailed soil temperature calculation</p></li>
+<li><p>Low Temperature Network (suffix: _low_temp_network)
+- Low temperature regime (20°C supply / 10°C return)
+- Heat pump substations (Carnot-based)
+- Includes substation parameters (COP, nominal temperatures)</p></li>
+</ol>
+</section>
+<section id="functions">
+<h3>Functions:<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>model_generation_pinola(dir_source, dir_dest):</dt><dd><p>Generates three variants of Modelica models for the Pinola network</p>
+</dd>
+<dt>model_generation_ibpsa(dir_source, dir_dest):</dt><dd><p>Generates three variants of Modelica models for the IBPSA network</p>
+</dd>
+<dt>create_dirs(dir_project):</dt><dd><p>Creates standardized directory structure for model files and results</p>
+</dd>
+</dl>
+</section>
+<section id="model-parameters">
+<h3>Model Parameters:<a class="headerlink" href="#model-parameters" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>Simulation time: 603900 seconds</p></li>
+<li><p>Time step: 900 seconds</p></li>
+<li><p>Nominal pressure: 5e5 Pa</p></li>
+<li><p>Heat pump COP (nominal): 4.5</p></li>
+<li><p>Network pressure difference: 4e5 Pa (supply-return)</p></li>
+</ul>
+</section>
+<section id="components-used">
+<h3>Components Used:<a class="headerlink" href="#components-used" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>Supply: AixLib.Fluid.DistrictHeatingCooling.Supplies.OpenLoop.SourceIdeal</p></li>
+<li><dl class="simple">
+<dt>Demand: AixLib.Fluid.DistrictHeatingCooling.Demands.OpenLoop.VarTSupplyDp</dt><dd><p>AixLib.Fluid.DistrictHeatingCooling.Demands.OpenLoop.HeatPumpCarnot</p>
+</dd>
+</dl>
+</li>
+<li><p>Pipes: AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded</p></li>
+<li><p>Medium: AixLib.Media.Specialized.Water.ConstantProperties_pT</p></li>
+</ul>
+</section>
+<section id="notes">
+<h3>Notes:<a class="headerlink" href="#notes" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>All models use plug flow pipe models with embedded heat losses</p></li>
+<li><p>Ground coupling can be either table-based or using the Kusuda model</p></li>
+<li><p>Directory structure is automatically created for inputs, models, and results</p></li>
+<li><p>Models are exported in Modelica format (.mo files)</p></li>
+<li><p>Direct simulation in Dymola is possible, but strictly requires AixLib v2.1.0</p></li>
+</ul>
+</section>
+</section>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.create_dirs" title="uesgraphs.examples.e11_model_generation_example.create_dirs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_dirs</span></code></a>(dir_project)</p></td>
+<td><p>Creates <cite>input</cite>, <cite>model</cite>, <cite>result</cite> and <cite>visualization</cite> directories</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.main" title="uesgraphs.examples.e11_model_generation_example.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">main</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.model_generation_ibpsa" title="uesgraphs.examples.e11_model_generation_example.model_generation_ibpsa"><code class="xref py py-obj docutils literal notranslate"><span class="pre">model_generation_ibpsa</span></code></a>(dir_source, dir_dest)</p></td>
+<td><p>Run example model generation for Ibpsa network</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.model_generation_pinola" title="uesgraphs.examples.e11_model_generation_example.model_generation_pinola"><code class="xref py py-obj docutils literal notranslate"><span class="pre">model_generation_pinola</span></code></a>(dir_source, dir_dest)</p></td>
+<td><p>Run example model generation for Pinola network</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e11_model_generation_example.main">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e11_model_generation_example.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e11_model_generation_example.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e11_model_generation_example.main" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e11_model_generation_example.model_generation_pinola">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e11_model_generation_example.</span></span><span class="sig-name descname"><span class="pre">model_generation_pinola</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_dest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e11_model_generation_example.html#model_generation_pinola"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e11_model_generation_example.model_generation_pinola" title="Permalink to this definition"></a></dt>
+<dd><p>Run example model generation for Pinola network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dir_source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Source directory with nodes.json</p></li>
+<li><p><strong>dir_dest</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Directory to store generated models</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e11_model_generation_example.model_generation_ibpsa">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e11_model_generation_example.</span></span><span class="sig-name descname"><span class="pre">model_generation_ibpsa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_dest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e11_model_generation_example.html#model_generation_ibpsa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e11_model_generation_example.model_generation_ibpsa" title="Permalink to this definition"></a></dt>
+<dd><p>Run example model generation for Ibpsa network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dir_source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Source directory with nodes.json</p></li>
+<li><p><strong>dir_dest</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Directory to store generated models</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e11_model_generation_example.create_dirs">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e11_model_generation_example.</span></span><span class="sig-name descname"><span class="pre">create_dirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e11_model_generation_example.html#create_dirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e11_model_generation_example.create_dirs" title="Permalink to this definition"></a></dt>
+<dd><p>Creates <cite>input</cite>, <cite>model</cite>, <cite>result</cite> and <cite>visualization</cite> directories</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dir_project</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Base directory of the example where the directories will be created</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>dir_input</strong> (<em>str</em>) – Directory for input files</p></li>
+<li><p><strong>dir_model</strong> (<em>str</em>) – Directory for model files</p></li>
+<li><p><strong>dir_result</strong> (<em>str</em>) – Directory for result files</p></li>
+<li><p><strong>dir_visualization</strong> (<em>str</em>) – Directory for plots</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="uesgraphs.examples.e10_networks_example.html" class="btn btn-neutral float-left" title="uesgraphs.examples.e10_networks_example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="uesgraphs.examples.e12_template_generation_example.html" class="btn btn-neutral float-right" title="uesgraphs.examples.e12_template_generation_example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Rahul Karuvingal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

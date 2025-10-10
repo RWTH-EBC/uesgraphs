@@ -1,0 +1,31 @@
+﻿uesgraphs.examples.e1\_readme\_example
+======================================
+
+.. automodule:: uesgraphs.examples.e1_readme_example
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      example_readme
+      main
+      workspace_example
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

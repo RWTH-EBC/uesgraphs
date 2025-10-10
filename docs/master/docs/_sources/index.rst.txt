@@ -2,8 +2,7 @@
    :alt: EBC Logo
    :align: right
 
-.. image:: _static/Logo_uesgraphs_1.png
-   :alt: UESGraphs Logo
+
 
 |uesgraphs|: Automated graph-based simulation model generation and analysis tool
 =================================================================================
@@ -11,16 +10,13 @@
 .. |uesgraphs| replace:: **uesgraphs**
 
 .. badges-start
-.. image:: https://img.shields.io/pypi/v/uesgraphs.svg
-   :target: https://pypi.org/project/uesgraphs/
-   :alt: PyPI Version
 
-.. image:: https://github.com/RWTH-EBC/uesgraphs/actions/workflows/test.yml/badge.svg
-   :target: https://github.com/RWTH-EBC/uesgraphs/actions/workflows/test.yml
+.. image:: https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml/badge.svg?branch=master
+   :target: https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml
    :alt: CI Tests
 
 .. image:: http://img.shields.io/:license-mit-blue.svg
-   :target: https://github.com/RWTH-EBC/uesgraphs/blob/master/LICENSE.txt
+   :target:http://doge.mit-license.org
    :alt: License: MIT
 .. badges-end
 
@@ -63,47 +59,17 @@ The comprehensive workflow is broken down into these five stages:
 4.  **Analysis**: Post-simulation data (such as result `.mat` files) is handled for tasks including constraint analysis and Key Performance Indicator (KPI) evaluation.
 5.  **Visualisation**: The final stage focuses on presenting results effectively, offering features like color-coded plots, 3-D plots, and exploded views.
 
-### API Documentation
----------------------
+API Documentation
+=================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    code/modules
-
-### Modules
------------
-
-Core Modules
-~~~~~~~~~~~~
-
-.. autosummary::
-   :toctree: _autosummary
-
-   uesgraphs.uesgraph
-   uesgraphs.visuals
-   uesgraphs.analyze
-   uesgraphs.template_generation
-   uesgraphs.utilities
-
-System Models
-~~~~~~~~~~~~~
-
-.. autosummary::
-   :toctree: _autosummary
-
-   uesgraphs.systemmodels.systemmodelheating
-   uesgraphs.systemmodels.templates
-   uesgraphs.systemmodels.utilities
-
-Examples
-~~~~~~~~
-
-.. autosummary::
-   :toctree: _autosummary
-
-   uesgraphs.examples
+   api_core_modules
+   api_system_models
+   api_examples
 
 Indices and tables
 ==================

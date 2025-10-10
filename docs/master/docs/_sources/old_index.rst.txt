@@ -1,4 +1,6 @@
-
+.. image:: _static/Logo_uesgraphs_1.png
+   :alt: UESGraphs Logo
+   
 Welcome to uesgraphs documentation!
 ====================================
 

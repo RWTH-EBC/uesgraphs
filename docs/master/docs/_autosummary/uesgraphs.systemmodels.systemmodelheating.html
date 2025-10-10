@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="uesgraphs.systemmodels.templates" href="uesgraphs.systemmodels.templates.html" />
-    <link rel="prev" title="uesgraphs.utilities" href="uesgraphs.utilities.html" /> 
+    <link rel="prev" title="System Models" href="../api_system_models.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,62 +45,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../code/modules.html">uesgraphs</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.visuals.html">uesgraphs.visuals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.analyze.html">uesgraphs.analyze</a></li>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.utilities.html">uesgraphs.utilities</a></li>
-</ul>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">uesgraphs.systemmodels.systemmodelheating</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.nodelist_pipe"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.nodelist_pipe</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.network_type"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.network_type</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.stop_time"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.stop_time</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.timestep"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.timestep</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.time"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.time</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.solver"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.solver</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.medium"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.medium</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.doc_string"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.doc_string</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.documentation"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.documentation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.add_ground_around_pipe"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.add_ground_around_pipe</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.uses"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.uses</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.control_pressure"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.control_pressure</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.__init__"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.time</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.doc_string</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.medium</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.import_nodes_from_uesgraph"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.import_nodes_from_uesgraph()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.add_pipe_node"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.add_pipe_node()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.remove_pipe_node"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.remove_pipe_node()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.import_pipes_from_uesgraph"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.import_pipes_from_uesgraph()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.import_from_uesgraph"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.import_from_uesgraph()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.set_connection"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.set_connection()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_medium_definition"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_medium_definition()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_supply_definitions"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_supply_definitions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_t_ground_definitions"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_t_ground_definitions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_demand_definitions"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_demand_definitions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_pipe_definitions"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_pipe_definitions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_annotations"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_annotations()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_input_connections"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_input_connections()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_network_connections"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_network_connections()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_network_model"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_network_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_modelica_package"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_modelica_package()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_modelica_system"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_modelica_system()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_input_txt"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_input_txt()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.set_control_pressure"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.set_control_pressure()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_output_connector"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_output_connector()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.systemmodels.utilities.html">uesgraphs.systemmodels.utilities</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="uesgraphs.examples.html">uesgraphs.examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
 </ul>
 
         </div>
@@ -117,6 +64,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api_system_models.html">System Models</a></li>
       <li class="breadcrumb-item active">uesgraphs.systemmodels.systemmodelheating</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/_autosummary/uesgraphs.systemmodels.systemmodelheating.rst.txt" rel="nofollow"> View page source</a>
@@ -699,7 +647,7 @@ supply unit will be chosen</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="uesgraphs.utilities.html" class="btn btn-neutral float-left" title="uesgraphs.utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api_system_models.html" class="btn btn-neutral float-left" title="System Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="uesgraphs.systemmodels.templates.html" class="btn btn-neutral float-right" title="uesgraphs.systemmodels.templates" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
