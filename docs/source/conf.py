@@ -48,6 +48,13 @@ autodoc_default_options = {
 # Generate autosummary pages
 autosummary_generate = True
 
+# Don't fail on import errors, just warn
+autodoc_mock_imports = []
+autodoc_warningiserror = False
+
+# Suppress warnings about missing references
+suppress_warnings = ['ref.citation', 'ref.footnote']
+
 # Napoleon settings for Google and NumPy style docstrings
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
