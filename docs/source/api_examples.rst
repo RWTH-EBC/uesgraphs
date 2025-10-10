@@ -62,6 +62,22 @@ This interactive notebook demonstrates demand-based mass flow estimation and hyd
 
 **GitHub:** `View on GitHub <https://github.com/RWTH-EBC/uesgraphs/blob/master/uesgraphs/examples/e14_hydronic_sizing_example.ipynb>`_
 
+Example 15: Import from GeoJSON
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This interactive notebook demonstrates how to import district heating networks from GeoJSON files.
+
+**Topics covered:**
+
+- Importing network topology from GeoJSON files
+- Loading building data and supply points from separate GeoJSON files
+- Automatic network generation and validation
+- Generating visualizations during the import process
+
+**Location:** ``uesgraphs/examples/e15_from_geojson_example.ipynb``
+
+**GitHub:** `View on GitHub <https://github.com/RWTH-EBC/uesgraphs/blob/master/uesgraphs/examples/e15_from_geojson_example.ipynb>`_
+
 Interactive Plotting Example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
