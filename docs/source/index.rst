@@ -16,7 +16,7 @@
    :alt: CI Tests
 
 .. image:: http://img.shields.io/:license-mit-blue.svg
-   :target:http://doge.mit-license.org
+   :target: http://doge.mit-license.org
    :alt: License: MIT
 .. badges-end
 
