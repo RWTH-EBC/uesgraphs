@@ -2256,7 +2256,7 @@
 
         <span class="n">content</span> <span class="o">=</span> <span class="n">input_template</span><span class="o">.</span><span class="n">render_unicode</span><span class="p">(</span>
             <span class="n">name_variable</span><span class="o">=</span><span class="n">name_variable</span><span class="p">,</span>
-            <span class="n">rows</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">),</span>
+            <span class="n">rows</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)),</span>
             <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span>
             <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">,</span>
             <span class="n">digits</span><span class="o">=</span><span class="n">digits</span><span class="p">,</span>
