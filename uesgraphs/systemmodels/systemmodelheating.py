@@ -2181,7 +2181,7 @@ class SystemModelHeating(UESGraph):
 
         content = input_template.render_unicode(
             name_variable=name_variable,
-            rows=len(values),
+            rows=min(len(time), len(values)),
             time=time,
             values=values,
             digits=digits,
