@@ -78,11 +78,9 @@
 <h1><strong>uesgraphs</strong>: Automated graph-based simulation model generation and analysis tool<a class="headerlink" href="#uesgraphs-automated-graph-based-simulation-model-generation-and-analysis-tool" title="Permalink to this heading"></a></h1>
 <a class="reference external image-reference" href="https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml"><img alt="CI Tests" src="https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml/badge.svg?branch=master" /></a>
 <a class="reference external image-reference" href="http://doge.mit-license.org"><img alt="License: MIT" src="http://img.shields.io/:license-mit-blue.svg" /></a>
-<p><strong>uesgraphs</strong> is a Python package developed at RWTH-EBC. It utilizes a graph structure to manage data for buildings, energy networks, and infrastructure, enabling the <strong>automated generation of dynamic district simulation models</strong>.</p>
-<section id="general-motivation">
-<h2>### General Motivation<a class="headerlink" href="#general-motivation" title="Permalink to this heading"></a></h2>
-<p>The decarbonization of energy supply demands <strong>integral approaches</strong> and <strong>automation</strong> to manage the increasing complexity of urban energy systems. <strong>uesgraphs</strong> addresses this by providing a flexible, model-neutral description of complex energy infrastructure that is ready for simulation workflows.</p>
-</section>
+<p><strong>uesgraphs</strong> is an open-source Python framework designed for the automated generation, simulation, and analysis of complex urban energy systems, with a focus on district heating and cooling networks. Built on a graph-based data structure, uesgraphs simplifies the challenging task of modeling interconnected energy infrastructure, enabling researchers and practitioners to rapidly create robust, dynamic simulation models ready for advanced analysis.
+The tool seamlessly integrates diverse data sources, including spatial (OpenStreetMap) and tabular datasets, to build high-fidelity system graphs representing buildings, energy networks, and supply stations. Automated workflows encompass hydronic sizing, network topology optimization, and model export to simulation environments like Modelica/Dymola.</p>
+<p>Beyond model creation, <strong>uesgraphs</strong> offers comprehensive post-simulation analytics and intuitive visualization capabilities, empowering users to extract actionable insights through color-coded network plots, KPIs, and interactive exploration of complex energy systems.</p>
 <section id="getting-started">
 <h2>### Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h2>
 <p>The best way to start is by installing the package and checking out the <span class="xref std std-doc">examples</span>.</p>
@@ -95,18 +93,19 @@ pip<span class="w"> </span>install<span class="w"> </span>uesgraphs
 </pre></div>
 </div>
 </section>
-<section id="structure-and-workflow">
-<h2>### Structure and Workflow<a class="headerlink" href="#structure-and-workflow" title="Permalink to this heading"></a></h2>
+<section id="functional-principle">
+<h2>### Functional Principle<a class="headerlink" href="#functional-principle" title="Permalink to this heading"></a></h2>
 <p><strong>uesgraphs</strong> is built with <cite>networkx</cite> as its core library. The typical workflow for the tool involves:</p>
-<a class="reference internal image-reference" href="_images/workflow_diagram.png"><img alt="Developed workflow using uesgraphs v 2.0.0" class="align-center" src="_images/workflow_diagram.png" style="width: 100%;" /></a>
-<p>The comprehensive workflow is broken down into these five stages:</p>
-<ol class="arabic simple">
-<li><p><strong>Input</strong>: Data ingestion from various sources, including Open Street Map (OSM) based data, manual imports, and JSON imports. This forms the foundation of the system model.</p></li>
-<li><p><strong>Graph preparation</strong>: This stage involves crucial preprocessing steps like hydronic sizing, topology clean-up, and network simplification to ensure a robust and accurate model structure within the <a class="reference internal" href="_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><code class="xref py py-class docutils literal notranslate"><span class="pre">uesgraphs.UESGraph</span></code></a>.</p></li>
-<li><p><strong>Simulation</strong>: The prepared graph is used to create dynamic simulation model for the district based on the graph generated which can be then simulated in using tools like <strong>Dymola</strong>. This process can also be automated.</p></li>
-<li><p><strong>Analysis</strong>: Post-simulation data (such as result <cite>.mat</cite> files) is handled for tasks including constraint analysis and Key Performance Indicator (KPI) evaluation.</p></li>
-<li><p><strong>Visualisation</strong>: The final stage focuses on presenting results effectively, offering features like color-coded plots, 3-D plots, and exploded views.</p></li>
-</ol>
+<a class="reference internal image-reference" href="_images/uesgraph_function_principle.png"><img alt="Developed workflow using uesgraphs v 2.0.0" class="align-center" src="_images/uesgraph_function_principle.png" style="width: 100%;" /></a>
+<p>The functional principle of <strong>uesgraphs</strong> can be summarized as under:</p>
+<ul class="simple">
+<li><p>uesgraphs uses a graph-based structure to represent urban energy systems, where nodes denote buildings, network junctions, and supply units, and edges represent thermal and hydraulic connections like pipes.</p></li>
+<li><p>The core graph functionality builds on the Python NetworkX library, allowing flexible and scalable handling of complex system topologies.</p></li>
+<li><p>The framework supports automated preprocessing steps such as network cleaning, topology simplification, and hydronic pipe sizing to prepare accurate system models.</p></li>
+<li><p>Multiple data input formats are supported, including OpenStreetMap, GIS files, and manual data, enabling integration of heterogeneous spatial and tabular data.</p></li>
+<li><p>uesgraphs automates the generation of dynamic simulation models by transforming graph representations into Modelica code through templated model export.</p></li>
+<li><p>The tool facilitates downstream analysis and visualization, including color-coded plots and KPI extraction, to support evaluation and decision-making.</p></li>
+</ul>
 </section>
 </section>
 <section id="api-documentation">
