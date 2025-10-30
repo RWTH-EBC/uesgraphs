@@ -2259,6 +2259,37 @@ class UESGraph(nx.Graph):
 
         return removed
 
+    def remove_streets(self):
+        """Remove all street elements from the graph
+
+        Parameters
+        ----------
+        graph : uesgraphs.UESGraph
+            Network graph
+
+        Returns
+        -------
+        graph : uesgraphs.UESGraph
+            Network graph
+        """
+
+        to_remove = []
+        for edge in self.edges():
+            if "length" not in self.edges[edge]:
+                to_remove.append(edge)
+        for edge in to_remove:
+            self.remove_edge(edge[0], edge[1])
+
+        to_remove = []
+        for node in self.nodelist_street:
+            to_remove.append(node)
+        for node in to_remove:
+            self.remove_street_node(node)
+
+        self.remove_unconnected_nodes(network_type="heating")
+
+
+
     def calc_angle(self, a, b, output="rad"):
         """Return the angle of a line from point a to b in rad or degrees.
 
