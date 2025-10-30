@@ -230,7 +230,7 @@ class UESTemplates:
             "    annotation(Placement(transformation(\n"
             "      extent={{-2,-2},{2,2}},\n"
             "      rotation=0,\n"
-            "      origin={${str(round(x, 4))},${str(round(y, 4))}})));\n"
+            "      origin={${str(round(x, 10))},${str(round(y, 10))}})));\n"
         )
         
         template_str = template_str + self.__generate_real_input_string(template_dict["Connectors"])
@@ -284,7 +284,7 @@ class UESTemplates:
             if parameter.type == "Boolean":
                 param_str = f"{modelica_name} = ${{str({python_name}).lower()}}"
             else:
-                param_str = f"{modelica_name} = ${{str(round({python_name}, 4))}}"
+                param_str = f"{modelica_name} = ${{str(round({python_name}, 10))}}"
             if parameter.category == "optional":
                 param_strings.append(f"    %if {python_name} is not None:\n"
                         f"    {param_str},\n"
@@ -333,11 +333,11 @@ class UESTemplates:
                     "      transformation(\n"
                     "        extent={{-2,-2},{2,2}},\n"
                     "        rotation=0,\n"
-                    "        origin={${str(round(x+25, 4))},${str(round(y+%s, 4))}}),\n"
+                    "        origin={${str(round(x+25, 10))},${str(round(y+%s, 10))}}),\n"
                     "      iconTransformation(\n"
                     "        extent={{-2,-2},{2,2}},\n"
                     "        rotation=0,\n"
-                    "        origin={${%s},${str(round(90 - i*180/(max(number_of_instances-1.0, 1.0)) + %s, 4))}})\n"
+                    "        origin={${%s},${str(round(90 - i*180/(max(number_of_instances-1.0, 1.0)) + %s, 10))}})\n"
                     "      ));\n" % (connector_name, y_mod_t, origin_x, y_mod_it)
                 )
                 self.connector_list.append(connector_name)
