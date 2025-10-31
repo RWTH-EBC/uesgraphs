@@ -1,13 +1,13 @@
 from pathlib import Path
-import yaml
+#import yaml
 import os
 
 import pandas as pd
 
 from uesgraphs.uesgraph import UESGraph
+from uesgraphs.systemmodels.templates import UESTemplates
 
-
-
+import warnings
 import logging
 from datetime import datetime
 import tempfile
@@ -93,10 +93,10 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         raise FileNotFoundError("Some files are missing. Please check the logs for details.")
     logger.debug(f"Existing files: {existing_files}")
 
-    # Step 2: Load simulation configuration
-    logger.info("Loading simulation settings")
-    sim_setup_dict = load_simulation_settings(sim_setup_path)
-    logger.debug(f"Simulation settings loaded: {sim_setup_dict}")
+    # Step 2: Load simulation configuration from Excel
+    logger.info("Loading simulation settings from Excel")
+    sim_params = load_simulation_settings_from_excel(sim_setup_path, logger)
+    logger.debug(f"Simulation settings loaded: {sim_params}")
 
     # Step 3: Initialize or load the UESGraph from file or object
     logger.info("Initialize UESGraph")
@@ -135,18 +135,45 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         except Exception as e:
             logger.error(f"Failed to save uesgraph with demand data: {e}")
 
-        # Step 6: Load ground temperature data for simulations
+        # Step 6: Assign pipe parameters from Excel
+        logger.info("*** Assigning pipe parameters from Excel ***")
+        try:
+            assign_pipe_parameters(uesgraph, sim_setup_path, logger)
+            logger.info("Pipe parameters successfully assigned")
+        except Exception as e:
+            logger.error(f"Failed to assign pipe parameters: {e}")
+            raise
+
+        # Step 7: Assign supply parameters from Excel
+        logger.info("*** Assigning supply parameters from Excel ***")
+        try:
+            assign_supply_parameters(uesgraph, sim_setup_path, logger)
+            logger.info("Supply parameters successfully assigned")
+        except Exception as e:
+            logger.error(f"Failed to assign supply parameters: {e}")
+            raise
+
+        # Step 8: Assign demand parameters from Excel
+        logger.info("*** Assigning demand parameters from Excel ***")
+        try:
+            assign_demand_parameters(uesgraph, sim_setup_path, logger)
+            logger.info("Demand parameters successfully assigned")
+        except Exception as e:
+            logger.error(f"Failed to assign demand parameters: {e}")
+            raise
+
+        # Step 9: Load ground temperature data for simulations
         logger.info("Loading ground temperature data")
         ground_temp_df = load_ground_temp_data(ground_temp_path)
         logger.debug(f"Ground temperature data loaded of shape: {ground_temp_df.shape}")
 
-        # Step 7: Simplify the UESGraph according to the specified level
+        # Step 10: Simplify the UESGraph according to the specified level
         logger.info(f"*** Start simplyfing Uesgraph with simplification level: {simplification_level} ***")
         logger.info(f"Before simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type='heating')}")
         uesgraph = simplify_uesgraph(uesgraph, simplification_level)
         logger.info(f"After simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type='heating')}")
-    
-        # Step 8: Save the simplified UESGraph
+
+        # Step 11: Save the simplified UESGraph
         logger.info("Try to save uesgraph after simplification")
         try:
             uesgraph.to_json(path=str(workspace),
@@ -157,7 +184,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         except Exception as e:
             logger.error(f"Failed to save uesgraph after simplification: {e}")
         
-        # Step 9: Create directory structure for Modelica output files
+        # Step 12: Create directory structure for Modelica output files
         logger.info("Creating subfolder for modelica files")
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         sim_name = f"Sim{timestamp}"
@@ -165,31 +192,34 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         os.makedirs(sim_model_dir, exist_ok=True)
         logger.info(f"Modelica files will be saved to: {sim_model_dir}")
 
-        # Step 10: Generate Modelica files for each simulation configuration
-        logger.info(f"Start process of generating Modelica files for: {len(sim_setup_dict)} simulations")
-        for setup_params in sim_setup_dict:
-            sim_name_ix = f"{sim_name}_{str(setup_params["Simulation Name"])}"
-            logger.info(f"Processing simulation parameters: {setup_params}")
-            ground_temp_list = ground_temp_df[setup_params["ground_depth"]].tolist()
-            logger.info(f"Using ground temperature data for depth {setup_params['ground_depth']}")
-            #uesgraph_copy = uesgraph.copy()
-            uesgraph = map_setup_to_uesgraph(uesgraph=uesgraph, setup_params=setup_params)
-            
-            if setup_params["save_params_to_csv"]: 
-                logger.info("Saving setup parameters to CSV")
-                save_setup_params_to_csv(setup_params, sim_name_ix, sim_model_dir)
-            
-            try:
-                logger.info(f"Start creating model for simulation: {sim_name_ix}")
-                generate_simulation_model(uesgraph=uesgraph,
-                                sim_name=sim_name_ix,
-                                setup_params=setup_params,
-                                ground_temp_list=ground_temp_list,
-                                sim_model_dir = sim_model_dir,
-                )
-            except Exception as e:
-                logger.error(f"Error while generating Modelica files: {e}")
-                raise e
+        # Step 13: Generate Modelica files using new Excel-based simulation parameters
+        logger.info("Start process of generating Modelica files using Excel parameters")
+        sim_name_ix = f"{sim_name}_{str(sim_params['simulation_name'])}"
+        logger.info(f"Processing simulation: {sim_params['simulation_name']}")
+
+        # Extract ground temperature data (assuming ground_depth is in sim_params or use default)
+        ground_depth = sim_params.get('ground_depth', 'depth_1m')  # Default fallback
+        ground_temp_list = ground_temp_df[ground_depth].tolist()
+        logger.info(f"Using ground temperature data for depth {ground_depth}")
+
+        # Save simulation parameters to CSV if requested
+        if sim_params.get("save_params_to_csv", False):
+            logger.info("Saving simulation parameters to CSV")
+            save_setup_params_to_csv(sim_params, sim_name_ix, sim_model_dir)
+
+        try:
+            logger.info(f"Start creating model for simulation: {sim_name_ix}")
+            generate_simulation_model_new(
+                uesgraph=uesgraph,
+                sim_name=sim_name_ix,
+                sim_params=sim_params,
+                ground_temp_list=ground_temp_list,
+                sim_model_dir=sim_model_dir,
+                logger=logger
+            )
+        except Exception as e:
+            logger.error(f"Error while generating Modelica files: {e}")
+            raise e
 
     except Exception as e:
         logger.error(f"Error while processing uesgraph: {e}")
@@ -198,7 +228,821 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
     
 ### Helper functions ###
     
+
+# ============================================================================
+# MAIN ASSIGNMENT FUNCTIONS
+# ============================================================================
+def _process_component_parameters(component_id, component_data, main_parameters, 
+                                  aux_parameters, excel_params, logger):
+    """
+    Process MAIN and AUX parameters for a single component (node or edge).
+    
+    This is the core validation logic shared by all three assignment functions.
+    
+    Parameters
+    ----------
+    component_id : str or tuple
+        Identifier of the component (node id or edge tuple)
+    component_data : dict
+        The component's data dictionary
+    main_parameters : list
+        List of required MAIN parameter names
+    aux_parameters : list
+        List of optional AUX parameter names
+    excel_params : dict
+        Dictionary of parameters from Excel
+    logger : logging.Logger
+        Logger for debug messages
+        
+    Returns
+    -------
+    missing_main : list
+        List of missing MAIN parameters for this component
+    missing_aux : set
+        Set of missing AUX parameters for this component
+    stats : dict
+        Statistics dict with 'from_graph' and 'from_excel' counts
+    """
+    missing_main = []
+    missing_aux = set()
+    stats = {'from_graph': 0, 'from_excel': 0}
+    
+    # Process MAIN parameters
+    for param in main_parameters:
+        if param in component_data:
+            # Parameter already in component - keep it
+            stats['from_graph'] += 1
+            logger.debug(f"  ✓ MAIN '{param}' found in component")
+        elif param in excel_params:
+            # Parameter not in component, but available in Excel - apply it
+            try:
+                resolved_value = resolve_parameter_value(
+                    excel_params[param], component_data, param, component_id
+                )
+                component_data[param] = resolved_value
+                stats['from_excel'] += 1
+                source = f"@{excel_params[param][1:]}" if isinstance(excel_params[param], str) and excel_params[param].startswith('@') else "Excel"
+                logger.debug(f"  ✓ MAIN '{param}' applied from {source}")
+            except ValueError as e:
+                # Reference resolution failed
+                missing_main.append(param)
+                logger.error(f"  ✗ MAIN '{param}': {e}")
+        else:
+            # Parameter missing - ERROR!
+            missing_main.append(param)
+            logger.error(f"  ✗ MAIN '{param}' not found")
+    
+    # Process AUX parameters
+    for param in aux_parameters:
+        if param in component_data:
+            # Parameter already in component - keep it
+            stats['from_graph'] += 1
+            logger.debug(f"  ✓ AUX '{param}' found in component")
+        elif param in excel_params:
+            # Parameter not in component, but available in Excel - apply it
+            try:
+                resolved_value = resolve_parameter_value(
+                    excel_params[param], component_data, param, component_id
+                )
+                component_data[param] = resolved_value
+                stats['from_excel'] += 1
+                source = f"@{excel_params[param][1:]}" if isinstance(excel_params[param], str) and excel_params[param].startswith('@') else "Excel"
+                logger.debug(f"  ✓ AUX '{param}' applied from {source}")
+            except ValueError as e:
+                # Reference resolution failed - treat as missing AUX
+                missing_aux.add(param)
+                logger.warning(f"  ⚠ AUX '{param}' reference failed: {e}")
+        else:
+            # Parameter missing - will use Modelica default
+            missing_aux.add(param)
+            logger.debug(f"  ⚠ AUX '{param}' not provided - will use Modelica default")
+    
+    return missing_main, missing_aux, stats
+
+def assign_pipe_parameters(uesgraph, excel_path, logger=None):
+    """
+    Assign parameters to pipe edges in the uesgraph according to the flow chart logic.
+
+    This function follows the validation flow:
+    1. Load Excel parameters and extract template configuration
+    2. Load and parse the template file (standard or custom based on Excel)
+    3. Extract MAIN (required) and AUX (optional) parameters
+    4. For each edge individually:
+       - Check MAIN parameters: in edge → keep, not in edge → try Excel, missing → ERROR
+       - Check AUX parameters: in edge → keep, not in edge → try Excel, missing → WARNING
+    5. Apply parameters from Excel where needed (never overwrite existing edge attributes)
+    6. Support @ references: Excel values starting with @ are resolved to edge attributes
+
+    Parameters
+    ----------
+    uesgraph : UESGraph
+        The urban energy system graph object (modified in-place)
+    excel_path : str or Path
+        Path to Excel file containing component parameters and template configuration
+        Excel should have either 'template' (for standard) or 'template_path' (for custom)
+    logger : logging.Logger, optional
+        Logger for status messages and warnings
+        If None, creates a default logger
+
+    Returns
+    -------
+    uesgraph : UESGraph
+        The updated graph object (same as input, modified in-place)
+
+    Raises
+    ------
+    ValueError
+        If neither 'template' nor 'template_path' found in Excel
+        If required MAIN parameters are missing for any edge
+
+    Warns
+    -----
+    UserWarning
+        If optional AUX parameters are missing (will use Modelica defaults)
+    """
+    if logger is None:
+        logger = logging.getLogger(__name__)
+    
+    # Step 1: Load Excel parameters (mandatory)
+    excel_params = _load_excel(excel_path, 'Pipes', logger)
+
+    # Step 2: Load template file (from Excel config)
+    model_name = excel_params.get('template')
+    template_path = excel_params.get('template_path')
+    main_parameters, aux_parameters = parse_template_parameters('Pipe', model_name, template_path, logger)
+    
+    # Step 3: Process each edge individually
+    total_edges = len(list(uesgraph.edges()))
+    logger.info(f"Processing {total_edges} edge(s)...")
+    
+    all_missing_main = []
+    all_missing_aux = set()
+    all_stats = []
+    
+    for edge_idx, edge in enumerate(uesgraph.edges(), 1):
+        edge_data = uesgraph.edges[edge]
+        logger.debug(f"Processing edge {edge_idx}/{total_edges}: {edge}")
+        
+        missing_main, missing_aux, stats = _process_component_parameters(
+            edge, edge_data, main_parameters, aux_parameters, 
+            excel_params, logger
+        )
+        
+        # Collect results
+        all_missing_main.extend([(edge, param) for param in missing_main])
+        all_missing_aux.update(missing_aux)
+        all_stats.append(stats)
+    
+    # Step 4: Aggregate and report results
+    total_stats = _aggregate_statistics(all_stats)
+    _check_and_report_results(
+        'edge', total_edges, all_missing_main, all_missing_aux, 
+        total_stats, logger
+    )
+    
+    return uesgraph
+
+
+def assign_supply_parameters(uesgraph, excel_path, logger=None):
+    """
+    Assign parameters to supply nodes in the uesgraph according to the flow chart logic.
+    
+    This function follows the validation flow:
+    1. Load and parse the template file
+    2. Extract MAIN (required) and AUX (optional) parameters
+    3. Load Excel parameters if provided
+    4. For each supply node individually:
+       - Check MAIN parameters: in node → keep, not in node → try Excel, missing → ERROR
+       - Check AUX parameters: in node → keep, not in node → try Excel, missing → WARNING
+    5. Apply parameters from Excel where needed (never overwrite existing node attributes)
+    6. Support @ references: Excel values starting with @ are resolved to node attributes
+    
+    Parameters
+    ----------
+    uesgraph : UESGraph
+        The urban energy system graph object (modified in-place)
+    template_path : str or Path
+        Path to the supply template file (.mako)
+    excel_path : str or Path, optional
+        Path to Excel file containing component parameters
+        If None, only graph attributes are used
+    logger : logging.Logger, optional
+        Logger for status messages and warnings
+        If None, creates a default logger
+        
+    Returns
+    -------
+    uesgraph : UESGraph
+        The updated graph object (same as input, modified in-place)
+        
+    Raises
+    ------
+    FileNotFoundError
+        If template file not found
+    ValueError
+        If required MAIN parameters are missing for any supply node
+        
+    Warns
+    -----
+    UserWarning
+        If optional AUX parameters are missing (will use Modelica defaults)
+    """
+    if logger is None:
+        logger = logging.getLogger(__name__)
+
+    # Step 1: Load Excel parameters (mandatory)
+    excel_params = _load_excel(excel_path, 'Supply', logger)
+
+    # Step 2: Load template file (from Excel config)
+    model_name = excel_params.get('template')
+    template_path = excel_params.get('template_path')
+    main_parameters, aux_parameters = parse_template_parameters('Supply', model_name, template_path, logger)
+    
+    # Step 3: Find supply nodes
+    network_type = uesgraph.graph.get("network_type", "heating")
+    is_supply_key = f"is_supply_{network_type}"
+    
+    supply_nodes = [
+        node for node in uesgraph.nodelist_building
+        if uesgraph.nodes[node].get(is_supply_key, False)
+    ]
+    
+    if not supply_nodes:
+        warning_msg = f"No supply nodes found (looking for '{is_supply_key}' = True)"
+        logger.warning(warning_msg)
+        warnings.warn(warning_msg, UserWarning)
+        return uesgraph
+    
+    # Step 4: Process each supply node individually
+    total_nodes = len(supply_nodes)
+    logger.info(f"Processing {total_nodes} supply node(s)...")
+    
+    all_missing_main = []
+    all_missing_aux = set()
+    all_stats = []
+    
+    for node_idx, node in enumerate(supply_nodes, 1):
+        node_data = uesgraph.nodes[node]
+        logger.debug(f"Processing supply node {node_idx}/{total_nodes}: {node}")
+        
+        missing_main, missing_aux, stats = _process_component_parameters(
+            node, node_data, main_parameters, aux_parameters,
+            excel_params, logger
+        )
+        
+        # Collect results
+        all_missing_main.extend([(node, param) for param in missing_main])
+        all_missing_aux.update(missing_aux)
+        all_stats.append(stats)
+    
+    # Step 5: Aggregate and report results
+    total_stats = _aggregate_statistics(all_stats)
+    _check_and_report_results(
+        'supply node', total_nodes, all_missing_main, all_missing_aux,
+        total_stats, logger
+    )
+    
+    return uesgraph
+
+
+def assign_demand_parameters(uesgraph, excel_path, logger=None):
+    """
+    Assign parameters to demand nodes in the uesgraph according to the flow chart logic.
+    
+    This function follows the validation flow:
+    1. Load and parse the template file
+    2. Extract MAIN (required) and AUX (optional) parameters
+    3. Load Excel parameters if provided
+    4. For each demand node individually:
+       - Check MAIN parameters: in node → keep, not in node → try Excel, missing → ERROR
+       - Check AUX parameters: in node → keep, not in node → try Excel, missing → WARNING
+    5. Apply parameters from Excel where needed (never overwrite existing node attributes)
+    6. Support @ references: Excel values starting with @ are resolved to node attributes
+    
+    Parameters
+    ----------
+    uesgraph : UESGraph
+        The urban energy system graph object (modified in-place)
+    template_path : str or Path
+        Path to the demand template file (.mako)
+    excel_path : str or Path, optional
+        Path to Excel file containing component parameters
+        If None, only graph attributes are used
+    logger : logging.Logger, optional
+        Logger for status messages and warnings
+        If None, creates a default logger
+        
+    Returns
+    -------
+    uesgraph : UESGraph
+        The updated graph object (same as input, modified in-place)
+        
+    Raises
+    ------
+    FileNotFoundError
+        If template file not found
+    ValueError
+        If required MAIN parameters are missing for any demand node
+        
+    Warns
+    -----
+    UserWarning
+        If optional AUX parameters are missing (will use Modelica defaults)
+    """
+    if logger is None:
+        logger = logging.getLogger(__name__)
+
+    # Step 1: Load Excel parameters (mandatory)
+    excel_params = _load_excel(excel_path, 'Demands', logger)
+
+    # Step 2: Load template file (from Excel config)
+    model_name = excel_params.get('template')
+    template_path = excel_params.get('template_path')
+    main_parameters, aux_parameters = parse_template_parameters('Demand', model_name, template_path, logger)
+    
+    # Step 3: Find demand nodes (buildings that are NOT supply)
+    network_type = uesgraph.graph.get("network_type", "heating")
+    is_supply_key = f"is_supply_{network_type}"
+    
+    demand_nodes = [
+        node for node in uesgraph.nodelist_building
+        if not uesgraph.nodes[node].get(is_supply_key, False)
+    ]
+    
+    if not demand_nodes:
+        warning_msg = f"No demand nodes found (looking for buildings with '{is_supply_key}' = False)"
+        logger.warning(warning_msg)
+        warnings.warn(warning_msg, UserWarning)
+        return uesgraph
+    
+    # Step 4: Process each demand node individually
+    total_nodes = len(demand_nodes)
+    logger.info(f"Processing {total_nodes} demand node(s)...")
+    
+    all_missing_main = []
+    all_missing_aux = set()
+    all_stats = []
+    
+    for node_idx, node in enumerate(demand_nodes, 1):
+        node_data = uesgraph.nodes[node]
+        logger.debug(f"Processing demand node {node_idx}/{total_nodes}: {node}")
+        
+        missing_main, missing_aux, stats = _process_component_parameters(
+            node, node_data, main_parameters, aux_parameters,
+            excel_params, logger
+        )
+        
+        # Collect results
+        all_missing_main.extend([(node, param) for param in missing_main])
+        all_missing_aux.update(missing_aux)
+        all_stats.append(stats)
+    
+    # Step 5: Aggregate and report results
+    total_stats = _aggregate_statistics(all_stats)
+    _check_and_report_results(
+        'demand node', total_nodes, all_missing_main, all_missing_aux,
+        total_stats, logger
+    )
+    
+    return uesgraph
+
+
+def resolve_parameter_value(value, component_data, param_name, component_id):
+    """
+    Resolve parameter value - either direct value or @reference to component attribute.
+    
+    Parameters
+    ----------
+    value : any
+        The parameter value from Excel (can be direct value or @reference)
+    component_data : dict
+        The component's data dictionary (node or edge attributes)
+    param_name : str
+        Name of the parameter being resolved
+    component_id : str or tuple
+        Identifier of the component (node id or edge tuple)
+        
+    Returns
+    -------
+    resolved_value : any
+        The resolved parameter value
+        
+    Raises
+    ------
+    ValueError
+        If referenced attribute does not exist in component_data
+    """
+    if isinstance(value, str) and value.startswith('@'):
+        # It's a reference to a component attribute
+        attr_name = value[1:]  # Remove '@' prefix
+        if attr_name in component_data:
+            return component_data[attr_name]
+        else:
+            raise ValueError(
+                f"Component {component_id}: Parameter '{param_name}' references "
+                f"non-existent attribute '@{attr_name}'"
+            )
+    else:
+        # Direct value
+        return value
+
+
+def parse_template_parameters(model_type, model_name=None, template_path=None, logger=None):
+    """
+    Parse template to extract required and optional parameters using UESTemplates.
+
+    Parameters
+    ----------
+    model_type : str
+        Component type: "Supply", "Demand", or "Pipe"
+    model_name : str, optional
+        Modelica class name for standard templates (e.g., "OpenLoop.SourceIdeal")
+    template_path : str or Path, optional
+        Path to custom template file
+    logger : logging.Logger, optional
+        Logger for status messages
+
+    Returns
+    -------
+    tuple (list, list)
+        (main_parameters, aux_parameters)
+
+    Raises
+    ------
+    ValueError
+        If neither model_name nor template_path is provided, or both are None
+    Exception
+        If template parsing fails
+
+    Examples
+    --------
+    # Standard template:
+    >>> main, aux = parse_template_parameters('Supply', model_name='OpenLoop.SourceIdeal')
+
+    # Custom template:
+    >>> main, aux = parse_template_parameters('Supply', template_path='/path/custom.mako')
+    """
+    if logger is None:
+        logger = logging.getLogger(__name__)
+
+    # Validation
+    if not model_name and not template_path:
+        raise ValueError("Either model_name or template_path must be provided")
+
+    # Warning if both are provided
+    if model_name and template_path:
+        logger.warning(f"Both model_name ('{model_name}') and template_path ('{template_path}') provided. "
+                      f"Using custom template at template_path, ignoring model_name.")
+
+    try:
+        if template_path:
+            logger.debug(f"Loading custom template: {template_path}")
+            effective_model_name = "CustomTemplate"  # Dummy name
+            effective_template_path = template_path
+        else:
+            logger.debug(f"Loading standard template for {model_type}: {model_name}")
+            effective_model_name = model_name
+            effective_template_path = None
+
+        template = UESTemplates(
+            model_name=effective_model_name,
+            model_type=model_type,
+            template_path=effective_template_path
+        )
+
+        # Extract parameters
+        main_params = template.call_function("get_main_parameters")
+        aux_params = template.call_function("get_aux_parameters")
+
+        logger.info(f"Template parsed: {len(main_params)} main, {len(aux_params)} aux parameters")
+
+        return main_params, aux_params
+
+    except Exception as e:
+        error_msg = f"Failed to parse template: {e}"
+        logger.error(error_msg)
+        raise Exception(error_msg)
+
+
+def load_simulation_settings_from_excel(excel_path, logger=None):
+    """
+    Load simulation settings from Excel 'Simulation' sheet.
+
+    Parameters
+    ----------
+    excel_path : str or Path
+        Path to Excel file containing simulation settings
+    logger : logging.Logger, optional
+        Logger instance
+
+    Returns
+    -------
+    sim_params : dict
+        Dictionary of simulation parameters
+
+    Raises
+    ------
+    ValueError
+        If required simulation parameters are missing
+    """
+    if logger is None:
+        logger = logging.getLogger(__name__)
+
+    sim_params = _load_excel(excel_path, 'Simulation', logger)
+
+    # Validate required simulation parameters
+    required = ['simulation_name', 'solver', 'start_time', 'stop_time', 'tolerance', 'medium']
+    missing = [param for param in required if param not in sim_params]
+
+    if missing:
+        raise ValueError(f"Missing required simulation parameters in 'Simulation' sheet: {missing}")
+
+    logger.info(f"Simulation settings loaded from Excel: {sim_params.get('simulation_name')}")
+    return sim_params
+
+
+def _load_excel(excel_path, excel_sheet_name, logger):
+    """
+    Load parameters from Excel file.
+    
+    Parameters
+    ----------
+    excel_path : str or Path or None
+        Path to Excel file (optional)
+    excel_sheet_name : str
+        Name of the Excel sheet to load
+    logger : logging.Logger
+        Logger instance
+        
+    Returns
+    -------
+    excel_params : dict
+        Dictionary of parameters from Excel (empty dict if excel_path is None)
+    """
+    excel_params = {}
+    
+    if excel_path is not None:
+        try:
+            logger.info(f"Loading parameters from Excel: {excel_path}")
+            excel_params = load_component_parameters(excel_path, excel_sheet_name)
+            logger.debug(f"Excel parameters loaded: {list(excel_params.keys())}")
+        except Exception as e:
+            warning_msg = f"Could not load Excel parameters: {e}"
+            logger.warning(warning_msg)
+            warnings.warn(warning_msg, UserWarning)
+    else:
+        logger.info("No Excel file provided, using only graph attributes")
+    
+    return excel_params
+
+
+def _aggregate_statistics(all_stats_list):
+    """Aggregate statistics from multiple components."""
+    total_stats = {'from_graph': 0, 'from_excel': 0}
+    for stats in all_stats_list:
+        total_stats['from_graph'] += stats['from_graph']
+        total_stats['from_excel'] += stats['from_excel']
+    return total_stats
+
+
+def _check_and_report_results(component_type, component_count, all_missing_main, 
+                              all_missing_aux, total_stats, logger):
+    """
+    Check if validation was successful and report results.
+    
+    Parameters
+    ----------
+    component_type : str
+        Type of component ('edge', 'supply node', 'demand node')
+    component_count : int
+        Number of components processed
+    all_missing_main : list of tuples
+        List of (component_id, param) tuples for missing MAIN parameters
+    all_missing_aux : set
+        Set of AUX parameter names missing across all components
+    total_stats : dict
+        Aggregated statistics
+    logger : logging.Logger
+        Logger instance
+        
+    Raises
+    ------
+    ValueError
+        If any MAIN parameters are missing
+    """
+    # Report summary
+    logger.info(f"✓ Processed {component_count} {component_type}(s)")
+    logger.info(f"  - Parameters from graph: {total_stats['from_graph']}")
+    logger.info(f"  - Parameters from Excel: {total_stats['from_excel']}")
+    
+    # Summary of missing AUX parameters
+    if all_missing_aux:
+        missing_count = len(all_missing_aux)
+        warning_msg = (
+            f"{missing_count} AUX parameter(s) not provided for {component_type}s, "
+            f"will use Modelica defaults: {', '.join(sorted(all_missing_aux))}"
+        )
+        logger.warning(warning_msg)
+        warnings.warn(warning_msg, UserWarning)
+    
+    # Check if validation was successful
+    if all_missing_main:
+        error_count = len(all_missing_main)
+        error_msg = (
+            f"Validation FAILED: {error_count} missing MAIN parameter(s)\n"
+            f"Missing parameters per {component_type}:\n"
+        )
+        for component_id, param in all_missing_main:
+            error_msg += f"  - {component_type.capitalize()} {component_id}: '{param}'\n"
+        error_msg += (
+            f"\nFix suggestions:\n"
+            f"  → If parameter varies per {component_type}: add to uesgraph attributes\n"
+            f"  → If parameter is same for all {component_type}s: add to Excel sheet"
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+    else:
+        logger.info("✓ All MAIN parameters successfully validated and applied")
+
+
+def load_component_parameters(excel_path, component_type):
+    """
+    Load component parameters from an Excel file.
+    
+    Reads a specific sheet from an Excel file and returns parameters as a dictionary.
+    Expected Excel structure:
+    - Column A: Parameter (parameter names)
+    - Column B: Value (parameter values)
+    
+    Parameters
+    ----------
+    excel_path : str or Path
+        Path to the Excel file containing component parameters
+    component_type : str
+        Type of component, must be one of: 'pipes', 'supply', 'demands', 'simulation'
+        This determines which sheet to read from the Excel file
+        
+    Returns
+    -------
+    dict
+        Dictionary with parameter names as keys and their values
+        Returns empty dict if sheet not found
+        
+    Raises
+    ------
+    FileNotFoundError
+        If the Excel file does not exist
+    ValueError
+        If the component_type is not valid or Excel structure is incorrect
+        
+    Examples
+    --------
+    >>> params = load_component_parameters('parameters.xlsx', 'pipes')
+    >>> print(params['dp_nominal'])
+    0.10
+    """
+    # Validate component type
+    valid_types = ['Pipes', 'Supply', 'Demands', 'Simulation']
+    if component_type not in valid_types:
+        raise ValueError(
+            f"Invalid component_type '{component_type}'. "
+            f"Must be one of: {', '.join(valid_types)}"
+        )
+    
+    # Check if file exists
+    if not os.path.exists(excel_path):
+        raise FileNotFoundError(f"Excel file not found: {excel_path}")
+    
+    try:
+        # Read the specific sheet
+        df = pd.read_excel(excel_path, sheet_name=component_type)
+        
+        # Validate Excel structure
+        if len(df.columns) < 2:
+            raise ValueError(
+                f"Excel sheet '{component_type}' must have at least 2 columns "
+                "(Parameter and Value)"
+            )
+        
+        # Check if first row contains expected column names
+        if 'Parameter' not in df.columns and 'parameter' not in df.columns.str.lower():
+            # Assume first two columns are Parameter and Value
+            df.columns = ['Parameter', 'Value'] + list(df.columns[2:])
+        
+        # Create dictionary from Parameter and Value columns
+        # Drop rows where Parameter is NaN
+        df_clean = df[['Parameter', 'Value']].dropna(subset=['Parameter'])
+        
+        # Convert to dictionary
+        param_dict = dict(zip(df_clean['Parameter'], df_clean['Value']))
+        
+        return param_dict
+        
+    except ValueError as e:
+        if "Worksheet named" in str(e):
+            # Sheet doesn't exist
+            logging.warning(
+                f"Sheet '{component_type}' not found in {excel_path}. "
+                f"Returning empty dictionary."
+            )
+            return {}
+        else:
+            raise
+    
+    except Exception as e:
+        raise Exception(
+            f"Error reading Excel file {excel_path}, sheet '{component_type}': {e}"
+        )
 #### Modelica code generation
+
+def generate_simulation_model_new(uesgraph, sim_name, sim_params, ground_temp_list, sim_model_dir, logger=None):
+    """
+    Generate Modelica simulation model using new Excel-based parameter system.
+
+    This is the streamlined version that assumes parameters are already assigned
+    to uesgraph nodes/edges via the assign_*_parameters functions.
+
+    Parameters
+    ----------
+    uesgraph : UESGraph
+        Graph with pre-assigned parameters from Excel
+    sim_name : str
+        Name of the simulation
+    sim_params : dict
+        Simulation parameters from Excel 'Simulation' sheet
+    ground_temp_list : list
+        Ground temperature data
+    sim_model_dir : str
+        Directory to save Modelica files
+    logger : logging.Logger, optional
+        Logger instance
+    """
+    if logger is None:
+        logger = logging.getLogger(__name__)
+
+    logger.info("Setting up UESGraph for Modelica generation")
+
+    # Ensure node names are strings
+    for node in list(uesgraph.nodes()):
+        uesgraph.nodes[node]["name"] = str(uesgraph.nodes[node]["name"])
+
+    # Set network type
+    uesgraph.graph["network_type"] = "heating"
+
+    # NOTE: Parameter assignment (setup_building_parameters, setup_pipe_parameters)
+    # is NO LONGER needed here - already done in main pipeline Steps 6-8!
+
+    # Create metadata
+    meta_data = create_meta_data_new(sim_name, sim_params)
+
+    # Import utilities
+    from uesgraphs.systemmodels import utilities as sysmod_utils
+
+    # Estimate m_flow_nominal
+    uesgraph = sysmod_utils.estimate_m_flow_nominal_tablebased(
+        uesgraph,
+        logger=logger
+    )
+
+    # Create system model
+    logger.info("Creating system model with pre-assigned parameters")
+    sysmod_utils.create_model(
+        name=sim_name,
+        save_at=sim_model_dir,
+        graph=uesgraph,
+        stop_time=float(sim_params["stop_time"]),
+        timestep=900,  # Could be made configurable
+        model_supply="AlreadyAssigned",  # Dummy - actual template set via template_path
+        model_demand="AlreadyAssigned",  # Dummy - actual template set via template_path
+        model_pipe="AlreadyAssigned",    # Dummy - actual template set via template_path
+        model_medium=sim_params["medium"],
+        model_ground="t_ground_table",
+        T_nominal=273.15 + 0,
+        p_nominal=4e5,
+        fraction_glycol=0.3,
+        solver=sim_params["solver"],
+        t_ground_prescribed=ground_temp_list,
+        short_pipes_static=None,  # Could be made configurable
+        meta_data=meta_data,
+    )
+
+    logger.info(f"Modelica model generated successfully: {sim_name}")
+
+
+def create_meta_data_new(sim_name, sim_params):
+    """Create metadata dictionary from Excel simulation parameters."""
+    return {
+        "simulation_name": sim_name,
+        "solver": sim_params["solver"],
+        "start_time": float(sim_params["start_time"]),
+        "stop_time": float(sim_params["stop_time"]),
+        "tolerance": float(sim_params["tolerance"]),
+        "medium": sim_params["medium"],
+        "created_at": datetime.now().isoformat()
+    }
+
+
+# OLD GENERATE FUNCTION (keep for backward compatibility)
 def generate_simulation_model(uesgraph,setup_params,sim_name,
                      sim_model_dir, ground_temp_list):
     for node in list(uesgraph.nodes()):
