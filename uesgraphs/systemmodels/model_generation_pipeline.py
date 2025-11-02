@@ -111,8 +111,29 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
                 raise Exception(f"While loading UESGraph from JSON: {e}")
         else:
             raise ValueError(f"Value for uesgraph: {uesgraph} is nor uesgraph object nor valid JSON path")
-    
-    
+
+    # Step 3.5: Ensure all edges have names (required for Modelica generation)
+    # This is needed because from_geojson() doesn't set edge names automatically,
+    # while from_json() does (via pipeID). We need consistent behavior.
+    logger.info("Validating and generating edge names if needed")
+    edges_without_names = 0
+    edges_total = uesgraph.number_of_edges()
+
+    for edge in uesgraph.edges():
+        if 'name' not in uesgraph.edges[edge]:
+            # Generate name from connected node names
+            node_0_name = uesgraph.nodes[edge[0]].get('name', edge[0])
+            node_1_name = uesgraph.nodes[edge[1]].get('name', edge[1])
+            edge_name = f"{node_0_name}_{node_1_name}"
+            uesgraph.edges[edge]['name'] = edge_name
+            edges_without_names += 1
+            logger.debug(f"Generated name for edge {edge}: '{edge_name}'")
+
+    if edges_without_names > 0:
+        logger.info(f"Generated names for {edges_without_names}/{edges_total} edges that were missing names")
+    else:
+        logger.info(f"All {edges_total} edges already have names")
+
     try:
         #Step 4: Assign demand data to the graph nodes
         logger.info("Assigning demand data")
@@ -169,9 +190,9 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
 
         # Step 10: Simplify the UESGraph according to the specified level
         logger.info(f"*** Start simplyfing Uesgraph with simplification level: {simplification_level} ***")
-        logger.info(f"Before simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type='heating')}")
-        uesgraph = simplify_uesgraph(uesgraph, simplification_level)
-        logger.info(f"After simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type='heating')}")
+        #logger.info(f"Before simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type='heating')}")
+        #uesgraph = simplify_uesgraph(uesgraph, simplification_level)
+        #logger.info(f"After simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type='heating')}")
 
         # Step 11: Save the simplified UESGraph
         logger.info("Try to save uesgraph after simplification")
@@ -198,7 +219,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         logger.info(f"Processing simulation: {sim_params['simulation_name']}")
 
         # Extract ground temperature data (assuming ground_depth is in sim_params or use default)
-        ground_depth = sim_params.get('ground_depth', 'depth_1m')  # Default fallback
+        ground_depth = sim_params.get('ground_depth', '1.0 m')  # Default fallback
         ground_temp_list = ground_temp_df[ground_depth].tolist()
         logger.info(f"Using ground temperature data for depth {ground_depth}")
 
@@ -215,6 +236,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
                 sim_params=sim_params,
                 ground_temp_list=ground_temp_list,
                 sim_model_dir=sim_model_dir,
+                sim_setup_path=sim_setup_path,
                 logger=logger
             )
         except Exception as e:
@@ -685,17 +707,17 @@ def parse_template_parameters(model_type, model_name=None, template_path=None, l
     if logger is None:
         logger = logging.getLogger(__name__)
 
-    # Validation
-    if not model_name and not template_path:
+    # Validation - treat None as not provided
+    if (not model_name or model_name is None) and (not template_path or template_path is None):
         raise ValueError("Either model_name or template_path must be provided")
 
     # Warning if both are provided
-    if model_name and template_path:
+    if model_name and template_path and template_path is not None:
         logger.warning(f"Both model_name ('{model_name}') and template_path ('{template_path}') provided. "
                       f"Using custom template at template_path, ignoring model_name.")
 
     try:
-        if template_path:
+        if template_path and template_path is not None:
             logger.debug(f"Loading custom template: {template_path}")
             effective_model_name = "CustomTemplate"  # Dummy name
             effective_template_path = template_path
@@ -932,10 +954,16 @@ def load_component_parameters(excel_path, component_type):
         # Create dictionary from Parameter and Value columns
         # Drop rows where Parameter is NaN
         df_clean = df[['Parameter', 'Value']].dropna(subset=['Parameter'])
-        
+
         # Convert to dictionary
         param_dict = dict(zip(df_clean['Parameter'], df_clean['Value']))
-        
+
+        # Convert NaN values to None
+        import math
+        for key, value in param_dict.items():
+            if isinstance(value, float) and math.isnan(value):
+                param_dict[key] = None
+
         return param_dict
         
     except ValueError as e:
@@ -955,7 +983,7 @@ def load_component_parameters(excel_path, component_type):
         )
 #### Modelica code generation
 
-def generate_simulation_model_new(uesgraph, sim_name, sim_params, ground_temp_list, sim_model_dir, logger=None):
+def generate_simulation_model_new(uesgraph, sim_name, sim_params, ground_temp_list, sim_model_dir, sim_setup_path, logger=None):
     """
     Generate Modelica simulation model using new Excel-based parameter system.
 
@@ -974,6 +1002,8 @@ def generate_simulation_model_new(uesgraph, sim_name, sim_params, ground_temp_li
         Ground temperature data
     sim_model_dir : str
         Directory to save Modelica files
+    sim_setup_path : str
+        Path to Excel configuration file (needed to load template names)
     logger : logging.Logger, optional
         Logger instance
     """
@@ -999,10 +1029,25 @@ def generate_simulation_model_new(uesgraph, sim_name, sim_params, ground_temp_li
     from uesgraphs.systemmodels import utilities as sysmod_utils
 
     # Estimate m_flow_nominal
+    logger.info("Estimating nominal mass flow rates from pipe diameters")
+    network_type = uesgraph.graph.get("network_type", "heating")
     uesgraph = sysmod_utils.estimate_m_flow_nominal_tablebased(
-        uesgraph,
-        logger=logger
+        graph=uesgraph,
+        network_type=network_type
     )
+
+    # Load template names from Excel sheets (needed for create_model)
+    logger.info("Loading template names from Excel configuration")
+    pipe_params = load_component_parameters(excel_path=sim_setup_path, component_type='Pipes')
+    supply_params = load_component_parameters(excel_path=sim_setup_path, component_type='Supply')
+    demand_params = load_component_parameters(excel_path=sim_setup_path, component_type='Demands')
+
+    # Get template names (prefer template_path if provided, otherwise use template name)
+    model_pipe = pipe_params.get('template_path') or pipe_params.get('template')
+    model_supply = supply_params.get('template_path') or supply_params.get('template')
+    model_demand = demand_params.get('template_path') or demand_params.get('template')
+
+    logger.info(f"Using templates: pipe={model_pipe}, supply={model_supply}, demand={model_demand}")
 
     # Create system model
     logger.info("Creating system model with pre-assigned parameters")
@@ -1012,9 +1057,9 @@ def generate_simulation_model_new(uesgraph, sim_name, sim_params, ground_temp_li
         graph=uesgraph,
         stop_time=float(sim_params["stop_time"]),
         timestep=900,  # Could be made configurable
-        model_supply="AlreadyAssigned",  # Dummy - actual template set via template_path
-        model_demand="AlreadyAssigned",  # Dummy - actual template set via template_path
-        model_pipe="AlreadyAssigned",    # Dummy - actual template set via template_path
+        model_supply=model_supply,
+        model_demand=model_demand,
+        model_pipe=model_pipe,
         model_medium=sim_params["medium"],
         model_ground="t_ground_table",
         T_nominal=273.15 + 0,
