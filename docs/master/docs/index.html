@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>uesgraphs: Automated graph-based simulation model generation and analysis tool &mdash; uesgraphs v2.1.1</title>
+  <title>UESgraphs: Automated graph-based simulation model generation and analysis tool &mdash; uesgraphs v2.1.1</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
 
@@ -63,7 +63,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active"><strong>uesgraphs</strong>: Automated graph-based simulation model generation and analysis tool</li>
+      <li class="breadcrumb-item active"><strong>UESgraphs</strong>: Automated graph-based simulation model generation and analysis tool</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -75,35 +75,68 @@
              
   <img alt="EBC Logo" class="align-right" src="_images/EBC_Logo.png" />
 <section id="uesgraphs-automated-graph-based-simulation-model-generation-and-analysis-tool">
-<h1><strong>uesgraphs</strong>: Automated graph-based simulation model generation and analysis tool<a class="headerlink" href="#uesgraphs-automated-graph-based-simulation-model-generation-and-analysis-tool" title="Permalink to this heading"></a></h1>
+<h1><strong>UESgraphs</strong>: Automated graph-based simulation model generation and analysis tool<a class="headerlink" href="#uesgraphs-automated-graph-based-simulation-model-generation-and-analysis-tool" title="Permalink to this heading"></a></h1>
 <a class="reference external image-reference" href="https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml"><img alt="CI Tests" src="https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml/badge.svg?branch=master" /></a>
 <a class="reference external image-reference" href="http://doge.mit-license.org"><img alt="License: MIT" src="http://img.shields.io/:license-mit-blue.svg" /></a>
-<p><strong>uesgraphs</strong> is an open-source Python framework designed for the automated generation, simulation, and analysis of complex urban energy systems, with a focus on district heating and cooling networks. Built on a graph-based data structure, uesgraphs simplifies the challenging task of modeling interconnected energy infrastructure, enabling researchers and practitioners to rapidly create robust, dynamic simulation models ready for advanced analysis.
+<p><strong>UESgraphs</strong> is an open-source Python framework designed for the automated generation, simulation, and analysis of complex urban energy systems, with a focus on district heating and cooling networks. Built on a graph-based data structure, UESgraphs simplifies the challenging task of modeling interconnected energy infrastructure, enabling researchers and practitioners to rapidly create robust, dynamic simulation models ready for advanced analysis.
 The tool seamlessly integrates diverse data sources, including spatial (OpenStreetMap) and tabular datasets, to build high-fidelity system graphs representing buildings, energy networks, and supply stations. Automated workflows encompass hydronic sizing, network topology optimization, and model export to simulation environments like Modelica/Dymola.</p>
-<p>Beyond model creation, <strong>uesgraphs</strong> offers comprehensive post-simulation analytics and intuitive visualization capabilities, empowering users to extract actionable insights through color-coded network plots, KPIs, and interactive exploration of complex energy systems.</p>
+<p>Beyond model creation, <strong>UESgraphs</strong> offers comprehensive post-simulation analytics and intuitive visualization capabilities, empowering users to extract actionable insights through color-coded network plots, KPIs, and interactive exploration of complex energy systems.</p>
 <section id="getting-started">
 <h2>### Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h2>
 <p>The best way to start is by installing the package and checking out the <span class="xref std std-doc">examples</span>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Create and activate a new virtual environment</span>
-conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>uesgraphs-env<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.13
-conda<span class="w"> </span>activate<span class="w"> </span>uesgraphs-env
-
-<span class="c1"># 2. Install uesgraphs</span>
-pip<span class="w"> </span>install<span class="w"> </span>uesgraphs
+<p>Follow these steps to install <strong>UESgraphs</strong> using Conda:</p>
+<ol class="arabic">
+<li><p><strong>Create a new virtual environment</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>uesgraphs<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.13
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">3.13</span></code> with your desired version of Python.</p>
+</div>
+</li>
+<li><p><strong>Activate the virtual environment</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>uesgraphs
+</pre></div>
+</div>
+</li>
+<li><p><strong>Clone or download the UESgraphs repository</strong>:</p>
+<ul>
+<li><p>If you’re cloning the repository using Git, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/RWTH-EBC/uesgraphs.git
+</pre></div>
+</div>
+</li>
+<li><p>If you’ve downloaded the repository as a ZIP file, extract it to your desired location.</p></li>
+</ul>
+</li>
+<li><p><strong>Install UESgraphs in editable mode</strong>:</p>
+<p>Navigate to the directory where <em>UESgraphs</em> is located and run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>&lt;path/to/your/uesgraphs&gt;
+</pre></div>
+</div>
+</li>
+<li><p><strong>Verify your UESgraphs installation</strong> by running the automated tests:</p>
+<p>Navigate to the top-level <em>UESgraphs</em> folder and execute:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--mpl
+</pre></div>
+</div>
+<p>This will run the test suite and verify that everything is set up correctly.</p>
+</li>
+</ol>
+<p>For more detailed information, please check the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file.</p>
 </section>
 <section id="functional-principle">
 <h2>### Functional Principle<a class="headerlink" href="#functional-principle" title="Permalink to this heading"></a></h2>
-<p><strong>uesgraphs</strong> is built with <cite>networkx</cite> as its core library. The typical workflow for the tool involves:</p>
-<a class="reference internal image-reference" href="_images/uesgraph_function_principle.png"><img alt="Developed workflow using uesgraphs v 2.0.0" class="align-center" src="_images/uesgraph_function_principle.png" style="width: 100%;" /></a>
-<p>The functional principle of <strong>uesgraphs</strong> can be summarized as under:</p>
+<p><strong>UESgraphs</strong> is built with <cite>networkx</cite> as its core library. The typical workflow for the tool involves:</p>
+<a class="reference internal image-reference" href="_images/uesgraph_function_principle.png"><img alt="Developed workflow using UESgraphs v 2.0.0" class="align-center" src="_images/uesgraph_function_principle.png" style="width: 100%;" /></a>
+<p>The functional principle of <strong>UESgraphs</strong> can be summarized as under:</p>
 <ul class="simple">
-<li><p>uesgraphs uses a graph-based structure to represent urban energy systems, where nodes denote buildings, network junctions, and supply units, and edges represent thermal and hydraulic connections like pipes.</p></li>
+<li><p>UESgraphs uses a graph-based structure to represent urban energy systems, where nodes denote buildings, network junctions, and supply units, and edges represent thermal and hydraulic connections like pipes.</p></li>
 <li><p>The core graph functionality builds on the Python NetworkX library, allowing flexible and scalable handling of complex system topologies.</p></li>
 <li><p>The framework supports automated preprocessing steps such as network cleaning, topology simplification, and hydronic pipe sizing to prepare accurate system models.</p></li>
 <li><p>Multiple data input formats are supported, including OpenStreetMap, GIS files, and manual data, enabling integration of heterogeneous spatial and tabular data.</p></li>
-<li><p>uesgraphs automates the generation of dynamic simulation models by transforming graph representations into Modelica code through templated model export.</p></li>
+<li><p>UESgraphs automates the generation of dynamic simulation models by transforming graph representations into Modelica code through templated model export.</p></li>
 <li><p>The tool facilitates downstream analysis and visualization, including color-coded plots and KPI extraction, to support evaluation and decision-making.</p></li>
 </ul>
 </section>
