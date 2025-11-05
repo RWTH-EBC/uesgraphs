@@ -1,6 +1,6 @@
 ![E.ON EBC RWTH Aachen University](./uesgraphs/img/EBC_Logo.png)
 
-# uesgraphs
+# UESgraphs
 
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
 [![Documentation](https://raw.githubusercontent.com/RWTH-EBC/uesgraphs/gh-pages/docs/master/docs/doc.svg)](https://rwth-ebc.github.io//uesgraphs/master/docs/)
@@ -8,9 +8,9 @@
 ![Coverage](https://raw.githubusercontent.com/RWTH-EBC/uesgraphs/gh-pages/docs/master/coverage/badge.svg)
 
 
-**uesgraphs** is a Python package for describing Urban Energy Systems, managing their data within a Python graph structure, and enabling the automatic generation of dynamic district simulation models. We extend the
+**UESgraphs** is a Python package for describing Urban Energy Systems, managing their data within a Python graph structure, and enabling the automatic generation of dynamic district simulation models. We extend the
 [networkx](https://networkx.github.io/) Graph class and add basic methods to
-represent buildings and energy networks in the graph. **uesgraphs** can be used as a
+represent buildings and energy networks in the graph. **UESgraphs** can be used as a
 foundation to analyze energy network structures, evaluate district energy
 systems or generate simulation models. **Version 2** has been updated with the following enhancements:
 - **Simplified Installation**: Easier installation with the removal of unnecessary Python library dependencies.
@@ -19,9 +19,9 @@ systems or generate simulation models. **Version 2** has been updated with the f
 - **Improved Visualization**: Enhanced visualization features for better representation of results.
 - **Addition of `analyze.py`**: Introduced `analyze.py` to enable simulation post-processing and visualization for dynamic district simulations.
 - **Updated Model Template Generation**: The template generation feature for Modelica models has been updated, enabling automation of multiple models.
-- **Updated Examples**: The examples for **uesgraphs** have been updated, and two new examples have been added to clarify the use of template generation and the `analyze.py` script.
+- **Updated Examples**: The examples for **UESgraphs** have been updated, and two new examples have been added to clarify the use of template generation and the `analyze.py` script.
 
-**uesgraphs** is being developed at [RWTH Aachen University, E.ON Energy
+**UESgraphs** is being developed at [RWTH Aachen University, E.ON Energy
 Research Center, Institute for Energy Efficient Buildings and Indoor
 Climate](https://www.ebc.eonerc.rwth-aachen.de/cms/~dmzz/E-ON-ERC-EBC/?lidx=1).
 
@@ -29,11 +29,11 @@ If you have any questions regarding the tool, feel free to contact us at [ebc-to
 
 ## :rocket: Quick start
 
-### :wrench: Install uesgraphs
+### :wrench: Install UESgraphs
 
-We recommend using **Conda** or **Anaconda** for installing **uesgraphs**. Usage of `python venv` has shown to cause trouble in the installation process.
+We recommend using **Conda** or **Anaconda** for installing **UESgraphs**. Usage of `python venv` has shown to cause trouble in the installation process.
 
-Follow these steps to install **uesgraphs** using Conda:
+Follow these steps to install **UESgraphs** using Conda:
 
 1. **Create a new virtual environment**:
 
@@ -49,7 +49,7 @@ Follow these steps to install **uesgraphs** using Conda:
    conda activate uesgraphs
    ```
 
-3. **Clone or download the uesgraphs repository**.
+3. **Clone or download the UESgraphs repository**.
 
    - If you're cloning the repository using Git, run:
 
@@ -59,7 +59,7 @@ Follow these steps to install **uesgraphs** using Conda:
 
    - If you've downloaded the repository as a ZIP file, extract it to your desired location.
 
-4. **Install uesgraphs in editable mode**:
+4. **Install UESgraphs in editable mode**:
 
    Navigate to the directory where _uesgraphs_ is located and run:
 
@@ -67,7 +67,7 @@ Follow these steps to install **uesgraphs** using Conda:
    pip install -e <path/to/your/uesgraphs>
    ```
 
-5. **Verify your uesgraphs installation** by running the automated tests:
+5. **Verify your UESgraphs installation** by running the automated tests:
 
    Navigate to the top-level _uesgraphs_ folder and execute:
 
@@ -143,7 +143,7 @@ vis.show_network(
 
 ![Example graph](./uesgraphs/img/graph.png)
 
-Instead of building a graph from scratch, uesgraphs comes with an example
+Instead of building a graph from scratch, UESgraphs comes with an example
 containing all supported energy network types. You can create this example
 graph with
 
@@ -200,7 +200,7 @@ The package version can be accessed programmatically:
 
 ```python
 import uesgraphs
-print(f"uesgraphs version: {uesgraphs.__version__}")
+print(f"UESgraphs version: {uesgraphs.__version__}")
 ```
 
 ## :herb: Branch strategy
@@ -216,14 +216,14 @@ Further documentation is available in the `/doc` directory. There you find:
 
 ## :page_facing_up: License
 
-**uesgraphs** is released by RWTH Aachen University, E.ON Energy
+**UESgraphs** is released by RWTH Aachen University, E.ON Energy
 Research Center, Institute for Energy Efficient Buildings and Indoor Climate,
 under the
 [MIT License](https://github.com/RWTH-EBC/uesgraphs/blob/master/LICENSE.md).
 
-## :books: How to cite uesgraphs
+## :books: How to cite UESgraphs
 
-To reference **uesgraphs**, please cite the following papers: 
+To reference **UESgraphs**, please cite the following papers: 
 + (doi [10.1016/j.energy.2016.04.023](https://doi.org/10.1016/j.energy.2016.04.023)):
 
 > M. Fuchs, J. Teichmann, M. Lauster, P. Remmen, R. Streblow, and D. Müller, “Workflow automation for combined modeling of buildings and district energy systems,” Energy, vol. 117, pp. 478–484, Dec. 2016.
@@ -270,7 +270,7 @@ The BibTex for this paper is:
 
 This  work  was  supported  by  the  Helmholtz  Association  under  the  Joint  Initiative  “Energy System 2050 – A Contribution of the Research Field Energy”.
 
-Parts of uesgraphs have been developed within public funded projects
+Parts of UESgraphs have been developed within public funded projects
 and with financial support by BMWK (German Federal Ministry for Economic Affairs and Climate Action).
 
 <img src="https://www.innovation-beratung-foerderung.de/INNO/Redaktion/DE/Bilder/Titelbilder/titel_foerderlogo_bmwi.jpg?__blob=normal" width="200">
