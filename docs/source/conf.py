@@ -11,7 +11,7 @@ import sys
 sys.path.insert(0, os.path.abspath('../../'))
 
 project = 'uesgraphs'
-copyright = '2025, Rahul Karuvingal'
+copyright = '2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University'
 author = 'Rahul Karuvingal'
 release = '2.1.1'
 
