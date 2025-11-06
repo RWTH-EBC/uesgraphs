@@ -112,7 +112,13 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         else:
             raise ValueError(f"Value for uesgraph: {uesgraph} is nor uesgraph object nor valid JSON path")
 
-    # Step 3.5: Ensure all edges have names (required for Modelica generation)
+    # Step 3.5: Write simulation parameters to graph (needed for connector time-series generation)
+    logger.info("Writing simulation parameters to graph")
+    uesgraph.graph['stop_time'] = float(sim_params['stop_time'])
+    uesgraph.graph['timestep'] = sim_params.get('timestep', 900)  # Default 900s = 15min
+    logger.debug(f"Set graph parameters: stop_time={uesgraph.graph['stop_time']}, timestep={uesgraph.graph['timestep']}")
+
+    # Step 3.6: Ensure all edges have names (required for Modelica generation)
     # This is needed because from_geojson() doesn't set edge names automatically,
     # while from_json() does (via pipeID). We need consistent behavior.
     logger.info("Validating and generating edge names if needed")
@@ -341,6 +347,101 @@ def _process_component_parameters(component_id, component_data, main_parameters,
     
     return missing_main, missing_aux, stats
 
+
+def _process_component_connectors(component_id, component_data, connector_parameters,
+                                   excel_params, time_array, logger):
+    """
+    Process connector parameters (time-series inputs) for a single component.
+
+    Connectors are dynamic inputs to Modelica models (e.g., TIn, dpIn, Q_flow_input).
+    Unlike MAIN/AUX parameters, all connectors are optional. Scalar values are
+    automatically converted to constant time-series.
+
+    Parameters
+    ----------
+    component_id : str or tuple
+        Identifier of the component (node id or edge tuple)
+    component_data : dict
+        The component's data dictionary (modified in-place)
+    connector_parameters : list
+        List of connector names from template's get_connector_names()
+    excel_params : dict
+        Dictionary of parameters from Excel
+    time_array : list
+        Time array for converting scalars to time-series (e.g., [0, 3600, 7200, ...])
+    logger : logging.Logger
+        Logger for debug/warning messages
+
+    Returns
+    -------
+    missing_connectors : list
+        List of connectors that were not provided
+    stats : dict
+        Statistics dict with 'from_graph', 'from_excel', 'converted' counts
+
+    Notes
+    -----
+    Processing logic:
+    1. If connector already in component_data:
+       - Keep existing value (don't overwrite)
+       - Convert scalar to time-series if needed
+    2. If connector in Excel:
+       - Resolve value (@ references, direct values)
+       - Convert scalar to time-series
+    3. If connector missing:
+       - Add to missing_connectors (WARNING, not ERROR)
+    """
+    missing_connectors = []
+    stats = {'from_graph': 0, 'from_excel': 0, 'converted': 0}
+
+    for connector in connector_parameters:
+        if connector in component_data:
+            # Connector already in component - keep it, but check if conversion needed
+            value = component_data[connector]
+
+            # Convert scalar to time-series if needed
+            if isinstance(value, (int, float)):
+                component_data[connector] = [value] * len(time_array)
+                stats['from_graph'] += 1
+                stats['converted'] += 1
+                logger.debug(f"  ✓ Connector '{connector}' from component (scalar → time-series)")
+            elif isinstance(value, list):
+                stats['from_graph'] += 1
+                logger.debug(f"  ✓ Connector '{connector}' from component (time-series)")
+            else:
+                # Unexpected type - keep as is but warn
+                stats['from_graph'] += 1
+                logger.warning(f"  ⚠ Connector '{connector}' has unexpected type: {type(value)}")
+
+        elif connector in excel_params:
+            # Connector not in component, but available in Excel - apply it
+            try:
+                resolved_value = resolve_parameter_value(
+                    value=excel_params[connector],
+                    component_data=component_data,
+                    param_name=connector,
+                    component_id=component_id,
+                    time_array=time_array,
+                    as_timeseries=True  # Connectors are always converted to time-series
+                )
+                component_data[connector] = resolved_value
+                stats['from_excel'] += 1
+                if isinstance(excel_params[connector], (int, float)):
+                    stats['converted'] += 1
+                source = f"@{excel_params[connector][1:]}" if isinstance(excel_params[connector], str) and excel_params[connector].startswith('@') else "Excel"
+                logger.debug(f"  ✓ Connector '{connector}' applied from {source}")
+            except ValueError as e:
+                # Reference resolution failed - treat as missing
+                missing_connectors.append(connector)
+                logger.warning(f"  ⚠ Connector '{connector}': {e}")
+        else:
+            # Connector missing - this is OK (connectors are optional)
+            missing_connectors.append(connector)
+            logger.debug(f"  ⚠ Connector '{connector}' not provided")
+
+    return missing_connectors, stats
+
+
 def assign_pipe_parameters(uesgraph, excel_path, logger=None):
     """
     Assign parameters to pipe edges in the uesgraph according to the flow chart logic.
@@ -391,37 +492,61 @@ def assign_pipe_parameters(uesgraph, excel_path, logger=None):
     # Step 2: Load template file (from Excel config)
     model_name = excel_params.get('template')
     template_path = excel_params.get('template_path')
-    main_parameters, aux_parameters = parse_template_parameters('Pipe', model_name, template_path, logger)
-    
-    # Step 3: Process each edge individually
+    main_parameters, aux_parameters, connector_parameters = parse_template_parameters(
+        'Pipe', model_name, template_path, logger
+    )
+
+    # Step 3: Get time array for connector conversion
+    stop_time = uesgraph.graph.get('stop_time')
+    timestep = uesgraph.graph.get('timestep')
+    if stop_time and timestep:
+        time_array = [x * timestep for x in range(int((stop_time / timestep) + 1))]
+    else:
+        time_array = []
+        if connector_parameters:
+            logger.warning("Connectors found but no time_array available (stop_time/timestep not set)")
+
+    # Step 4: Process each edge individually
     total_edges = len(list(uesgraph.edges()))
     logger.info(f"Processing {total_edges} edge(s)...")
-    
+
     all_missing_main = []
     all_missing_aux = set()
+    all_missing_connectors = set()
     all_stats = []
-    
+    all_connector_stats = []
+
     for edge_idx, edge in enumerate(uesgraph.edges(), 1):
         edge_data = uesgraph.edges[edge]
         logger.debug(f"Processing edge {edge_idx}/{total_edges}: {edge}")
-        
+
+        # Process parameters
         missing_main, missing_aux, stats = _process_component_parameters(
-            edge, edge_data, main_parameters, aux_parameters, 
+            edge, edge_data, main_parameters, aux_parameters,
             excel_params, logger
         )
-        
+
+        # Process connectors
+        missing_connectors, connector_stats = _process_component_connectors(
+            edge, edge_data, connector_parameters, excel_params,
+            time_array, logger
+        )
+
         # Collect results
         all_missing_main.extend([(edge, param) for param in missing_main])
         all_missing_aux.update(missing_aux)
+        all_missing_connectors.update(missing_connectors)
         all_stats.append(stats)
-    
-    # Step 4: Aggregate and report results
+        all_connector_stats.append(connector_stats)
+
+    # Step 5: Aggregate and report results
     total_stats = _aggregate_statistics(all_stats)
+    total_connector_stats = _aggregate_statistics(all_connector_stats)
     _check_and_report_results(
-        'edge', total_edges, all_missing_main, all_missing_aux, 
-        total_stats, logger
+        'edge', total_edges, all_missing_main, all_missing_aux,
+        all_missing_connectors, total_stats, total_connector_stats, logger
     )
-    
+
     return uesgraph
 
 
@@ -478,52 +603,76 @@ def assign_supply_parameters(uesgraph, excel_path, logger=None):
     # Step 2: Load template file (from Excel config)
     model_name = excel_params.get('template')
     template_path = excel_params.get('template_path')
-    main_parameters, aux_parameters = parse_template_parameters('Supply', model_name, template_path, logger)
-    
-    # Step 3: Find supply nodes
+    main_parameters, aux_parameters, connector_parameters = parse_template_parameters(
+        'Supply', model_name, template_path, logger
+    )
+
+    # Step 3: Get time array for connector conversion
+    stop_time = uesgraph.graph.get('stop_time')
+    timestep = uesgraph.graph.get('timestep')
+    if stop_time and timestep:
+        time_array = [x * timestep for x in range(int((stop_time / timestep) + 1))]
+    else:
+        time_array = []
+        if connector_parameters:
+            logger.warning("Connectors found but no time_array available (stop_time/timestep not set)")
+
+    # Step 4: Find supply nodes
     network_type = uesgraph.graph.get("network_type", "heating")
     is_supply_key = f"is_supply_{network_type}"
-    
+
     supply_nodes = [
         node for node in uesgraph.nodelist_building
         if uesgraph.nodes[node].get(is_supply_key, False)
     ]
-    
+
     if not supply_nodes:
         warning_msg = f"No supply nodes found (looking for '{is_supply_key}' = True)"
         logger.warning(warning_msg)
         warnings.warn(warning_msg, UserWarning)
         return uesgraph
-    
-    # Step 4: Process each supply node individually
+
+    # Step 5: Process each supply node individually
     total_nodes = len(supply_nodes)
     logger.info(f"Processing {total_nodes} supply node(s)...")
-    
+
     all_missing_main = []
     all_missing_aux = set()
+    all_missing_connectors = set()
     all_stats = []
-    
+    all_connector_stats = []
+
     for node_idx, node in enumerate(supply_nodes, 1):
         node_data = uesgraph.nodes[node]
         logger.debug(f"Processing supply node {node_idx}/{total_nodes}: {node}")
-        
+
+        # Process parameters
         missing_main, missing_aux, stats = _process_component_parameters(
             node, node_data, main_parameters, aux_parameters,
             excel_params, logger
         )
-        
+
+        # Process connectors
+        missing_connectors, connector_stats = _process_component_connectors(
+            node, node_data, connector_parameters, excel_params,
+            time_array, logger
+        )
+
         # Collect results
         all_missing_main.extend([(node, param) for param in missing_main])
         all_missing_aux.update(missing_aux)
+        all_missing_connectors.update(missing_connectors)
         all_stats.append(stats)
-    
-    # Step 5: Aggregate and report results
+        all_connector_stats.append(connector_stats)
+
+    # Step 6: Aggregate and report results
     total_stats = _aggregate_statistics(all_stats)
+    total_connector_stats = _aggregate_statistics(all_connector_stats)
     _check_and_report_results(
         'supply node', total_nodes, all_missing_main, all_missing_aux,
-        total_stats, logger
+        all_missing_connectors, total_stats, total_connector_stats, logger
     )
-    
+
     return uesgraph
 
 
@@ -580,59 +729,90 @@ def assign_demand_parameters(uesgraph, excel_path, logger=None):
     # Step 2: Load template file (from Excel config)
     model_name = excel_params.get('template')
     template_path = excel_params.get('template_path')
-    main_parameters, aux_parameters = parse_template_parameters('Demand', model_name, template_path, logger)
-    
-    # Step 3: Find demand nodes (buildings that are NOT supply)
+    main_parameters, aux_parameters, connector_parameters = parse_template_parameters(
+        'Demand', model_name, template_path, logger
+    )
+
+    # Step 3: Get time array for connector conversion
+    stop_time = uesgraph.graph.get('stop_time')
+    timestep = uesgraph.graph.get('timestep')
+    if stop_time and timestep:
+        time_array = [x * timestep for x in range(int((stop_time / timestep) + 1))]
+    else:
+        time_array = []
+        if connector_parameters:
+            logger.warning("Connectors found but no time_array available (stop_time/timestep not set)")
+
+    # Step 4: Find demand nodes (buildings that are NOT supply)
     network_type = uesgraph.graph.get("network_type", "heating")
     is_supply_key = f"is_supply_{network_type}"
-    
+
     demand_nodes = [
         node for node in uesgraph.nodelist_building
         if not uesgraph.nodes[node].get(is_supply_key, False)
     ]
-    
+
     if not demand_nodes:
         warning_msg = f"No demand nodes found (looking for buildings with '{is_supply_key}' = False)"
         logger.warning(warning_msg)
         warnings.warn(warning_msg, UserWarning)
         return uesgraph
-    
-    # Step 4: Process each demand node individually
+
+    # Step 5: Process each demand node individually
     total_nodes = len(demand_nodes)
     logger.info(f"Processing {total_nodes} demand node(s)...")
-    
+
     all_missing_main = []
     all_missing_aux = set()
+    all_missing_connectors = set()
     all_stats = []
-    
+    all_connector_stats = []
+
     for node_idx, node in enumerate(demand_nodes, 1):
         node_data = uesgraph.nodes[node]
         logger.debug(f"Processing demand node {node_idx}/{total_nodes}: {node}")
-        
+
+        # Process parameters
         missing_main, missing_aux, stats = _process_component_parameters(
             node, node_data, main_parameters, aux_parameters,
             excel_params, logger
         )
-        
+
+        # Process connectors
+        missing_connectors, connector_stats = _process_component_connectors(
+            node, node_data, connector_parameters, excel_params,
+            time_array, logger
+        )
+
         # Collect results
         all_missing_main.extend([(node, param) for param in missing_main])
         all_missing_aux.update(missing_aux)
+        all_missing_connectors.update(missing_connectors)
         all_stats.append(stats)
-    
-    # Step 5: Aggregate and report results
+        all_connector_stats.append(connector_stats)
+
+    # Step 6: Aggregate and report results
     total_stats = _aggregate_statistics(all_stats)
+    total_connector_stats = _aggregate_statistics(all_connector_stats)
     _check_and_report_results(
         'demand node', total_nodes, all_missing_main, all_missing_aux,
-        total_stats, logger
+        all_missing_connectors, total_stats, total_connector_stats, logger
     )
-    
+
     return uesgraph
 
 
-def resolve_parameter_value(value, component_data, param_name, component_id):
+def resolve_parameter_value(value, component_data, param_name, component_id,
+                           time_array=None, as_timeseries=False):
     """
-    Resolve parameter value - either direct value or @reference to component attribute.
-    
+    Resolve parameter value - handles direct values, @references, and optional time-series conversion.
+
+    This function is used by both parameter and connector processing to resolve values from Excel.
+    It supports:
+    - Direct values (int, float, bool, str, list)
+    - @ References to component attributes
+    - Scalar to time-series conversion for connectors
+
     Parameters
     ----------
     value : any
@@ -643,35 +823,74 @@ def resolve_parameter_value(value, component_data, param_name, component_id):
         Name of the parameter being resolved
     component_id : str or tuple
         Identifier of the component (node id or edge tuple)
-        
+    time_array : list, optional
+        Time array for converting scalars to time-series. Required if as_timeseries=True.
+    as_timeseries : bool, optional
+        If True, convert scalar values to constant time-series. Default is False.
+
     Returns
     -------
     resolved_value : any
         The resolved parameter value
-        
+
     Raises
     ------
     ValueError
-        If referenced attribute does not exist in component_data
+        If @reference not found or time_array missing when as_timeseries=True
+
+    Notes
+    -----
+    Future extensions could include:
+    - CSV file path loading (e.g., value="path/to/timeseries.csv")
+    - Multiple column selection from CSVs
+    - Interpolation for time-series with different timesteps
+
+    Examples
+    --------
+    >>> # Direct scalar value
+    >>> resolve_parameter_value(353.15, {}, 'TReturn', 'node1')
+    353.15
+
+    >>> # @ Reference
+    >>> node_data = {'heatDemand_max': 800000}
+    >>> resolve_parameter_value('@heatDemand_max', node_data, 'Q_nominal', 'node1')
+    800000
+
+    >>> # Scalar to time-series conversion
+    >>> time = [0, 3600, 7200]
+    >>> resolve_parameter_value(353.15, {}, 'TIn', 'node1', time, as_timeseries=True)
+    [353.15, 353.15, 353.15]
     """
+    resolved = value
+
+    # Handle @ references
     if isinstance(value, str) and value.startswith('@'):
-        # It's a reference to a component attribute
         attr_name = value[1:]  # Remove '@' prefix
-        if attr_name in component_data:
-            return component_data[attr_name]
-        else:
+        if attr_name not in component_data:
             raise ValueError(
                 f"Component {component_id}: Parameter '{param_name}' references "
                 f"non-existent attribute '@{attr_name}'"
             )
+        resolved = component_data[attr_name]
     else:
         # Direct value
-        return value
+        resolved = value
+
+    # Convert scalar to time-series if requested
+    if as_timeseries and isinstance(resolved, (int, float)):
+        if time_array is None:
+            raise ValueError(
+                f"Component {component_id}: Cannot convert '{param_name}' to time-series "
+                f"without time_array"
+            )
+        resolved = [resolved] * len(time_array)
+
+    return resolved
 
 
 def parse_template_parameters(model_type, model_name=None, template_path=None, logger=None):
     """
-    Parse template to extract required and optional parameters using UESTemplates.
+    Parse template to extract required, optional, and connector parameters using UESTemplates.
 
     Parameters
     ----------
@@ -686,8 +905,8 @@ def parse_template_parameters(model_type, model_name=None, template_path=None, l
 
     Returns
     -------
-    tuple (list, list)
-        (main_parameters, aux_parameters)
+    tuple (list, list, list)
+        (main_parameters, aux_parameters, connector_parameters)
 
     Raises
     ------
@@ -699,10 +918,14 @@ def parse_template_parameters(model_type, model_name=None, template_path=None, l
     Examples
     --------
     # Standard template:
-    >>> main, aux = parse_template_parameters('Supply', model_name='OpenLoop.SourceIdeal')
+    >>> main, aux, conn = parse_template_parameters('Supply', model_name='OpenLoop.SourceIdeal')
+    >>> main
+    ['pReturn', 'TReturn']
+    >>> conn
+    ['TIn', 'dpIn']
 
     # Custom template:
-    >>> main, aux = parse_template_parameters('Supply', template_path='/path/custom.mako')
+    >>> main, aux, conn = parse_template_parameters('Supply', template_path='/path/custom.mako')
     """
     if logger is None:
         logger = logging.getLogger(__name__)
@@ -735,10 +958,12 @@ def parse_template_parameters(model_type, model_name=None, template_path=None, l
         # Extract parameters
         main_params = template.call_function("get_main_parameters")
         aux_params = template.call_function("get_aux_parameters")
+        connector_params = template.call_function("get_connector_names")
 
-        logger.info(f"Template parsed: {len(main_params)} main, {len(aux_params)} aux parameters")
+        logger.info(f"Template parsed: {len(main_params)} main, {len(aux_params)} aux, "
+                   f"{len(connector_params)} connector parameters")
 
-        return main_params, aux_params
+        return main_params, aux_params, connector_params
 
     except Exception as e:
         error_msg = f"Failed to parse template: {e}"
@@ -827,11 +1052,12 @@ def _aggregate_statistics(all_stats_list):
     return total_stats
 
 
-def _check_and_report_results(component_type, component_count, all_missing_main, 
-                              all_missing_aux, total_stats, logger):
+def _check_and_report_results(component_type, component_count, all_missing_main,
+                              all_missing_aux, all_missing_connectors,
+                              total_stats, total_connector_stats, logger):
     """
     Check if validation was successful and report results.
-    
+
     Parameters
     ----------
     component_type : str
@@ -842,21 +1068,32 @@ def _check_and_report_results(component_type, component_count, all_missing_main,
         List of (component_id, param) tuples for missing MAIN parameters
     all_missing_aux : set
         Set of AUX parameter names missing across all components
+    all_missing_connectors : set
+        Set of connector names missing across all components
     total_stats : dict
-        Aggregated statistics
+        Aggregated statistics for parameters
+    total_connector_stats : dict
+        Aggregated statistics for connectors
     logger : logging.Logger
         Logger instance
-        
+
     Raises
     ------
     ValueError
         If any MAIN parameters are missing
     """
-    # Report summary
+    # Report parameter summary
     logger.info(f"✓ Processed {component_count} {component_type}(s)")
     logger.info(f"  - Parameters from graph: {total_stats['from_graph']}")
     logger.info(f"  - Parameters from Excel: {total_stats['from_excel']}")
-    
+
+    # Report connector summary (if any connectors were found)
+    if total_connector_stats['from_graph'] > 0 or total_connector_stats['from_excel'] > 0:
+        logger.info(f"  - Connectors from graph: {total_connector_stats['from_graph']}")
+        logger.info(f"  - Connectors from Excel: {total_connector_stats['from_excel']}")
+        if total_connector_stats.get('converted', 0) > 0:
+            logger.info(f"  - Scalars converted to time-series: {total_connector_stats['converted']}")
+
     # Summary of missing AUX parameters
     if all_missing_aux:
         missing_count = len(all_missing_aux)
@@ -866,7 +1103,31 @@ def _check_and_report_results(component_type, component_count, all_missing_main,
         )
         logger.warning(warning_msg)
         warnings.warn(warning_msg, UserWarning)
-    
+
+    # Summary of missing connectors (ERROR - connectors are required!)
+    if all_missing_connectors:
+        missing_count = len(all_missing_connectors)
+        connector_list = ', '.join(sorted(all_missing_connectors))
+        first_connector = list(all_missing_connectors)[0]
+        error_msg = (
+            f"Validation FAILED: {missing_count} required connector(s) missing for {component_type}s\n"
+            f"Missing connectors: {connector_list}\n\n"
+            f"Connectors are time-series inputs required by Modelica templates.\n\n"
+            f"HOW TO FIX:\n"
+            f"Option 1 - Define in Excel sheet:\n"
+            f"  • Open the Excel configuration file\n"
+            f"  • Go to the '{component_type.capitalize()}' sheet\n"
+            f"  • Add rows: Parameter='{first_connector}', Value=<number or @reference>\n"
+            f"  • Example: Parameter='TIn', Value=353.15 (will be converted to constant time-series)\n\n"
+            f"Option 2 - Define on UESGraph before calling pipeline:\n"
+            f"  • For {component_type}s: uesgraph.{component_type}[component_id]['{first_connector}'] = value\n"
+            f"  • Example: uesgraph.nodes['supply1']['TIn'] = 353.15\n\n"
+            f"Note: Scalar values are automatically converted to constant time-series.\n"
+            f"      Use @references to point to existing attributes (e.g., Value='@supply_temp')"
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+
     # Check if validation was successful
     if all_missing_main:
         error_count = len(all_missing_main)
@@ -958,11 +1219,31 @@ def load_component_parameters(excel_path, component_type):
         # Convert to dictionary
         param_dict = dict(zip(df_clean['Parameter'], df_clean['Value']))
 
-        # Convert NaN values to None
+        # Convert and clean values
         import math
         for key, value in param_dict.items():
+            # Convert NaN to None
             if isinstance(value, float) and math.isnan(value):
                 param_dict[key] = None
+            # Try to convert string values to appropriate types
+            elif isinstance(value, str):
+                value_stripped = value.strip()
+
+                # Skip if it looks like a reference (@something) or template path/name
+                if value_stripped.startswith('@') or '/' in value_stripped or '.' in value_stripped and not value_stripped.replace('.', '').replace('e', '').replace('E', '').replace('-', '').replace('+', '').isdigit():
+                    continue
+
+                # Try boolean conversion
+                if value_stripped.upper() in ('TRUE', 'FALSE'):
+                    param_dict[key] = value_stripped.upper() == 'TRUE'
+                # Try numeric conversion (handles scientific notation like '1e5')
+                else:
+                    try:
+                        # Try float first (handles both '123' and '1.23' and '1e5')
+                        param_dict[key] = float(value_stripped)
+                    except ValueError:
+                        # Keep as string if conversion fails (e.g., template names)
+                        pass
 
         return param_dict
         
