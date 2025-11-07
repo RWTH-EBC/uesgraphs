@@ -93,6 +93,161 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         raise FileNotFoundError("Some files are missing. Please check the logs for details.")
     logger.debug(f"Existing files: {existing_files}")
 
+    # Step 3: Initialize or load the UESGraph from file or object
+    logger.info("Initialize UESGraph")
+    if isinstance(uesgraph, (str, os.PathLike, Path)):
+        if str(uesgraph).endswith(".json"):
+            try:
+                uesgraph_path = str(uesgraph)
+                uesgraph = UESGraph()
+                uesgraph.from_json(path = uesgraph_path, network_type="heating")
+                logger.info(f"UESGraph loaded from JSON: {uesgraph_path}")
+            except Exception as e:
+                raise Exception(f"While loading UESGraph from JSON: {e}")
+        else:
+            raise ValueError(f"Value for uesgraph: {uesgraph} is nor uesgraph object nor valid JSON path")
+    
+    
+    try:
+        #Step 4: Assign demand data to the graph nodes
+        logger.info("Assigning demand data")
+        input_paths_dict = {
+            "heating": input_heating,
+            "cooling": input_cooling,
+            "dhw": input_dhw
+        }
+        uesgraph, msg = assign_demand_data(uesgraph, input_paths_dict)
+        logger.debug(msg)
+
+        # Step 5: Save the UESGraph with added demand data
+        logger.info("Try to save uesgraph with demand data")
+        try:
+            uesgraph.to_json(path=str(workspace),
+                        name = "transurban_seestadt_uesgraphs_with_demand",
+                        all_data = True,
+                        prettyprint = True)
+            logger.info("UESGraph with demand data saved")
+        except Exception as e:
+            logger.error(f"Failed to save uesgraph with demand data: {e}")
+
+        # Step 6: Load ground temperature data for simulations
+        logger.info("Loading ground temperature data")
+        ground_temp_df = load_ground_temp_data(ground_temp_path)
+        logger.debug(f"Ground temperature data loaded of shape: {ground_temp_df.shape}")
+
+        # Step 7: Simplify the UESGraph according to the specified level
+        logger.info(f"*** Start simplyfing Uesgraph with simplification level: {simplification_level} ***")
+        logger.info(f"Before simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type='heating')}")
+        uesgraph = simplify_uesgraph(uesgraph, simplification_level)
+        logger.info(f"After simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type='heating')}")
+    
+        # Step 8: Save the simplified UESGraph
+        logger.info("Try to save uesgraph after simplification")
+        try:
+            uesgraph.to_json(path=str(workspace),
+                        name = "transurban_seestadt_uesgraphs_simplified",
+                        all_data = True,
+                        prettyprint = True)
+            logger.info("UESGraph after simplification saved")
+        except Exception as e:
+            logger.error(f"Failed to save uesgraph after simplification: {e}")
+        
+        # Step 9: Create directory structure for Modelica output files
+        logger.info("Creating subfolder for modelica files")
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        sim_name = f"Sim{timestamp}"
+        sim_model_dir = os.path.join(workspace, "models", sim_name)
+        os.makedirs(sim_model_dir, exist_ok=True)
+        logger.info(f"Modelica files will be saved to: {sim_model_dir}")
+
+        # Step 10: Generate Modelica files for each simulation configuration
+        logger.info(f"Start process of generating Modelica files for: {len(sim_setup_dict)} simulations")
+        for setup_params in sim_setup_dict:
+            sim_name_ix = f"{sim_name}_{str(setup_params["Simulation Name"])}"
+            logger.info(f"Processing simulation parameters: {setup_params}")
+            ground_temp_list = ground_temp_df[setup_params["ground_depth"]].tolist()
+            logger.info(f"Using ground temperature data for depth {setup_params['ground_depth']}")
+            #uesgraph_copy = uesgraph.copy()
+            uesgraph = map_setup_to_uesgraph(uesgraph=uesgraph, setup_params=setup_params)
+            
+            if setup_params["save_params_to_csv"]: 
+                logger.info("Saving setup parameters to CSV")
+                save_setup_params_to_csv(setup_params, sim_name_ix, sim_model_dir)
+            
+            try:
+                logger.info(f"Start creating model for simulation: {sim_name_ix}")
+                generate_simulation_model(uesgraph=uesgraph,
+                                sim_name=sim_name_ix,
+                                setup_params=setup_params,
+                                ground_temp_list=ground_temp_list,
+                                sim_model_dir = sim_model_dir,
+                )
+            except Exception as e:
+                logger.error(f"Error while generating Modelica files: {e}")
+                raise e
+
+    except Exception as e:
+        logger.error(f"Error while processing uesgraph: {e}")
+        raise e
+    
+def uesgraph_to_modelica_old(uesgraph, simplification_level,
+                         workspace,
+                         sim_setup_path,
+                         input_heating, input_dhw, input_cooling,
+                         ground_temp_path,
+                         log_dir=None,
+                         log_level=logging.DEBUG
+                         ):
+    """
+    Convert an Urban Energy System Graph (UESGraph) to Modelica model files.
+    
+    This function processes a UESGraph, applies simplification, adds demand data,
+    and generates Modelica model files based on simulation parameters.
+    
+    Parameters:
+    -----------
+    uesgraph : UESGraph object or str
+        The UESGraph object or path to a JSON file containing the UESGraph data
+    simplification_level : int
+        Level of simplification to apply to the UESGraph (higher = more simplified)
+    workspace : str or Path
+        Directory path where output files will be saved
+    sim_setup_path : str or Path
+        Path to the simulation setup configuration file
+    input_heating : str or Path
+        Path to heating demand data
+    input_dhw : str or Path
+        Path to domestic hot water demand data
+    input_cooling : str or Path
+        Path to cooling demand data
+    ground_temp_path : str or Path
+        Path to ground temperature data file
+    log_dir : str or Path, optional
+        Directory to save log files (default is None, logs to tmp directory)
+    log_level : int, optional
+        Logging level (default is logging.DEBUG)
+        
+    Returns:
+    --------
+    None
+    
+    Raises:
+    -------
+    FileNotFoundError: If required files are missing
+    ValueError: If uesgraph parameter is invalid
+    Exception: For various processing errors with detailed messages
+    """
+    # Set up logging configuration
+    logger = set_up_logger("ModelicaCodeGen",level=int(log_level), log_dir=log_dir)
+    
+    # Step 1: Validate input files and folders    logger.info("Validating files")
+    paths_to_check = [sim_setup_path, input_heating, input_dhw, input_cooling, ground_temp_path]
+    existing_files, missing_files = validate_paths(paths_to_check)
+    if missing_files:
+        logger.error(f"Missing files: {missing_files}")
+        raise FileNotFoundError("Some files are missing. Please check the logs for details.")
+    logger.debug(f"Existing files: {existing_files}")
+
     # Step 2: Load simulation configuration
     logger.info("Loading simulation settings")
     sim_setup_dict = load_simulation_settings(sim_setup_path)
