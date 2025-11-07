@@ -11,7 +11,7 @@ jobs:
     uses: RWTH-EBC/ci_templates/.github/workflows/ci_pipeline.yml@main
     secrets:
       GH_TOKEN: ${{ secrets.UESGRAPHS_GITHUB_CI }}
-      PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      PYPI_PASSWORD: ${{ secrets.PYPI_TOKEN }}
       
     with:
       PYTHON_VERSION:  "3.11"
