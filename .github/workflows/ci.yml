@@ -27,3 +27,4 @@ jobs:
       EXECUTE_TESTS: true
       EXECUTE_COVERAGE_TEST: true
       CONVERT_EXAMPLES: false
+      PYPI_RELEASE: true
