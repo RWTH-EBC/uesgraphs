@@ -255,7 +255,6 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
 ##############################
     
 ### Helper functions ###
-    
 
 # ============================================================================
 # MAIN ASSIGNMENT FUNCTIONS
@@ -1337,15 +1336,15 @@ def generate_simulation_model_new(uesgraph, sim_name, sim_params, ground_temp_li
         save_at=sim_model_dir,
         graph=uesgraph,
         stop_time=float(sim_params["stop_time"]),
-        timestep=900,  # Could be made configurable
+        timestep=sim_params.get("timestep",900),  # Could be made configurable
         model_supply=model_supply,
         model_demand=model_demand,
         model_pipe=model_pipe,
         model_medium=sim_params["medium"],
         model_ground="t_ground_table",
-        T_nominal=273.15 + 0,
-        p_nominal=4e5,
-        fraction_glycol=0.3,
+        T_nominal=sim_params.get("T_nominal", 273.15 + 20),
+        p_nominal=sim_params.get("p_nominal",4e5),
+        fraction_glycol=sim_params.get("fraction_glycol",0.3),
         solver=sim_params["solver"],
         t_ground_prescribed=ground_temp_list,
         short_pipes_static=None,  # Could be made configurable
@@ -1683,7 +1682,6 @@ def assign_demand_data(uesgraph, input_paths_dict, input_types = ["heating", "co
         msg += "No missing buildings found."
 
     return uesgraph, msg
-
 
 ### Administrative Helper functions ###
 
