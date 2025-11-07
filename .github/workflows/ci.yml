@@ -26,5 +26,6 @@ jobs:
       CREATE_PAGES_ON_FAILURE: true
       EXECUTE_TESTS: true
       EXECUTE_COVERAGE_TEST: true
-      CONVERT_EXAMPLES: false
       PYPI_RELEASE: true
+      CONVERT_EXAMPLES: false
+      
