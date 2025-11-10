@@ -27,7 +27,7 @@ authors:
 
 affiliations:
  - name: Institute for Energy Efficient Buildings and Indoor Climate, RWTH Aachen University
- - index: 1
+   index: 1
 
 date: 12 October 2025
 
