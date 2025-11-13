@@ -464,22 +464,29 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_save_to_mako</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">rigorous</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">&quot;Template for class </span><span class="si">%s</span><span class="s2"> already exists. Do you want to replace it&quot;</span>
-                <span class="s2">&quot; with new template? Please enter&quot;</span>
-                <span class="s1">&#39; &quot;Y&quot; to proceed or &quot;N&quot; to abort.&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span>
-            <span class="p">)</span>
-            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">choice</span> <span class="o">=</span> <span class="nb">input</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delete existing template for </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">)</span>
-                    <span class="k">break</span>
-                <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;N&quot;</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Keep existing template.&quot;</span><span class="p">)</span>
-                    <span class="k">break</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Please respond with &#39;Y&#39; or &#39;N&#39;&quot;</span><span class="p">)</span>
+            <span class="c1"># Check if running in non-interactive environment (CI/CD, automated scripts)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">():</span>
+                <span class="c1"># Non-interactive mode: auto-overwrite</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Non-interactive mode detected: Overwriting existing template for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Interactive mode: ask user</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Template for class </span><span class="si">%s</span><span class="s2"> already exists. Do you want to replace it&quot;</span>
+                    <span class="s2">&quot; with new template? Please enter&quot;</span>
+                    <span class="s1">&#39; &quot;Y&quot; to proceed or &quot;N&quot; to abort.&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span>
+                <span class="p">)</span>
+                <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">choice</span> <span class="o">=</span> <span class="nb">input</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delete existing template for </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">)</span>
+                        <span class="k">break</span>
+                    <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;N&quot;</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Keep existing template.&quot;</span><span class="p">)</span>
+                        <span class="k">break</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Please respond with &#39;Y&#39; or &#39;N&#39;&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">rigorous</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span>
