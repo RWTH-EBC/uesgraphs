@@ -7,6 +7,7 @@ import pandas as pd
 from uesgraphs.uesgraph import UESGraph
 from uesgraphs.systemmodels.templates import UESTemplates
 from uesgraphs.utilities import set_up_file_logger, set_up_terminal_logger
+from uesgraphs.systemmodels import utilities as sysmod_utils
 
 import warnings
 import logging
@@ -191,7 +192,6 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
 
         # Step 10: Estimate nominal mass flow rates for pipes
         logger.info("Estimating nominal mass flow rates based on pipe diameters")
-        from uesgraphs.systemmodels import utilities as sysmod_utils
         uesgraph = sysmod_utils.estimate_m_flow_nominal_tablebased(
             graph=uesgraph,
             network_type=uesgraph.graph.get("network_type", "heating")
@@ -1311,14 +1311,10 @@ def generate_simulation_model(uesgraph, sim_name, sim_params, ground_temp_list, 
     # Set network type
     uesgraph.graph["network_type"] = "heating"
 
-    # NOTE: Parameter assignment (setup_building_parameters, setup_pipe_parameters)
-    # is NO LONGER needed here - already done in main pipeline Steps 6-8!
-
     # Create metadata
     meta_data = create_meta_data(sim_name, sim_params)
 
-    # NOTE: m_flow_nominal estimation is already done in main pipeline Step 10!
-
+  
     # Load template names from Excel sheets (needed for create_model)
     logger.info("Loading template names from Excel configuration")
     pipe_params = load_component_parameters(excel_path=sim_setup_path, component_type='Pipes')
