@@ -165,25 +165,25 @@ class TestE16IntegrationPipeline:
             if not os.path.exists(file_path):
                 pytest.skip(f"Required file not found: {file_path}")
         
-        # Create temporary workspace
-        with tempfile.TemporaryDirectory() as workspace:
-            # Step 1: Import GeoJSON
-            graph = UESGraph()
-            graph.from_geojson(
-                network_path=network_geojson,
-                buildings_path=buildings_geojson,
-                supply_path=supply_geojson,
-                name='test_district',
-                save_path=workspace,
-                generate_visualizations=False
-            )
-            
-            # Verify graph was created
-            assert len(graph.nodelist_building) > 0
-            assert graph.number_of_edges() > 0
-            
-            # Step 2: Run pipeline
+        # Create temporary workspace - ignore cleanup errors on Windows
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as workspace:
             try:
+                # Step 1: Import GeoJSON
+                graph = UESGraph()
+                graph.from_geojson(
+                    network_path=network_geojson,
+                    buildings_path=buildings_geojson,
+                    supply_path=supply_geojson,
+                    name='test_district',
+                    save_path=workspace,
+                    generate_visualizations=False
+                )
+                
+                # Verify graph was created
+                assert len(graph.nodelist_building) > 0
+                assert graph.number_of_edges() > 0
+                
+                # Step 2: Run pipeline
                 uesgraph_to_modelica(
                     uesgraph=graph,
                     simplification_level=0,
@@ -194,22 +194,30 @@ class TestE16IntegrationPipeline:
                     input_cooling=demands_cool,
                     ground_temp_path=ground_temps
                 )
+                
+                # Step 3: Verify output
+                models_dir = os.path.join(workspace, 'models')
+                assert os.path.exists(models_dir), "Models directory was not created"
+                
+                # Check that at least one simulation directory was created
+                sim_dirs = [d for d in os.listdir(models_dir) if d.startswith('Sim')]
+                assert len(sim_dirs) > 0, "No simulation directories were created"
+                
+                # Check that Modelica files were generated - search recursively
+                sim_dir = os.path.join(models_dir, sim_dirs[0])
+                mo_files = []
+                for root, dirs, files in os.walk(sim_dir):
+                    mo_files.extend([f for f in files if f.endswith('.mo')])
+                
+                assert len(mo_files) > 0, f"No Modelica files were generated in {sim_dir}"
+                print(f"✓ Test passed: Found {len(mo_files)} Modelica files")
+                
             except Exception as e:
                 pytest.fail(f"Pipeline failed: {e}")
-
-            # Step 3: Verify output
-            models_dir = os.path.join(workspace, 'models')
-            assert os.path.exists(models_dir), "Models directory was not created"
-
-            # Check that at least one simulation directory was created
-            sim_dirs = [d for d in os.listdir(models_dir) if d.startswith('Sim')]
-            assert len(sim_dirs) > 0, "No simulation directories were created"
-
-            # Check that Modelica files were generated
-            sim_dir = os.path.join(models_dir, sim_dirs[0])
-            mo_files = [f for f in os.listdir(sim_dir) if f.endswith('.mo')]
-            assert len(mo_files) > 0, "No Modelica files were generated"
-
+            finally:
+                # Close all loggers to release file handles
+                import logging
+                logging.shutdown()
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
