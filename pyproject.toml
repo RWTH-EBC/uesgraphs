@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "uesgraphs"
-version = "2.1.1"
+version = "2.1.2"
 description = "Graphs to describe Urban Energy Systems"
 authors = [{name = "Rahul Mohandasan Karuvingal", email = "rahul.karuvingal@eonerc.rwth-aachen.de"}]
 license = {text = "MIT"}
