@@ -189,20 +189,22 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         ground_temp_df = load_ground_temp_data(ground_temp_path)
         logger.debug(f"Ground temperature data loaded of shape: {ground_temp_df.shape}")
 
-        # Step 10: 
+        # Step 10: Estimate nominal mass flow rates for pipes
+        logger.info("Estimating nominal mass flow rates based on pipe diameters")
         from uesgraphs.systemmodels import utilities as sysmod_utils
-
         uesgraph = sysmod_utils.estimate_m_flow_nominal_tablebased(
-            graph = uesgraph,
-            network_type = "heating"
+            graph=uesgraph,
+            network_type=uesgraph.graph.get("network_type", "heating")
         )
-        # Step 10: Simplify the UESGraph according to the specified level
+        logger.info(f"Estimated m_flow_nominal for {uesgraph.number_of_edges()} pipe edges")
+
+        # Step 11: Simplify the UESGraph according to the specified level
         logger.info(f"*** Start simplyfing Uesgraph with simplification level: {simplification_level} ***")
         #logger.info(f"Before simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type='heating')}")
         #uesgraph = simplify_uesgraph(uesgraph, simplification_level)
         #logger.info(f"After simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type='heating')}")
 
-        # Step 11: Save the simplified UESGraph
+        # Step 12: Save the simplified UESGraph
         logger.info("Try to save uesgraph after simplification")
         try:
             uesgraph.to_json(path=str(workspace),
@@ -213,7 +215,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         except Exception as e:
             logger.error(f"Failed to save uesgraph after simplification: {e}")
 
-        # Step 12: Create directory structure for Modelica output files
+        # Step 13: Create directory structure for Modelica output files
         logger.info("Creating subfolder for modelica files")
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         sim_name = f"Sim{timestamp}"
@@ -221,7 +223,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         os.makedirs(sim_model_dir, exist_ok=True)
         logger.info(f"Modelica files will be saved to: {sim_model_dir}")
 
-        # Step 13: Generate Modelica files using new Excel-based simulation parameters
+        # Step 14: Generate Modelica files using Excel-based simulation parameters
         logger.info("Start process of generating Modelica files using Excel parameters")
         sim_name_ix = f"{sim_name}_{str(sim_params['simulation_name'])}"
         logger.info(f"Processing simulation: {sim_params['simulation_name']}")
@@ -1315,16 +1317,7 @@ def generate_simulation_model(uesgraph, sim_name, sim_params, ground_temp_list, 
     # Create metadata
     meta_data = create_meta_data(sim_name, sim_params)
 
-    # Import utilities
-    from uesgraphs.systemmodels import utilities as sysmod_utils
-
-    # Estimate m_flow_nominal
-    logger.info("Estimating nominal mass flow rates from pipe diameters")
-    network_type = uesgraph.graph.get("network_type", "heating")
-    uesgraph = sysmod_utils.estimate_m_flow_nominal_tablebased(
-        graph=uesgraph,
-        network_type=network_type
-    )
+    # NOTE: m_flow_nominal estimation is already done in main pipeline Step 10!
 
     # Load template names from Excel sheets (needed for create_model)
     logger.info("Loading template names from Excel configuration")
