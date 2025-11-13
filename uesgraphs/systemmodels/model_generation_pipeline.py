@@ -112,13 +112,13 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         else:
             raise ValueError(f"Value for uesgraph: {uesgraph} is nor uesgraph object nor valid JSON path")
 
-    # Step 3.5: Write simulation parameters to graph (needed for connector time-series generation)
+    # Step 3.1: Write simulation parameters to graph (needed for connector time-series generation)
     logger.info("Writing simulation parameters to graph")
     uesgraph.graph['stop_time'] = float(sim_params['stop_time'])
     uesgraph.graph['timestep'] = sim_params.get('timestep', 900)  # Default 900s = 15min
     logger.debug(f"Set graph parameters: stop_time={uesgraph.graph['stop_time']}, timestep={uesgraph.graph['timestep']}")
 
-    # Step 3.6: Ensure all edges have names (required for Modelica generation)
+    # Step 3.2: Ensure all edges have names (required for Modelica generation)
     # This is needed because from_geojson() doesn't set edge names automatically,
     # while from_json() does (via pipeID). We need consistent behavior.
     logger.info("Validating and generating edge names if needed")
@@ -141,7 +141,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         logger.info(f"All {edges_total} edges already have names")
 
     try:
-        #Step 4: Assign demand data to the graph nodes
+        # Step 4: Assign demand data to the graph nodes
         logger.info("Assigning demand data")
         input_paths_dict = {
             "heating": input_heating,
@@ -210,7 +210,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
             logger.info("UESGraph after simplification saved")
         except Exception as e:
             logger.error(f"Failed to save uesgraph after simplification: {e}")
-        
+
         # Step 12: Create directory structure for Modelica output files
         logger.info("Creating subfolder for modelica files")
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
