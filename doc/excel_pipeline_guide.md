@@ -22,10 +22,11 @@ The new Excel-based pipeline provides a unified, streamlined approach to generat
 4. [Type Conversion](#type-conversion)
 5. [Connector Handling](#connector-handling)
 6. [Why Step 3.1: Writing stop_time and timestep to the Graph](#why-step-31-writing-stop_time-and-timestep-to-the-graph)
-7. [Using @References](#using-references)
-8. [Complete Workflow Example](#complete-workflow-example)
-9. [Troubleshooting](#troubleshooting)
-10. [Migration from Old Pipeline](#migration-from-old-pipeline)
+7. [Step 10: Estimating Nominal Mass Flow Rates](#step-10-estimating-nominal-mass-flow-rates)
+8. [Using @References](#using-references)
+9. [Complete Workflow Example](#complete-workflow-example)
+10. [Troubleshooting](#troubleshooting)
+11. [Migration from Old Pipeline](#migration-from-old-pipeline)
 
 ---
 
@@ -55,10 +56,11 @@ The pipeline executes the following steps in order:
 7. **Assign supply parameters** from Excel 'Supply' sheet
 8. **Assign demand parameters** from Excel 'Demands' sheet
 9. **Load ground temperature data** for simulations
-10. **Simplify the UESGraph** according to the specified level
-11. **Save the simplified UESGraph**
-12. **Create directory structure** for Modelica output files
-13. **Generate Modelica code** using templates
+10. **Estimate nominal mass flow rates** for pipes based on diameters - *Uses Isoplus table*
+11. **Simplify the UESGraph** according to the specified level
+12. **Save the simplified UESGraph**
+13. **Create directory structure** for Modelica output files
+14. **Generate Modelica code** using templates
 
 Each parameter assignment step (6-8) processes three categories:
 - **MAIN parameters**: Required static parameters (e.g., pReturn, TReturn)
@@ -607,6 +609,82 @@ ValueError: Component supply1: Cannot convert 'TIn' to time-series without time_
 - **Modelica experiment** settings use these values
 
 This design allows users to specify simple constant values in Excel while the pipeline handles the complexity of time-series generation automatically.
+
+---
+
+## Step 10: Estimating Nominal Mass Flow Rates
+
+### Background
+
+In **Step 10** of the pipeline, the nominal mass flow rates (`m_flow_nominal`) are estimated for all pipe edges based on their diameters. This step is executed after parameter assignment (Steps 6-8) and before Modelica code generation (Step 14).
+
+### Why is this needed?
+
+**All pipe templates require `m_flow_nominal`** as a parameter. This value represents the design mass flow rate through each pipe section and is used by Modelica for:
+- Pressure drop calculations
+- Flow initialization
+- Numerical stability
+
+Without `m_flow_nominal`, the Modelica simulation would fail to compile or run.
+
+### How it works
+
+The estimation uses the **Isoplus catalog table** for district heating pipes, which provides recommended mass flow rates for specific pipe diameters assuming an average pressure loss of 70 Pa/m.
+
+**Reference:** [Isoplus Catalogue](http://www.isoplus.de/fileadmin/user_upload/downloads/documents/germany/Catalogue_German/Kapitel_2_Starre_Verbundsysteme.pdf), page 9
+
+**Algorithm:**
+1. For each pipe edge in the network
+2. Read the `diameter` attribute (in meters, from Step 6)
+3. Look up closest diameter in Isoplus table
+4. Assign corresponding `m_flow_nominal` (in kg/s) to the edge
+
+**Example mapping:**
+```python
+diameter = 0.0273 m (27.3 mm)  →  m_flow_nominal = 0.25 kg/s
+diameter = 0.1603 m (160.3 mm) →  m_flow_nominal = 24.58 kg/s
+```
+
+### When it runs
+
+**Position in pipeline:** Step 10 (after Steps 6-8, before Step 14)
+
+**Why here?**
+- **After Step 6**: Pipe parameters including `diameter` are assigned
+- **Before Step 14**: Modelica generation needs `m_flow_nominal`
+- **Before Step 11**: Simplification might modify edges
+
+### Logging output
+
+The step provides clear feedback:
+```
+INFO: Estimating nominal mass flow rates based on pipe diameters
+INFO: Estimated m_flow_nominal for 47 pipe edges
+```
+
+### Custom values
+
+If you want to override the automatic estimation:
+1. **Set `m_flow_nominal` manually before calling the pipeline:**
+   ```python
+   for edge in uesgraph.edges():
+       uesgraph.edges[edge]['m_flow_nominal'] = your_custom_value
+   ```
+
+2. **Or add to Excel 'Pipes' sheet:**
+   ```
+   Parameter: m_flow_nominal
+   Value: 1.5  (or @reference)
+   ```
+
+   If `m_flow_nominal` is already present on an edge, Step 10 will **overwrite** it with the table-based estimate.
+
+### Key Takeaways
+
+- **Step 10 is mandatory** for all simulations using standard pipe templates
+- **Automatic estimation** based on industry-standard Isoplus table
+- **Diameter-based lookup** ensures realistic flow rates
+- **Runs once** in the pipeline (not duplicated in sub-functions)
 
 ---
 
