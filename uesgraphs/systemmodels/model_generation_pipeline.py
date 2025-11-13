@@ -1353,7 +1353,6 @@ def generate_simulation_model_new(uesgraph, sim_name, sim_params, ground_temp_li
 
     logger.info(f"Modelica model generated successfully: {sim_name}")
 
-
 def create_meta_data_new(sim_name, sim_params):
     """Create metadata dictionary from Excel simulation parameters."""
     return {
@@ -1516,7 +1515,6 @@ def validate_paths(paths):
             missing_paths.append(path_str)
             
     return existing_paths, missing_paths
-
 
 def load_ground_temp_data(ground_temp_path):
     try:
