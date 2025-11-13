@@ -139,61 +139,60 @@ class TestE16IntegrationPipeline:
     def test_e16_geojson_to_modelica_pipeline(self):
         """
         Test the complete pipeline from GeoJSON import to Modelica generation.
-
-        This is an integration test that validates the entire workflow including:
-        - GeoJSON import
-        - Excel parameter loading
-        - Connector handling
-        - Type conversion
-        - Modelica code generation
         """
-        # Check if example data exists
-        data_dir = 'uesgraphs/data/examples'
-        geojson_dir = os.path.join(data_dir, 'e15_geojson')
-
+        # Define all paths once
+        data_dir = os.path.join('uesgraphs', 'data')
+        data_examples_dir = os.path.join(data_dir, 'examples')
+        geojson_dir = os.path.join(data_examples_dir, 'e15_geojson')
+        
+        # File paths
+        network_geojson = os.path.join(geojson_dir, 'network.geojson')
+        buildings_geojson = os.path.join(geojson_dir, 'buildings.geojson')
+        supply_geojson = os.path.join(geojson_dir, 'supply.geojson')
+        demands_heat = os.path.join(data_examples_dir, 'demands-heat.csv')
+        demands_dhw = os.path.join(data_examples_dir, 'demands-dhw.csv')
+        demands_cool = os.path.join(data_examples_dir, 'demands-cool.csv')
+        ground_temps = os.path.join(data_examples_dir, 'ground_temps_hassel.csv')
+        params_template = os.path.join(data_dir, 'uesgraphs_parameters_template.xlsx')
+        
+        # Check if all required files exist
         required_files = [
-            os.path.join(geojson_dir, 'network.geojson'),
-            os.path.join(geojson_dir, 'buildings.geojson'),
-            os.path.join(geojson_dir, 'supply.geojson'),
-            os.path.join(data_dir, 'demands-heat.csv'),
-            os.path.join(data_dir, 'demands-dhw.csv'),
-            os.path.join(data_dir, 'demands-cool.csv'),
-            os.path.join(data_dir, 'ground_temps_hassel.csv'),
-            'uesgraphs/data/uesgraphs_parameters_template.xlsx'
+            network_geojson, buildings_geojson, supply_geojson,
+            demands_heat, demands_dhw, demands_cool, 
+            ground_temps, params_template
         ]
-
         for file_path in required_files:
             if not os.path.exists(file_path):
                 pytest.skip(f"Required file not found: {file_path}")
-
+        
         # Create temporary workspace
         with tempfile.TemporaryDirectory() as workspace:
             # Step 1: Import GeoJSON
             graph = UESGraph()
             graph.from_geojson(
-                network_path=os.path.join(geojson_dir, 'network.geojson'),
-                buildings_path=os.path.join(geojson_dir, 'buildings.geojson'),
-                supply_path=os.path.join(geojson_dir, 'supply.geojson'),
+                network_path=network_geojson,
+                buildings_path=buildings_geojson,
+                supply_path=supply_geojson,
                 name='test_district',
                 save_path=workspace,
                 generate_visualizations=False
             )
-
+            
             # Verify graph was created
             assert len(graph.nodelist_building) > 0
             assert graph.number_of_edges() > 0
-
+            
             # Step 2: Run pipeline
             try:
                 uesgraph_to_modelica(
                     uesgraph=graph,
                     simplification_level=0,
                     workspace=workspace,
-                    sim_setup_path='uesgraphs/data/uesgraphs_parameters_template.xlsx',
-                    input_heating=os.path.join(data_dir, 'demands-heat.csv'),
-                    input_dhw=os.path.join(data_dir, 'demands-dhw.csv'),
-                    input_cooling=os.path.join(data_dir, 'demands-cool.csv'),
-                    ground_temp_path=os.path.join(data_dir, 'ground_temps_hassel.csv')
+                    sim_setup_path=params_template,
+                    input_heating=demands_heat,
+                    input_dhw=demands_dhw,
+                    input_cooling=demands_cool,
+                    ground_temp_path=ground_temps
                 )
             except Exception as e:
                 pytest.fail(f"Pipeline failed: {e}")
