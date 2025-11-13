@@ -5,12 +5,12 @@
 The new Excel-based pipeline provides a unified, streamlined approach to generating Modelica simulation models from UESGraph district heating networks. All configuration is centralized in a single Excel file (`uesgraphs_parameters_template.xlsx`), making it easy to configure and manage simulation parameters, component properties, and time-series inputs.
 
 **Key improvements over the old system:**
-- ✅ Single Excel file for all configuration
-- ✅ Automatic handling of connectors (time-series inputs)
-- ✅ Intelligent type conversion (scientific notation, booleans)
-- ✅ Clear parameter priorities (graph → Excel → defaults)
-- ✅ Better validation with helpful error messages
-- ✅ Support for @references to link parameters
+- Single Excel file for all configuration
+- Automatic handling of connectors (time-series inputs)
+- Intelligent type conversion (scientific notation, booleans)
+- Clear parameter priorities (graph → Excel → defaults)
+- Better validation with helpful error messages
+- Support for @references to link parameters
 
 ---
 
@@ -21,10 +21,11 @@ The new Excel-based pipeline provides a unified, streamlined approach to generat
 3. [Parameter Types and Priorities](#parameter-types-and-priorities)
 4. [Type Conversion](#type-conversion)
 5. [Connector Handling](#connector-handling)
-6. [Using @References](#using-references)
-7. [Complete Workflow Example](#complete-workflow-example)
-8. [Troubleshooting](#troubleshooting)
-9. [Migration from Old Pipeline](#migration-from-old-pipeline)
+6. [Why Step 3.1: Writing stop_time and timestep to the Graph](#why-step-31-writing-stop_time-and-timestep-to-the-graph)
+7. [Using @References](#using-references)
+8. [Complete Workflow Example](#complete-workflow-example)
+9. [Troubleshooting](#troubleshooting)
+10. [Migration from Old Pipeline](#migration-from-old-pipeline)
 
 ---
 
@@ -43,18 +44,23 @@ GeoJSON Files → UESGraph → Parameter Assignment → Modelica Generation
 
 The pipeline executes the following steps in order:
 
-1. **Load simulation settings** from Excel 'Simulation' sheet
-2. **Import or load UESGraph** from GeoJSON or JSON file
-3. **Write simulation parameters to graph** (stop_time, timestep)
-4. **Generate edge names** if missing (required for Modelica)
-5. **Assign demand data** from CSV files to building nodes
+1. **Validate input files and folders** - Check that all required files exist
+2. **Load simulation settings** from Excel 'Simulation' sheet
+3. **Initialize or load UESGraph** from GeoJSON or JSON file
+   - 3.1: **Write simulation parameters to graph** (stop_time, timestep) - *Required for connector time-series generation*
+   - 3.2: **Generate edge names** if missing - *Required for Modelica generation*
+4. **Assign demand data** from CSV files to building nodes
+5. **Save the UESGraph** with added demand data
 6. **Assign pipe parameters** from Excel 'Pipes' sheet
 7. **Assign supply parameters** from Excel 'Supply' sheet
 8. **Assign demand parameters** from Excel 'Demands' sheet
-9. **Validate all parameters** (MAIN required, AUX optional, CONNECTORS required)
-10. **Generate Modelica code** using templates
+9. **Load ground temperature data** for simulations
+10. **Simplify the UESGraph** according to the specified level
+11. **Save the simplified UESGraph**
+12. **Create directory structure** for Modelica output files
+13. **Generate Modelica code** using templates
 
-Each parameter assignment step processes three categories:
+Each parameter assignment step (6-8) processes three categories:
 - **MAIN parameters**: Required static parameters (e.g., pReturn, TReturn)
 - **AUX parameters**: Optional static parameters (e.g., allowFlowReversal)
 - **CONNECTORS**: Required time-series inputs (e.g., TIn, dpIn)
@@ -148,9 +154,9 @@ Each Modelica template defines three categories of parameters:
 
 | Category | Required? | Validation | Default Behavior |
 |----------|-----------|------------|------------------|
-| **MAIN** | ✅ Yes | ValueError if missing | No defaults |
-| **AUX** | ❌ No | UserWarning if missing | Modelica defaults used |
-| **CONNECTORS** | ✅ Yes | ValueError if missing | No defaults |
+| **MAIN** | Yes | ValueError if missing | No defaults |
+| **AUX** | No | UserWarning if missing | Modelica defaults used |
+| **CONNECTORS** | Yes | ValueError if missing | No defaults |
 
 ### Parameter Priority (What Overwrites What?)
 
@@ -225,10 +231,10 @@ pReturn = '1e5'  # From Excel
 
 ### Edge Cases Handled
 
-✅ Template names with dots: `AixLib.Fluid.DistrictHeating...` → stays string
-✅ @references: `@diameter` → stays string
-✅ File paths: `/home/user/template.mako` → stays string
-✅ Mixed notation: `1.5e3` → 1500.0
+- Template names with dots: `AixLib.Fluid.DistrictHeating...` → stays string
+- @references: `@diameter` → stays string
+- File paths: `/home/user/template.mako` → stays string
+- Mixed notation: `1.5e3` → 1500.0
 
 ---
 
@@ -359,10 +365,10 @@ connect(networkModel.${name_demand}Q_flow_input, ${name_demand}Table.y[1])
 #### Why This Convention Exists
 
 The demand system is **hardcoded** for historical reasons:
-- ✅ **Backward compatible** with existing workflows
-- ✅ **Proven system** used in production
-- ✅ **Automatic file generation** without manual specification
-- ⚠️ **Less flexible** than supply system (which uses dynamic connector names)
+- **Backward compatible** with existing workflows
+- **Proven system** used in production
+- **Automatic file generation** without manual specification
+- **Less flexible** than supply system (which uses dynamic connector names)
 
 #### Configuration Example
 
@@ -442,6 +448,168 @@ Note: Scalar values are automatically converted to constant time-series.
 
 ---
 
+## Why Step 3.1: Writing stop_time and timestep to the Graph
+
+### Background
+
+In **Step 3.1** of the pipeline, the simulation parameters `stop_time` and `timestep` are written to the UESGraph:
+
+```python
+# Step 3.1: Write simulation parameters to graph
+uesgraph.graph['stop_time'] = float(sim_params['stop_time'])
+uesgraph.graph['timestep'] = sim_params.get('timestep', 900)  # Default 900s = 15min
+```
+
+This step is **critical** for the connector time-series generation that happens later in Steps 6-8.
+
+### The Problem: Connectors Need Time-Series
+
+Connector parameters (like `TIn`, `dpIn`, `Q_flow_input`) must be provided as **time-series** to Modelica models, not as scalar values. However, in most cases, users want to specify simple **constant values** in Excel:
+
+```
+Excel: Supply Sheet
+Parameter    Value
+TIn          353.15    # Just a single temperature value
+```
+
+The pipeline needs to convert this scalar value into a full time-series array that matches the simulation duration.
+
+### The Solution: Automatic Scalar-to-Time-Series Conversion
+
+#### Step 1: Time Array Calculation
+
+In Steps 6-8 (`assign_pipe_parameters`, `assign_supply_parameters`, `assign_demand_parameters`), the pipeline reads `stop_time` and `timestep` from the graph to calculate a **time array**:
+
+```python
+# Example from assign_supply_parameters() - Line 610-613
+stop_time = uesgraph.graph.get('stop_time')
+timestep = uesgraph.graph.get('timestep')
+if stop_time and timestep:
+    time_array = [x * timestep for x in range(int((stop_time / timestep) + 1))]
+```
+
+**Example calculation**:
+```python
+stop_time = 3600  # 1 hour
+timestep = 900    # 15 minutes
+
+# Result:
+time_array = [0, 900, 1800, 2700, 3600]  # 5 timesteps
+```
+
+#### Step 2: Scalar Value Conversion
+
+When a connector parameter is found with a scalar value, it gets automatically expanded to a **constant time-series**:
+
+```python
+# From _process_component_connectors() - Line 403
+if isinstance(value, (int, float)):
+    component_data[connector] = [value] * len(time_array)
+```
+
+**Example**:
+```python
+# Input from Excel:
+TIn = 353.15  # Single value
+
+# After conversion:
+TIn = [353.15, 353.15, 353.15, 353.15, 353.15]  # Matches time_array length
+```
+
+#### Step 3: Usage in SystemModelHeating
+
+The `stop_time` and `timestep` values are then transferred from the UESGraph to the `SystemModelHeating` object in `utilities.py:274-275`:
+
+```python
+new_model = SystemModelHeating(network_type=graph.graph["network_type"])
+new_model.stop_time = stop_time  # From create_model() parameter
+new_model.timestep = timestep    # From create_model() parameter
+```
+
+These values are used to:
+1. **Calculate the time property** for the model (Line 187-190 in `systemmodelheating.py`):
+   ```python
+   @property
+   def time(self):
+       if self.stop_time is not None and self.timestep is not None:
+           number_of_timesteps = int((self.stop_time / self.timestep) + 1)
+           self.__time = [x * self.timestep for x in range(number_of_timesteps)]
+       return self.__time
+   ```
+
+2. **Generate Modelica experiment annotations** (Line 1360-1361 in `systemmodelheating.py`):
+   ```python
+   experiment = template_experiment.render_unicode(
+       stop_time=self.stop_time,
+       interval=self.timestep,
+       solver=self.solver,
+       tolerance=self.tolerance,
+   )
+   ```
+
+### Complete Example
+
+**Scenario**: 1-day simulation with 15-minute timesteps
+
+```python
+# Excel: Simulation sheet
+stop_time = 86400   # 1 day in seconds
+timestep = 900      # 15 minutes
+
+# Excel: Supply sheet
+TIn = 353.15       # Constant supply temperature
+```
+
+**Pipeline processing**:
+
+```python
+# Step 3.1: Write to graph
+uesgraph.graph['stop_time'] = 86400.0
+uesgraph.graph['timestep'] = 900
+
+# Step 7: assign_supply_parameters()
+time_array = [0, 900, 1800, ..., 86400]  # 97 timesteps
+
+# Connector conversion
+TIn = 353.15  # From Excel
+→ TIn = [353.15, 353.15, ..., 353.15]  # 97 values
+
+# Step 13: Modelica generation
+# Creates CSV file with time-series:
+# workspace/models/.../supply1TIn.csv
+#   0,353.15
+#   900,353.15
+#   1800,353.15
+#   ...
+#   86400,353.15
+```
+
+### What Happens Without Step 3.1?
+
+If `stop_time` and `timestep` are not written to the graph, you'll get this warning:
+
+```
+WARNING: Connectors found but no time_array available (stop_time/timestep not set)
+```
+
+And the connector conversion will **fail**, causing a `ValueError`:
+
+```
+ValueError: Component supply1: Cannot convert 'TIn' to time-series without time_array
+```
+
+### Key Takeaways
+
+- **Step 3.1 is mandatory** for connector functionality
+- **stop_time and timestep** define the simulation timeframe
+- **Scalar values** are automatically expanded to time-series
+- **Time-series length** must match the simulation duration
+- **Modelica experiment** settings use these values
+
+This design allows users to specify simple constant values in Excel while the pipeline handles the complexity of time-series generation automatically.
+
+---
+
 ## Using @References
 
 ### What Are @References?
@@ -507,10 +675,10 @@ resolved_value = uesgraph.nodes['supply1']['design_temp']  # → 353.15
 
 ### @Reference Rules
 
-✅ **Works for**: Node attributes, edge attributes, programmatically set values
-✅ **Works on**: MAIN, AUX, and CONNECTOR parameters
-✅ **Type handling**: Resolved value is checked for type (scalar vs list)
-❌ **Error if missing**: `ValueError` if referenced attribute doesn't exist
+- **Works for**: Node attributes, edge attributes, programmatically set values
+- **Works on**: MAIN, AUX, and CONNECTOR parameters
+- **Type handling**: Resolved value is checked for type (scalar vs list)
+- **Error if missing**: `ValueError` if referenced attribute doesn't exist
 
 ### Error Handling
 
@@ -663,9 +831,9 @@ TypeError: type str doesn't define __round__ method
 **Cause**: Excel cell formatted as "Text" instead of number.
 
 **Solution**:
-- ✅ **Automatic**: The new pipeline handles this automatically!
-- ✅ Scientific notation `1e5` is converted to `100000.0`
-- ✅ Booleans `TRUE`/`FALSE` are converted to `True`/`False`
+- **Automatic**: The new pipeline handles this automatically!
+- Scientific notation `1e5` is converted to `100000.0`
+- Booleans `TRUE`/`FALSE` are converted to `True`/`False`
 
 If error persists, check that `load_component_parameters()` is being used (not old loading method).
 
@@ -722,7 +890,7 @@ will use Modelica defaults: allowFlowReversal, linearized, ...
 
 **Cause**: Optional (AUX) parameters not specified.
 
-**Impact**: ⚠️ **This is OK!** Modelica will use default values.
+**Impact**: **This is acceptable.** Modelica will use default values.
 
 **If you want to customize**:
 1. Add parameters to Excel sheet
@@ -829,10 +997,10 @@ uesgraph_to_modelica(
 ```
 
 **Benefits**:
-- ✅ 90% less code
-- ✅ Centralized configuration
-- ✅ Better error handling
-- ✅ Automatic connector support
+- 90% less code
+- Centralized configuration
+- Better error handling
+- Automatic connector support
 
 ---
 
@@ -888,13 +1056,13 @@ T_b1_nominal = @supply_temp  # Different per building
 
 ### Key Takeaways
 
-✅ **Single Excel file** for all configuration
-✅ **Automatic connector handling** with scalar→time-series conversion
-✅ **Intelligent type conversion** (scientific notation, booleans)
-✅ **Clear parameter priorities**: Graph > Excel > Modelica defaults
-✅ **@References** for linking parameters to graph attributes
-✅ **Comprehensive validation** with helpful error messages
-✅ **Seamless GeoJSON workflow** with e16 example
+- **Single Excel file** for all configuration
+- **Automatic connector handling** with scalar→time-series conversion
+- **Intelligent type conversion** (scientific notation, booleans)
+- **Clear parameter priorities**: Graph > Excel > Modelica defaults
+- **@References** for linking parameters to graph attributes
+- **Comprehensive validation** with helpful error messages
+- **Seamless GeoJSON workflow** with e16 example
 
 ### Next Steps
 
