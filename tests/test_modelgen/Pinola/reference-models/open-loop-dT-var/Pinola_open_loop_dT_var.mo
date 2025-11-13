@@ -1,5 +1,5 @@
 model Pinola_open_loop_dT_var
-  "Model automatically generated with uesgraphs version 2.1.1 at 2025-08-21 10:54:36.389046"
+  "Model automatically generated with uesgraphs version 2.1.1 at 2025-11-13 13:09:42.111265"
 
   package Medium = AixLib.Media.Specialized.Water.ConstantProperties_pT(
     T_nominal=353.15,
@@ -14,14 +14,14 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={0.0,114.2857})));
+      origin={0.0,114.2857142857})));
 
   Modelica.Blocks.Interfaces.RealInput S1TIn
     annotation(Placement(
       transformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
-        origin={25.0,139.2857}),
+        origin={25.0,139.2857142857}),
       iconTransformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
@@ -33,7 +33,7 @@ model Pinola_open_loop_dT_var
       transformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
-        origin={25.0,129.2857}),
+        origin={25.0,129.2857142857}),
       iconTransformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
@@ -48,14 +48,14 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={380.9524,0.0})));
+      origin={380.9523809524,0.0})));
 
   Modelica.Blocks.Interfaces.RealInput S2TIn
     annotation(Placement(
       transformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
-        origin={405.9524,25.0}),
+        origin={405.9523809524,25.0}),
       iconTransformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
@@ -67,7 +67,7 @@ model Pinola_open_loop_dT_var
       transformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
-        origin={405.9524,15.0}),
+        origin={405.9523809524,15.0}),
       iconTransformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
@@ -76,21 +76,21 @@ model Pinola_open_loop_dT_var
 
   AixLib.Fluid.DistrictHeatingCooling.Demands.OpenLoop.VarTSupplyDp demandB1(
     redeclare package Medium = Medium,
-    Q_flow_nominal = 22719.1187,
+    Q_flow_nominal = 22719.1187448,
     dTDesign = 30,
     TReturn = 323.15
     )
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={64.7619,217.1429})));
+      origin={64.7619047619,217.1428571429})));
 
   Modelica.Blocks.Interfaces.RealInput B1Q_flow_input
     annotation(Placement(
       transformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
-        origin={89.7619,242.1429}),
+        origin={89.7619047619,242.1428571429}),
       iconTransformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
@@ -106,14 +106,14 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={285.7143,285.7143})));
+      origin={285.7142857143,285.7142857143})));
 
   Modelica.Blocks.Interfaces.RealInput B2Q_flow_input
     annotation(Placement(
       transformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
-        origin={310.7143,310.7143}),
+        origin={310.7142857143,310.7142857143}),
       iconTransformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
@@ -129,14 +129,14 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={400.0,95.2381})));
+      origin={400.0,95.2380952381})));
 
   Modelica.Blocks.Interfaces.RealInput B3Q_flow_input
     annotation(Placement(
       transformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
-        origin={425.0,120.2381}),
+        origin={425.0,120.2380952381}),
       iconTransformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
@@ -154,7 +154,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={47.619,152.381})));
+      origin={47.619047619,152.380952381})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe1R(
     redeclare package Medium = Medium,
@@ -167,7 +167,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={42.619,147.381})));
+      origin={42.619047619,147.380952381})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe5(
     redeclare package Medium = Medium,
@@ -180,7 +180,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={371.4286,38.0952})));
+      origin={371.4285714286,38.0952380952})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe5R(
     redeclare package Medium = Medium,
@@ -193,7 +193,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={366.4286,33.0952})));
+      origin={366.4285714286,33.0952380952})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe6(
     redeclare package Medium = Medium,
@@ -206,7 +206,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={80.0,203.8095})));
+      origin={80.0,203.8095238095})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe6R(
     redeclare package Medium = Medium,
@@ -219,7 +219,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={75.0,198.8095})));
+      origin={75.0,198.8095238095})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe7(
     redeclare package Medium = Medium,
@@ -232,7 +232,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={285.7143,266.6667})));
+      origin={285.7142857143,266.6666666667})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe7R(
     redeclare package Medium = Medium,
@@ -245,7 +245,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={280.7143,261.6667})));
+      origin={280.7142857143,261.6666666667})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe8(
     redeclare package Medium = Medium,
@@ -258,7 +258,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={380.9524,85.7143})));
+      origin={380.9523809524,85.7142857143})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe8R(
     redeclare package Medium = Medium,
@@ -271,7 +271,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={375.9524,80.7143})));
+      origin={375.9523809524,80.7142857143})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe2(
     redeclare package Medium = Medium,
@@ -284,7 +284,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={190.4762,219.0476})));
+      origin={190.4761904762,219.0476190476})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe2R(
     redeclare package Medium = Medium,
@@ -297,7 +297,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={185.4762,214.0476})));
+      origin={185.4761904762,214.0476190476})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe4(
     redeclare package Medium = Medium,
@@ -310,7 +310,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={228.5714,133.3333})));
+      origin={228.5714285714,133.3333333333})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe4R(
     redeclare package Medium = Medium,
@@ -323,7 +323,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={223.5714,128.3333})));
+      origin={223.5714285714,128.3333333333})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe3(
     redeclare package Medium = Medium,
@@ -336,7 +336,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={323.8095,161.9048})));
+      origin={323.8095238095,161.9047619048})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe3R(
     redeclare package Medium = Medium,
@@ -349,7 +349,7 @@ model Pinola_open_loop_dT_var
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={318.8095,156.9048})));
+      origin={318.8095238095,156.9047619048})));
 
   Modelica.Thermal.HeatTransfer.Sources.PrescribedTemperature TGround
     "Ground temperature for network"
@@ -462,7 +462,7 @@ equation
       <p>Network model generated with uesgraphs</p>
       </html>", revisions="<html>
       <ul>
-        <li><i>August 21, 2025&nbsp;</i> uesgraphs v2.1.1:<br/>Auto-generated.</li>
+        <li><i>November 13, 2025&nbsp;</i> uesgraphs v2.1.1:<br/>Auto-generated.</li>
       </ul>
       </html>"
     ),
