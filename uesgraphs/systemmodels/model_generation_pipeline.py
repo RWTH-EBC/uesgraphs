@@ -189,6 +189,13 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         ground_temp_df = load_ground_temp_data(ground_temp_path)
         logger.debug(f"Ground temperature data loaded of shape: {ground_temp_df.shape}")
 
+        # Step 10: 
+        from uesgraphs.systemmodels import utilities as sysmod_utils
+
+        uesgraph = sysmod_utils.estimate_m_flow_nominal_tablebased(
+            graph = uesgraph,
+            network_type = "heating"
+        )
         # Step 10: Simplify the UESGraph according to the specified level
         logger.info(f"*** Start simplyfing Uesgraph with simplification level: {simplification_level} ***")
         #logger.info(f"Before simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type='heating')}")
