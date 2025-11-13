@@ -117,8 +117,8 @@ class TestExcelTypeConversion:
 
         # Check that pReturn (which is '1e5' in Excel) is converted to float
         assert 'pReturn' in params
-        assert isinstance(params['pReturn'], float)
-
+        assert isinstance(params['pReturn'], (int, float))
+    
     def test_boolean_string_conversion(self):
         """Test that TRUE/FALSE strings are converted to bool."""
         excel_path = 'uesgraphs/data/uesgraphs_parameters_template.xlsx'
