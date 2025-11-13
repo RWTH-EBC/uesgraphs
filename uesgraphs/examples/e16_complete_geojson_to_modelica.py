@@ -109,7 +109,7 @@ def main():
     # =========================================================================
     # STEP 1: Setup Workspace and Paths
     # =========================================================================
-    print("\n📁 STEP 1: Setting up workspace and paths...")
+    print("\n STEP 1: Setting up workspace and paths...")
 
     # Create workspace directory for this example
     workspace = workspace_example("e16")
@@ -235,10 +235,6 @@ if __name__ == "__main__":
     print("="*80)
 
     main()
-
-    # Show optional features
-    demo_alternative_usage()
-    demo_simplification()
 
     print("\n" + "="*80)
     print("Example script completed. Check your workspace for outputs!")
