@@ -514,6 +514,8 @@ def assign_pipe_parameters(uesgraph, excel_path, logger=None):
         edge_data = uesgraph.edges[edge]
         logger.debug(f"Processing edge {edge_idx}/{total_edges}: {edge}")
 
+        if template_path is not None:
+            uesgraph.edges[edge]['template_path'] = str(template_path)
         # Process parameters
         missing_main, missing_aux, stats = _process_component_parameters(
             edge, edge_data, main_parameters, aux_parameters,
@@ -640,6 +642,9 @@ def assign_supply_parameters(uesgraph, excel_path, logger=None):
         node_data = uesgraph.nodes[node]
         logger.debug(f"Processing supply node {node_idx}/{total_nodes}: {node}")
 
+        if template_path is not None:
+            uesgraph.nodes[node]['template_path'] = str(template_path)
+        
         # Process parameters
         missing_main, missing_aux, stats = _process_component_parameters(
             node, node_data, main_parameters, aux_parameters,
@@ -771,6 +776,9 @@ def assign_demand_parameters(uesgraph, excel_path, logger=None):
             node, node_data, main_parameters, aux_parameters,
             excel_params, logger
         )
+
+        if template_path is not None:
+            uesgraph.nodes[node]['template_path'] = str(template_path)
 
         # Process connectors
         missing_connectors, connector_stats = _process_component_connectors(
