@@ -65,8 +65,22 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
     # Set up logging configuration
     if logger is None:
         logger = set_up_file_logger("ModelicaCodeGen", level=int(log_level))
-    
-    # Step 1: Validate input files and folders    logger.info("Validating files")
+
+    # Step 0: Resolve all paths to absolute paths (prevents issues with os.chdir in to_json)
+    logger.debug("Resolving all input paths to absolute paths")
+    workspace = os.path.abspath(str(workspace))
+    sim_setup_path = os.path.abspath(str(sim_setup_path))
+    input_heating = os.path.abspath(str(input_heating))
+    input_dhw = os.path.abspath(str(input_dhw))
+    input_cooling = os.path.abspath(str(input_cooling))
+    ground_temp_path = os.path.abspath(str(ground_temp_path))
+
+    logger.debug(f"Resolved workspace: {workspace}")
+    logger.debug(f"Resolved sim_setup_path: {sim_setup_path}")
+    logger.debug(f"Resolved ground_temp_path: {ground_temp_path}")
+
+    # Step 1: Validate input files and folders
+    logger.info("Validating files")
     paths_to_check = [sim_setup_path, input_heating, input_dhw, input_cooling, ground_temp_path]
     existing_files, missing_files = validate_paths(paths_to_check)
     if missing_files:
