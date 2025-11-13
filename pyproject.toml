@@ -26,16 +26,19 @@ dependencies = [
     "pyarrow",
     "ipykernel",
     "scipy",
-    "pytest>=6.0",
-    "pytest-mpl>=0.12",
-    "pytest-cov>=4.0.0,<5.0.0",
-    "coverage>=7.0.0,<8.0.0",
     "tomli>=1.2.0;python_version<'3.11'",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pyyaml",
+    "pytest>=6.0",
+    "pytest-mpl>=0.12",
+    "pytest-cov>=4.0.0,<5.0.0",
+    "coverage>=7.0.0,<8.0.0",
+]
+modelica = [
+    "OMPython>=3.4.0",
 ]
 
 [project.urls]
@@ -45,7 +48,23 @@ repository = "https://github.com/RWTH-EBC/uesgraphs"
 compatible_aixlib_version = "2.1.1"
 
 [tool.setuptools]
-packages = ["uesgraphs"]
+packages = ["uesgraphs", "uesgraphs.analyze", "uesgraphs.analyze.data_handling", 
+            "uesgraphs.examples", "uesgraphs.systemmodels", "uesgraphs.uesmodels", 
+            "uesgraphs.uesmodels.utilities"]
+
+[tool.setuptools.package-data]
+uesgraphs = [
+    "data/**/*",
+    "data/templates/**/*.mako",
+    "data/pipe_catalogs/*.csv",
+    "data/examples/**/*"
+]
+
+[tool.setuptools.exclude-package-data]
+uesgraphs = [
+    "**/__pycache__",
+    "**/*.pyc"
+]
 
 [tool.pytest.ini_options]
 #addopts = "--ignore=tests/test_modelgen.py --ignore=tests/test_uesmodel.py"

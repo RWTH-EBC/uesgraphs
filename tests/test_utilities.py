@@ -46,11 +46,18 @@ class TestUtilities:
         os.chdir(original_cwd)
     
     def test_name_uesgraph_function(self):
-        """Test name_uesgraph function (though it has a bug)"""
-        # This function has a bug - it tries to access make_workspace.name_workspace
-        # which doesn't exist. Testing the current behavior.
-        with pytest.raises(AttributeError):
-            name_uesgraph("test_workspace")
+        """Test name_uesgraph function"""
+        # Test with a workspace name provided
+        result = name_uesgraph("test_workspace")
+        assert result == "test_workspace"
+        
+        # Test with None (should return default)
+        result = name_uesgraph(None)
+        assert result == "Project"
+        
+        # Test with no argument (should return default)
+        result = name_uesgraph()
+        assert result == "Project"
     
     def test_set_up_terminal_logger_basic(self):
         """Test basic terminal logger setup"""

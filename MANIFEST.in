@@ -1,0 +1,28 @@
+# Include documentation files
+include README.md
+include LICENSE.md
+include CONTRIBUTING.md
+
+# Include data files
+recursive-include uesgraphs/data *
+recursive-include uesgraphs/data/templates *.mako
+recursive-include uesgraphs/data/pipe_catalogs *.csv
+recursive-include uesgraphs/data/examples *
+
+# Exclude compiled Python files
+global-exclude __pycache__
+global-exclude *.py[co]
+global-exclude *.so
+global-exclude *.dylib
+
+# Exclude test and workspace directories
+recursive-exclude tests *
+recursive-exclude workspace *
+recursive-exclude docs *
+recursive-exclude joss *
+
+# Exclude version control and IDE files
+global-exclude .git*
+global-exclude .vscode
+global-exclude .idea
+global-exclude *.egg-info

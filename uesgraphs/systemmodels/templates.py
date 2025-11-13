@@ -389,22 +389,29 @@ class UESTemplates:
 
     def _save_to_mako(self, template_str):
         if os.path.isfile(self.save_path) and self.rigorous == False:
-            print(
-                "Template for class %s already exists. Do you want to replace it"
-                " with new template? Please enter"
-                ' "Y" to proceed or "N" to abort.' % self.model_name
-            )
-            while True:
-                choice = input()
-                if choice == "Y":
-                    print("Delete existing template for %s." % self.model_name)
-                    os.remove(self.save_path)
-                    break
-                elif choice == "N":
-                    print("Keep existing template.")
-                    break
-                else:
-                    sys.stdout.write("Please respond with 'Y' or 'N'")
+            # Check if running in non-interactive environment (CI/CD, automated scripts)
+            if not sys.stdin.isatty():
+                # Non-interactive mode: auto-overwrite
+                print(f"Non-interactive mode detected: Overwriting existing template for {self.model_name}")
+                os.remove(self.save_path)
+            else:
+                # Interactive mode: ask user
+                print(
+                    "Template for class %s already exists. Do you want to replace it"
+                    " with new template? Please enter"
+                    ' "Y" to proceed or "N" to abort.' % self.model_name
+                )
+                while True:
+                    choice = input()
+                    if choice == "Y":
+                        print("Delete existing template for %s." % self.model_name)
+                        os.remove(self.save_path)
+                        break
+                    elif choice == "N":
+                        print("Keep existing template.")
+                        break
+                    else:
+                        sys.stdout.write("Please respond with 'Y' or 'N'")
 
         if not os.path.isfile(self.save_path) or self.rigorous == True:
             print(
