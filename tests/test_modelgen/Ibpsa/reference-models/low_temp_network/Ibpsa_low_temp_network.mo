@@ -1,5 +1,5 @@
 model Ibpsa_low_temp_network
-  "Model automatically generated with uesgraphs version 2.1.1 at 2025-08-21 10:54:38.499819"
+  "Model automatically generated with uesgraphs version 2.1.1 at 2025-11-13 13:35:21.415237"
 
   package Medium = AixLib.Media.Specialized.Water.ConstantProperties_pT(
     T_nominal=288.15,
@@ -22,14 +22,14 @@ model Ibpsa_low_temp_network
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={400.0,112.5926})));
+      origin={400.0,112.5925925926})));
 
   Modelica.Blocks.Interfaces.RealInput supplyTIn
     annotation(Placement(
       transformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
-        origin={425.0,137.5926}),
+        origin={425.0,137.5925925926}),
       iconTransformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
@@ -41,7 +41,7 @@ model Ibpsa_low_temp_network
       transformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
-        origin={425.0,127.5926}),
+        origin={425.0,127.5925925926}),
       iconTransformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
@@ -52,7 +52,7 @@ model Ibpsa_low_temp_network
     redeclare package MediumBuilding = MediumBuilding,
     redeclare package Medium = Medium,
     dp_nominal = 50000,
-    Q_flow_nominal = 22719.1187,
+    Q_flow_nominal = 22719.1187448,
     dTDesign = 10,
     TReturn = 283.15,
     dTBuilding = 10,
@@ -61,14 +61,14 @@ model Ibpsa_low_temp_network
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={0.0,337.7778})));
+      origin={0.0,337.7777777778})));
 
   Modelica.Blocks.Interfaces.RealInput point_2Q_flow_input
     annotation(Placement(
       transformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
-        origin={25.0,362.7778}),
+        origin={25.0,362.7777777778}),
       iconTransformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
@@ -115,14 +115,14 @@ model Ibpsa_low_temp_network
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={59.2593,198.5185})));
+      origin={59.2592592593,198.5185185185})));
 
   Modelica.Blocks.Interfaces.RealInput point_4Q_flow_input
     annotation(Placement(
       transformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
-        origin={84.2593,223.5185}),
+        origin={84.2592592593,223.5185185185}),
       iconTransformation(
         extent={{-2,-2},{2,2}},
         rotation=0,
@@ -135,7 +135,7 @@ model Ibpsa_low_temp_network
     cPip = 500,
     rhoPip = 8000,
     thickness = 0.0032,
-    R = 4.7636,
+    R = 4.76363,
     fac = 1,
     length = 115,
     dIns = 0.045,
@@ -144,7 +144,7 @@ model Ibpsa_low_temp_network
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={229.6296,112.5926})));
+      origin={229.6296296296,112.5925925926})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe10011005R(
     redeclare package Medium = Medium,
@@ -152,7 +152,7 @@ model Ibpsa_low_temp_network
     cPip = 500,
     rhoPip = 8000,
     thickness = 0.0032,
-    R = 4.7636,
+    R = 4.76363,
     fac = 1,
     length = 115,
     dIns = 0.045,
@@ -161,7 +161,7 @@ model Ibpsa_low_temp_network
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={224.6296,107.5926})));
+      origin={224.6296296296,107.5925925926})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe10021006(
     redeclare package Medium = Medium,
@@ -169,7 +169,7 @@ model Ibpsa_low_temp_network
     cPip = 500,
     rhoPip = 8000,
     thickness = 0.0032,
-    R = 5.0699,
+    R = 5.06989,
     fac = 1,
     length = 76,
     dIns = 0.045,
@@ -178,7 +178,7 @@ model Ibpsa_low_temp_network
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={0.0,225.1852})));
+      origin={0.0,225.1851851852})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe10021006R(
     redeclare package Medium = Medium,
@@ -186,7 +186,7 @@ model Ibpsa_low_temp_network
     cPip = 500,
     rhoPip = 8000,
     thickness = 0.0032,
-    R = 5.0699,
+    R = 5.06989,
     fac = 1,
     length = 76,
     dIns = 0.045,
@@ -195,7 +195,7 @@ model Ibpsa_low_temp_network
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={-5.0,220.1852})));
+      origin={-5.0,220.1851851852})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe10031006(
     redeclare package Medium = Medium,
@@ -203,7 +203,7 @@ model Ibpsa_low_temp_network
     cPip = 500,
     rhoPip = 8000,
     thickness = 0.0032,
-    R = 5.0699,
+    R = 5.06989,
     fac = 1,
     length = 38,
     dIns = 0.045,
@@ -212,7 +212,7 @@ model Ibpsa_low_temp_network
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={0.0,56.2963})));
+      origin={0.0,56.2962962963})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe10031006R(
     redeclare package Medium = Medium,
@@ -220,7 +220,7 @@ model Ibpsa_low_temp_network
     cPip = 500,
     rhoPip = 8000,
     thickness = 0.0032,
-    R = 5.0699,
+    R = 5.06989,
     fac = 1,
     length = 38,
     dIns = 0.045,
@@ -229,7 +229,7 @@ model Ibpsa_low_temp_network
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={-5.0,51.2963})));
+      origin={-5.0,51.2962962963})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe10041005(
     redeclare package Medium = Medium,
@@ -237,7 +237,7 @@ model Ibpsa_low_temp_network
     cPip = 500,
     rhoPip = 8000,
     thickness = 0.0032,
-    R = 5.0699,
+    R = 5.06989,
     fac = 1,
     length = 29,
     dIns = 0.045,
@@ -246,7 +246,7 @@ model Ibpsa_low_temp_network
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={59.2593,155.5556})));
+      origin={59.2592592593,155.5555555556})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe10041005R(
     redeclare package Medium = Medium,
@@ -254,7 +254,7 @@ model Ibpsa_low_temp_network
     cPip = 500,
     rhoPip = 8000,
     thickness = 0.0032,
-    R = 5.0699,
+    R = 5.06989,
     fac = 1,
     length = 29,
     dIns = 0.045,
@@ -263,7 +263,7 @@ model Ibpsa_low_temp_network
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={54.2593,150.5556})));
+      origin={54.2592592593,150.5555555556})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe10051006(
     redeclare package Medium = Medium,
@@ -271,7 +271,7 @@ model Ibpsa_low_temp_network
     cPip = 500,
     rhoPip = 8000,
     thickness = 0.0032,
-    R = 4.7636,
+    R = 4.76363,
     fac = 1,
     length = 20,
     dIns = 0.045,
@@ -280,7 +280,7 @@ model Ibpsa_low_temp_network
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={29.6296,112.5926})));
+      origin={29.6296296296,112.5925925926})));
 
   AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeEmbedded pipe10051006R(
     redeclare package Medium = Medium,
@@ -288,7 +288,7 @@ model Ibpsa_low_temp_network
     cPip = 500,
     rhoPip = 8000,
     thickness = 0.0032,
-    R = 4.7636,
+    R = 4.76363,
     fac = 1,
     length = 20,
     dIns = 0.045,
@@ -297,7 +297,7 @@ model Ibpsa_low_temp_network
     annotation(Placement(transformation(
       extent={{-2,-2},{2,2}},
       rotation=0,
-      origin={24.6296,107.5926})));
+      origin={24.6296296296,107.5925925926})));
 
   Modelica.Thermal.HeatTransfer.Sources.PrescribedTemperature TGround
     "Ground temperature for network"
@@ -382,7 +382,7 @@ equation
       <p>Network model generated with uesgraphs</p>
       </html>", revisions="<html>
       <ul>
-        <li><i>August 21, 2025&nbsp;</i> uesgraphs v2.1.1:<br/>Auto-generated.</li>
+        <li><i>November 13, 2025&nbsp;</i> uesgraphs v2.1.1:<br/>Auto-generated.</li>
       </ul>
       </html>"
     ),
