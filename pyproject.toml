@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "uesgraphs"
-version = "2.1.2"
-description = "Graphs to describe Urban Energy Systems"
+version = "2.1.3"
+description = "Automated graph-based simulation model generation and analysis tool"
 authors = [{name = "Rahul Mohandasan Karuvingal", email = "rahul.karuvingal@eonerc.rwth-aachen.de"}]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = [
     "geopandas",
     "networkx>=2.1",
@@ -45,7 +45,7 @@ modelica = [
 repository = "https://github.com/RWTH-EBC/uesgraphs"
 
 [tool.aixlib]
-compatible_aixlib_version = "2.1.1"
+compatible_aixlib_version = "<= '2.1.1'"
 
 [tool.setuptools]
 packages = ["uesgraphs", "uesgraphs.analyze", "uesgraphs.analyze.data_handling", 
