@@ -494,6 +494,90 @@ and CI/CD integration.</p>
 <section id="uesgraphs-examples-e13-analyze-uesgraphs-example-module">
 <h2>uesgraphs.examples.e13_analyze_uesgraphs_example module<a class="headerlink" href="#uesgraphs-examples-e13-analyze-uesgraphs-example-module" title="Permalink to this heading"></a></h2>
 </section>
+<section id="module-uesgraphs.examples.e16_complete_geojson_to_modelica">
+<span id="uesgraphs-examples-e16-complete-geojson-to-modelica-module"></span><h2>uesgraphs.examples.e16_complete_geojson_to_modelica module<a class="headerlink" href="#module-uesgraphs.examples.e16_complete_geojson_to_modelica" title="Permalink to this heading"></a></h2>
+<section id="geojson-import-to-modelica-code-generation">
+<h3>GeoJSON Import to Modelica Code Generation<a class="headerlink" href="#geojson-import-to-modelica-code-generation" title="Permalink to this heading"></a></h3>
+<p>This example demonstrates the workflow for generating modelica simulation files.</p>
+<p>=== Main lesson: Know your template! ===</p>
+<p>The pipeline checks, which parameters are required for each component template. Following
+parameters are read from template:
+- MAIN,
+- AUX and
+- CONNECTOR</p>
+<p>Those parameters have to be provided either via graph attributes, excel template or references.
+This example shows how to use it.</p>
+<section id="workflow-overview">
+<h4>Workflow Overview:<a class="headerlink" href="#workflow-overview" title="Permalink to this heading"></a></h4>
+<ol class="arabic simple">
+<li><p><strong>GeoJSON Import</strong>: Load network topology, buildings, and supply stations from GeoJSON files</p></li>
+<li><p><strong>Demand Data Assignment</strong>: Attach heating, DHW, and cooling demand time series to buildings</p></li>
+<li><p><strong>Excel-Based Configuration</strong>: Use Excel template to configure all simulation and component parameters</p></li>
+<li><p><strong>Modelica Generation</strong>: Automatically generate ready-to-simulate Modelica code</p></li>
+</ol>
+</section>
+<section id="excel-configuration-structure">
+<h4>Excel Configuration Structure:<a class="headerlink" href="#excel-configuration-structure" title="Permalink to this heading"></a></h4>
+<p>The Excel template has four sheets:
+1. <strong>Simulation</strong>: Simulation parameters (solver, time settings, medium, etc.)
+2. <strong>Pipes</strong>: Pipe network parameters (template, insulation, roughness, etc.)
+3. <strong>Supply</strong>: Supply station parameters (template, max heat demand, pressures, etc.)
+4. <strong>Demands</strong>: Demand substation parameters (template, temperatures, heat exchanger settings, etc.)</p>
+</section>
+<section id="input-data-requirements">
+<h4>Input Data Requirements:<a class="headerlink" href="#input-data-requirements" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Network GeoJSON</strong>: LineString features representing the pipe network</p></li>
+<li><p><strong>Buildings GeoJSON</strong>: Point or Polygon features for demand buildings</p></li>
+<li><p><strong>Supply GeoJSON</strong>: Point features for supply stations (with is_supply_heating=True)</p></li>
+<li><p><strong>Demand CSVs</strong>: Time series for heating, DHW, and cooling demands (8760 hourly values)</p></li>
+<li><p><strong>Ground Temperature CSV</strong>: Ground temperature profiles at various depths</p></li>
+</ul>
+</section>
+<section id="example-directory-structure">
+<h4>Example Directory Structure:<a class="headerlink" href="#example-directory-structure" title="Permalink to this heading"></a></h4>
+<p>workspace/e16/
+├── simple_district_graph.json          # Saved UESGraph after GeoJSON import
+├── models/                             # Generated Modelica files
+│   └── Sim20250102_123456_MySimulation/
+│       ├── MySimulation.mo             # Main Modelica model
+│       ├── package.mo                  # Modelica package definition
+│       └── [component models]          # Individual component files
+└── [demand and ground temp CSVs]       # Input time series data</p>
+</section>
+<section id="id3">
+<h4>Notes:<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>The pipeline automatically handles parameter assignment and validation</p></li>
+<li><p>Missing buildings in demand files will use dummy demand profiles</p></li>
+<li><p>The Excel template can be customized for different simulation scenarios</p></li>
+<li><p>Generated Modelica models are compatible with Dymola and require AixLib library</p></li>
+</ul>
+</section>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e16_complete_geojson_to_modelica.workspace_example">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e16_complete_geojson_to_modelica.</span></span><span class="sig-name descname"><span class="pre">workspace_example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_workspace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e16_complete_geojson_to_modelica.html#workspace_example"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e16_complete_geojson_to_modelica.workspace_example" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a local workspace with given name (copied from e1_readme_example)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name_workspace</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the local workspace to be created</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>workspace</strong> – Full path to the new workspace</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e16_complete_geojson_to_modelica.main">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e16_complete_geojson_to_modelica.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e16_complete_geojson_to_modelica.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e16_complete_geojson_to_modelica.main" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
 <section id="module-uesgraphs.examples.e1_readme_example">
 <span id="uesgraphs-examples-e1-readme-example-module"></span><h2>uesgraphs.examples.e1_readme_example module<a class="headerlink" href="#module-uesgraphs.examples.e1_readme_example" title="Permalink to this heading"></a></h2>
 <p>Creating and Visualizing a Simple Heating Network from the readme.md with uesgraphs</p>
@@ -728,7 +812,7 @@ Note: Only building 1121 is removed in this example</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="uesgraphs.examples.e9_generate_ues_from_osm_example.remove_small_buildings">
 <span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e9_generate_ues_from_osm_example.</span></span><span class="sig-name descname"><span class="pre">remove_small_buildings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_area</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e9_generate_ues_from_osm_example.html#remove_small_buildings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e9_generate_ues_from_osm_example.remove_small_buildings" title="Permalink to this definition"></a></dt>
-<dd><p>Remove all buildings from the graph that have area less than <a href="#id3"><span class="problematic" id="id4">`</span></a>min_area´.</p>
+<dd><p>Remove all buildings from the graph that have area less than <a href="#id4"><span class="problematic" id="id5">`</span></a>min_area´.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

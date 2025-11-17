@@ -59,6 +59,7 @@
       ~UESGraph.remove_nodes_from
       ~UESGraph.remove_self_edges
       ~UESGraph.remove_street_node
+      ~UESGraph.remove_streets
       ~UESGraph.remove_unconnected_nodes
       ~UESGraph.rotate
       ~UESGraph.size

@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_eb68c8f6debeba98_utilities_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2025-11-13 14:03 +0000
+            created at 2025-11-17 13:48 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -312,7 +312,7 @@
     <p class="pln"><span class="n"><a id="t230" href="#t230">230</a></span><span class="t">            <span class="str">"    annotation(Placement(transformation(\n"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t231" href="#t231">231</a></span><span class="t">            <span class="str">"      extent={{-2,-2},{2,2}},\n"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t232" href="#t232">232</a></span><span class="t">            <span class="str">"      rotation=0,\n"</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t233" href="#t233">233</a></span><span class="t">            <span class="str">"      origin={${str(round(x, 4))},${str(round(y, 4))}})));\n"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t233" href="#t233">233</a></span><span class="t">            <span class="str">"      origin={${str(round(x, 10))},${str(round(y, 10))}})));\n"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t234" href="#t234">234</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t235" href="#t235">235</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t236" href="#t236">236</a></span><span class="t">        <span class="nam">template_str</span> <span class="op">=</span> <span class="nam">template_str</span> <span class="op">+</span> <span class="nam">self</span><span class="op">.</span><span class="nam">__generate_real_input_string</span><span class="op">(</span><span class="nam">template_dict</span><span class="op">[</span><span class="str">"Connectors"</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -366,7 +366,7 @@
     <p class="mis show_mis"><span class="n"><a id="t284" href="#t284">284</a></span><span class="t">            <span class="key">if</span> <span class="nam">parameter</span><span class="op">.</span><span class="nam">type</span> <span class="op">==</span> <span class="str">"Boolean"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t285" href="#t285">285</a></span><span class="t">                <span class="nam">param_str</span> <span class="op">=</span> <span class="str">f"{modelica_name} = ${{str({python_name}).lower()}}"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t286" href="#t286">286</a></span><span class="t">            <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t287" href="#t287">287</a></span><span class="t">                <span class="nam">param_str</span> <span class="op">=</span> <span class="str">f"{modelica_name} = ${{str(round({python_name}, 4))}}"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t287" href="#t287">287</a></span><span class="t">                <span class="nam">param_str</span> <span class="op">=</span> <span class="str">f"{modelica_name} = ${{str(round({python_name}, 10))}}"</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t288" href="#t288">288</a></span><span class="t">            <span class="key">if</span> <span class="nam">parameter</span><span class="op">.</span><span class="nam">category</span> <span class="op">==</span> <span class="str">"optional"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t289" href="#t289">289</a></span><span class="t">                <span class="nam">param_strings</span><span class="op">.</span><span class="nam">append</span><span class="op">(</span><span class="str">f"    %if {python_name} is not None:\n"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t290" href="#t290">290</a></span><span class="t">                        <span class="str">f"    {param_str},\n"</span>&nbsp;</span><span class="r"></span></p>
@@ -415,11 +415,11 @@
     <p class="pln"><span class="n"><a id="t333" href="#t333">333</a></span><span class="t">                    <span class="str">"      transformation(\n"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t334" href="#t334">334</a></span><span class="t">                    <span class="str">"        extent={{-2,-2},{2,2}},\n"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t335" href="#t335">335</a></span><span class="t">                    <span class="str">"        rotation=0,\n"</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t336" href="#t336">336</a></span><span class="t">                    <span class="str">"        origin={${str(round(x+25, 4))},${str(round(y+%s, 4))}}),\n"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t336" href="#t336">336</a></span><span class="t">                    <span class="str">"        origin={${str(round(x+25, 10))},${str(round(y+%s, 10))}}),\n"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t337" href="#t337">337</a></span><span class="t">                    <span class="str">"      iconTransformation(\n"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t338" href="#t338">338</a></span><span class="t">                    <span class="str">"        extent={{-2,-2},{2,2}},\n"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t339" href="#t339">339</a></span><span class="t">                    <span class="str">"        rotation=0,\n"</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t340" href="#t340">340</a></span><span class="t">                    <span class="str">"        origin={${%s},${str(round(90 - i*180/(max(number_of_instances-1.0, 1.0)) + %s, 4))}})\n"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t340" href="#t340">340</a></span><span class="t">                    <span class="str">"        origin={${%s},${str(round(90 - i*180/(max(number_of_instances-1.0, 1.0)) + %s, 10))}})\n"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t341" href="#t341">341</a></span><span class="t">                    <span class="str">"      ));\n"</span> <span class="op">%</span> <span class="op">(</span><span class="nam">connector_name</span><span class="op">,</span> <span class="nam">y_mod_t</span><span class="op">,</span> <span class="nam">origin_x</span><span class="op">,</span> <span class="nam">y_mod_it</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t342" href="#t342">342</a></span><span class="t">                <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t343" href="#t343">343</a></span><span class="t">                <span class="nam">self</span><span class="op">.</span><span class="nam">connector_list</span><span class="op">.</span><span class="nam">append</span><span class="op">(</span><span class="nam">connector_name</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -1048,7 +1048,7 @@
             <a id="nextFileLink" class="nav" href="d_eb68c8f6debeba98_utilities_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2025-11-13 14:03 +0000
+            created at 2025-11-17 13:48 +0000
         </p>
     </div>
 </footer>

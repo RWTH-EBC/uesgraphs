@@ -2334,6 +2334,37 @@
 
         <span class="k">return</span> <span class="n">removed</span></div>
 
+<div class="viewcode-block" id="UESGraph.remove_streets"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.remove_streets">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_streets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove all street elements from the graph</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        graph : uesgraphs.UESGraph</span>
+<span class="sd">            Network graph</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        graph : uesgraphs.UESGraph</span>
+<span class="sd">            Network graph</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">to_remove</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">&quot;length&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">]:</span>
+                <span class="n">to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">to_remove</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">to_remove</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodelist_street</span><span class="p">:</span>
+            <span class="n">to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">to_remove</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_street_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_unconnected_nodes</span><span class="p">(</span><span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="UESGraph.calc_angle"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.calc_angle">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">calc_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;rad&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the angle of a line from point a to b in rad or degrees.</span>
 

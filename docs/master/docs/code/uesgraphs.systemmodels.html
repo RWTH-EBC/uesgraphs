@@ -97,6 +97,479 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
+<section id="module-uesgraphs.systemmodels.model_generation_pipeline">
+<span id="uesgraphs-systemmodels-model-generation-pipeline-module"></span><h2>uesgraphs.systemmodels.model_generation_pipeline module<a class="headerlink" href="#module-uesgraphs.systemmodels.model_generation_pipeline" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.uesgraph_to_modelica">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">uesgraph_to_modelica</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simplification_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_setup_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_heating</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_dhw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_cooling</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ground_temp_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#uesgraph_to_modelica"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.uesgraph_to_modelica" title="Permalink to this definition"></a></dt>
+<dd><p>Convert an Urban Energy System Graph (UESGraph) to Modelica model files.</p>
+<p>This function processes a UESGraph, applies simplification, adds demand data,
+and generates Modelica model files based on simulation parameters.</p>
+<section id="parameters">
+<h3>Parameters:<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>uesgraph<span class="classifier">UESGraph object or str</span></dt><dd><p>The UESGraph object or path to a JSON file containing the UESGraph data</p>
+</dd>
+<dt>simplification_level<span class="classifier">int</span></dt><dd><p>Level of simplification to apply to the UESGraph (higher = more simplified)</p>
+</dd>
+<dt>workspace<span class="classifier">str or Path</span></dt><dd><p>Directory path where output files will be saved</p>
+</dd>
+<dt>sim_setup_path<span class="classifier">str or Path</span></dt><dd><p>Path to the simulation setup configuration file</p>
+</dd>
+<dt>input_heating<span class="classifier">str or Path</span></dt><dd><p>Path to heating demand data</p>
+</dd>
+<dt>input_dhw<span class="classifier">str or Path</span></dt><dd><p>Path to domestic hot water demand data</p>
+</dd>
+<dt>input_cooling<span class="classifier">str or Path</span></dt><dd><p>Path to cooling demand data</p>
+</dd>
+<dt>ground_temp_path<span class="classifier">str or Path</span></dt><dd><p>Path to ground temperature data file</p>
+</dd>
+<dt>logger<span class="classifier">logging.Logger, optional</span></dt><dd><p>Logger instance. If None, creates a new file logger in temp directory</p>
+</dd>
+<dt>log_level<span class="classifier">int, optional</span></dt><dd><p>Logging level (default is logging.DEBUG). Only used if logger is None</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns:<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="raises">
+<h3>Raises:<a class="headerlink" href="#raises" title="Permalink to this heading"></a></h3>
+<p>FileNotFoundError: If required files are missing
+ValueError: If uesgraph parameter is invalid
+Exception: For various processing errors with detailed messages</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.assign_pipe_parameters">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">assign_pipe_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excel_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#assign_pipe_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.assign_pipe_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Assign parameters to pipe edges in the uesgraph according to the flow chart logic.</p>
+<p>This function follows the validation flow:
+1. Load Excel parameters and extract template configuration
+2. Load and parse the template file (standard or custom based on Excel)
+3. Extract MAIN (required) and AUX (optional) parameters
+4. For each edge individually:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Check MAIN parameters: in edge: keep, not in edge: try Excel, missing: ERROR</p></li>
+<li><p>Check AUX parameters: in edge: keep, not in edge: try Excel, missing: WARNING</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li><p>Apply parameters from Excel where needed (never overwrite existing edge attributes)</p></li>
+<li><p>Support &#64; references: Excel values starting with &#64; are resolved to edge attributes</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uesgraph</strong> (<a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>UESGraph</em></a>) – The urban energy system graph object (modified in-place)</p></li>
+<li><p><strong>excel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to Excel file containing component parameters and template configuration
+Excel should have either ‘template’ (for standard) or ‘template_path’ (for custom)</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger for status messages and warnings
+If None, creates a default logger</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>uesgraph</strong> – The updated graph object (same as input, modified in-place)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph">UESGraph</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If neither ‘template’ nor ‘template_path’ found in Excel
+    If required MAIN parameters are missing for any edge</p>
+</dd>
+<dt class="field-odd">Warns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>UserWarning</strong> – If optional AUX parameters are missing (will use Modelica defaults)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.assign_supply_parameters">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">assign_supply_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excel_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#assign_supply_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.assign_supply_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Assign parameters to supply nodes in the uesgraph according to the flow chart logic.</p>
+<p>This function follows the validation flow:
+1. Load and parse the template file
+2. Extract MAIN (required) and AUX (optional) parameters
+3. Load Excel parameters if provided
+4. For each supply node individually:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Check MAIN parameters: in node: keep, not in node: try Excel, missing: ERROR</p></li>
+<li><p>Check AUX parameters: in node: keep, not in node: try Excel, missing: WARNING</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li><p>Apply parameters from Excel where needed (never overwrite existing node attributes)</p></li>
+<li><p>Support &#64; references: Excel values starting with &#64; are resolved to node attributes</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uesgraph</strong> (<a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>UESGraph</em></a>) – The urban energy system graph object (modified in-place)</p></li>
+<li><p><strong>template_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to the supply template file (.mako)</p></li>
+<li><p><strong>excel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Path to Excel file containing component parameters
+If None, only graph attributes are used</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger for status messages and warnings
+If None, creates a default logger</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>uesgraph</strong> – The updated graph object (same as input, modified in-place)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph">UESGraph</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If template file not found</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If required MAIN parameters are missing for any supply node</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Warns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>UserWarning</strong> – If optional AUX parameters are missing (will use Modelica defaults)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.assign_demand_parameters">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">assign_demand_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excel_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#assign_demand_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.assign_demand_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Assign parameters to demand nodes in the uesgraph according to the flow chart logic.</p>
+<p>This function follows the validation flow:
+1. Load and parse the template file
+2. Extract MAIN (required) and AUX (optional) parameters
+3. Load Excel parameters if provided
+4. For each demand node individually:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Check MAIN parameters: in node: keep, not in node: try Excel, missing: ERROR</p></li>
+<li><p>Check AUX parameters: in node: keep, not in node: try Excel, missing: WARNING</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li><p>Apply parameters from Excel where needed (never overwrite existing node attributes)</p></li>
+<li><p>Support &#64; references: Excel values starting with &#64; are resolved to node attributes</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uesgraph</strong> (<a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>UESGraph</em></a>) – The urban energy system graph object (modified in-place)</p></li>
+<li><p><strong>template_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to the demand template file (.mako)</p></li>
+<li><p><strong>excel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Path to Excel file containing component parameters
+If None, only graph attributes are used</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger for status messages and warnings
+If None, creates a default logger</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>uesgraph</strong> – The updated graph object (same as input, modified in-place)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph">UESGraph</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If template file not found</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If required MAIN parameters are missing for any demand node</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Warns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>UserWarning</strong> – If optional AUX parameters are missing (will use Modelica defaults)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.resolve_parameter_value">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">resolve_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_array</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_timeseries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#resolve_parameter_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.resolve_parameter_value" title="Permalink to this definition"></a></dt>
+<dd><p>Resolve parameter value - handles direct values, &#64;references, and optional time-series conversion.</p>
+<p>This function is used by both parameter and connector processing to resolve values from Excel.
+It supports:
+- Direct values (int, float, bool, str, list)
+- &#64; References to component attributes
+- Scalar to time-series conversion for connectors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>any</em>) – The parameter value from Excel (can be direct value or &#64;reference)</p></li>
+<li><p><strong>component_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – The component’s data dictionary (node or edge attributes)</p></li>
+<li><p><strong>param_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the parameter being resolved</p></li>
+<li><p><strong>component_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>) – Identifier of the component (node id or edge tuple)</p></li>
+<li><p><strong>time_array</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>, </em><em>optional</em>) – Time array for converting scalars to time-series. Required if as_timeseries=True.</p></li>
+<li><p><strong>as_timeseries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, convert scalar values to constant time-series. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>resolved_value</strong> – The resolved parameter value</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>any</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If &#64;reference not found or time_array missing when as_timeseries=True</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Future extensions could include:
+- CSV file path loading (e.g., value=”path/to/timeseries.csv”)
+- Multiple column selection from CSVs
+- Interpolation for time-series with different timesteps</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Direct scalar value</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resolve_parameter_value</span><span class="p">(</span><span class="mf">353.15</span><span class="p">,</span> <span class="p">{},</span> <span class="s1">&#39;TReturn&#39;</span><span class="p">,</span> <span class="s1">&#39;node1&#39;</span><span class="p">)</span>
+<span class="go">353.15</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># @ Reference</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node_data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;heatDemand_max&#39;</span><span class="p">:</span> <span class="mi">800000</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resolve_parameter_value</span><span class="p">(</span><span class="s1">&#39;@heatDemand_max&#39;</span><span class="p">,</span> <span class="n">node_data</span><span class="p">,</span> <span class="s1">&#39;Q_nominal&#39;</span><span class="p">,</span> <span class="s1">&#39;node1&#39;</span><span class="p">)</span>
+<span class="go">800000</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Scalar to time-series conversion</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="mi">7200</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resolve_parameter_value</span><span class="p">(</span><span class="mf">353.15</span><span class="p">,</span> <span class="p">{},</span> <span class="s1">&#39;TIn&#39;</span><span class="p">,</span> <span class="s1">&#39;node1&#39;</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">as_timeseries</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">[353.15, 353.15, 353.15]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.parse_template_parameters">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">parse_template_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#parse_template_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.parse_template_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Parse template to extract required, optional, and connector parameters using UESTemplates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Component type: “Supply”, “Demand”, or “Pipe”</p></li>
+<li><p><strong>model_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Modelica class name for standard templates (e.g., “OpenLoop.SourceIdeal”)</p></li>
+<li><p><strong>template_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Path to custom template file</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger for status messages</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(main_parameters, aux_parameters, connector_parameters)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>)</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If neither model_name nor template_path is provided, or both are None</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><strong>Exception</strong></a> – If template parsing fails</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p># Standard template:
+&gt;&gt;&gt; main, aux, conn = parse_template_parameters(‘Supply’, model_name=’OpenLoop.SourceIdeal’)
+&gt;&gt;&gt; main
+[‘pReturn’, ‘TReturn’]
+&gt;&gt;&gt; conn
+[‘TIn’, ‘dpIn’]</p>
+<p># Custom template:
+&gt;&gt;&gt; main, aux, conn = parse_template_parameters(‘Supply’, template_path=’/path/custom.mako’)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.load_simulation_settings_from_excel">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">load_simulation_settings_from_excel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">excel_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#load_simulation_settings_from_excel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.load_simulation_settings_from_excel" title="Permalink to this definition"></a></dt>
+<dd><p>Load simulation settings from Excel ‘Simulation’ sheet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>excel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to Excel file containing simulation settings</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger instance</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>sim_params</strong> – Dictionary of simulation parameters</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If required simulation parameters are missing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.load_component_parameters">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">load_component_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">excel_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#load_component_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.load_component_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Load component parameters from an Excel file.</p>
+<p>Reads a specific sheet from an Excel file and returns parameters as a dictionary.
+Expected Excel structure:
+- Column A: Parameter (parameter names)
+- Column B: Value (parameter values)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>excel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to the Excel file containing component parameters</p></li>
+<li><p><strong>component_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Type of component, must be one of: ‘pipes’, ‘supply’, ‘demands’, ‘simulation’
+This determines which sheet to read from the Excel file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with parameter names as keys and their values
+Returns empty dict if sheet not found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If the Excel file does not exist</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the component_type is not valid or Excel structure is incorrect</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">load_component_parameters</span><span class="p">(</span><span class="s1">&#39;parameters.xlsx&#39;</span><span class="p">,</span> <span class="s1">&#39;pipes&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;dp_nominal&#39;</span><span class="p">])</span>
+<span class="go">0.10</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.generate_simulation_model">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">generate_simulation_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ground_temp_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_model_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_setup_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#generate_simulation_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.generate_simulation_model" title="Permalink to this definition"></a></dt>
+<dd><p>Generate Modelica simulation model using Excel-based parameter system.</p>
+<p>This function assumes parameters are already assigned to uesgraph nodes/edges
+via the assign_*_parameters functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uesgraph</strong> (<a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>UESGraph</em></a>) – Graph with pre-assigned parameters from Excel</p></li>
+<li><p><strong>sim_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the simulation</p></li>
+<li><p><strong>sim_params</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Simulation parameters from Excel ‘Simulation’ sheet</p></li>
+<li><p><strong>ground_temp_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Ground temperature data</p></li>
+<li><p><strong>sim_model_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Directory to save Modelica files</p></li>
+<li><p><strong>sim_setup_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to Excel configuration file (needed to load template names)</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger instance</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.create_meta_data">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">create_meta_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#create_meta_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.create_meta_data" title="Permalink to this definition"></a></dt>
+<dd><p>Create metadata dictionary from Excel simulation parameters.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.combine_heating_dhw">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">combine_heating_dhw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">heat_demand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dhw_demand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#combine_heating_dhw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.combine_heating_dhw" title="Permalink to this definition"></a></dt>
+<dd><p>Combines heating and DHW demands where both are non-zero for peak load calc.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.assign_demand_data">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">assign_demand_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_paths_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['heating',</span> <span class="pre">'cooling',</span> <span class="pre">'dhw']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">demand_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#assign_demand_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.assign_demand_data" title="Permalink to this definition"></a></dt>
+<dd><p>Assigns energy demand data to buildings in a UES (Urban Energy Systems) graph.</p>
+<p>This function reads demand profiles from CSV files and assigns them to building nodes
+in the graph. For buildings without specific demand data, it uses a fallback profile
+(dummy demand) based on the first building in the respective CSV file. The function
+can handle heating, cooling, and domestic hot water (DHW) demands.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uesgraph</strong> (<em>ueesgraphs Graph</em>) – The urban energy system graph containing building nodes.</p></li>
+<li><p><strong>input_paths_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Dictionary containing file paths for each demand type.
+Expected keys: ‘heating’, ‘cooling’, ‘dhw’.</p></li>
+<li><p><strong>input_types</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>, </em><em>optional</em>) – List of demand types to process. Default is [“heating”, “cooling”, “dhw”].</p></li>
+<li><p><strong>demand_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Mode for demand calculation. Currently only mode 0 is implemented,
+which combines heating and DHW demands for peak load calculation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>Updated UES graph with demand data assigned to building nodes</p></li>
+<li><p>Message string containing information about the data assignment process</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>Building nodes are updated with the following attributes:</dt><dd><ul class="simple">
+<li><p>input_heat: List of heating demand values</p></li>
+<li><p>input_cool: List of cooling demand values</p></li>
+<li><p>input_dhw: List of DHW demand values</p></li>
+<li><p>max_demand_heating: Maximum combined heating/DHW demand</p></li>
+</ul>
+</dd>
+<dt>The function handles missing data by:</dt><dd><ol class="arabic simple">
+<li><p>Using a dummy profile if a building is not found in demand data</p></li>
+<li><p>Tracking which buildings exist in CSVs but not in the graph</p></li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.validate_paths">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">validate_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#validate_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.validate_paths" title="Permalink to this definition"></a></dt>
+<dd><p>Validate if the provided file and directory paths exist.</p>
+<section id="id1">
+<h3>Parameters:<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>paths<span class="classifier">list</span></dt><dd><p>List of paths (strings or Path objects) to validate</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h3>Returns:<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>tuple</dt><dd><p>(existing_paths, missing_paths): Two lists containing the paths that exist
+and the paths that are missing, respectively</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.load_ground_temp_data">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">load_ground_temp_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ground_temp_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#load_ground_temp_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.load_ground_temp_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels.model_generation_pipeline.save_setup_params_to_csv">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels.model_generation_pipeline.</span></span><span class="sig-name descname"><span class="pre">save_setup_params_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">setup_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_model_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels/model_generation_pipeline.html#save_setup_params_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels.model_generation_pipeline.save_setup_params_to_csv" title="Permalink to this definition"></a></dt>
+<dd><p>Save simulation setup parameters to a CSV file.</p>
+<p>This function takes a single row from the simulation setup Excel file (as a dictionary)
+and saves it as a CSV file in a specified directory, with parameters as rows and their
+values as a single column.</p>
+<section id="id3">
+<h3>Parameters:<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>setup_params<span class="classifier">dict</span></dt><dd><p>Dictionary containing simulation setup parameters (a single row from the Excel setup)</p>
+</dd>
+<dt>sim_name<span class="classifier">str</span></dt><dd><p>Name of the current simulation, used for filename generation</p>
+</dd>
+<dt>sim_model_dir<span class="classifier">str</span></dt><dd><p>Directory where to save the CSV file</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h3>Returns:<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>str</dt><dd><p>Path to the saved CSV file</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
 <section id="module-uesgraphs.systemmodels.systemmodelheating">
 <span id="uesgraphs-systemmodels-systemmodelheating-module"></span><h2>uesgraphs.systemmodels.systemmodelheating module<a class="headerlink" href="#module-uesgraphs.systemmodels.systemmodelheating" title="Permalink to this heading"></a></h2>
 <p>This module includes the UESModel graph to write Modelica code from uesgraphs</p>
@@ -303,13 +776,13 @@ model using
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id1">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">doc_string</span></span><a class="headerlink" href="#id1" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="id5">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">doc_string</span></span><a class="headerlink" href="#id5" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id2">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">medium</span></span><a class="headerlink" href="#id2" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="id6">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">medium</span></span><a class="headerlink" href="#id6" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -880,32 +1353,32 @@ Either “optional” or “mandatory”. Specified in _extract_parameters. Impo
 </pre></div>
 </div>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a></em><a class="headerlink" href="#id3" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a></em><a class="headerlink" href="#id7" title="Permalink to this definition"></a></dt>
 <dd><p>Alias for field number 0</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#id4" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#id8" title="Permalink to this definition"></a></dt>
 <dd><p>Alias for field number 1</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">category</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#id5" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">category</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#id9" title="Permalink to this definition"></a></dt>
 <dd><p>Alias for field number 2</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#id6" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#id10" title="Permalink to this definition"></a></dt>
 <dd><p>Alias for field number 3</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id7">
-<span class="sig-name descname"><span class="pre">unit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#id7" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">unit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#id11" title="Permalink to this definition"></a></dt>
 <dd><p>Alias for field number 4</p>
 </dd></dl>
 
@@ -939,8 +1412,8 @@ Either “optional” or “mandatory”. Specified in _extract_parameters. Impo
 <dd><p>Lists all main models in the loaded library.</p>
 <p>This method queries OpenModelica for a list of all main models in the currently loaded library.
 It returns a list of class names that can be used for further analysis.</p>
-<section id="returns">
-<h3>Returns:<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h3>
+<section id="id12">
+<h3>Returns:<a class="headerlink" href="#id12" title="Permalink to this heading"></a></h3>
 <dl class="simple">
 <dt>List[str]</dt><dd><p>A list of class names representing the main models in the loaded library.</p>
 </dd>

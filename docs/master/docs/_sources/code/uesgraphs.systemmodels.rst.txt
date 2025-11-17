@@ -9,6 +9,14 @@ uesgraphs.systemmodels package
 Submodules
 ----------
 
+uesgraphs.systemmodels.model\_generation\_pipeline module
+---------------------------------------------------------
+
+.. automodule:: uesgraphs.systemmodels.model_generation_pipeline
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 uesgraphs.systemmodels.systemmodelheating module
 ------------------------------------------------
 

@@ -439,34 +439,37 @@ networkx drawing functions need this format.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_street_node" title="uesgraphs.UESGraph.remove_street_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_street_node</span></code></a>(node_number)</p></td>
 <td><p>Remove the specified street node from the graph.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_unconnected_nodes" title="uesgraphs.UESGraph.remove_unconnected_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_unconnected_nodes</span></code></a>(network_type[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_streets" title="uesgraphs.UESGraph.remove_streets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_streets</span></code></a>()</p></td>
+<td><p>Remove all street elements from the graph</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.remove_unconnected_nodes" title="uesgraphs.UESGraph.remove_unconnected_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_unconnected_nodes</span></code></a>(network_type[, ...])</p></td>
 <td><p>Remove any edges and network nodes not connected to a supply node.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.rotate" title="uesgraphs.UESGraph.rotate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate</span></code></a>(degrees)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.rotate" title="uesgraphs.UESGraph.rotate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate</span></code></a>(degrees)</p></td>
 <td><p>Rotate all nodes of the graph by <cite>degrees</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">size</span></code>([weight])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">size</span></code>([weight])</p></td>
 <td><p>Returns the number of edges or total of all edge weights.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">subgraph</span></code>(nodes)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">subgraph</span></code>(nodes)</p></td>
 <td><p>Returns a SubGraph view of the subgraph induced on <cite>nodes</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_directed</span></code>([as_view])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_directed</span></code>([as_view])</p></td>
 <td><p>Returns a directed representation of the graph.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_directed_class</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_directed_class</span></code>()</p></td>
 <td><p>Returns the class to use for empty directed copies.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.to_json" title="uesgraphs.UESGraph.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>([path, name, description, all_data, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.UESGraph.to_json" title="uesgraphs.UESGraph.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>([path, name, description, all_data, ...])</p></td>
 <td><p>Save UESGraph structure to json files.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected</span></code>([as_view])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected</span></code>([as_view])</p></td>
 <td><p>Returns an undirected copy of the graph.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected_class</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_undirected_class</span></code>()</p></td>
 <td><p>Returns the class to use for empty undirected copies.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>([edges, nodes])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>([edges, nodes])</p></td>
 <td><p>Update the graph using nodes/edges/graphs as input.</p></td>
 </tr>
 </tbody>
@@ -1029,6 +1032,23 @@ processing step. Requires save_path to be specified.</p></li>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.UESGraph.remove_streets">
+<span class="sig-name descname"><span class="pre">remove_streets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.remove_streets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.UESGraph.remove_streets" title="Permalink to this definition"></a></dt>
+<dd><p>Remove all street elements from the graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>graph</strong> (<a class="reference internal" href="#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>uesgraphs.UESGraph</em></a>) – Network graph</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>graph</strong> – Network graph</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#uesgraphs.UESGraph" title="uesgraphs.UESGraph">uesgraphs.UESGraph</a></p>
 </dd>
 </dl>
 </dd></dl>

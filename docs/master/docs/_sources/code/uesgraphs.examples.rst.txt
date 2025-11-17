@@ -41,6 +41,14 @@ uesgraphs.examples.e13\_analyze\_uesgraphs\_example module
    :undoc-members:
    :show-inheritance:
 
+uesgraphs.examples.e16\_complete\_geojson\_to\_modelica module
+--------------------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e16_complete_geojson_to_modelica
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 uesgraphs.examples.e1\_readme\_example module
 ---------------------------------------------
 
