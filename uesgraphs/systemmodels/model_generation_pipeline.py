@@ -95,6 +95,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
 
     # Step 3: Initialize or load the UESGraph from file or object
     logger.info("Initialize UESGraph")
+
     if isinstance(uesgraph, (str, os.PathLike, Path)):
         if str(uesgraph).endswith(".json"):
             try:
@@ -106,6 +107,38 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
                 raise Exception(f"While loading UESGraph from JSON: {e}")
         else:
             raise ValueError(f"Value for uesgraph: {uesgraph} is nor uesgraph object nor valid JSON path")
+    elif isinstance(uesgraph, UESGraph):
+        # Normalize UESGraph via JSON
+        logger.info("Normalize UESGraph via JSON")
+        name = "uesgraphs_origin"
+        origin_path = Path(workspace) / f"{name}.json"
+
+        try:
+            # Save to JSON
+            uesgraph.to_json(
+                path=str(workspace),
+                name=name,
+                all_data=True,
+                prettyprint=True
+            )
+            logger.info(f"Original UESGraph saved to {origin_path}")
+
+            # Reload from JSON to normalize internal structures
+            normalized_graph = UESGraph()
+            normalized_graph.from_json(
+                path=str(origin_path),
+                network_type="heating"
+            )
+
+            # Replace with normalized version
+            uesgraph = normalized_graph
+            logger.info("UESGraph normalized successfully")
+
+        except Exception as e:
+            logger.error(f"Failed to normalize UESGraph: {e}")
+            raise
+    else:
+        raise ValueError(f"uesgraph must be either a JSON path or UESGraph object, got: {type(uesgraph)}")
 
     # Step 3.1: Write simulation parameters to graph (needed for connector time-series generation)
     logger.info("Writing simulation parameters to graph")
@@ -1317,7 +1350,6 @@ def generate_simulation_model(uesgraph, sim_name, sim_params, ground_temp_list, 
     # Create metadata
     meta_data = create_meta_data(sim_name, sim_params)
 
-    # NOTE: m_flow_nominal estimation is already done in main pipeline Step 10!
 
     # Load template names from Excel sheets (needed for create_model)
     logger.info("Loading template names from Excel configuration")
@@ -1334,6 +1366,8 @@ def generate_simulation_model(uesgraph, sim_name, sim_params, ground_temp_list, 
 
     # Create system model
     logger.info("Creating system model with pre-assigned parameters")
+    from uesgraphs.systemmodels import utilities as sysmod_utils
+
     sysmod_utils.create_model(
         name=sim_name,
         save_at=sim_model_dir,
