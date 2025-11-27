@@ -11,10 +11,11 @@ jobs:
     uses: RWTH-EBC/ci_templates/.github/workflows/ci_pipeline.yml@main
     secrets:
       GH_TOKEN: ${{ secrets.UESGRAPHS_GITHUB_CI }}
+      PYPI_PASSWORD: ${{ secrets.PYPI_TOKEN }}
       
     with:
       PYTHON_VERSION:  "3.11"
-      PYTHON_TEST_MATRIX: '["3.9", "3.10", "3.11", "3.12", "3.13"]'
+      PYTHON_TEST_MATRIX: '["3.10", "3.11", "3.12", "3.13"]'
       USE_PYLINT: false
       USE_RUFF: false
       BUILD_PACKAGE: false
@@ -27,3 +28,4 @@ jobs:
       EXECUTE_TESTS: true
       EXECUTE_COVERAGE_TEST: true
       CONVERT_EXAMPLES: false
+      PYPI_RELEASE: true

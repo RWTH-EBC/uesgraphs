@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "uesgraphs"
-version = "2.1.1"
-description = "Graphs to describe Urban Energy Systems"
+version = "2.1.3"
+description = "Automated graph-based simulation model generation and analysis tool"
 authors = [{name = "Rahul Mohandasan Karuvingal", email = "rahul.karuvingal@eonerc.rwth-aachen.de"}]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = [
     "geopandas",
     "networkx>=2.1",
@@ -26,16 +26,19 @@ dependencies = [
     "pyarrow",
     "ipykernel",
     "scipy",
-    "pytest>=6.0",
-    "pytest-mpl>=0.12",
-    "pytest-cov>=4.0.0,<5.0.0",
-    "coverage>=7.0.0,<8.0.0",
     "tomli>=1.2.0;python_version<'3.11'",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pyyaml",
+    "pytest>=6.0",
+    "pytest-mpl>=0.12",
+    "pytest-cov>=4.0.0,<5.0.0",
+    "coverage>=7.0.0,<8.0.0",
+]
+modelica = [
+    "OMPython>=3.4.0",
 ]
 templates = [
     "OMPython>=3.4.0,<4.0.0",
@@ -45,10 +48,26 @@ templates = [
 repository = "https://github.com/RWTH-EBC/uesgraphs"
 
 [tool.aixlib]
-compatible_aixlib_version = "2.1.1"
+compatible_aixlib_version = "<= '2.1.1'"
 
 [tool.setuptools]
-packages = ["uesgraphs"]
+packages = ["uesgraphs", "uesgraphs.analyze", "uesgraphs.analyze.data_handling", 
+            "uesgraphs.examples", "uesgraphs.systemmodels", "uesgraphs.uesmodels", 
+            "uesgraphs.uesmodels.utilities"]
+
+[tool.setuptools.package-data]
+uesgraphs = [
+    "data/**/*",
+    "data/templates/**/*.mako",
+    "data/pipe_catalogs/*.csv",
+    "data/examples/**/*"
+]
+
+[tool.setuptools.exclude-package-data]
+uesgraphs = [
+    "**/__pycache__",
+    "**/*.pyc"
+]
 
 [tool.pytest.ini_options]
 #addopts = "--ignore=tests/test_modelgen.py --ignore=tests/test_uesmodel.py"

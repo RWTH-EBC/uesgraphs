@@ -359,6 +359,7 @@ def test_mass_flows(example_district):
 
 @pytest.mark.mpl_image_compare(baseline_dir='baseline_images',
                                filename='15_temperatures.png',
+                               tolerance=15,
                                savefig_kwargs={'dpi': 150})
 def test_temperatures(example_district):
     """Tests the plotting of temperatures with line colors

@@ -3,7 +3,12 @@ from uesgraphs.uesgraph import UESGraph
 from uesgraphs.visuals import Visuals
 
 import importlib.metadata
-__version__ = importlib.metadata.version("uesgraphs")
+
+try:
+    __version__ = importlib.metadata.version("uesgraphs")
+except importlib.metadata.PackageNotFoundError:
+    # Fallback for development installations or when package is not installed
+    __version__ = "0.0.0+unknown"
 
 #Aixlib compatibility
 def _get_aixlib_version():

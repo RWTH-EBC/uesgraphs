@@ -80,9 +80,9 @@ def name_uesgraph(name_workspace=None):
         Name of the uesgraph according to its workspace
     """
 
-    name_uesgraph = make_workspace.name_workspace
-
-    return name_uesgraph
+    if name_workspace is None:
+        return "Project"
+    return name_workspace
 
 
 def set_up_terminal_logger(name: str, level: int = logging.INFO) -> logging.Logger:
