@@ -751,8 +751,9 @@ class ModelInfoExtractor:
                 fail_msg = (f"The file does not exist: {abs_path}")
                 self.logger.error(fail_msg)
                 raise FileNotFoundError(fail_msg)
-            success = omc.loadFile((abs_path))
-            if success != "true\n":
+            success = omc.sendExpression(f'loadFile("{abs_path}")')
+            # Handle both boolean True (newer OMPython) and string "true\n" (older OMPython)
+            if success not in (True, "true", "true\n"):
                 error = omc.sendExpression("getErrorString()")
                 self.logger.error(error)
                 raise Exception("Could not load " + abs_path + "  " + error)         

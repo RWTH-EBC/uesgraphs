@@ -96,6 +96,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
 
     # Step 3: Initialize or load the UESGraph from file or object
     logger.info("Initialize UESGraph")
+
     if isinstance(uesgraph, (str, os.PathLike, Path)):
         if str(uesgraph).endswith(".json"):
             try:
@@ -107,6 +108,38 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
                 raise Exception(f"While loading UESGraph from JSON: {e}")
         else:
             raise ValueError(f"Value for uesgraph: {uesgraph} is nor uesgraph object nor valid JSON path")
+    elif isinstance(uesgraph, UESGraph):
+        # Normalize UESGraph via JSON
+        logger.info("Normalize UESGraph via JSON")
+        name = "uesgraphs_origin"
+        origin_path = Path(workspace) / f"{name}.json"
+
+        try:
+            # Save to JSON
+            uesgraph.to_json(
+                path=str(workspace),
+                name=name,
+                all_data=True,
+                prettyprint=True
+            )
+            logger.info(f"Original UESGraph saved to {origin_path}")
+
+            # Reload from JSON to normalize internal structures
+            normalized_graph = UESGraph()
+            normalized_graph.from_json(
+                path=str(origin_path),
+                network_type="heating"
+            )
+
+            # Replace with normalized version
+            uesgraph = normalized_graph
+            logger.info("UESGraph normalized successfully")
+
+        except Exception as e:
+            logger.error(f"Failed to normalize UESGraph: {e}")
+            raise
+    else:
+        raise ValueError(f"uesgraph must be either a JSON path or UESGraph object, got: {type(uesgraph)}")
 
     # Step 3.1: Write simulation parameters to graph (needed for connector time-series generation)
     logger.info("Writing simulation parameters to graph")
@@ -147,7 +180,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         uesgraph, msg = assign_demand_data(uesgraph, input_paths_dict)
         logger.debug(msg)
 
-        # Step 5: Save the UESGraph with added demand data
+        # Step 4.1: Save the UESGraph with added demand data
         logger.info("Try to save uesgraph with demand data")
         try:
             uesgraph.to_json(path=str(workspace),
@@ -158,7 +191,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         except Exception as e:
             logger.error(f"Failed to save uesgraph with demand data: {e}")
 
-        # Step 6: Assign pipe parameters from Excel
+        # Step 5: Assign pipe parameters from Excel
         logger.info("*** Assigning pipe parameters from Excel ***")
         try:
             assign_pipe_parameters(uesgraph, sim_setup_path, logger)
@@ -167,7 +200,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
             logger.error(f"Failed to assign pipe parameters: {e}")
             raise
 
-        # Step 7: Assign supply parameters from Excel
+        # Step 6: Assign supply parameters from Excel
         logger.info("*** Assigning supply parameters from Excel ***")
         try:
             assign_supply_parameters(uesgraph, sim_setup_path, logger)
@@ -176,7 +209,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
             logger.error(f"Failed to assign supply parameters: {e}")
             raise
 
-        # Step 8: Assign demand parameters from Excel
+        # Step 7: Assign demand parameters from Excel
         logger.info("*** Assigning demand parameters from Excel ***")
         try:
             assign_demand_parameters(uesgraph, sim_setup_path, logger)
@@ -185,12 +218,12 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
             logger.error(f"Failed to assign demand parameters: {e}")
             raise
 
-        # Step 9: Load ground temperature data for simulations
+        # Step 8: Load ground temperature data for simulations
         logger.info("Loading ground temperature data")
         ground_temp_df = load_ground_temp_data(ground_temp_path)
         logger.debug(f"Ground temperature data loaded of shape: {ground_temp_df.shape}")
 
-        # Step 10: Estimate nominal mass flow rates for pipes
+        # Step 9: Estimate nominal mass flow rates for pipes
         logger.info("Estimating nominal mass flow rates based on pipe diameters")
         uesgraph = sysmod_utils.estimate_m_flow_nominal_tablebased(
             graph=uesgraph,
@@ -198,13 +231,13 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         )
         logger.info(f"Estimated m_flow_nominal for {uesgraph.number_of_edges()} pipe edges")
 
-        # Step 11: Simplify the UESGraph according to the specified level
+        # Step 10: Simplify the UESGraph according to the specified level
         logger.info(f"*** Start simplyfing Uesgraph with simplification level: {simplification_level} ***")
         #logger.info(f"Before simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type='heating')}")
         #uesgraph = simplify_uesgraph(uesgraph, simplification_level)
         #logger.info(f"After simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type='heating')}")
 
-        # Step 12: Save the simplified UESGraph
+        # Step 10.1: Save the simplified UESGraph
         logger.info("Try to save uesgraph after simplification")
         try:
             uesgraph.to_json(path=str(workspace),
@@ -215,7 +248,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         except Exception as e:
             logger.error(f"Failed to save uesgraph after simplification: {e}")
 
-        # Step 13: Create directory structure for Modelica output files
+        # Step 11: Create directory structure for Modelica output files
         logger.info("Creating subfolder for modelica files")
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         sim_name = f"Sim{timestamp}"
@@ -223,7 +256,7 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
         os.makedirs(sim_model_dir, exist_ok=True)
         logger.info(f"Modelica files will be saved to: {sim_model_dir}")
 
-        # Step 14: Generate Modelica files using Excel-based simulation parameters
+        # Step 12: Generate Modelica files using Excel-based simulation parameters
         logger.info("Start process of generating Modelica files using Excel parameters")
         sim_name_ix = f"{sim_name}_{str(sim_params['simulation_name'])}"
         logger.info(f"Processing simulation: {sim_params['simulation_name']}")
@@ -1330,6 +1363,8 @@ def generate_simulation_model(uesgraph, sim_name, sim_params, ground_temp_list, 
 
     # Create system model
     logger.info("Creating system model with pre-assigned parameters")
+    from uesgraphs.systemmodels import utilities as sysmod_utils
+
     sysmod_utils.create_model(
         name=sim_name,
         save_at=sim_model_dir,

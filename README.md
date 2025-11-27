@@ -95,8 +95,20 @@ For more detailed information, please check the `pyproject.toml` file.
      - Install OMPython using `pip`:
 
        ```bash
-       pip install OMPython
+       pip install "OMPython>=3.4.0,<4.0.0"
        ```
+
+       Or install with the optional templates dependency:
+
+       ```bash
+       pip install -e ".[templates]"
+       ```
+
+     - **Note**: uesgraphs is currently compatible with OMPython versions 3.x only. Version 4.0.0+ introduces breaking API changes that are not yet supported.
+
+     - **Tested Configurations**:
+       - ✓ OpenModelica 1.24.4 + OMPython 3.6.0
+       - ✓ OpenModelica 1.26.0 + OMPython 3.6.0
 
      - For more information on OMPython, refer to the [OMPython documentation](https://openmodelica.org/doc/OpenModelicaUsersGuide/latest/ompython.html#ompython).
 

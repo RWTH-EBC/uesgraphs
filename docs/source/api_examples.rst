@@ -19,70 +19,20 @@ Python Script Examples
    uesgraphs.examples.e10_networks_example
    uesgraphs.examples.e11_model_generation_example
    uesgraphs.examples.e12_template_generation_example
-
-Example 13: Analysis and Visualization of Simulation Results
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. automodule:: uesgraphs.examples.e13_analyze_uesgraphs_example
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-This example processes and visualizes simulation results from Dymola for UESGraphs-generated 
-district heating network models. It demonstrates the analysis workflow from loading 
-simulation data to creating network visualizations with key performance indicators.
-
-**Prerequisites:**
-
-- Simulation period can be specified (default: one week)
-- Visualization uses time-averaged values for certain properties
-- AixLib version must be specified for correct data mapping
-- All paths are relative to the workspace directory
-
-**Location:** ``uesgraphs/examples/e13_analyze_uesgraphs_example.py``
-
-**GitHub:** `View on GitHub <https://github.com/RWTH-EBC/uesgraphs/blob/master/uesgraphs/examples/e13_analyze_uesgraphs_example.py>`_
+   uesgraphs.examples.e13_analyze_uesgraphs_example
+   uesgraphs.examples.e16_complete_geojson_to_modelica
 
 Jupyter Notebook Examples
 --------------------------
 
-Example 14: Hydronic Sizing Example
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. note::
+   Interactive Jupyter notebooks for hands-on learning and experimentation.
 
-This interactive notebook demonstrates demand-based mass flow estimation and hydronic sizing capabilities.
+**e14_hydronic_sizing_example.ipynb**
+   Demand-based mass flow estimation and automated pipe sizing using manufacturer catalogs.
 
-**Topics covered:**
+**e15_from_geojson_example.ipynb**
+   Import district heating networks from GeoJSON files with building data and supply points.
 
-- Physically accurate mass flow calculations based on individual demand nodes
-- Automated pipe sizing using manufacturer catalogs
-- Robust network design using maximum flow principles
-- Flexible scenario analysis (peak vs average loads)
-
-**Location:** ``uesgraphs/examples/e14_hydronic_sizing_example.ipynb``
-
-**GitHub:** `View on GitHub <https://github.com/RWTH-EBC/uesgraphs/blob/master/uesgraphs/examples/e14_hydronic_sizing_example.ipynb>`_
-
-Example 15: Import from GeoJSON
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This interactive notebook demonstrates how to import district heating networks from GeoJSON files.
-
-**Topics covered:**
-
-- Importing network topology from GeoJSON files
-- Loading building data and supply points from separate GeoJSON files
-- Automatic network generation and validation
-- Generating visualizations during the import process
-
-**Location:** ``uesgraphs/examples/e15_from_geojson_example.ipynb``
-
-**GitHub:** `View on GitHub <https://github.com/RWTH-EBC/uesgraphs/blob/master/uesgraphs/examples/e15_from_geojson_example.ipynb>`_
-
-Interactive Plotting Example
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Additional interactive plotting demonstrations using Jupyter notebooks.
-
-**Location:** ``uesgraphs/examples/interactive_plotting_example.ipynb``
-
-**GitHub:** `View on GitHub <https://github.com/RWTH-EBC/uesgraphs/blob/master/uesgraphs/examples/interactive_plotting_example.ipynb>`_
+**interactive_plotting_example.ipynb**
+   Advanced interactive plotting demonstrations.
