@@ -22,13 +22,13 @@
 
 **uesgraphs** is a Python package developed at RWTH-EBC. It utilizes a graph structure to manage data for buildings, energy networks, and infrastructure, enabling the **automated generation of dynamic district simulation models**.
 
-### General Motivation
----------------------
+General Motivation
+=================
 
 The decarbonization of energy supply demands **integral approaches** and **automation** to manage the increasing complexity of urban energy systems. **uesgraphs** addresses this by providing a flexible, model-neutral description of complex energy infrastructure that is ready for simulation workflows.
 
-### Getting Started
--------------------
+Getting Started
+=================
 
 The best way to start is by installing the package and checking out the :doc:`examples`.
 
@@ -41,8 +41,16 @@ The best way to start is by installing the package and checking out the :doc:`ex
     # 2. Install uesgraphs
     pip install uesgraphs
 
-### Structure and Workflow
--------------------------
+    # 3. (Optional) For template generation, install OMPython 3.x
+    pip install "uesgraphs[templates]"
+
+.. note::
+   **Template generation requires OMPython 3.x**: If you want to use automated Modelica template generation (examples 12-14), install with ``pip install "uesgraphs[templates]"``. OMPython 4.0.0+ is not yet supported due to breaking API changes.
+
+   Tested with OpenModelica 1.24.4 and 1.26.0.
+
+Structure and Workflow
+=================
 
 **uesgraphs** is built with `networkx` as its core library. The typical workflow for the tool involves:
 
@@ -62,14 +70,28 @@ The comprehensive workflow is broken down into these five stages:
 API Documentation
 =================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+  .. toctree::
+     :maxdepth: 2
+     :caption: User Guides:
 
-   code/modules
-   api_core_modules
-   api_system_models
-   api_examples
+     guides/model_generation_pipeline
+     guides/hydronic_sizing
+     guides/Template_Generation.rst
+
+  .. toctree::
+     :maxdepth: 2
+     :caption: Architecture:
+     
+     architecture/modelica_pipeline
+     architecture/graph_transformation
+
+  .. toctree::
+     :maxdepth: 2
+     :caption: API Reference:
+
+     api_core_modules
+     api_system_models
+     api_examples
 
 Indices and tables
 ==================
