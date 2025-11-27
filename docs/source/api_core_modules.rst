@@ -7,5 +7,5 @@ Core Modules
    uesgraphs.uesgraph
    uesgraphs.visuals
    uesgraphs.analyze
-   uesgraphs.template_generation
+   uesgraphs.systemmodels
    uesgraphs.utilities

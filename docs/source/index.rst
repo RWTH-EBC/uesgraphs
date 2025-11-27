@@ -26,8 +26,8 @@ The tool seamlessly integrates diverse data sources, including spatial (OpenStre
 Beyond model creation, **UESgraphs** offers comprehensive post-simulation analytics and intuitive visualization capabilities, empowering users to extract actionable insights through color-coded network plots, KPIs, and interactive exploration of complex energy systems.
 
 
-### Getting Started
--------------------
+Getting Started
+=================
 
 The best way to start is by installing the package and checking out the :doc:`examples`.
 
@@ -66,7 +66,18 @@ Follow these steps to install **UESgraphs** using Conda:
 
       pip install -e <path/to/your/uesgraphs>
 
-5. **Verify your UESgraphs installation** by running the automated tests:
+5. **(Optional) For template generation, install OMPython 3.x**:
+
+   .. code-block:: bash
+
+      pip install "uesgraphs[templates]"
+
+   .. note::
+      **Template generation requires OMPython 3.x**: OMPython 4.0.0+ is not yet supported due to breaking API changes.
+
+      Tested with OpenModelica 1.24.4 and 1.26.0.
+
+6. **Verify your UESgraphs installation** by running the automated tests:
 
    Navigate to the top-level *UESgraphs* folder and execute:
 
@@ -107,14 +118,28 @@ The functional principle of **UESgraphs** can be summarized as under:
 API Documentation
 =================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+  .. toctree::
+     :maxdepth: 2
+     :caption: User Guides:
 
-   code/modules
-   api_core_modules
-   api_system_models
-   api_examples
+     guides/model_generation_pipeline
+     guides/hydronic_sizing
+     guides/Template_Generation.rst
+
+  .. toctree::
+     :maxdepth: 2
+     :caption: Architecture:
+     
+     architecture/modelica_pipeline
+     architecture/graph_transformation
+
+  .. toctree::
+     :maxdepth: 2
+     :caption: API Reference:
+
+     api_core_modules
+     api_system_models
+     api_examples
 
 Indices and tables
 ==================
