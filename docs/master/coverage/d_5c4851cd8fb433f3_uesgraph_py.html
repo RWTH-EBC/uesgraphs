@@ -55,8 +55,8 @@
         </aside>
         <h2>
             <span class="text">1004 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">674<span class="text"> run</span></button>
-            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">330<span class="text"> missing</span></button>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">676<span class="text"> run</span></button>
+            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">328<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">4<span class="text"> excluded</span></button>
         </h2>
         <p class="text">
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_15b4b1c316851423_uesgenerator_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2025-11-17 14:43 +0000
+            created at 2025-11-27 15:46 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -1096,8 +1096,8 @@
     <p class="pln"><span class="n"><a id="t1014" href="#t1014">1014</a></span><span class="t">        <span class="com"># Write pipe data from uesgraph to dict for json output</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t1015" href="#t1015">1015</a></span><span class="t">        <span class="key">for</span> <span class="nam">edge</span> <span class="key">in</span> <span class="nam">self</span><span class="op">.</span><span class="nam">edges</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t1016" href="#t1016">1016</a></span><span class="t">            <span class="key">if</span> <span class="str">"pipeID"</span> <span class="key">in</span> <span class="nam">self</span><span class="op">.</span><span class="nam">edges</span><span class="op">[</span><span class="nam">edge</span><span class="op">[</span><span class="num">0</span><span class="op">]</span><span class="op">,</span> <span class="nam">edge</span><span class="op">[</span><span class="num">1</span><span class="op">]</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t1017" href="#t1017">1017</a></span><span class="t">                <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t1018" href="#t1018">1018</a></span><span class="t">                    <span class="nam">pipe_id</span> <span class="op">=</span> <span class="nam">str</span><span class="op">(</span><span class="nam">int</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">edges</span><span class="op">[</span><span class="nam">edge</span><span class="op">[</span><span class="num">0</span><span class="op">]</span><span class="op">,</span> <span class="nam">edge</span><span class="op">[</span><span class="num">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="str">"pipeID"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t1017" href="#t1017">1017</a></span><span class="t">                <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t1018" href="#t1018">1018</a></span><span class="t">                    <span class="nam">pipe_id</span> <span class="op">=</span> <span class="nam">str</span><span class="op">(</span><span class="nam">int</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">edges</span><span class="op">[</span><span class="nam">edge</span><span class="op">[</span><span class="num">0</span><span class="op">]</span><span class="op">,</span> <span class="nam">edge</span><span class="op">[</span><span class="num">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="str">"pipeID"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t1019" href="#t1019">1019</a></span><span class="t">                <span class="key">except</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t1020" href="#t1020">1020</a></span><span class="t">                    <span class="nam">pipe_id</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">edges</span><span class="op">[</span><span class="nam">edge</span><span class="op">[</span><span class="num">0</span><span class="op">]</span><span class="op">,</span> <span class="nam">edge</span><span class="op">[</span><span class="num">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="str">"pipeID"</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1021" href="#t1021">1021</a></span><span class="t">            <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -2444,7 +2444,7 @@
             <a id="nextFileLink" class="nav" href="d_15b4b1c316851423_uesgenerator_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2025-11-17 14:43 +0000
+            created at 2025-11-27 15:46 +0000
         </p>
     </div>
 </footer>

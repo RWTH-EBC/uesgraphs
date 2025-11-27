@@ -42,9 +42,19 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/Template_Generation.html">Template Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="code/modules.html">uesgraphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_core_modules.html">Core Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_system_models.html">System Models</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
@@ -61,15 +71,10 @@
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/uesgraphs.examples.e10_networks_example.html">uesgraphs.examples.e10_networks_example</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/uesgraphs.examples.e11_model_generation_example.html">uesgraphs.examples.e11_model_generation_example</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/uesgraphs.examples.e12_template_generation_example.html">uesgraphs.examples.e12_template_generation_example</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#example-13-analysis-and-visualization-of-simulation-results">Example 13: Analysis and Visualization of Simulation Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/uesgraphs.examples.e16_complete_geojson_to_modelica.html">uesgraphs.examples.e16_complete_geojson_to_modelica</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#jupyter-notebook-examples">Jupyter Notebook Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#example-14-hydronic-sizing-example">Example 14: Hydronic Sizing Example</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#example-15-import-from-geojson">Example 15: Import from GeoJSON</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#interactive-plotting-example">Interactive Plotting Example</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#jupyter-notebook-examples">Jupyter Notebook Examples</a></li>
 </ul>
 </li>
 </ul>
@@ -155,58 +160,26 @@ Modelica Model Generation using UESGraphs
 Comprehensive Mako Template Generation for UESGraphs Modelica Components
 =====================================================================</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="code/uesgraphs.examples.html#module-uesgraphs.examples.e16_complete_geojson_to_modelica" title="uesgraphs.examples.e16_complete_geojson_to_modelica"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.examples.e16_complete_geojson_to_modelica</span></code></a></p></td>
+<td><p>GeoJSON Import to Modelica Code Generation</p></td>
+</tr>
 </tbody>
 </table>
-<section id="example-13-analysis-and-visualization-of-simulation-results">
-<h3>Example 13: Analysis and Visualization of Simulation Results<a class="headerlink" href="#example-13-analysis-and-visualization-of-simulation-results" title="Permalink to this heading"></a></h3>
-<p>This example processes and visualizes simulation results from Dymola for UESGraphs-generated
-district heating network models. It demonstrates the analysis workflow from loading
-simulation data to creating network visualizations with key performance indicators.</p>
-<p><strong>Prerequisites:</strong></p>
-<ul class="simple">
-<li><p>Simulation period can be specified (default: one week)</p></li>
-<li><p>Visualization uses time-averaged values for certain properties</p></li>
-<li><p>AixLib version must be specified for correct data mapping</p></li>
-<li><p>All paths are relative to the workspace directory</p></li>
-</ul>
-<p><strong>Location:</strong> <code class="docutils literal notranslate"><span class="pre">uesgraphs/examples/e13_analyze_uesgraphs_example.py</span></code></p>
-<p><strong>GitHub:</strong> <a class="reference external" href="https://github.com/RWTH-EBC/uesgraphs/blob/master/uesgraphs/examples/e13_analyze_uesgraphs_example.py">View on GitHub</a></p>
-</section>
 </section>
 <section id="jupyter-notebook-examples">
 <h2>Jupyter Notebook Examples<a class="headerlink" href="#jupyter-notebook-examples" title="Permalink to this heading"></a></h2>
-<section id="example-14-hydronic-sizing-example">
-<h3>Example 14: Hydronic Sizing Example<a class="headerlink" href="#example-14-hydronic-sizing-example" title="Permalink to this heading"></a></h3>
-<p>This interactive notebook demonstrates demand-based mass flow estimation and hydronic sizing capabilities.</p>
-<p><strong>Topics covered:</strong></p>
-<ul class="simple">
-<li><p>Physically accurate mass flow calculations based on individual demand nodes</p></li>
-<li><p>Automated pipe sizing using manufacturer catalogs</p></li>
-<li><p>Robust network design using maximum flow principles</p></li>
-<li><p>Flexible scenario analysis (peak vs average loads)</p></li>
-</ul>
-<p><strong>Location:</strong> <code class="docutils literal notranslate"><span class="pre">uesgraphs/examples/e14_hydronic_sizing_example.ipynb</span></code></p>
-<p><strong>GitHub:</strong> <a class="reference external" href="https://github.com/RWTH-EBC/uesgraphs/blob/master/uesgraphs/examples/e14_hydronic_sizing_example.ipynb">View on GitHub</a></p>
-</section>
-<section id="example-15-import-from-geojson">
-<h3>Example 15: Import from GeoJSON<a class="headerlink" href="#example-15-import-from-geojson" title="Permalink to this heading"></a></h3>
-<p>This interactive notebook demonstrates how to import district heating networks from GeoJSON files.</p>
-<p><strong>Topics covered:</strong></p>
-<ul class="simple">
-<li><p>Importing network topology from GeoJSON files</p></li>
-<li><p>Loading building data and supply points from separate GeoJSON files</p></li>
-<li><p>Automatic network generation and validation</p></li>
-<li><p>Generating visualizations during the import process</p></li>
-</ul>
-<p><strong>Location:</strong> <code class="docutils literal notranslate"><span class="pre">uesgraphs/examples/e15_from_geojson_example.ipynb</span></code></p>
-<p><strong>GitHub:</strong> <a class="reference external" href="https://github.com/RWTH-EBC/uesgraphs/blob/master/uesgraphs/examples/e15_from_geojson_example.ipynb">View on GitHub</a></p>
-</section>
-<section id="interactive-plotting-example">
-<h3>Interactive Plotting Example<a class="headerlink" href="#interactive-plotting-example" title="Permalink to this heading"></a></h3>
-<p>Additional interactive plotting demonstrations using Jupyter notebooks.</p>
-<p><strong>Location:</strong> <code class="docutils literal notranslate"><span class="pre">uesgraphs/examples/interactive_plotting_example.ipynb</span></code></p>
-<p><strong>GitHub:</strong> <a class="reference external" href="https://github.com/RWTH-EBC/uesgraphs/blob/master/uesgraphs/examples/interactive_plotting_example.ipynb">View on GitHub</a></p>
-</section>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Interactive Jupyter notebooks for hands-on learning and experimentation.</p>
+</div>
+<dl class="simple">
+<dt><strong>e14_hydronic_sizing_example.ipynb</strong></dt><dd><p>Demand-based mass flow estimation and automated pipe sizing using manufacturer catalogs.</p>
+</dd>
+<dt><strong>e15_from_geojson_example.ipynb</strong></dt><dd><p>Import district heating networks from GeoJSON files with building data and supply points.</p>
+</dd>
+<dt><strong>interactive_plotting_example.ipynb</strong></dt><dd><p>Advanced interactive plotting demonstrations.</p>
+</dd>
+</dl>
 </section>
 </section>
 

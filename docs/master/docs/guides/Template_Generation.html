@@ -1,0 +1,261 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Template Generation &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="UESGraphs Modelica Code Generation Pipeline" href="../architecture/modelica_pipeline.html" />
+    <link rel="prev" title="Hydraulic Network Sizing" href="hydronic_sizing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Template Generation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-a-template-example">Generating a Template (Example)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bulk-template-generation">Bulk Template Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-type-support">Parameter Type Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#precision-si-units">Precision &amp; SI Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#common-issues">Common Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Template Generation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guides/Template_Generation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="template-generation">
+<h1>Template Generation<a class="headerlink" href="#template-generation" title="Permalink to this heading"></a></h1>
+<p>This guide shows how to quickly generate a Modelica template for an AixLib component using UESGraphs.</p>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<p><strong>Software:</strong></p>
+<ul class="simple">
+<li><p><strong>OpenModelica</strong>: Version 1.24.x or 1.26.x recommended</p>
+<ul>
+<li><p>Download from <a class="reference external" href="https://openmodelica.org/download/">openmodelica.org</a></p></li>
+<li><p>Ensure OpenModelica is added to your system PATH</p></li>
+</ul>
+</li>
+<li><p><strong>OMPython</strong>: Version 3.x (3.4.0 to &lt;4.0.0)</p>
+<ul>
+<li><p>Install with: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;uesgraphs[templates]&quot;</span></code></p></li>
+<li><p>OMPython 4.0.0+ is not yet supported due to breaking API changes</p></li>
+</ul>
+</li>
+<li><p><strong>AixLib</strong>: Local copy of the AixLib Modelica library</p>
+<ul>
+<li><p>Clone from <a class="reference external" href="https://github.com/RWTH-EBC/AixLib">RWTH-EBC/AixLib</a></p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Tested Configurations:</strong></p>
+<ul class="simple">
+<li><p>OpenModelica 1.24.4 + OMPython 3.6.0 ✓</p></li>
+<li><p>OpenModelica 1.26.0 + OMPython 3.6.0 ✓</p></li>
+</ul>
+</section>
+<section id="generating-a-template-example">
+<h2>Generating a Template (Example)<a class="headerlink" href="#generating-a-template-example" title="Permalink to this heading"></a></h2>
+<p>You can generate a template for an AixLib component with just a few lines of code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels.templates</span><span class="w"> </span><span class="kn">import</span> <span class="n">UESTemplates</span>
+
+<span class="c1"># Example: Generate template for StaticPipe model</span>
+<span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Pipes.StaticPipe&quot;</span>
+<span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;Pipe&quot;</span>
+
+<span class="n">template</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="n">model_type</span><span class="p">)</span>
+<span class="n">template</span><span class="o">.</span><span class="n">generate_new_template</span><span class="p">(</span><span class="n">path_library</span><span class="o">=</span><span class="s2">&quot;path/to/AixLib/package.mo&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Template saved at: </span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="n">save_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="bulk-template-generation">
+<h2>Bulk Template Generation<a class="headerlink" href="#bulk-template-generation" title="Permalink to this heading"></a></h2>
+<p>For generating multiple templates at once, use the <code class="docutils literal notranslate"><span class="pre">generate_bulk()</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels.templates</span><span class="w"> </span><span class="kn">import</span> <span class="n">UESTemplates</span>
+
+<span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Pipe&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Pipes.StaticPipe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AixLib.Fluid.FixedResistances.PlugFlowPipe&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;Demand&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Demands.OpenLoop.VarTSupplyDp&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="o">.</span><span class="n">generate_bulk</span><span class="p">(</span>
+    <span class="n">models</span><span class="p">,</span>
+    <span class="n">library_path</span><span class="o">=</span><span class="s2">&quot;/path/to/AixLib/package.mo&quot;</span><span class="p">,</span>
+    <span class="n">workspace</span><span class="o">=</span><span class="s2">&quot;./templates&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>For frequent use, consider an environment variable to avoid specifying the path each time:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">AIXLIB_LIBRARY_PATH</span><span class="o">=</span>/path/to/AixLib/package.mo
+</pre></div>
+</div>
+<p>See also example 12: demonstrate_config_generation()</p>
+</section>
+<section id="parameter-type-support">
+<h2>Parameter Type Support<a class="headerlink" href="#parameter-type-support" title="Permalink to this heading"></a></h2>
+<p>The template generation has been tested with standard AixLib components used in uesgraphs (pipes, demands, supplies). The following applies to these components:</p>
+<p><strong>Confirmed Support:</strong></p>
+<ul class="simple">
+<li><p><strong>Boolean</strong>: Explicitly converted to Modelica boolean syntax</p>
+<ul>
+<li><p>Python: <code class="docutils literal notranslate"><span class="pre">enable=True</span></code> → Modelica: <code class="docutils literal notranslate"><span class="pre">enable=true</span></code></p></li>
+<li><p><strong>Important</strong>: Requires special handling to work correctly in Modelica code</p></li>
+</ul>
+</li>
+<li><p><strong>Real (Float)</strong>: Numeric parameter values</p>
+<ul>
+<li><p>Values are rounded to 10 decimal places</p></li>
+<li><p>All physical quantities must be in <strong>SI units</strong> (meters, kilograms, seconds, etc.)</p></li>
+</ul>
+</li>
+<li><p><strong>Python Keywords</strong>: Parameters with names that are Python keywords (e.g., <code class="docutils literal notranslate"><span class="pre">lambda</span></code>) are detected during generation and you’ll be prompted to provide an alternative name</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>For custom AixLib components</strong>: The template generation is optimized for standard district heating/cooling components. If you’re generating templates for other AixLib components with different parameter types (Strings, Enumerations, Records, etc.), verify the generated template works correctly before use. Manual adjustments may be necessary.</p>
+</div>
+</section>
+<section id="precision-si-units">
+<h2>Precision &amp; SI Units<a class="headerlink" href="#precision-si-units" title="Permalink to this heading"></a></h2>
+<p><strong>Rounding</strong>: Real values are rounded to 10 decimal places during template generation.</p>
+<p><strong>Typical parameter ranges</strong> (examples from standard district heating components):</p>
+<ul class="simple">
+<li><p>Pipe roughness: ~1e-6 m (micrometers) ✓</p></li>
+<li><p>Diameters: 0.01 - 1.0 m ✓</p></li>
+<li><p>Thermal conductivity: 0.001 - 10 W/(m·K) ✓</p></li>
+</ul>
+<p><strong>Potential precision issues</strong>: Values smaller than 1e-10 may be affected by rounding. If you need extreme precision for specialized applications, verify the generated parameter values.</p>
+</section>
+<section id="common-issues">
+<h2>Common Issues<a class="headerlink" href="#common-issues" title="Permalink to this heading"></a></h2>
+<p><strong>Template generation fails with “Could not load package.mo”:</strong></p>
+<ul class="simple">
+<li><p>Check that OpenModelica is installed and in your PATH</p></li>
+<li><p>Verify the path to <code class="docutils literal notranslate"><span class="pre">package.mo</span></code> is correct</p></li>
+<li><p>Ensure you’re using OMPython 3.x (not 4.0.0+)</p></li>
+</ul>
+<p><strong>Parameters missing in generated template:</strong></p>
+<ul class="simple">
+<li><p>Only Boolean and Real types are supported</p></li>
+<li><p>Check if the parameter has a supported type in the Modelica model</p></li>
+</ul>
+<p><strong>Python keyword conflicts:</strong></p>
+<ul class="simple">
+<li><p>You’ll be prompted to rename parameters that conflict with Python keywords</p></li>
+<li><p>Choose descriptive alternatives (e.g., <code class="docutils literal notranslate"><span class="pre">lambda_ground</span></code> instead of <code class="docutils literal notranslate"><span class="pre">lambda</span></code>)</p></li>
+</ul>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this heading"></a></h2>
+<p>For more examples including configuration-driven generation, see <a class="reference internal" href="../api_examples.html"><span class="doc">Examples</span></a> (Example 12).</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="hydronic_sizing.html" class="btn btn-neutral float-left" title="Hydraulic Network Sizing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../architecture/modelica_pipeline.html" class="btn btn-neutral float-right" title="UESGraphs Modelica Code Generation Pipeline" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

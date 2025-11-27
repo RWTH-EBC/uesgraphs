@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="uesgraphs" href="code/modules.html" /> 
+    <link rel="next" title="Model Generation Pipeline" href="guides/model_generation_pipeline.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,9 +41,19 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="code/modules.html">uesgraphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/Template_Generation.html">Template Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="api_core_modules.html">Core Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_system_models.html">System Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_examples.html">Examples</a></li>
@@ -81,8 +91,9 @@
 <p><strong>UESgraphs</strong> is an open-source Python framework designed for the automated generation, simulation, and analysis of complex urban energy systems, with a focus on district heating and cooling networks. Built on a graph-based data structure, UESgraphs simplifies the challenging task of modeling interconnected energy infrastructure, enabling researchers and practitioners to rapidly create robust, dynamic simulation models ready for advanced analysis.
 The tool seamlessly integrates diverse data sources, including spatial (OpenStreetMap) and tabular datasets, to build high-fidelity system graphs representing buildings, energy networks, and supply stations. Automated workflows encompass hydronic sizing, network topology optimization, and model export to simulation environments like Modelica/Dymola.</p>
 <p>Beyond model creation, <strong>UESgraphs</strong> offers comprehensive post-simulation analytics and intuitive visualization capabilities, empowering users to extract actionable insights through color-coded network plots, KPIs, and interactive exploration of complex energy systems.</p>
+</section>
 <section id="getting-started">
-<h2>### Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h2>
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h1>
 <p>The best way to start is by installing the package and checking out the <span class="xref std std-doc">examples</span>.</p>
 <p>Follow these steps to install <strong>UESgraphs</strong> using Conda:</p>
 <ol class="arabic">
@@ -116,6 +127,16 @@ The tool seamlessly integrates diverse data sources, including spatial (OpenStre
 </pre></div>
 </div>
 </li>
+<li><p><strong>(Optional) For template generation, install OMPython 3.x</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;uesgraphs[templates]&quot;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Template generation requires OMPython 3.x</strong>: OMPython 4.0.0+ is not yet supported due to breaking API changes.</p>
+<p>Tested with OpenModelica 1.24.4 and 1.26.0.</p>
+</div>
+</li>
 <li><p><strong>Verify your UESgraphs installation</strong> by running the automated tests:</p>
 <p>Navigate to the top-level <em>UESgraphs</em> folder and execute:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--mpl
@@ -125,7 +146,6 @@ The tool seamlessly integrates diverse data sources, including spatial (OpenStre
 </li>
 </ol>
 <p>For more detailed information, please check the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file.</p>
-</section>
 <section id="functional-principle">
 <h2>### Functional Principle<a class="headerlink" href="#functional-principle" title="Permalink to this heading"></a></h2>
 <p><strong>UESgraphs</strong> is built with <cite>networkx</cite> as its core library. The typical workflow for the tool involves:</p>
@@ -143,17 +163,82 @@ The tool seamlessly integrates diverse data sources, including spatial (OpenStre
 </section>
 <section id="api-documentation">
 <h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<blockquote>
+<div><div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="code/modules.html">uesgraphs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="code/uesgraphs.html">uesgraphs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/model_generation_pipeline.html">Model Generation Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pipeline.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pipeline.html#what-you-need">What You Need</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pipeline.html#excel-configuration">Excel Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pipeline.html#parameter-priority">Parameter Priority</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pipeline.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pipeline.html#see-also">See Also</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="guides/hydronic_sizing.html">Hydraulic Network Sizing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/hydronic_sizing.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/hydronic_sizing.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/hydronic_sizing.html#how-it-works">How it Works</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/hydronic_sizing.html#core-functions">Core Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/hydronic_sizing.html#output-attributes">Output Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/hydronic_sizing.html#learn-more">Learn More</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/hydronic_sizing.html#advanced-features">Advanced Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/Template_Generation.html">Template Generation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#generating-a-template-example">Generating a Template (Example)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#bulk-template-generation">Bulk Template Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#parameter-type-support">Parameter Type Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#precision-si-units">Precision &amp; SI Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#common-issues">Common Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#architecture-documentation">Architecture Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#pipeline-architecture">Pipeline Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#component-interaction">Component Interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#excel-template-system">Excel-Template System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#parameter-assignment-flow">Parameter Assignment Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#connector-handling">Connector Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#validation-system">Validation System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#code-generation-process">Code Generation Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#extension-guide">Extension Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/graph_transformation.html">Graph Transformation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#conceptual-overview">Conceptual Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#why-this-transformation-matters">Why This Transformation Matters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#the-mapping-process">The Mapping Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#core-functions">Core Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#understanding-the-transformation">Understanding the Transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#practical-applications">Practical Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#complete-workflow-example">Complete Workflow Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#implementation-notes">Implementation Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#see-also">See Also</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="api_core_modules.html">Core Modules</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels.html">uesgraphs.systemmodels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
 </ul>
 </li>
@@ -170,6 +255,7 @@ The tool seamlessly integrates diverse data sources, including spatial (OpenStre
 </li>
 </ul>
 </div>
+</div></blockquote>
 </section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
@@ -184,7 +270,7 @@ The tool seamlessly integrates diverse data sources, including spatial (OpenStre
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="code/modules.html" class="btn btn-neutral float-right" title="uesgraphs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="guides/model_generation_pipeline.html" class="btn btn-neutral float-right" title="Model Generation Pipeline" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

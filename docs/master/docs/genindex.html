@@ -39,9 +39,19 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="code/modules.html">uesgraphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/Template_Generation.html">Template Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="api_core_modules.html">Core Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_system_models.html">System Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_examples.html">Examples</a></li>
@@ -176,6 +186,17 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_autosummary/uesgraphs.systemmodels.utilities.html#uesgraphs.systemmodels.utilities.build_flow_paths">build_flow_paths() (in module uesgraphs.systemmodels.utilities)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.build_flow_paths">[1]</a>
 </li>
+      <li>
+    built-in function
+
+      <ul>
+        <li><a href="architecture/graph_transformation.html#get_pipes_for_node">get_pipes_for_node()</a>
+</li>
+        <li><a href="architecture/graph_transformation.html#map_ues_nodes_to_system_ports">map_ues_nodes_to_system_ports()</a>
+</li>
+        <li><a href="architecture/graph_transformation.html#validate_structural_node_port_mapping">validate_structural_node_port_mapping()</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -346,10 +367,10 @@
       </ul></li>
       <li><a href="_autosummary/uesgraphs.systemmodels.utilities.html#uesgraphs.systemmodels.utilities.get_inner_diameter_from_DN">get_inner_diameter_from_DN() (in module uesgraphs.systemmodels.utilities)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.get_inner_diameter_from_DN">[1]</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_autosummary/uesgraphs.examples.e10_networks_example.html#uesgraphs.examples.e10_networks_example.get_input_heat">get_input_heat() (in module uesgraphs.examples.e10_networks_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e10_networks_example.get_input_heat">[1]</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph.get_min_max">get_min_max() (uesgraphs.UESGraph method)</a>
 
       <ul>
@@ -364,6 +385,13 @@
       </ul></li>
       <li><a href="_autosummary/uesgraphs.systemmodels.utilities.html#uesgraphs.systemmodels.utilities.get_pipe_catalog_DN_m_flow">get_pipe_catalog_DN_m_flow() (in module uesgraphs.systemmodels.utilities)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.get_pipe_catalog_DN_m_flow">[1]</a>
 </li>
+      <li>
+    get_pipes_for_node()
+
+      <ul>
+        <li><a href="architecture/graph_transformation.html#get_pipes_for_node">built-in function</a>
+</li>
+      </ul></li>
       <li><a href="_autosummary/uesgraphs.examples.e10_networks_example.html#uesgraphs.examples.e10_networks_example.get_temperature_ground">get_temperature_ground() (in module uesgraphs.examples.e10_networks_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e10_networks_example.get_temperature_ground">[1]</a>
 </li>
       <li><a href="_autosummary/uesgraphs.examples.e10_networks_example.html#uesgraphs.examples.e10_networks_example.get_temperature_supply">get_temperature_supply() (in module uesgraphs.examples.e10_networks_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e10_networks_example.get_temperature_supply">[1]</a>
@@ -433,7 +461,7 @@
 </li>
         <li><a href="_autosummary/uesgraphs.examples.e12_template_generation_example.html#uesgraphs.examples.e12_template_generation_example.main">(in module uesgraphs.examples.e12_template_generation_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.main">[1]</a>
 </li>
-        <li><a href="code/uesgraphs.examples.html#uesgraphs.examples.e16_complete_geojson_to_modelica.main">(in module uesgraphs.examples.e16_complete_geojson_to_modelica)</a>
+        <li><a href="_autosummary/uesgraphs.examples.e16_complete_geojson_to_modelica.html#uesgraphs.examples.e16_complete_geojson_to_modelica.main">(in module uesgraphs.examples.e16_complete_geojson_to_modelica)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e16_complete_geojson_to_modelica.main">[1]</a>
 </li>
         <li><a href="_autosummary/uesgraphs.examples.e1_readme_example.html#uesgraphs.examples.e1_readme_example.main">(in module uesgraphs.examples.e1_readme_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e1_readme_example.main">[1]</a>
 </li>
@@ -462,6 +490,13 @@
 </li>
       <li><a href="_autosummary/uesgraphs.analyze.html#uesgraphs.analyze.map_system_model_to_uesgraph">map_system_model_to_uesgraph() (in module uesgraphs.analyze)</a>, <a href="code/uesgraphs.analyze.html#uesgraphs.analyze.map_system_model_to_uesgraph">[1]</a>
 </li>
+      <li>
+    map_ues_nodes_to_system_ports()
+
+      <ul>
+        <li><a href="architecture/graph_transformation.html#map_ues_nodes_to_system_ports">built-in function</a>
+</li>
+      </ul></li>
       <li><a href="_autosummary/uesgraphs.analyze.html#uesgraphs.analyze.mat_to_pandas">mat_to_pandas() (in module uesgraphs.analyze)</a>, <a href="code/uesgraphs.analyze.html#uesgraphs.analyze.mat_to_pandas">[1]</a>
 </li>
       <li><a href="_autosummary/uesgraphs.analyze.html#uesgraphs.analyze.mat_to_parquet">mat_to_parquet() (in module uesgraphs.analyze)</a>, <a href="code/uesgraphs.analyze.html#uesgraphs.analyze.mat_to_parquet">[1]</a>
@@ -486,10 +521,10 @@
       </ul></li>
       <li><a href="_autosummary/uesgraphs.examples.e11_model_generation_example.html#uesgraphs.examples.e11_model_generation_example.model_generation_ibpsa">model_generation_ibpsa() (in module uesgraphs.examples.e11_model_generation_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.model_generation_ibpsa">[1]</a>
 </li>
-      <li><a href="_autosummary/uesgraphs.examples.e11_model_generation_example.html#uesgraphs.examples.e11_model_generation_example.model_generation_pinola">model_generation_pinola() (in module uesgraphs.examples.e11_model_generation_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.model_generation_pinola">[1]</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="_autosummary/uesgraphs.examples.e11_model_generation_example.html#uesgraphs.examples.e11_model_generation_example.model_generation_pinola">model_generation_pinola() (in module uesgraphs.examples.e11_model_generation_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.model_generation_pinola">[1]</a>
+</li>
       <li><a href="_autosummary/uesgraphs.systemmodels.templates.html#uesgraphs.systemmodels.templates.UESTemplates.model_name">model_name (uesgraphs.systemmodels.templates.UESTemplates attribute)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.model_name">[1]</a>
 </li>
       <li><a href="_autosummary/uesgraphs.systemmodels.templates.html#uesgraphs.systemmodels.templates.UESTemplates.model_type">model_type (uesgraphs.systemmodels.templates.UESTemplates attribute)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.model_type">[1]</a>
@@ -512,7 +547,7 @@
 </li>
         <li><a href="_autosummary/uesgraphs.examples.e12_template_generation_example.html#module-uesgraphs.examples.e12_template_generation_example">uesgraphs.examples.e12_template_generation_example</a>, <a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e12_template_generation_example">[1]</a>
 </li>
-        <li><a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e16_complete_geojson_to_modelica">uesgraphs.examples.e16_complete_geojson_to_modelica</a>
+        <li><a href="_autosummary/uesgraphs.examples.e16_complete_geojson_to_modelica.html#module-uesgraphs.examples.e16_complete_geojson_to_modelica">uesgraphs.examples.e16_complete_geojson_to_modelica</a>, <a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e16_complete_geojson_to_modelica">[1]</a>
 </li>
         <li><a href="_autosummary/uesgraphs.examples.e1_readme_example.html#module-uesgraphs.examples.e1_readme_example">uesgraphs.examples.e1_readme_example</a>, <a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e1_readme_example">[1]</a>
 </li>
@@ -532,7 +567,7 @@
 </li>
         <li><a href="_autosummary/uesgraphs.examples.e9_generate_ues_from_osm_example.html#module-uesgraphs.examples.e9_generate_ues_from_osm_example">uesgraphs.examples.e9_generate_ues_from_osm_example</a>, <a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e9_generate_ues_from_osm_example">[1]</a>
 </li>
-        <li><a href="code/uesgraphs.systemmodels.html#module-uesgraphs.systemmodels">uesgraphs.systemmodels</a>
+        <li><a href="_autosummary/uesgraphs.systemmodels.html#module-uesgraphs.systemmodels">uesgraphs.systemmodels</a>, <a href="code/uesgraphs.systemmodels.html#module-uesgraphs.systemmodels">[1]</a>
 </li>
         <li><a href="code/uesgraphs.systemmodels.html#module-uesgraphs.systemmodels.model_generation_pipeline">uesgraphs.systemmodels.model_generation_pipeline</a>
 </li>
@@ -919,7 +954,7 @@
     uesgraphs.examples.e16_complete_geojson_to_modelica
 
       <ul>
-        <li><a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e16_complete_geojson_to_modelica">module</a>
+        <li><a href="_autosummary/uesgraphs.examples.e16_complete_geojson_to_modelica.html#module-uesgraphs.examples.e16_complete_geojson_to_modelica">module</a>, <a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e16_complete_geojson_to_modelica">[1]</a>
 </li>
       </ul></li>
       <li>
@@ -991,7 +1026,7 @@
     uesgraphs.systemmodels
 
       <ul>
-        <li><a href="code/uesgraphs.systemmodels.html#module-uesgraphs.systemmodels">module</a>
+        <li><a href="_autosummary/uesgraphs.systemmodels.html#module-uesgraphs.systemmodels">module</a>, <a href="code/uesgraphs.systemmodels.html#module-uesgraphs.systemmodels">[1]</a>
 </li>
       </ul></li>
       <li>
@@ -1057,10 +1092,17 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.validate_paths">validate_paths() (in module uesgraphs.systemmodels.model_generation_pipeline)</a>
 </li>
-      <li><a href="_autosummary/uesgraphs.systemmodels.templates.html#id0">value (uesgraphs.systemmodels.templates.Parameter attribute)</a>, <a href="_autosummary/uesgraphs.systemmodels.templates.html#uesgraphs.systemmodels.templates.Parameter.value">[1]</a>, <a href="code/uesgraphs.systemmodels.html#id7">[2]</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.Parameter.value">[3]</a>
+      <li>
+    validate_structural_node_port_mapping()
+
+      <ul>
+        <li><a href="architecture/graph_transformation.html#validate_structural_node_port_mapping">built-in function</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="_autosummary/uesgraphs.systemmodels.templates.html#id0">value (uesgraphs.systemmodels.templates.Parameter attribute)</a>, <a href="_autosummary/uesgraphs.systemmodels.templates.html#uesgraphs.systemmodels.templates.Parameter.value">[1]</a>, <a href="code/uesgraphs.systemmodels.html#id7">[2]</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.Parameter.value">[3]</a>
+</li>
       <li><a href="_autosummary/uesgraphs.Visuals.html#uesgraphs.Visuals">Visuals (class in uesgraphs)</a>
 
       <ul>
@@ -1073,7 +1115,7 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code/uesgraphs.examples.html#uesgraphs.examples.e16_complete_geojson_to_modelica.workspace_example">workspace_example() (in module uesgraphs.examples.e16_complete_geojson_to_modelica)</a>
+      <li><a href="_autosummary/uesgraphs.examples.e16_complete_geojson_to_modelica.html#uesgraphs.examples.e16_complete_geojson_to_modelica.workspace_example">workspace_example() (in module uesgraphs.examples.e16_complete_geojson_to_modelica)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e16_complete_geojson_to_modelica.workspace_example">[1]</a>
 
       <ul>
         <li><a href="_autosummary/uesgraphs.examples.e1_readme_example.html#uesgraphs.examples.e1_readme_example.workspace_example">(in module uesgraphs.examples.e1_readme_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e1_readme_example.workspace_example">[1]</a>

@@ -18,9 +18,7 @@
       <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="uesgraphs.analyze package" href="uesgraphs.analyze.html" />
-    <link rel="prev" title="uesgraphs" href="modules.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,40 +40,19 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">uesgraphs</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">uesgraphs package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.get_versioning_info"><code class="docutils literal notranslate"><span class="pre">get_versioning_info()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html">uesgraphs.analyze package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html">uesgraphs.examples package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html">uesgraphs.systemmodels package</a></li>
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
 </ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-uesgraphs.uesgraph">uesgraphs.uesgraph module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.uesgraph.UESGraph"><code class="docutils literal notranslate"><span class="pre">UESGraph</span></code></a></li>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
 </ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-uesgraphs.utilities">uesgraphs.utilities module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.default_json_path"><code class="docutils literal notranslate"><span class="pre">default_json_path()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.make_workspace"><code class="docutils literal notranslate"><span class="pre">make_workspace()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.name_uesgraph"><code class="docutils literal notranslate"><span class="pre">name_uesgraph()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.set_up_terminal_logger"><code class="docutils literal notranslate"><span class="pre">set_up_terminal_logger()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.set_up_file_logger"><code class="docutils literal notranslate"><span class="pre">set_up_file_logger()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.utilities.get_attribute_case_insensitive"><code class="docutils literal notranslate"><span class="pre">get_attribute_case_insensitive()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-uesgraphs.visuals">uesgraphs.visuals module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.visuals.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.visuals.Visuals"><code class="docutils literal notranslate"><span class="pre">Visuals</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
@@ -95,7 +72,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">uesgraphs</a></li>
       <li class="breadcrumb-item active">uesgraphs package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/code/uesgraphs.rst.txt" rel="nofollow"> View page source</a>
@@ -389,7 +365,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">uesgraphs.uesgraph.</span></span><span class="sig-name descname"><span class="pre">UESGraph</span></span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a></p>
 <p>A networkx Graph enhanced for use to describe urban energy systems.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.name">
@@ -1587,10 +1563,7 @@ explosion if set to True</p></li>
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-left" title="uesgraphs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="uesgraphs.analyze.html" class="btn btn-neutral float-right" title="uesgraphs.analyze package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

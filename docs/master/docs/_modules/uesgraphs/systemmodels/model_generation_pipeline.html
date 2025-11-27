@@ -39,9 +39,19 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../code/modules.html">uesgraphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/Template_Generation.html">Template Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../api_core_modules.html">Core Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api_system_models.html">System Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api_examples.html">Examples</a></li>
@@ -171,6 +181,7 @@
 
     <span class="c1"># Step 3: Initialize or load the UESGraph from file or object</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initialize UESGraph&quot;</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
         <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.json&quot;</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
@@ -182,6 +193,38 @@
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;While loading UESGraph from JSON: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Value for uesgraph: </span><span class="si">{</span><span class="n">uesgraph</span><span class="si">}</span><span class="s2"> is nor uesgraph object nor valid JSON path&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">,</span> <span class="n">UESGraph</span><span class="p">):</span>
+        <span class="c1"># Normalize UESGraph via JSON</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Normalize UESGraph via JSON&quot;</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;uesgraphs_origin&quot;</span>
+        <span class="n">origin_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">workspace</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.json&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Save to JSON</span>
+            <span class="n">uesgraph</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span>
+                <span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">workspace</span><span class="p">),</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">all_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">prettyprint</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original UESGraph saved to </span><span class="si">{</span><span class="n">origin_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Reload from JSON to normalize internal structures</span>
+            <span class="n">normalized_graph</span> <span class="o">=</span> <span class="n">UESGraph</span><span class="p">()</span>
+            <span class="n">normalized_graph</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span>
+                <span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">origin_path</span><span class="p">),</span>
+                <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Replace with normalized version</span>
+            <span class="n">uesgraph</span> <span class="o">=</span> <span class="n">normalized_graph</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;UESGraph normalized successfully&quot;</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to normalize UESGraph: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;uesgraph must be either a JSON path or UESGraph object, got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Step 3.1: Write simulation parameters to graph (needed for connector time-series generation)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing simulation parameters to graph&quot;</span><span class="p">)</span>
@@ -222,7 +265,7 @@
         <span class="n">uesgraph</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">assign_demand_data</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">,</span> <span class="n">input_paths_dict</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-        <span class="c1"># Step 5: Save the UESGraph with added demand data</span>
+        <span class="c1"># Step 4.1: Save the UESGraph with added demand data</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Try to save uesgraph with demand data&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">uesgraph</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">workspace</span><span class="p">),</span>
@@ -233,7 +276,7 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save uesgraph with demand data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Step 6: Assign pipe parameters from Excel</span>
+        <span class="c1"># Step 5: Assign pipe parameters from Excel</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;*** Assigning pipe parameters from Excel ***&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">assign_pipe_parameters</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">,</span> <span class="n">sim_setup_path</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
@@ -242,7 +285,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to assign pipe parameters: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">raise</span>
 
-        <span class="c1"># Step 7: Assign supply parameters from Excel</span>
+        <span class="c1"># Step 6: Assign supply parameters from Excel</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;*** Assigning supply parameters from Excel ***&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">assign_supply_parameters</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">,</span> <span class="n">sim_setup_path</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
@@ -251,7 +294,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to assign supply parameters: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">raise</span>
 
-        <span class="c1"># Step 8: Assign demand parameters from Excel</span>
+        <span class="c1"># Step 7: Assign demand parameters from Excel</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;*** Assigning demand parameters from Excel ***&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">assign_demand_parameters</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">,</span> <span class="n">sim_setup_path</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
@@ -260,12 +303,12 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to assign demand parameters: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">raise</span>
 
-        <span class="c1"># Step 9: Load ground temperature data for simulations</span>
+        <span class="c1"># Step 8: Load ground temperature data for simulations</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading ground temperature data&quot;</span><span class="p">)</span>
         <span class="n">ground_temp_df</span> <span class="o">=</span> <span class="n">load_ground_temp_data</span><span class="p">(</span><span class="n">ground_temp_path</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ground temperature data loaded of shape: </span><span class="si">{</span><span class="n">ground_temp_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Step 10: Estimate nominal mass flow rates for pipes</span>
+        <span class="c1"># Step 9: Estimate nominal mass flow rates for pipes</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Estimating nominal mass flow rates based on pipe diameters&quot;</span><span class="p">)</span>
         <span class="n">uesgraph</span> <span class="o">=</span> <span class="n">sysmod_utils</span><span class="o">.</span><span class="n">estimate_m_flow_nominal_tablebased</span><span class="p">(</span>
             <span class="n">graph</span><span class="o">=</span><span class="n">uesgraph</span><span class="p">,</span>
@@ -273,13 +316,13 @@
         <span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Estimated m_flow_nominal for </span><span class="si">{</span><span class="n">uesgraph</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span><span class="si">}</span><span class="s2"> pipe edges&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Step 11: Simplify the UESGraph according to the specified level</span>
+        <span class="c1"># Step 10: Simplify the UESGraph according to the specified level</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*** Start simplyfing Uesgraph with simplification level: </span><span class="si">{</span><span class="n">simplification_level</span><span class="si">}</span><span class="s2"> ***&quot;</span><span class="p">)</span>
         <span class="c1">#logger.info(f&quot;Before simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type=&#39;heating&#39;)}&quot;)</span>
         <span class="c1">#uesgraph = simplify_uesgraph(uesgraph, simplification_level)</span>
         <span class="c1">#logger.info(f&quot;After simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type=&#39;heating&#39;)}&quot;)</span>
 
-        <span class="c1"># Step 12: Save the simplified UESGraph</span>
+        <span class="c1"># Step 10.1: Save the simplified UESGraph</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Try to save uesgraph after simplification&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">uesgraph</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">workspace</span><span class="p">),</span>
@@ -290,7 +333,7 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save uesgraph after simplification: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Step 13: Create directory structure for Modelica output files</span>
+        <span class="c1"># Step 11: Create directory structure for Modelica output files</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating subfolder for modelica files&quot;</span><span class="p">)</span>
         <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
         <span class="n">sim_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Sim</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -298,7 +341,7 @@
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">sim_model_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Modelica files will be saved to: </span><span class="si">{</span><span class="n">sim_model_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Step 14: Generate Modelica files using Excel-based simulation parameters</span>
+        <span class="c1"># Step 12: Generate Modelica files using Excel-based simulation parameters</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Start process of generating Modelica files using Excel parameters&quot;</span><span class="p">)</span>
         <span class="n">sim_name_ix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sim_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">sim_params</span><span class="p">[</span><span class="s1">&#39;simulation_name&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing simulation: </span><span class="si">{</span><span class="n">sim_params</span><span class="p">[</span><span class="s1">&#39;simulation_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1405,6 +1448,8 @@
 
     <span class="c1"># Create system model</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating system model with pre-assigned parameters&quot;</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">utilities</span> <span class="k">as</span> <span class="n">sysmod_utils</span>
+
     <span class="n">sysmod_utils</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="n">sim_name</span><span class="p">,</span>
         <span class="n">save_at</span><span class="o">=</span><span class="n">sim_model_dir</span><span class="p">,</span>

@@ -19,6 +19,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="uesgraphs.examples.e16_complete_geojson_to_modelica" href="uesgraphs.examples.e16_complete_geojson_to_modelica.html" />
     <link rel="prev" title="uesgraphs.examples.e11_model_generation_example" href="uesgraphs.examples.e11_model_generation_example.html" /> 
 </head>
 
@@ -41,9 +42,19 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../code/modules.html">uesgraphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_examples.html">Examples</a><ul class="current">
@@ -70,7 +81,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#uesgraphs.examples.e12_template_generation_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../api_examples.html#example-13-analysis-and-visualization-of-simulation-results">Example 13: Analysis and Visualization of Simulation Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.e16_complete_geojson_to_modelica.html">uesgraphs.examples.e16_complete_geojson_to_modelica</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_examples.html#jupyter-notebook-examples">Jupyter Notebook Examples</a></li>
@@ -213,6 +224,14 @@ step-by-step generation to automated production workflows.</p>
 <p>This approach shows exactly how template generation works internally.
 Each template is created individually with full control over the process.
 This is the best method for learning and debugging.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of successfully generated templates</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -222,6 +241,14 @@ This is the best method for learning and debugging.</p>
 <p>This approach uses the generate_bulk() method to efficiently create
 multiple templates with organized error handling. Good for moderate
 scale template generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of successfully generated templates</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -231,6 +258,14 @@ scale template generation.</p>
 <p>This approach uses JSON configuration files and environment variables
 for fully automated template generation. Ideal for production workflows
 and CI/CD integration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of successfully generated templates</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -258,6 +293,7 @@ and CI/CD integration.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="uesgraphs.examples.e11_model_generation_example.html" class="btn btn-neutral float-left" title="uesgraphs.examples.e11_model_generation_example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="uesgraphs.examples.e16_complete_geojson_to_modelica.html" class="btn btn-neutral float-right" title="uesgraphs.examples.e16_complete_geojson_to_modelica" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
