@@ -1064,13 +1064,13 @@
 <span class="sd">        &quot;edges_only&quot;: Only edge assignment (no node data)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">node_to_port_mapping</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Port mapping provided → Full assignment mode&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Port mapping provided - Full assignment mode&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;full&quot;</span>
     <span class="k">elif</span> <span class="n">system_model_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;System model provided → Full assignment mode&quot;</span><span class="p">)</span>  
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;System model provided - Full assignment mode&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;full&quot;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No port mapping or system model → Edge-only assignment mode&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No port mapping or system model - Edge-only assignment mode&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Node temperatures and pressures will NOT be assigned&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;edges_only&quot;</span>
 

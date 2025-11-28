@@ -616,11 +616,11 @@
                     
                     <span class="n">template</span><span class="o">.</span><span class="n">generate_new_template</span><span class="p">(</span><span class="n">path_library</span><span class="o">=</span><span class="n">libs</span><span class="p">)</span>
                     <span class="n">results</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">save_path</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Successfully generated template for </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                    
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Successfully generated template for </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;ERROR: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✗ Error generating template for </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERROR: Error generating template for </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="n">results</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_msg</span>
         
         <span class="k">return</span> <span class="n">results</span></div>

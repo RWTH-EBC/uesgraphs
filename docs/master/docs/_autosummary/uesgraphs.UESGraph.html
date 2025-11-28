@@ -852,7 +852,7 @@ the OSM file.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="uesgraphs.UESGraph.from_geojson">
-<span class="sig-name descname"><span class="pre">from_geojson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buildings_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supply_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generate_visualizations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.from_geojson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.UESGraph.from_geojson" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">from_geojson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buildings_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supply_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generate_visualizations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.from_geojson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.UESGraph.from_geojson" title="Permalink to this definition"></a></dt>
 <dd><p>Import district heating network from GeoJSON files.</p>
 <p>Creates a complete UESGraph model from three GeoJSON input files containing
 network topology, supply points, and building locations. All geometries must
@@ -878,6 +878,10 @@ Must include ‘name’ property. Points must coincide with network nodes.</p></
 If None, no files are saved.</p></li>
 <li><p><strong>generate_visualizations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>default False</em>) – Whether to generate and save network visualization PDFs at each
 processing step. Requires save_path to be specified.</p></li>
+<li><p><strong>tolerance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>default 1e-8</em>) – Distance tolerance in degrees for Point-to-Point matching between
+buildings and network nodes. Default (1e-8) handles floating-point
+precision errors (~1mm). Increase (e.g., 1e-6 = ~11cm) if GeoJSON
+files have been processed through tools that reduce coordinate precision.</p></li>
 </ul>
 </dd>
 </dl>
