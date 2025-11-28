@@ -171,7 +171,7 @@ class SystemModelHeating(UESGraph):
             except Exception as e:
                 logger.warning(f"Could not list template files: {e}")
         else:
-            logger.error(f"❌ Template directory does not exist: {self.template_directory}")
+            logger.error(f"ERROR: Template directory does not exist: {self.template_directory}")
         
         self.templates = {
             # Ground temperature

@@ -531,11 +531,11 @@ class UESTemplates:
                     
                     template.generate_new_template(path_library=libs)
                     results[model_name] = template.save_path
-                    print(f"✓ Successfully generated template for {model_name}")
-                    
+                    print(f"SUCCESS: Successfully generated template for {model_name}")
+
                 except Exception as e:
                     error_msg = f"ERROR: {e}"
-                    print(f"✗ Error generating template for {model_name}: {e}")
+                    print(f"ERROR: Error generating template for {model_name}: {e}")
                     results[model_name] = error_msg
         
         return results

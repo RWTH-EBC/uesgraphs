@@ -979,13 +979,13 @@ def _determine_assignment_mode(
         "edges_only": Only edge assignment (no node data)
     """
     if node_to_port_mapping is not None:
-        logger.info("Port mapping provided → Full assignment mode")
+        logger.info("Port mapping provided - Full assignment mode")
         return "full"
     elif system_model_path is not None:
-        logger.info("System model provided → Full assignment mode")  
+        logger.info("System model provided - Full assignment mode")
         return "full"
     else:
-        logger.warning("No port mapping or system model → Edge-only assignment mode")
+        logger.warning("No port mapping or system model - Edge-only assignment mode")
         logger.warning("Node temperatures and pressures will NOT be assigned")
         return "edges_only"
 
