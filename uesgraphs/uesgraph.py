@@ -1712,29 +1712,46 @@ class UESGraph(nx.Graph):
                     replaced_node=repl_node,
                 )
     
-    def __find_node_in_polygon(self, polygon):
+    def __find_node_in_polygon(self, polygon, tolerance=1e-8):
         """
         Find the first network node located within a building polygon.
-        
+
+        For Point geometries, uses distance-based matching with tolerance
+        to handle floating-point precision issues.
+
         Parameters
         ----------
-        polygon : shapely.geometry.Polygon
-            Building footprint to search within
-            
+        polygon : shapely.geometry
+            Building footprint (Point, Polygon, or MultiPolygon)
+        tolerance : float, optional
+            Distance tolerance in degrees for Point-Point matching
+            (default: 1e-8, approximately 1m on Earth surface)
+
         Returns
         -------
         int or None
-            Node ID if found within polygon, otherwise None
-            
+            Node ID if found, otherwise None
+
         Notes
         -----
-        Returns only the first matching node. If multiple nodes exist
-        within the polygon, only one will be used for the building connection.
+        - For Point geometries: Uses distance-based matching to handle
+          floating-point precision errors in coordinates
+        - For Polygon/MultiPolygon: Uses contains() method
+        - Returns only the first matching node
         """
-        for node in self.nodes:
-            if polygon.contains(self.nodes[node]["position"]):
-                return node
-        
+        # For Point geometries, use distance-based matching with tolerance
+        if polygon.geom_type == 'Point':
+            for node in self.nodes:
+                node_pos = self.nodes[node]["position"]
+                if polygon.distance(node_pos) < tolerance:
+                    return node
+
+        # For Polygon/MultiPolygon, use contains() method
+        else:
+            for node in self.nodes:
+                if polygon.contains(self.nodes[node]["position"]):
+                    return node
+
         return None
         
     def _create_network_visualization(self, save_path, filename=None, scaling_factor=2, 
