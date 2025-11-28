@@ -1396,7 +1396,8 @@ class UESGraph(nx.Graph):
             supply_path,
             name,
             save_path=None,
-            generate_visualizations=False
+            generate_visualizations=False,
+            tolerance=1e-8
         ):
         """
         Import district heating network from GeoJSON files.
@@ -1432,6 +1433,11 @@ class UESGraph(nx.Graph):
         generate_visualizations : bool, default False
             Whether to generate and save network visualization PDFs at each
             processing step. Requires save_path to be specified.
+        tolerance : float, default 1e-8
+            Distance tolerance in degrees for Point-to-Point matching between
+            buildings and network nodes. Default (1e-8) handles floating-point
+            precision errors (~1mm). Increase (e.g., 1e-6 = ~11cm) if GeoJSON
+            files have been processed through tools that reduce coordinate precision.
         
         Notes
         -----
@@ -1478,7 +1484,7 @@ class UESGraph(nx.Graph):
             self._create_network_visualization(folder_vis, filename="2_with_supply",labels="heat")
 
         # Process buildings
-        self._process_buildings_from_geojson(buildings_path)
+        self._process_buildings_from_geojson(buildings_path, tolerance=tolerance)
         
         if folder_vis: # Generate visualization
             self._create_network_visualization(folder_vis, filename="3_with_bldg", labels="heat")
@@ -1674,33 +1680,40 @@ class UESGraph(nx.Graph):
                     replaced_node=repl_node,
                 )
         
-    def _process_buildings_from_geojson(self, buildings_path):
+    def _process_buildings_from_geojson(self, buildings_path, tolerance=1e-8):
         """
         Process building geometries and connect them to the network.
-        
+
         For Point geometries: building must coincide with a network node.
         For Polygon geometries: any network node within the polygon is used.
         The network node is replaced with a building node, reconnecting all edges.
-        
+
         Parameters
         ----------
         buildings_path : str
             Path to buildings GeoJSON file (Point or Polygon geometries)
-            
+        tolerance : float, default 1e-8
+            Distance tolerance in degrees for Point-to-Point matching
+
         Notes
         -----
         Building names are converted to lowercase for consistency.
         Buildings without matching network nodes are skipped.
+
+        Raises
+        ------
+        ValueError
+            If multiple network nodes are found within tolerance for a building
         """
 
         bldg_df = gp.read_file(buildings_path)
-        
+
         for _, row in bldg_df.iterrows():
             bldg_name = ut.get_attribute_case_insensitive(row, "name")
             polygon = row["geometry"]
 
             # Find node within building polygon
-            repl_node = self.__find_node_in_polygon(polygon)
+            repl_node = self.__find_node_in_polygon(polygon, tolerance=tolerance)
             
             if repl_node:
                 position = self.nodes[repl_node]["position"]
@@ -1714,10 +1727,11 @@ class UESGraph(nx.Graph):
     
     def __find_node_in_polygon(self, polygon, tolerance=1e-8):
         """
-        Find the first network node located within a building polygon.
+        Find network node matching building position.
 
         For Point geometries, uses distance-based matching with tolerance
-        to handle floating-point precision issues.
+        to handle floating-point precision issues. For Polygon/MultiPolygon,
+        uses geometric containment.
 
         Parameters
         ----------
@@ -1725,31 +1739,59 @@ class UESGraph(nx.Graph):
             Building footprint (Point, Polygon, or MultiPolygon)
         tolerance : float, optional
             Distance tolerance in degrees for Point-Point matching
-            (default: 1e-8, approximately 1m on Earth surface)
+            (default: 1e-8 ≈ 1mm, increase to 1e-6 ≈ 11cm for reduced-precision GeoJSON)
 
         Returns
         -------
         int or None
-            Node ID if found, otherwise None
+            Node ID if exactly one match found, otherwise None
+
+        Raises
+        ------
+        ValueError
+            If multiple network nodes are found within tolerance for Point geometry.
+            This indicates ambiguous matching - reduce tolerance or check data quality.
 
         Notes
         -----
-        - For Point geometries: Uses distance-based matching to handle
-          floating-point precision errors in coordinates
-        - For Polygon/MultiPolygon: Uses contains() method
-        - Returns only the first matching node
+        - Point geometries: Returns closest node within tolerance, error if multiple
+        - Polygon/MultiPolygon: Returns first node inside polygon (order-dependent)
+        - Nodes without 'position' attribute are skipped
         """
         # For Point geometries, use distance-based matching with tolerance
         if polygon.geom_type == 'Point':
+            candidates = []
+
             for node in self.nodes:
-                node_pos = self.nodes[node]["position"]
-                if polygon.distance(node_pos) < tolerance:
-                    return node
+                node_pos = self.nodes[node].get("position")
+                if node_pos is None:
+                    continue  # Skip nodes without position
+
+                dist = polygon.distance(node_pos)
+                if dist < tolerance:
+                    candidates.append((node, dist))
+
+            # Handle results
+            if len(candidates) == 0:
+                return None
+            elif len(candidates) == 1:
+                return candidates[0][0]
+            else:
+                # Multiple matches - find closest
+                raise ValueError(
+                        f"Ambiguous building-node matching: Found {len(candidates)} network nodes "
+                        f"within tolerance {tolerance} degrees for building at {polygon.coords[0]}. "
+                        f"Reduce tolerance or check for overlapping network nodes."
+                    )
+
 
         # For Polygon/MultiPolygon, use contains() method
         else:
             for node in self.nodes:
-                if polygon.contains(self.nodes[node]["position"]):
+                node_pos = self.nodes[node].get("position")
+                if node_pos is None:
+                    continue
+                if polygon.contains(node_pos):
                     return node
 
         return None
