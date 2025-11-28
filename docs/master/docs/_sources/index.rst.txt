@@ -48,7 +48,42 @@ Follow these steps to install **UESgraphs** using Conda:
 
       conda activate uesgraphs
 
-3. **Clone or download the UESgraphs repository**:
+3. **Install UESgraphs from PyPI** (Quick Installation):
+
+   If you want to use UESgraphs without modifying the source code, install directly from PyPI:
+
+   **Basic Installation** (core functionality only):
+
+   .. code-block:: bash
+
+      pip install uesgraphs
+
+   **Installation with Optional Dependencies**:
+
+   * **For template generation and Modelica support**:
+
+     .. code-block:: bash
+
+        pip install uesgraphs[templates]
+
+   * **For development (includes testing and coverage tools)**:
+
+     .. code-block:: bash
+
+        pip install uesgraphs[dev]
+
+   * **Complete installation with all dependencies**:
+
+     .. code-block:: bash
+
+        pip install uesgraphs[full]
+
+   .. note::
+      If you're installing from PyPI, skip steps 4 and 5 and proceed directly to step 6 for verification, or step 7 for OpenModelica setup.
+
+4. **Clone or download the UESgraphs repository** (Development Installation):
+
+   If you want to modify the source code or contribute to development:
 
    * If you're cloning the repository using Git, run:
 
@@ -58,24 +93,38 @@ Follow these steps to install **UESgraphs** using Conda:
 
    * If you've downloaded the repository as a ZIP file, extract it to your desired location.
 
-4. **Install UESgraphs in editable mode**:
+5. **Install UESgraphs in editable mode** (Development Installation):
 
-   Navigate to the directory where *UESgraphs* is located and run:
+   Navigate to the directory where *UESgraphs* is located and choose your installation method:
+
+   **Basic Installation** (core functionality only):
 
    .. code-block:: bash
 
       pip install -e <path/to/your/uesgraphs>
 
-5. **(Optional) For template generation, install OMPython 3.x**:
+   **Installation with Optional Dependencies**:
 
-   .. code-block:: bash
+   * **For template generation and Modelica support**:
 
-      pip install "uesgraphs[templates]"
+     .. code-block:: bash
+
+        pip install -e <path/to/your/uesgraphs>[templates]
+
+   * **For development (includes testing and coverage tools)**:
+
+     .. code-block:: bash
+
+        pip install -e <path/to/your/uesgraphs>[dev]
+
+   * **Complete installation with all dependencies**:
+
+     .. code-block:: bash
+
+        pip install -e <path/to/your/uesgraphs>[full]
 
    .. note::
-      **Template generation requires OMPython 3.x**: OMPython 4.0.0+ is not yet supported due to breaking API changes.
-
-      Tested with OpenModelica 1.24.4 and 1.26.0.
+      The ``[full]`` option installs all optional dependencies including OMPython, pytest, coverage, and other development tools. Use this for a complete development environment.
 
 6. **Verify your UESgraphs installation** by running the automated tests:
 
@@ -87,7 +136,63 @@ Follow these steps to install **UESgraphs** using Conda:
 
    This will run the test suite and verify that everything is set up correctly.
 
+   .. note::
+      Running tests requires the ``[dev]`` or ``[full]`` optional dependencies to be installed. If you only installed the basic version, install the dev dependencies first: ``pip install uesgraphs[dev]`` or ``pip install -e .[dev]`` (for editable installs).
+
 For more detailed information, please check the ``pyproject.toml`` file.
+
+7. **Install OpenModelica and OMPython to Run Examples 9 to 14**
+
+   To run examples 9 to 14, you need to install **OpenModelica** and **OMPython**.
+
+   * **Download and Install OpenModelica**:
+
+     * Visit the `OpenModelica download page <https://openmodelica.org/download/download-windows/>`_ to download the installer for your operating system.
+     * Follow the on-screen instructions to install OpenModelica on your computer.
+     * Add OpenModelica to the environment variable
+
+   * **Install OMPython**:
+
+     If you haven't already installed OMPython with the ``[templates]`` or ``[full]`` options in step 3 or 5, you can install it separately:
+
+     .. code-block:: bash
+
+        pip install "OMPython>=3.4.0,<4.0.0"
+
+     **Alternative**: If you skipped the optional dependencies, you can add them:
+
+     For PyPI installation:
+
+     .. code-block:: bash
+
+        pip install uesgraphs[templates]
+        # or for complete installation:
+        pip install uesgraphs[full]
+
+     For editable/development installation:
+
+     .. code-block:: bash
+
+        pip install -e <path/to/your/uesgraphs>[templates]
+        # or for complete installation:
+        pip install -e <path/to/your/uesgraphs>[full]
+
+     **Important Notes**:
+
+     * ✓ UESgraphs is compatible with **OMPython 3.x only** (versions ``>=3.4.0,<4.0.0``)
+     * ✗ OMPython 4.0.0+ introduces breaking API changes and is **not yet supported**
+     * If you encounter the error ``'OMCSessionZMQ' object has no attribute 'loadFile'``, downgrade OMPython:
+
+       .. code-block:: bash
+
+          pip install "OMPython==3.6.0"
+
+     **Tested Configurations**:
+
+     * ✓ OpenModelica 1.24.4 + OMPython 3.6.0
+     * ✓ OpenModelica 1.26.0 + OMPython 3.6.0
+
+     For more information on OMPython, refer to the `OMPython documentation <https://openmodelica.org/doc/OpenModelicaUsersGuide/latest/ompython.html#ompython>`_.
 
 
 ### Functional Principle
