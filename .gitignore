@@ -20,3 +20,7 @@ coverage_html_report/
 .pytest_cache/
 result_images/
 
+#Sphinx auto-generated #
+#####################
+docs/source/_autosummary/
+
