@@ -8,7 +8,7 @@
 ![Coverage](https://raw.githubusercontent.com/RWTH-EBC/uesgraphs/gh-pages/docs/master/coverage/badge.svg)
 
 
-**UESgraphs** is a Python package for describing Urban Energy Systems, managing their data within a Python graph structure, and enabling the automatic generation of dynamic district simulation models. We extend the
+**UESgraphs** (Urban Energy Systems graphs) is a Python package for describing Urban Energy Systems, managing their data within a Python graph structure, and enabling the automatic generation of dynamic district simulation models. We extend the
 [networkx](https://networkx.github.io/) Graph class and add basic methods to
 represent buildings and energy networks in the graph. **UESgraphs** can be used as a
 foundation to analyze energy network structures, evaluate district energy
@@ -49,7 +49,37 @@ Follow these steps to install **UESgraphs** using Conda:
    conda activate uesgraphs
    ```
 
-3. **Clone or download the UESgraphs repository**.
+3. **Install UESgraphs from PyPI** (Quick Installation):
+
+   If you want to use UESgraphs without modifying the source code, install directly from PyPI:
+
+   **Basic Installation** (core functionality only):
+   ```bash
+   pip install uesgraphs
+   ```
+
+   **Installation with Optional Dependencies**:
+
+   - **For template generation and Modelica support**:
+     ```bash
+     pip install uesgraphs[templates]
+     ```
+
+   - **For development (includes testing and coverage tools)**:
+     ```bash
+     pip install uesgraphs[dev]
+     ```
+
+   - **Complete installation with all dependencies**:
+     ```bash
+     pip install uesgraphs[full]
+     ```
+
+   > **Note**: If you're installing from PyPI, skip steps 4 and 5 and proceed directly to step 6 for OpenModelica setup.
+
+4. **Clone or download the UESgraphs repository** (Development Installation):
+
+   If you want to modify the source code or contribute to development:
 
    - If you're cloning the repository using Git, run:
 
@@ -59,15 +89,35 @@ Follow these steps to install **UESgraphs** using Conda:
 
    - If you've downloaded the repository as a ZIP file, extract it to your desired location.
 
-4. **Install UESgraphs in editable mode**:
+5. **Install UESgraphs in editable mode** (Development Installation):
 
-   Navigate to the directory where _uesgraphs_ is located and run:
+   Navigate to the directory where _uesgraphs_ is located and choose your installation method:
 
+   **Basic Installation** (core functionality only):
    ```bash
    pip install -e <path/to/your/uesgraphs>
    ```
 
-5. **Verify your UESgraphs installation** by running the automated tests:
+   **Installation with Optional Dependencies**:
+
+   - **For template generation and Modelica support**:
+     ```bash
+     pip install -e <path/to/your/uesgraphs>[templates]
+     ```
+
+   - **For development (includes testing and coverage tools)**:
+     ```bash
+     pip install -e <path/to/your/uesgraphs>[dev]
+     ```
+
+   - **Complete installation with all dependencies**:
+     ```bash
+     pip install -e <path/to/your/uesgraphs>[full]
+     ```
+
+   > **Note**: The `[full]` option installs all optional dependencies including OMPython, pytest, coverage, and other development tools. Use this for a complete development environment.
+
+6. **Verify your UESgraphs installation** by running the automated tests:
 
    Navigate to the top-level _uesgraphs_ folder and execute:
 
@@ -77,9 +127,11 @@ Follow these steps to install **UESgraphs** using Conda:
 
    This will run the test suite and verify that everything is set up correctly.
 
+   > **Note**: Running tests requires the `[dev]` or `[full]` optional dependencies to be installed. If you only installed the basic version, install the dev dependencies first: `pip install uesgraphs[dev]` or `pip install -e .[dev]` (for editable installs).
+
 For more detailed information, please check the `pyproject.toml` file.
 
-6. **Install OpenModelica and OMPython to Run Examples 9 to 14**
+7. **Install OpenModelica and OMPython to Run Examples 9 to 14**
 
    To run examples 9 to 14, you need to install **OpenModelica** and **OMPython**.
 
@@ -91,26 +143,41 @@ For more detailed information, please check the `pyproject.toml` file.
 
    - **Install OMPython**:
 
-     - **OMPython** is a Python interface for OpenModelica.
-     - Install OMPython using `pip`:
+     If you haven't already installed OMPython with the `[templates]`,  or `[full]` options in step 3 or 5, you can install it separately:
 
+     ```bash
+     pip install "OMPython>=3.4.0,<4.0.0"
+     ```
+
+     **Alternative**: If you skipped the optional dependencies, you can add them:
+
+     For PyPI installation:
+     ```bash
+     pip install uesgraphs[templates]
+     # or for complete installation:
+     pip install uesgraphs[full]
+     ```
+
+     For editable/development installation:
+     ```bash
+     pip install -e <path/to/your/uesgraphs>[templates]
+     # or for complete installation:
+     pip install -e <path/to/your/uesgraphs>[full]
+     ```
+
+     **Important Notes**:
+     - ✓ UESgraphs is compatible with **OMPython 3.x only** (versions `>=3.4.0,<4.0.0`)
+     - ✗ OMPython 4.0.0+ introduces breaking API changes and is **not yet supported**
+     - If you encounter the error `'OMCSessionZMQ' object has no attribute 'loadFile'`, downgrade OMPython:
        ```bash
-       pip install "OMPython>=3.4.0,<4.0.0"
+       pip install "OMPython==3.6.0"
        ```
 
-       Or install with the optional templates dependency:
+     **Tested Configurations**:
+     - ✓ OpenModelica 1.24.4 + OMPython 3.6.0
+     - ✓ OpenModelica 1.26.0 + OMPython 3.6.0
 
-       ```bash
-       pip install -e ".[templates]"
-       ```
-
-     - **Note**: uesgraphs is currently compatible with OMPython versions 3.x only. Version 4.0.0+ introduces breaking API changes that are not yet supported.
-
-     - **Tested Configurations**:
-       - ✓ OpenModelica 1.24.4 + OMPython 3.6.0
-       - ✓ OpenModelica 1.26.0 + OMPython 3.6.0
-
-     - For more information on OMPython, refer to the [OMPython documentation](https://openmodelica.org/doc/OpenModelicaUsersGuide/latest/ompython.html#ompython).
+     For more information on OMPython, refer to the [OMPython documentation](https://openmodelica.org/doc/OpenModelicaUsersGuide/latest/ompython.html#ompython).
 
 
 ### :bulb: Usage
