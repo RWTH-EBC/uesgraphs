@@ -50,6 +50,11 @@ full = [
     "OMPython>=3.4.0,<4.0.0",
 ]
 
+pandapipes = [
+    "pandapipes==0.10.0",
+    "pandapower==3.0.0",
+]
+
 [project.urls]
 repository = "https://github.com/RWTH-EBC/uesgraphs"
 
