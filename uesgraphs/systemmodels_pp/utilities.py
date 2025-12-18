@@ -397,7 +397,7 @@ def uesgraph_to_pandapipes(uesgraph, simplification_level,
         logger.info("Try to save uesgraph after simplification")
         try:
             uesgraph.to_json(path=str(workspace),
-                        name = "transurban_seestadt_uesgraphs_simplified",
+                        name = "uesgraphs_simplified",
                         all_data = True,
                         prettyprint = True)
             logger.info("UESGraph after simplification saved")
@@ -439,7 +439,11 @@ def uesgraph_to_pandapipes(uesgraph, simplification_level,
             )
             try:
                 graph.to_json(path=str(workspace),
-                            name = "transurban_seestadt_uesgraphs_simulation_results",
+                            name = "uesgraphs",
+                            all_data = True,
+                            prettyprint = True)
+                graph.to_json(path=str(sim_model_dir),
+                            name = "uesgraphs",
                             all_data = True,
                             prettyprint = True)
                 logger.info("UESGraph after simulation saved")

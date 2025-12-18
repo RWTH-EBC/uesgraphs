@@ -603,6 +603,8 @@ class SystemModelHeating(UESGraph):
             ("res_circ_pump_pressure", "vdot_m3_per_s"),
             ("res_pipe", "v_mean_m_per_s"),
             ("res_pipe", "mdot_from_kg_per_s"),
+            ("res_pipe", "p_from_bar"),
+            ("res_pipe", "p_to_bar"),
         ]
 
         # --- heat-demand reading ---
@@ -725,7 +727,9 @@ class SystemModelHeating(UESGraph):
             "p_bar": "pressure",
             "t_k": "temperature",
             "mdot_from_kg_per_s": "mflow",
-            "v_mean_m_per_s": "velocity"
+            "v_mean_m_per_s": "velocity",
+            "p_from_bar": "pressure_from",
+            "p_to_bar": "pressure_to"
         }
 
         # --- Junction-Data -----------------------------------------------------
@@ -745,15 +749,28 @@ class SystemModelHeating(UESGraph):
                     node_id = junction_map[col_idx]
                     uesgraph_input.nodes[node_id][var_name] = df[col].tolist()  # Pandas Series
 
+        p_in = None
         # --- Pipe-Data ---------------------------------------------------------
         pipe_folder = base_folder / "res_pipe"
         for fname, var_name in [("mdot_from_kg_per_s.csv", "m_flow"),
-                                ("v_mean_m_per_s.csv", "velocity")]:
+                                 ("p_from_bar.csv", "pressure_from"),
+                                 ("p_to_bar.csv", "pressure_to")]:
             fpath = pipe_folder / fname
             if not fpath.exists():
                 continue
 
             df = pd.read_csv(fpath, index_col=0, sep=';')
+            if var_name == "pressure_from":
+                df = df*100000
+                p_in = df
+                continue
+            elif var_name == "pressure_to":
+                df = df*100000
+                if p_in is not None:
+                    df = p_in - df
+                    var_name = "dp"
+                else:
+                    df = df
 
             for col in df.columns:
                 col_idx = int(col)
