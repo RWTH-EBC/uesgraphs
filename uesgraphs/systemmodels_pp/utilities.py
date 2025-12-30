@@ -6,6 +6,7 @@ import pandas as pd
 
 import logging
 import tempfile
+import pickle
 import os
 from datetime import datetime
 import warnings
@@ -91,6 +92,109 @@ def set_up_logger(name, log_dir=None, level=int(logging.INFO)):  # Changed to IN
     
     return logger
 
+
+def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, logger=None):
+    """
+    Reads CSV-pandapipes results (Junctions & Pipes)
+    and saves them as Pandas Series in UESGraph.
+
+    base_folder must have these folders:
+    - res_junction/
+    - res_pipe/
+
+    Files and the names in the graph:
+    res_junction/p_bar.csv       → pressure
+    res_junction/t_k.csv         → temperature
+    res_pipe/mdot_from_kg_per_s.csv → mflow
+    res_pipe/v_mean_m_per_s.csv      → velocity
+
+    Parameters
+    ----------
+    uesgraph_input : uesgraphs.uesgraph.UESGraph object
+        UESGraph to assign the data to
+    base_folder : str
+        Folder where the CSV results are stored
+    logger : logging.Logger, optional
+        Logger instance for debugging
+    
+    Returns
+    -------
+    uesgraphs.uesgraph.UESGraph object
+        UESGraph with assigned data
+    """
+
+    if logger is None:
+        logger = set_up_terminal_logger(f"{__name__}.SystemModelHeating.assign_csv_data_to_uesgraph")
+
+    base_folder = Path(base_folder)
+
+    # Mappings depend on supply_type
+    supply_type = uesgraph_input.graph.get("supply_type", "supply")
+
+    logger.info(supply_type)
+
+    junction_map = mappings[supply_type]["junction"]
+    pipe_map = mappings[supply_type]["pipe"]
+
+    logger.info(junction_map)
+    # CSV --> Variable Name Mapping
+    csv_to_var = {
+        "p_bar": "pressure",
+        "t_k": "temperature",
+        "mdot_from_kg_per_s": "mflow",
+        "v_mean_m_per_s": "velocity",
+        "p_from_bar": "pressure_from",
+        "p_to_bar": "pressure_to"
+    }
+
+    # --- Junction-Data -----------------------------------------------------
+    junction_folder = base_folder / "res_junction"
+    for fname, var_name in [("p_bar.csv", "pressure"), ("t_k.csv", "temperature")]:
+        fpath = junction_folder / fname
+        if not fpath.exists():
+            continue
+        
+        df = pd.read_csv(fpath, index_col=0, sep=';')
+        if var_name == "pressure":
+            df = df*100000
+
+        for col in df.columns:
+            col_idx = int(col)
+            if col_idx in junction_map:
+                node_id = junction_map[col_idx]
+                uesgraph_input.nodes[node_id][var_name] = df[col].tolist()  # Pandas Series
+
+    p_in = None
+    # --- Pipe-Data ---------------------------------------------------------
+    pipe_folder = base_folder / "res_pipe"
+    for fname, var_name in [("mdot_from_kg_per_s.csv", "m_flow"),
+                                ("p_from_bar.csv", "pressure_from"),
+                                ("p_to_bar.csv", "pressure_to")]:
+        fpath = pipe_folder / fname
+        if not fpath.exists():
+            continue
+
+        df = pd.read_csv(fpath, index_col=0, sep=';')
+        if var_name == "pressure_from":
+            df = df*100000
+            p_in = df
+            continue
+        elif var_name == "pressure_to":
+            df = df*100000
+            if p_in is not None:
+                df = p_in - df
+                var_name = "dp"
+            else:
+                df = df
+
+        for col in df.columns:
+            col_idx = int(col)
+            if col_idx in pipe_map:
+                edge = pipe_map[col_idx]
+                uesgraph_input.edges[edge][var_name] = df[col].tolist()  # Pandas Series
+
+    return uesgraph_input
+
 ### Main Function for creating the model ###
 
 def create_model(
@@ -154,7 +258,21 @@ def create_model(
 
     new_model.run_timeseries_spp(save_at, logger=logger)
 
-    graph = new_model.assign_csv_data_to_uesgraph(graph, save_at, logger=logger)
+    mappings = {
+        "supply": {
+            "junction": new_model.junction_map_supply,
+            "pipe": new_model.pipe_map_supply,
+        },
+        "return": {
+            "junction": new_model.junction_map_return,
+            "pipe": new_model.pipe_map_return,
+        },
+    }
+
+    with open(Path(save_at) / "mappings.pkl", "wb") as f:
+        pickle.dump(mappings, f)
+
+    graph = assign_csv_data_to_uesgraph(graph, save_at, mappings, logger=logger)
 
     logger.info(f"=== create_model completed successfully for '{name}' ===")
     return new_model, graph
