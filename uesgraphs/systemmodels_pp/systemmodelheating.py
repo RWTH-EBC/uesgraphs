@@ -151,6 +151,9 @@ class SystemModelHeating(UESGraph):
     
         self.pp_network = pp.create_empty_network(fluid="water")
 
+        self.heat_to_mass_factor = 0
+        self.number_of_supplies = 1
+
         logger.info(f"SystemModelHeating initialization completed")
 
     def import_nodes_from_uesgraph(self, uesgraph_input, logger=None):
@@ -187,6 +190,7 @@ class SystemModelHeating(UESGraph):
         T_in = 0
         T_return = 0
         dT_design = 0
+        supplies = 0
         for node in uesgraph_input.nodes:
             try:
                 node_data = uesgraph_input.nodes[node]
@@ -194,48 +198,115 @@ class SystemModelHeating(UESGraph):
 
                 # Supply-node (heating)
                 if node_data["node_type"] == "building" and node_data.get("is_supply_heating", False):
-                    logger.debug(f"Creating supply node: {node}")
-                    p_in = node_data["dpIn"]
-                    p_return = node_data["pReturn"]
-                    T_in = node_data["TIn"]
-                    T_return = node_data["TReturn"]
-                    supply_junction = pp.create_junction(
-                        net=self.pp_network,
-                        pn_bar=p_in,
-                        tfluid_k=T_in,
-                        name=f"{node}0",
-                        geodata=(pos.x, pos.y),
-                        position_x=pos.x,
-                        position_y=pos.y
-                    )
-                    return_junction = pp.create_junction(
-                        net=self.pp_network,
-                        pn_bar=p_return,
-                        tfluid_k=T_return,
-                        name=f"{node}1",
-                        geodata=(pos.x, pos.y),
-                        position_x=pos.x,
-                        position_y=pos.y
-                    )
-                    junction_ids[int(f"{node}0")] = supply_junction
-                    junction_ids[int(f"{node}1")] = return_junction
+                    if supplies == 0:
+                        logger.debug(f"Creating supply node: {node}")
+                        p_in = node_data["dpIn"]
+                        p_return = node_data["pReturn"]
+                        T_in = node_data["TIn"]
+                        T_return = node_data["TReturn"]
+                        supply_junction = pp.create_junction(
+                            net=self.pp_network,
+                            pn_bar=p_in,
+                            tfluid_k=T_in,
+                            name=f"{node}0",
+                            geodata=(pos.x, pos.y),
+                            position_x=pos.x,
+                            position_y=pos.y
+                        )
+                        return_junction = pp.create_junction(
+                            net=self.pp_network,
+                            pn_bar=p_return,
+                            tfluid_k=T_return,
+                            name=f"{node}1",
+                            geodata=(pos.x, pos.y),
+                            position_x=pos.x,
+                            position_y=pos.y
+                        )
+                        junction_ids[int(f"{node}0")] = supply_junction
+                        junction_ids[int(f"{node}1")] = return_junction
 
-                    self.junction_map_supply[supply_junction] = node
-                    self.junction_map_return[return_junction] = node
+                        self.junction_map_supply[supply_junction] = node
+                        self.junction_map_return[return_junction] = node
 
-                    heat_source_id = supply_junction
-                    heat_source_r_id = return_junction
+                        heat_source_id = supply_junction
+                        heat_source_r_id = return_junction
 
-                    pp.create_circ_pump_const_pressure(
-                        net=self.pp_network,
-                        return_junction=return_junction,
-                        flow_junction=supply_junction,
-                        p_flow_bar=p_in,
-                        plift_bar=p_in - p_return,
-                        t_flow_k=T_in,
-                        type="auto",
-                        name="energy_hub"
-                    )
+                        pp.create_circ_pump_const_pressure(
+                            net=self.pp_network,
+                            return_junction=return_junction,
+                            flow_junction=supply_junction,
+                            p_flow_bar=p_in,
+                            plift_bar=p_in - p_return,
+                            t_flow_k=T_in,
+                            type="auto",
+                            name="energy_hub"
+                        )
+                        supplies += 1
+                    else:
+                        logger.debug(f"Creating supply node: {node}")
+                        p_in = node_data["dpIn"]
+                        p_return = node_data["pReturn"]
+                        T_in = node_data["TIn"]
+                        T_return = node_data["TReturn"]
+                        supply_junction = pp.create_junction(
+                            net=self.pp_network,
+                            pn_bar=p_in,
+                            tfluid_k=T_in,
+                            name=f"{node}0",
+                            geodata=(pos.x, pos.y),
+                            position_x=pos.x,
+                            position_y=pos.y
+                        )
+                        between_junction = pp.create_junction(
+                            net=self.pp_network,
+                            pn_bar=p_in,
+                            tfluid_k=T_in,
+                            name=f"{node}01",
+                            geodata=(pos.x, pos.y),
+                            position_x=pos.x,
+                            position_y=pos.y
+                        )
+                        return_junction = pp.create_junction(
+                            net=self.pp_network,
+                            pn_bar=p_return,
+                            tfluid_k=T_return,
+                            name=f"{node}1",
+                            geodata=(pos.x, pos.y),
+                            position_x=pos.x,
+                            position_y=pos.y
+                        )
+                        junction_ids[int(f"{node}0")] = supply_junction
+                        junction_ids[int(f"{node}01")] = between_junction
+                        junction_ids[int(f"{node}1")] = return_junction
+
+                        self.junction_map_supply[supply_junction] = node
+                        self.junction_map_return[return_junction] = node
+
+                        heat_source_id = supply_junction
+                        heat_source_r_id = return_junction
+
+                        #m_flow = /uesgraph_input.graph["number_of_supplies"]/(uesgraph_input.graph["dT_Net"]*uesgraph_input.graph["cp_default"])
+                        m_flow = 0
+                        logger.info(f"Mass flow for supply node '{node}': {m_flow:.4f} kg/s")
+
+                        pp.create_circ_pump_const_mass_flow(
+                            net=self.pp_network,
+                            return_junction=return_junction,
+                            flow_junction=between_junction,
+                            p_flow_bar=p_in,
+                            mdot_flow_kg_per_s = m_flow,
+                            t_flow_k=T_in,
+                            type="auto",
+                            name="energy_hub"
+                        )
+
+                        pp.create_flow_control(
+                            net=self.pp_network,
+                            from_junction=between_junction,
+                            to_junction=supply_junction,
+                            controlled_mdot_kg_per_s=m_flow,
+                            name="supply",
+                        )
 
                 # Building nodes (heating)
                 elif node_data["node_type"] == "building":
@@ -403,6 +474,8 @@ class SystemModelHeating(UESGraph):
             logger = set_up_terminal_logger(f"{__name__}.SystemModelHeating.import_from_uesgraph")
         
         logger.info("=== Starting full UESGraph import (pandapipes) ===")
+        self.heat_to_mass_factor = 1/uesgraph_input.graph["number_of_supplies"]/(uesgraph_input.graph["dT_Net"]*uesgraph_input.graph["cp_default"])
+        self.number_of_supplies = uesgraph_input.graph["number_of_supplies"]
 
         # Step 1: Junctions
         junction_ids, heat_source_id, heat_source_r_id = self.import_nodes_from_uesgraph(
@@ -422,7 +495,7 @@ class SystemModelHeating(UESGraph):
             # only take buildings
             if node_data.get("node_type") != "building" or node_data.get("is_supply_heating", False):
                 continue
-            heat = node_data.get("input_heat", [])
+            heat = node_data.get("input_heat", []) # TODO: adding of Dhw or only taking heat?
             data[node] = heat
             max_len = max(max_len, len(heat))
 
@@ -631,6 +704,39 @@ class SystemModelHeating(UESGraph):
             data_source=ds_dem,
             profile_name=profile_names,
         )
+        
+        if self.number_of_supplies > 1:
+            log_variables.append(("res_circ_pump_mass", "mdot_from_kg_per_s"))
+            profiles_mass_flow = profiles_demand.sum(axis=1)*self.heat_to_mass_factor
+            profiles_mass_flow = pd.concat(
+                [profiles_mass_flow] * (self.number_of_supplies-1), axis=1
+            )
+            profiles_mass_flow.columns = [
+                str(idx) for idx in pp_network.circ_pump_mass.index
+            ]
+
+            logger.info(profiles_mass_flow)
+            ds_mass = DFData(profiles_mass_flow)
+
+            profile_names = [str(idx) for idx in pp_network.circ_pump_mass.index]
+            control.ConstControl(
+                pp_network,
+                element="circ_pump_mass",
+                variable="mdot_flow_kg_per_s",
+                element_index=pp_network.circ_pump_mass.index.values,
+                data_source=ds_mass,
+                profile_name=profile_names,
+            )
+
+            profile_names = [str(idx) for idx in pp_network.flow_control.index]
+            control.ConstControl(
+                pp_network,
+                element="flow_control",
+                variable="controlled_mdot_kg_per_s",
+                element_index=pp_network.flow_control.index.values,
+                data_source=ds_mass,
+                profile_name=profile_names,
+            )
 
         # --- ground-temperatures reading ---
         if len(self.ground_temp_data["1.0 m"]) > 1:
@@ -674,7 +780,7 @@ class SystemModelHeating(UESGraph):
 
         # --- Simulation start ---
         try:
-            run_timeseries(pp_network, timesteps, mode="sequential")
+            run_timeseries(pp_network, timesteps, mode="bidirectional", iter = 100)
             logger.info("Pandapipes timeseries simulation completed successfully!")
         except Exception as e:
             logger.error(f"Timeseries simulation failed: {e}")

@@ -470,6 +470,7 @@ def uesgraph_to_pandapipes(uesgraph, simplification_level,
 
         # Step 6: Assign supply parameters from Excel
         logger.info("*** Assigning supply parameters from Excel ***")
+        supplies = 0
         try:
             excel_params = _load_excel(sim_setup_path, 'Supply', logger)
             for node in uesgraph.nodelist_building:
@@ -480,15 +481,18 @@ def uesgraph_to_pandapipes(uesgraph, simplification_level,
                     uesgraph.nodes[node]["dpIn"] = excel_params.get("pIn", 500000)/100000  # Convert from Pa to bar
                     uesgraph.nodes[node]["pReturn"] = excel_params.get("pReturn", 200000)/100000
                     uesgraph.nodes[node]["dpFlow"] = excel_params.get("dpFlow", 300000)/100000
+                    supplies += 1
             logger.info("Supply parameters successfully assigned")
         except Exception as e:
             logger.error(f"Failed to assign supply parameters: {e}")
             raise
-
+        uesgraph.graph["number_of_supplies"] = supplies
         # Step 7: Assign demand parameters from Excel
         logger.info("*** Assigning demand parameters from Excel ***")
         try:
             excel_params = _load_excel(sim_setup_path, 'Demands', logger)
+            uesgraph.graph["dT_Net"]= excel_params.get("dT_Network", 25)
+            uesgraph.graph["cp_default"] = excel_params.get("cp_default", 4180)  
             for node in uesgraph.nodelist_building:
                 is_supply = "is_supply_{}".format(uesgraph.graph["network_type"])
                 if not uesgraph.nodes[node][is_supply]:
@@ -498,8 +502,7 @@ def uesgraph_to_pandapipes(uesgraph, simplification_level,
             logger.info("Demand parameters successfully assigned")
         except Exception as e:
             logger.error(f"Failed to assign demand parameters: {e}")
-            raise
-            
+            raise 
         # Step 8: Load ground temperature data for simulations
         logger.info("Loading ground temperature data")
         ground_temp_df = load_ground_temp_data(ground_temp_path)
