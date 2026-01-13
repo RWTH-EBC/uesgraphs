@@ -1,0 +1,7 @@
+uesgraphs.analyze package
+=========================
+
+.. automodule:: uesgraphs.analyze
+   :members:
+   :undoc-members:
+   :show-inheritance:

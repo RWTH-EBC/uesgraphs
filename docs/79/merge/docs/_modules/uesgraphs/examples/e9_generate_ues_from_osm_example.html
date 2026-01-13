@@ -1,0 +1,470 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.examples.e9_generate_ues_from_osm_example &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/Template_Generation.html">Template Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.examples.e9_generate_ues_from_osm_example</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.examples.e9_generate_ues_from_osm_example</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># @Author: MichaMans</span>
+<span class="c1"># @Date:   2019-03-12 08:26:20</span>
+<span class="c1"># @Last Modified by:   rka-lko</span>
+<span class="c1"># @Last Modified time: 2024-01-17</span>
+
+<span class="sd">&quot;&quot;&quot;Generate complex Urban Energy System (UES) Graph from OpenStreetMap (OSM) data.</span>
+
+<span class="sd">This script processes OSM data to create and visualize district heating networks. It performs</span>
+<span class="sd">building clustering, street network analysis, and generates various visualization outputs.</span>
+
+<span class="sd">Output Files</span>
+<span class="sd">-----------</span>
+<span class="sd">e9_simple_melaten_osm.png</span>
+<span class="sd">    Basic network visualization without detailed features</span>
+<span class="sd">    </span>
+<span class="sd">e9_example_melaten_osm.png</span>
+<span class="sd">    Network layout including street labels</span>
+<span class="sd">    </span>
+<span class="sd">e9_example_melaten_osm_bldgs.png</span>
+<span class="sd">    Network layout with building identifiers</span>
+<span class="sd">    </span>
+<span class="sd">e9_example_melaten_osm_wo_large_bldgs.png</span>
+<span class="sd">    Network layout after removing large buildings</span>
+<span class="sd">    Note: Only building 1121 is removed in this example</span>
+<span class="sd">    </span>
+<span class="sd">e9_simple_melaten_osm_wo_large_bldgs.png</span>
+<span class="sd">    Simplified network view without building 1121</span>
+<span class="sd">    </span>
+<span class="sd">e9_melaten_dhc_network.png</span>
+<span class="sd">    District heating network visualization after:</span>
+<span class="sd">    - Street crossing detection</span>
+<span class="sd">    - Building clustering</span>
+<span class="sd">    - Supply node integration</span>
+<span class="sd">    - Network optimization</span>
+<span class="sd">    </span>
+<span class="sd">e9_melaten_dhc_network_detail.png</span>
+<span class="sd">    Detailed view of the final district heating network</span>
+
+<span class="sd">Dependencies</span>
+<span class="sd">-----------</span>
+<span class="sd">- uesgraphs</span>
+<span class="sd">- os</span>
+
+<span class="sd">Author</span>
+<span class="sd">------</span>
+<span class="sd">MichaMans</span>
+
+<span class="sd">Review</span>
+<span class="sd">------</span>
+<span class="sd">rka-lko</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ug</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs.uesmodels.utilities.uesgenerator</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">uesgen</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs.uesmodels.utilities.utilities</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">utils</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.examples</span><span class="w"> </span><span class="kn">import</span> <span class="n">e1_readme_example</span> <span class="k">as</span> <span class="n">e1</span>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e9_generate_ues_from_osm_example.main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main function.&quot;&quot;&quot;</span>
+    <span class="n">generate_ues</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="generate_ues"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e9_generate_ues_from_osm_example.generate_ues">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">generate_ues</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads an osm file and plots it.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Path to OSM file</span>
+
+    <span class="n">dir_this</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="n">dir_src</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dir_this</span><span class="p">))</span>
+    <span class="n">dir_data</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_src</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">))</span>
+    <span class="n">abs_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_data</span><span class="p">,</span> <span class="s2">&quot;campus_melaten.osm&quot;</span><span class="p">))</span>
+
+    <span class="c1"># Get output data directory</span>
+    <span class="n">workspace</span> <span class="o">=</span> <span class="n">e1</span><span class="o">.</span><span class="n">workspace_example</span><span class="p">(</span><span class="s2">&quot;e9&quot;</span><span class="p">)</span>
+
+    <span class="n">example_district</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+
+    <span class="c1"># To import buildings and streets from OpenStreetMap data in osm_file</span>
+    <span class="c1"># the from_osm function is used. This function contains four parameters.</span>
+    <span class="c1"># In path the full path to input osm file is given. Name gives the name of</span>
+    <span class="c1"># the city for the boundary check. If the parameter check_boundary is true,</span>
+    <span class="c1"># the city boundary will be extracted from the osm file and only nodes</span>
+    <span class="c1"># within this boundary will be accepted. The transform_positions parameter</span>
+    <span class="c1"># decides whether the position data should be transfomed to coordinates</span>
+    <span class="c1"># using metric system. By default it is set &#39;true&#39;. If it is set &#39;false&#39;</span>
+    <span class="c1"># the positions will remain in longitude and latitude as read from the</span>
+    <span class="c1"># OSM file.</span>
+
+    <span class="n">example_district</span><span class="o">.</span><span class="n">from_osm</span><span class="p">(</span>
+        <span class="n">osm_file</span><span class="o">=</span><span class="n">abs_file</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Melaten&quot;</span><span class="p">,</span>
+        <span class="n">check_boundary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">transform_positions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">scaling_factor</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="c1"># Plot simple osm layout using show_network function</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e9_simple_melaten_osm.png&quot;</span><span class="p">)</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">example_district</span><span class="p">)</span>
+    <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span> <span class="n">simple</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Analyze the building statistics for the district and distinguish them by</span>
+    <span class="c1"># area in small, medium and large buildings.</span>
+
+    <span class="n">area_list</span><span class="p">(</span><span class="n">example_district</span><span class="p">)</span>
+
+    <span class="c1"># Remove all buildings from the graph that have less area than parameter</span>
+    <span class="c1"># &#39;min_area&#39;. This function has two parameters &#39;input_graph&#39; and &#39;min_area&#39;.</span>
+
+    <span class="n">remove_small_buildings</span><span class="p">(</span><span class="n">example_district</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+    <span class="c1"># Plot full network layout with street labels to remove them afterwards</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e9_example_melaten_osm.png&quot;</span><span class="p">)</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">example_district</span><span class="p">)</span>
+    <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="s2">&quot;street&quot;</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot full network layout of building labels to remove them</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e9_example_melaten_osm_bldgs.png&quot;</span><span class="p">)</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">example_district</span><span class="p">)</span>
+    <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span>
+        <span class="n">labels</span><span class="o">=</span><span class="s2">&quot;building&quot;</span><span class="p">,</span>
+        <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># now we need to remove some street nodes which are not connected.</span>
+    <span class="c1"># or connect them by hand</span>
+    <span class="c1"># 1350 - 1357</span>
+    <span class="c1"># 2257 - 2271</span>
+    <span class="c1"># 1135, 1136, 1138, 1448 - 1455</span>
+    <span class="c1"># 1762 - 1767</span>
+
+    <span class="n">street_nodes_to_remove</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1135</span><span class="p">,</span> <span class="mi">1136</span><span class="p">,</span> <span class="mi">1138</span><span class="p">,</span> <span class="mi">1888</span><span class="p">,</span> <span class="mi">1889</span><span class="p">]</span>
+    <span class="n">street_nodes_to_remove</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1350</span><span class="p">,</span> <span class="mi">1358</span><span class="p">))</span>
+    <span class="n">street_nodes_to_remove</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2257</span><span class="p">,</span> <span class="mi">2272</span><span class="p">))</span>
+    <span class="n">street_nodes_to_remove</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1448</span><span class="p">,</span> <span class="mi">1456</span><span class="p">))</span>
+    <span class="n">street_nodes_to_remove</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1762</span><span class="p">,</span> <span class="mi">1768</span><span class="p">))</span>
+
+    <span class="c1"># Remove street nodes</span>
+
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">street_nodes_to_remove</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">example_district</span><span class="o">.</span><span class="n">nodelist_street</span><span class="p">:</span>
+            <span class="n">example_district</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="n">example_district</span><span class="o">.</span><span class="n">nodelist_street</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+    <span class="c1"># now we remove the buildings which should not be included</span>
+
+    <span class="n">example_district</span><span class="o">.</span><span class="n">remove_building</span><span class="p">(</span><span class="mi">1121</span><span class="p">)</span>
+
+    <span class="c1"># Plot full network layout without the unnecessary buildings and streets</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e9_example_melaten_osm_wo_large_bldgs.png&quot;</span><span class="p">)</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">example_district</span><span class="p">)</span>
+    <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="s2">&quot;street&quot;</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span>
+    <span class="p">)</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e9_simple_melaten_osm_wo_large_bldgs.png&quot;</span><span class="p">)</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">example_district</span><span class="p">)</span>
+    <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span> <span class="n">simple</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Now we can start generating an exemplary and randomized district heating</span>
+    <span class="c1"># network. A heating supply building is added using the</span>
+    <span class="c1"># add_district_heating_buildings.</span>
+
+    <span class="n">supply_node</span> <span class="o">=</span> <span class="n">add_district_heating_buildings</span><span class="p">(</span><span class="n">example_district</span><span class="p">,</span> <span class="s2">&quot;87275925&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Generate a urban energy system using the &#39;UESGenerator&#39; and the data just</span>
+    <span class="c1"># created from OSM file.</span>
+
+    <span class="n">uesgenerator</span> <span class="o">=</span> <span class="n">uesgen</span><span class="o">.</span><span class="n">UESGenerator</span><span class="p">()</span>
+    <span class="n">uesgenerator</span><span class="o">.</span><span class="n">uesgraph</span> <span class="o">=</span> <span class="n">example_district</span>
+
+    <span class="c1"># Find street crossings</span>
+
+    <span class="n">uesgenerator</span><span class="o">.</span><span class="n">find_crossings</span><span class="p">()</span>
+
+    <span class="c1"># Cluster buildings for a more generic usage using the cluster_bldg</span>
+    <span class="c1"># function. The parameter &#39;eps&#39; indicates the maximum distance (in m) that</span>
+    <span class="c1"># points can be away from each other to be considered a cluster.</span>
+
+    <span class="n">uesgenerator</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cluster_bldg</span><span class="p">(</span><span class="n">uesgenerator</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+    <span class="c1"># Adds the network to the district based on the street layout using</span>
+    <span class="c1"># add_network_new function. There are three parameters to set. &#39;supply_node&#39;</span>
+    <span class="c1"># specifies the heating supply building. &#39;number_of_buildings&#39; gives</span>
+    <span class="c1"># the number of buildings to be connected to the heating network and</span>
+    <span class="c1"># &#39;success_rate&#39; indicates the probability of a building to be part of the</span>
+    <span class="c1"># heating network.</span>
+
+    <span class="n">melaten_dhc_example</span> <span class="o">=</span> <span class="n">uesgenerator</span><span class="o">.</span><span class="n">add_network_new</span><span class="p">(</span>
+        <span class="n">supply_node</span><span class="o">=</span><span class="n">supply_node</span><span class="p">,</span>
+        <span class="n">number_of_buildings</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">example_district</span><span class="o">.</span><span class="n">nodelist_building</span><span class="p">),</span>
+        <span class="n">success_rate</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">workspace</span><span class="o">=</span><span class="n">workspace</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Generate a heating network as subgraph and remove any edges and network</span>
+    <span class="c1"># nodes not connected to a supply node of type &#39;heating&#39;.</span>
+
+    <span class="n">heating_network</span> <span class="o">=</span> <span class="n">melaten_dhc_example</span><span class="o">.</span><span class="n">create_subgraphs</span><span class="p">(</span><span class="s2">&quot;heating&quot;</span><span class="p">)[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+    <span class="n">heating_network</span><span class="o">.</span><span class="n">remove_unconnected_nodes</span><span class="p">(</span><span class="s2">&quot;heating&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Plot simple osm layout</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e9_melaten_dhc_network.png&quot;</span><span class="p">)</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">heating_network</span><span class="p">)</span>
+    <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span>
+        <span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">,</span> <span class="n">simple</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Plot detailed osm layout</span>
+
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;e9_melaten_dhc_network_detail.png&quot;</span><span class="p">)</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">heating_network</span><span class="p">)</span>
+    <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span><span class="n">save_as</span><span class="o">=</span><span class="n">save_as</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span><span class="p">)</span>
+
+    <span class="c1"># Print out the length of all edges for the heating network in meter.</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">heating_network</span><span class="o">.</span><span class="n">calc_network_length</span><span class="p">(</span><span class="s2">&quot;heating&quot;</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">example_district</span></div>
+
+
+<div class="viewcode-block" id="remove_small_buildings"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e9_generate_ues_from_osm_example.remove_small_buildings">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">remove_small_buildings</span><span class="p">(</span><span class="n">input_graph</span><span class="p">,</span> <span class="n">min_area</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Remove all buildings from the graph that have area less than `min_area´.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_graph : uesgraphs.uesgraph.UESGraph object</span>
+<span class="sd">        An UESGraph that will be analysed for data</span>
+<span class="sd">    min_area : float</span>
+<span class="sd">        Minimum area for a building to remain in the graph</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    input_graph : uesgraphs.uesgraph.UESGraph object</span>
+<span class="sd">        An UESGraph that will be analysed for data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">to_remove</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">building</span> <span class="ow">in</span> <span class="n">input_graph</span><span class="o">.</span><span class="n">nodelist_building</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;area&quot;</span> <span class="ow">in</span> <span class="n">input_graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">building</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">input_graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">building</span><span class="p">][</span><span class="s2">&quot;area&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">min_area</span><span class="p">:</span>
+                <span class="n">to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">building</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">building</span> <span class="ow">in</span> <span class="n">to_remove</span><span class="p">:</span>
+        <span class="n">input_graph</span><span class="o">.</span><span class="n">remove_building</span><span class="p">(</span><span class="n">building</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="add_district_heating_buildings"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e9_generate_ues_from_osm_example.add_district_heating_buildings">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">add_district_heating_buildings</span><span class="p">(</span><span class="n">input_graph</span><span class="p">,</span> <span class="n">supply_id_osm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set the given osm id as supply and remaining buildings as demand.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_graph : uesgraphs.uesgraph.UESGraph object</span>
+<span class="sd">        An UESGraph that will be analysed for data</span>
+<span class="sd">    supply_id_osm:</span>
+<span class="sd">        The osm id of the building which is used as the supply node</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">input_graph</span><span class="o">.</span><span class="n">nodelist_building</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">input_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;osm_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">supply_id_osm</span><span class="p">:</span>
+            <span class="n">input_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;is_supply_heating&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">supply_node</span> <span class="o">=</span> <span class="n">node</span>
+    <span class="k">return</span> <span class="n">supply_node</span></div>
+
+
+<div class="viewcode-block" id="area_list"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e9_generate_ues_from_osm_example.area_list">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">area_list</span><span class="p">(</span><span class="n">input_graph</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    List the average area of small, medium and large buildings</span>
+
+<span class="sd">    Small: &lt; 200 m²</span>
+<span class="sd">    Medium: 200 m² &lt; 1000 m²</span>
+<span class="sd">    Large: &gt; 1000 m²</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_graph : uesgraphs.uesgraph.UESGraph object</span>
+<span class="sd">        An UESGraph that will be analysed for data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">area_list_small</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">area_list_medium</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">area_list_large</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">list_small_buildings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">list_medium_buildings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">list_large_buildings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">building</span> <span class="ow">in</span> <span class="n">input_graph</span><span class="o">.</span><span class="n">nodelist_building</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;area&quot;</span> <span class="ow">in</span> <span class="n">input_graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">building</span><span class="p">]:</span>
+
+            <span class="k">if</span> <span class="n">input_graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">building</span><span class="p">][</span><span class="s2">&quot;area&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">list_small_buildings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">building</span><span class="p">])</span>
+                <span class="n">area_list_small</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">building</span><span class="p">][</span><span class="s2">&quot;area&quot;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">input_graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">building</span><span class="p">][</span><span class="s2">&quot;area&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">200</span>
+                <span class="ow">and</span> <span class="n">input_graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">building</span><span class="p">][</span><span class="s2">&quot;area&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1000</span>
+            <span class="p">):</span>
+                <span class="n">list_medium_buildings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">building</span><span class="p">])</span>
+                <span class="n">area_list_medium</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">building</span><span class="p">][</span><span class="s2">&quot;area&quot;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">input_graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">building</span><span class="p">][</span><span class="s2">&quot;area&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">:</span>
+                <span class="n">list_large_buildings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">building</span><span class="p">])</span>
+                <span class="n">area_list_large</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">building</span><span class="p">][</span><span class="s2">&quot;area&quot;</span><span class="p">])</span>
+
+    <span class="c1"># small buildings</span>
+    <span class="n">l_small</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_small_buildings</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Small buildings:&quot;</span><span class="p">,</span> <span class="n">l_small</span><span class="p">)</span>
+    <span class="n">a_small_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">area_list_small</span><span class="p">)</span>
+    <span class="n">a_small_mid</span> <span class="o">=</span> <span class="n">a_small_sum</span> <span class="o">/</span> <span class="n">l_small</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Small buildings: Avarage area =&quot;</span><span class="p">,</span> <span class="n">a_small_mid</span><span class="p">)</span>
+
+    <span class="c1"># medium buildings</span>
+    <span class="n">l_medium</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_medium_buildings</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Medium buildings:&quot;</span><span class="p">,</span> <span class="n">l_medium</span><span class="p">)</span>
+    <span class="n">a_medium_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">area_list_medium</span><span class="p">)</span>
+    <span class="n">a_medium_mid</span> <span class="o">=</span> <span class="n">a_medium_sum</span> <span class="o">/</span> <span class="n">l_medium</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Medium buildings: Avarage area =&quot;</span><span class="p">,</span> <span class="n">a_medium_mid</span><span class="p">)</span>
+
+    <span class="c1"># large buildings</span>
+    <span class="n">l_large</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_large_buildings</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Large buildings:&quot;</span><span class="p">,</span> <span class="n">l_large</span><span class="p">)</span>
+    <span class="n">a_large_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">area_list_large</span><span class="p">)</span>
+    <span class="n">a_large_mid</span> <span class="o">=</span> <span class="n">a_large_sum</span> <span class="o">/</span> <span class="n">l_large</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Large buildings: Avarage area =&quot;</span><span class="p">,</span> <span class="n">a_large_mid</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">input_graph</span></div>
+
+
+<span class="c1"># Main function</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Loading osm data ***&quot;</span><span class="p">)</span>
+    <span class="n">main</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Done ***&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

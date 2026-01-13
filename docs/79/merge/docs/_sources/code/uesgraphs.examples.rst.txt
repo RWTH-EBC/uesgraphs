@@ -1,0 +1,130 @@
+uesgraphs.examples package
+==========================
+
+.. automodule:: uesgraphs.examples
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+uesgraphs.examples.e10\_networks\_example module
+------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e10_networks_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e11\_model\_generation\_example module
+---------------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e11_model_generation_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e12\_template\_generation\_example module
+------------------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e12_template_generation_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e13\_analyze\_uesgraphs\_example module
+----------------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e13_analyze_uesgraphs_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e16\_complete\_geojson\_to\_modelica module
+--------------------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e16_complete_geojson_to_modelica
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e17\_complete\_geojson\_to\_pandapipes module
+----------------------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e17_complete_geojson_to_pandapipes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e1\_readme\_example module
+---------------------------------------------
+
+.. automodule:: uesgraphs.examples.e1_readme_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e2\_simple\_dhc\_example module
+--------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e2_simple_dhc_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e3\_add\_network\_example module
+---------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e3_add_network_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e4\_save\_uesgraphs\_example module
+------------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e4_save_uesgraphs_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e5\_add\_street\_nodes\_example module
+---------------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e5_add_street_nodes_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e6\_additional\_building\_attributes\_example module
+-----------------------------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e6_additional_building_attributes_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e7\_plot\_uesgraphs\_example module
+------------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e7_plot_uesgraphs_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e8\_load\_uesgraphs\_example module
+------------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e8_load_uesgraphs_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e9\_generate\_ues\_from\_osm\_example module
+---------------------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e9_generate_ues_from_osm_example
+   :members:
+   :undoc-members:
+   :show-inheritance:

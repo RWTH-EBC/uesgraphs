@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UESgraphs: Automated graph-based simulation model generation and analysis tool &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+
+  
+      <script src="_static/jquery.js"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+      <script src="_static/doctools.js"></script>
+      <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Model Generation Pipeline" href="guides/model_generation_pipeline.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/Template_Generation.html">Template Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><strong>UESgraphs</strong>: Automated graph-based simulation model generation and analysis tool</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <img alt="EBC Logo" class="align-right" src="_images/EBC_Logo.png" />
+<section id="uesgraphs-automated-graph-based-simulation-model-generation-and-analysis-tool">
+<h1><strong>UESgraphs</strong>: Automated graph-based simulation model generation and analysis tool<a class="headerlink" href="#uesgraphs-automated-graph-based-simulation-model-generation-and-analysis-tool" title="Permalink to this heading"></a></h1>
+<a class="reference external image-reference" href="https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml"><img alt="CI Tests" src="https://github.com/RWTH-EBC/uesgraphs/actions/workflows/ci.yml/badge.svg?branch=master" /></a>
+<a class="reference external image-reference" href="http://doge.mit-license.org"><img alt="License: MIT" src="http://img.shields.io/:license-mit-blue.svg" /></a>
+<p><strong>UESgraphs</strong> (Urban Energy Systems graphs) is an open-source Python framework designed for the automated generation, simulation, and analysis of complex urban energy systems, with a focus on district heating and cooling networks. Built on a graph-based data structure, UESgraphs simplifies the challenging task of modeling interconnected energy infrastructure, enabling researchers and practitioners to rapidly create robust, dynamic simulation models ready for advanced analysis.
+The tool seamlessly integrates diverse data sources, including spatial (OpenStreetMap) and tabular datasets, to build high-fidelity system graphs representing buildings, energy networks, and supply stations. Automated workflows encompass hydronic sizing, network topology optimization, and model export to simulation environments like Modelica/Dymola.</p>
+<p>Beyond model creation, <strong>UESgraphs</strong> offers comprehensive post-simulation analytics and intuitive visualization capabilities, empowering users to extract actionable insights through color-coded network plots, KPIs, and interactive exploration of complex energy systems.</p>
+</section>
+<section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h1>
+<p>The best way to start is by installing the package and checking out the <span class="xref std std-doc">examples</span>.</p>
+<p>Follow these steps to install <strong>UESgraphs</strong> using Conda:</p>
+<ol class="arabic">
+<li><p><strong>Create a new virtual environment</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>uesgraphs<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.13
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">3.13</span></code> with your desired version of Python.</p>
+</div>
+</li>
+<li><p><strong>Activate the virtual environment</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>uesgraphs
+</pre></div>
+</div>
+</li>
+<li><p><strong>Install UESgraphs from PyPI</strong> (Quick Installation):</p>
+<p>If you want to use UESgraphs without modifying the source code, install directly from PyPI:</p>
+<p><strong>Basic Installation</strong> (core functionality only):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>uesgraphs
+</pre></div>
+</div>
+<p><strong>Installation with Optional Dependencies</strong>:</p>
+<ul>
+<li><p><strong>For template generation and Modelica support</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>uesgraphs<span class="o">[</span>templates<span class="o">]</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>For development (includes testing and coverage tools)</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>uesgraphs<span class="o">[</span>dev<span class="o">]</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Complete installation with all dependencies</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>uesgraphs<span class="o">[</span>full<span class="o">]</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you’re installing from PyPI, skip steps 4 and 5 and proceed directly to step 6 for verification, or step 7 for OpenModelica setup.</p>
+</div>
+</li>
+<li><p><strong>Clone or download the UESgraphs repository</strong> (Development Installation):</p>
+<p>If you want to modify the source code or contribute to development:</p>
+<ul>
+<li><p>If you’re cloning the repository using Git, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/RWTH-EBC/uesgraphs.git
+</pre></div>
+</div>
+</li>
+<li><p>If you’ve downloaded the repository as a ZIP file, extract it to your desired location.</p></li>
+</ul>
+</li>
+<li><p><strong>Install UESgraphs in editable mode</strong> (Development Installation):</p>
+<p>Navigate to the directory where <em>UESgraphs</em> is located and choose your installation method:</p>
+<p><strong>Basic Installation</strong> (core functionality only):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>&lt;path/to/your/uesgraphs&gt;
+</pre></div>
+</div>
+<p><strong>Installation with Optional Dependencies</strong>:</p>
+<ul>
+<li><p><strong>For template generation and Modelica support</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>&lt;path/to/your/uesgraphs&gt;<span class="o">[</span>templates<span class="o">]</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>For development (includes testing and coverage tools)</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>&lt;path/to/your/uesgraphs&gt;<span class="o">[</span>dev<span class="o">]</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Complete installation with all dependencies</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>&lt;path/to/your/uesgraphs&gt;<span class="o">[</span>full<span class="o">]</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">[full]</span></code> option installs all optional dependencies including OMPython, pytest, coverage, and other development tools. Use this for a complete development environment.</p>
+</div>
+</li>
+<li><p><strong>Verify your UESgraphs installation</strong> by running the automated tests:</p>
+<p>Navigate to the top-level <em>UESgraphs</em> folder and execute:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--mpl
+</pre></div>
+</div>
+<p>This will run the test suite and verify that everything is set up correctly.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Running tests requires the <code class="docutils literal notranslate"><span class="pre">[dev]</span></code> or <code class="docutils literal notranslate"><span class="pre">[full]</span></code> optional dependencies to be installed. If you only installed the basic version, install the dev dependencies first: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">uesgraphs[dev]</span></code> or <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.[dev]</span></code> (for editable installs).</p>
+</div>
+</li>
+</ol>
+<p>For more detailed information, please check the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file.</p>
+<ol class="arabic" start="7">
+<li><p><strong>Install OpenModelica and OMPython to Run Examples 9 to 14</strong></p>
+<p>To run examples 9 to 14, you need to install <strong>OpenModelica</strong> and <strong>OMPython</strong>.</p>
+<ul>
+<li><p><strong>Download and Install OpenModelica</strong>:</p>
+<ul class="simple">
+<li><p>Visit the <a class="reference external" href="https://openmodelica.org/download/download-windows/">OpenModelica download page</a> to download the installer for your operating system.</p></li>
+<li><p>Follow the on-screen instructions to install OpenModelica on your computer.</p></li>
+<li><p>Add OpenModelica to the environment variable</p></li>
+</ul>
+</li>
+<li><p><strong>Install OMPython</strong>:</p>
+<p>If you haven’t already installed OMPython with the <code class="docutils literal notranslate"><span class="pre">[templates]</span></code> or <code class="docutils literal notranslate"><span class="pre">[full]</span></code> options in step 3 or 5, you can install it separately:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;OMPython&gt;=3.4.0,&lt;4.0.0&quot;</span>
+</pre></div>
+</div>
+<p><strong>Alternative</strong>: If you skipped the optional dependencies, you can add them:</p>
+<p>For PyPI installation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>uesgraphs<span class="o">[</span>templates<span class="o">]</span>
+<span class="c1"># or for complete installation:</span>
+pip<span class="w"> </span>install<span class="w"> </span>uesgraphs<span class="o">[</span>full<span class="o">]</span>
+</pre></div>
+</div>
+<p>For editable/development installation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>&lt;path/to/your/uesgraphs&gt;<span class="o">[</span>templates<span class="o">]</span>
+<span class="c1"># or for complete installation:</span>
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>&lt;path/to/your/uesgraphs&gt;<span class="o">[</span>full<span class="o">]</span>
+</pre></div>
+</div>
+<p><strong>Important Notes</strong>:</p>
+<ul>
+<li><p>✓ UESgraphs is compatible with <strong>OMPython 3.x only</strong> (versions <code class="docutils literal notranslate"><span class="pre">&gt;=3.4.0,&lt;4.0.0</span></code>)</p></li>
+<li><p>✗ OMPython 4.0.0+ introduces breaking API changes and is <strong>not yet supported</strong></p></li>
+<li><p>If you encounter the error <code class="docutils literal notranslate"><span class="pre">'OMCSessionZMQ'</span> <span class="pre">object</span> <span class="pre">has</span> <span class="pre">no</span> <span class="pre">attribute</span> <span class="pre">'loadFile'</span></code>, downgrade OMPython:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;OMPython==3.6.0&quot;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p><strong>Tested Configurations</strong>:</p>
+<ul class="simple">
+<li><p>✓ OpenModelica 1.24.4 + OMPython 3.6.0</p></li>
+<li><p>✓ OpenModelica 1.26.0 + OMPython 3.6.0</p></li>
+</ul>
+<p>For more information on OMPython, refer to the <a class="reference external" href="https://openmodelica.org/doc/OpenModelicaUsersGuide/latest/ompython.html#ompython">OMPython documentation</a>.</p>
+</li>
+</ul>
+</li>
+</ol>
+<section id="functional-principle">
+<h2>### Functional Principle<a class="headerlink" href="#functional-principle" title="Permalink to this heading"></a></h2>
+<p><strong>UESgraphs</strong> is built with <cite>networkx</cite> as its core library. The typical workflow for the tool involves:</p>
+<a class="reference internal image-reference" href="_images/uesgraph_function_principle.png"><img alt="Developed workflow using UESgraphs v 2.0.0" class="align-center" src="_images/uesgraph_function_principle.png" style="width: 100%;" /></a>
+<p>The functional principle of <strong>UESgraphs</strong> can be summarized as under:</p>
+<ul class="simple">
+<li><p>UESgraphs uses a graph-based structure to represent urban energy systems, where nodes denote buildings, network junctions, and supply units, and edges represent thermal and hydraulic connections like pipes.</p></li>
+<li><p>The core graph functionality builds on the Python NetworkX library, allowing flexible and scalable handling of complex system topologies.</p></li>
+<li><p>The framework supports automated preprocessing steps such as network cleaning, topology simplification, and hydronic pipe sizing to prepare accurate system models.</p></li>
+<li><p>Multiple data input formats are supported, including OpenStreetMap, GIS files, and manual data, enabling integration of heterogeneous spatial and tabular data.</p></li>
+<li><p>UESgraphs automates the generation of dynamic simulation models by transforming graph representations into Modelica code through templated model export.</p></li>
+<li><p>The tool facilitates downstream analysis and visualization, including color-coded plots and KPI extraction, to support evaluation and decision-making.</p></li>
+</ul>
+</section>
+</section>
+<section id="api-documentation">
+<h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this heading"></a></h1>
+<blockquote>
+<div><div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/model_generation_pipeline.html">Model Generation Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pipeline.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pipeline.html#what-you-need">What You Need</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pipeline.html#excel-configuration">Excel Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pipeline.html#parameter-priority">Parameter Priority</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pipeline.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pipeline.html#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/hydronic_sizing.html">Hydraulic Network Sizing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/hydronic_sizing.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/hydronic_sizing.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/hydronic_sizing.html#how-it-works">How it Works</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/hydronic_sizing.html#core-functions">Core Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/hydronic_sizing.html#output-attributes">Output Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/hydronic_sizing.html#learn-more">Learn More</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/hydronic_sizing.html#advanced-features">Advanced Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/Template_Generation.html">Template Generation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#generating-a-template-example">Generating a Template (Example)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#bulk-template-generation">Bulk Template Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#parameter-type-support">Parameter Type Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#precision-si-units">Precision &amp; SI Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#common-issues">Common Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#architecture-documentation">Architecture Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#pipeline-architecture">Pipeline Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#component-interaction">Component Interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#excel-template-system">Excel-Template System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#parameter-assignment-flow">Parameter Assignment Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#connector-handling">Connector Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#validation-system">Validation System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#code-generation-process">Code Generation Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#extension-guide">Extension Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/modelica_pipeline.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/graph_transformation.html">Graph Transformation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#conceptual-overview">Conceptual Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#why-this-transformation-matters">Why This Transformation Matters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#the-mapping-process">The Mapping Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#core-functions">Core Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#understanding-the-transformation">Understanding the Transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#practical-applications">Practical Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#complete-workflow-example">Complete Workflow Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#implementation-notes">Implementation Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#see-also">See Also</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api_core_modules.html">Core Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.uesgraph.html">uesgraphs.uesgraph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels.html">uesgraphs.systemmodels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_system_models.html">System Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels.systemmodelheating.html">uesgraphs.systemmodels.systemmodelheating</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels.utilities.html">uesgraphs.systemmodels.utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_examples.html#python-script-examples">Python Script Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_examples.html#jupyter-notebook-examples">Jupyter Notebook Examples</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div></blockquote>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="guides/model_generation_pipeline.html" class="btn btn-neutral float-right" title="Model Generation Pipeline" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

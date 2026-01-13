@@ -1,0 +1,1602 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs package &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">uesgraphs package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/code/uesgraphs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-uesgraphs">
+<span id="uesgraphs-package"></span><h1>uesgraphs package<a class="headerlink" href="#module-uesgraphs" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.get_versioning_info">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.</span></span><span class="sig-name descname"><span class="pre">get_versioning_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs.html#get_versioning_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.get_versioning_info" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the versioning information of uesgraphs.</p>
+</dd></dl>
+
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="uesgraphs.analyze.html">uesgraphs.analyze package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs-analysis-module">UESGraphs Analysis Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.analyze.html#id5">)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.assign_data_pipeline"><code class="docutils literal notranslate"><span class="pre">assign_data_pipeline()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.process_simulation_result"><code class="docutils literal notranslate"><span class="pre">process_simulation_result()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.prepare_DataFrame"><code class="docutils literal notranslate"><span class="pre">prepare_DataFrame()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.loadsim"><code class="docutils literal notranslate"><span class="pre">loadsim()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.mat_to_pandas"><code class="docutils literal notranslate"><span class="pre">mat_to_pandas()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.mat_to_parquet"><code class="docutils literal notranslate"><span class="pre">mat_to_parquet()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.map_system_model_to_uesgraph"><code class="docutils literal notranslate"><span class="pre">map_system_model_to_uesgraph()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.set_up_terminal_logger"><code class="docutils literal notranslate"><span class="pre">set_up_terminal_logger()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.set_up_file_logger"><code class="docutils literal notranslate"><span class="pre">set_up_file_logger()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="uesgraphs.examples.html">uesgraphs.examples package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e10_networks_example">uesgraphs.examples.e10_networks_example module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#example-network-generator-for-uesgraphs">Example Network Generator for UESGraphs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#main-features">Main Features:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#example-networks">Example Networks:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#functions">Functions:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#notes">Notes:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e10_networks_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e10_networks_example.convert_positions"><code class="docutils literal notranslate"><span class="pre">convert_positions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e10_networks_example.make_network_ibpsa"><code class="docutils literal notranslate"><span class="pre">make_network_ibpsa()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e10_networks_example.make_network_pinola"><code class="docutils literal notranslate"><span class="pre">make_network_pinola()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e10_networks_example.get_temperature_ground"><code class="docutils literal notranslate"><span class="pre">get_temperature_ground()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e10_networks_example.get_temperature_supply"><code class="docutils literal notranslate"><span class="pre">get_temperature_supply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e10_networks_example.get_input_heat"><code class="docutils literal notranslate"><span class="pre">get_input_heat()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e11_model_generation_example">uesgraphs.examples.e11_model_generation_example module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#modelica-model-generation-using-uesgraphs">Modelica Model Generation using UESGraphs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#model-variants">Model Variants:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#id1">Functions:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#model-parameters">Model Parameters:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#components-used">Components Used:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#id2">Notes:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.model_generation_pinola"><code class="docutils literal notranslate"><span class="pre">model_generation_pinola()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.model_generation_ibpsa"><code class="docutils literal notranslate"><span class="pre">model_generation_ibpsa()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.create_dirs"><code class="docutils literal notranslate"><span class="pre">create_dirs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e12_template_generation_example">uesgraphs.examples.e12_template_generation_example module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#comprehensive-mako-template-generation-for-uesgraphs-modelica-components">Comprehensive Mako Template Generation for UESGraphs Modelica Components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#template-generation-methods">Template Generation Methods:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#component-types">Component Types:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#educational-progression">Educational Progression:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#requirements">Requirements:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#usage">Usage:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.get_test_data"><code class="docutils literal notranslate"><span class="pre">get_test_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.demonstrate_manual_generation"><code class="docutils literal notranslate"><span class="pre">demonstrate_manual_generation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.demonstrate_bulk_generation"><code class="docutils literal notranslate"><span class="pre">demonstrate_bulk_generation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.demonstrate_config_generation"><code class="docutils literal notranslate"><span class="pre">demonstrate_config_generation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.get_user_choice"><code class="docutils literal notranslate"><span class="pre">get_user_choice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.get_aixlib_path"><code class="docutils literal notranslate"><span class="pre">get_aixlib_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs-examples-e13-analyze-uesgraphs-example-module">uesgraphs.examples.e13_analyze_uesgraphs_example module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e16_complete_geojson_to_modelica">uesgraphs.examples.e16_complete_geojson_to_modelica module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#geojson-import-to-modelica-code-generation">GeoJSON Import to Modelica Code Generation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#workflow-overview">Workflow Overview:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#excel-configuration-structure">Excel Configuration Structure:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#input-data-requirements">Input Data Requirements:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#example-directory-structure">Example Directory Structure:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#id3">Notes:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e16_complete_geojson_to_modelica.workspace_example"><code class="docutils literal notranslate"><span class="pre">workspace_example()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e16_complete_geojson_to_modelica.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs-examples-e17-complete-geojson-to-pandapipes-module">uesgraphs.examples.e17_complete_geojson_to_pandapipes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e1_readme_example">uesgraphs.examples.e1_readme_example module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e1_readme_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e1_readme_example.example_readme"><code class="docutils literal notranslate"><span class="pre">example_readme()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e1_readme_example.workspace_example"><code class="docutils literal notranslate"><span class="pre">workspace_example()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e2_simple_dhc_example">uesgraphs.examples.e2_simple_dhc_example module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e2_simple_dhc_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e2_simple_dhc_example.simple_dhc_model"><code class="docutils literal notranslate"><span class="pre">simple_dhc_model()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e3_add_network_example">uesgraphs.examples.e3_add_network_example module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e3_add_network_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e3_add_network_example.add_more_networks"><code class="docutils literal notranslate"><span class="pre">add_more_networks()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e4_save_uesgraphs_example">uesgraphs.examples.e4_save_uesgraphs_example module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e4_save_uesgraphs_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e4_save_uesgraphs_example.to_json"><code class="docutils literal notranslate"><span class="pre">to_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e5_add_street_nodes_example">uesgraphs.examples.e5_add_street_nodes_example module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e5_add_street_nodes_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e5_add_street_nodes_example.street_nodes"><code class="docutils literal notranslate"><span class="pre">street_nodes()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e6_additional_building_attributes_example">uesgraphs.examples.e6_additional_building_attributes_example module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e6_additional_building_attributes_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e6_additional_building_attributes_example.additional_attrib"><code class="docutils literal notranslate"><span class="pre">additional_attrib()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e7_plot_uesgraphs_example">uesgraphs.examples.e7_plot_uesgraphs_example module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e7_plot_uesgraphs_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e7_plot_uesgraphs_example.plot_example_networks"><code class="docutils literal notranslate"><span class="pre">plot_example_networks()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e8_load_uesgraphs_example">uesgraphs.examples.e8_load_uesgraphs_example module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e8_load_uesgraphs_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e8_load_uesgraphs_example.load_json"><code class="docutils literal notranslate"><span class="pre">load_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e8_load_uesgraphs_example.load_osm"><code class="docutils literal notranslate"><span class="pre">load_osm()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e9_generate_ues_from_osm_example">uesgraphs.examples.e9_generate_ues_from_osm_example module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#output-files">Output Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#dependencies">Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#author">Author</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#review">Review</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e9_generate_ues_from_osm_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e9_generate_ues_from_osm_example.generate_ues"><code class="docutils literal notranslate"><span class="pre">generate_ues()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e9_generate_ues_from_osm_example.remove_small_buildings"><code class="docutils literal notranslate"><span class="pre">remove_small_buildings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e9_generate_ues_from_osm_example.add_district_heating_buildings"><code class="docutils literal notranslate"><span class="pre">add_district_heating_buildings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs.examples.e9_generate_ues_from_osm_example.area_list"><code class="docutils literal notranslate"><span class="pre">area_list()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="uesgraphs.systemmodels.html">uesgraphs.systemmodels package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.systemmodels.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.systemmodels.html#module-uesgraphs.systemmodels.model_generation_pipeline">uesgraphs.systemmodels.model_generation_pipeline module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.uesgraph_to_modelica"><code class="docutils literal notranslate"><span class="pre">uesgraph_to_modelica()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.assign_pipe_parameters"><code class="docutils literal notranslate"><span class="pre">assign_pipe_parameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.assign_supply_parameters"><code class="docutils literal notranslate"><span class="pre">assign_supply_parameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.assign_demand_parameters"><code class="docutils literal notranslate"><span class="pre">assign_demand_parameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.resolve_parameter_value"><code class="docutils literal notranslate"><span class="pre">resolve_parameter_value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.parse_template_parameters"><code class="docutils literal notranslate"><span class="pre">parse_template_parameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.load_simulation_settings_from_excel"><code class="docutils literal notranslate"><span class="pre">load_simulation_settings_from_excel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.load_component_parameters"><code class="docutils literal notranslate"><span class="pre">load_component_parameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.generate_simulation_model"><code class="docutils literal notranslate"><span class="pre">generate_simulation_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.create_meta_data"><code class="docutils literal notranslate"><span class="pre">create_meta_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.combine_heating_dhw"><code class="docutils literal notranslate"><span class="pre">combine_heating_dhw()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.assign_demand_data"><code class="docutils literal notranslate"><span class="pre">assign_demand_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.validate_paths"><code class="docutils literal notranslate"><span class="pre">validate_paths()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.load_ground_temp_data"><code class="docutils literal notranslate"><span class="pre">load_ground_temp_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.save_setup_params_to_csv"><code class="docutils literal notranslate"><span class="pre">save_setup_params_to_csv()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.systemmodels.html#module-uesgraphs.systemmodels.systemmodelheating">uesgraphs.systemmodels.systemmodelheating module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.nodelist_pipe"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.nodelist_pipe</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.network_type"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.network_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.stop_time"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.stop_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.timestep"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.timestep</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.time"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.solver"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.medium"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.medium</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.doc_string"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.doc_string</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.documentation"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.documentation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.add_ground_around_pipe"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.add_ground_around_pipe</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.uses"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.uses</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.control_pressure"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.control_pressure</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.__init__"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#id0"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#id5"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.doc_string</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#id6"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.medium</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.import_nodes_from_uesgraph"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.import_nodes_from_uesgraph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.add_pipe_node"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.add_pipe_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.remove_pipe_node"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.remove_pipe_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.import_pipes_from_uesgraph"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.import_pipes_from_uesgraph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.import_from_uesgraph"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.import_from_uesgraph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.set_connection"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.set_connection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_medium_definition"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_medium_definition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_supply_definitions"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_supply_definitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_t_ground_definitions"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_t_ground_definitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_demand_definitions"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_demand_definitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_pipe_definitions"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_pipe_definitions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_annotations"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_annotations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_input_connections"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_input_connections()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_network_connections"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_network_connections()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_network_model"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_network_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_modelica_package"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_modelica_package()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_modelica_system"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_modelica_system()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_input_txt"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_input_txt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.set_control_pressure"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.set_control_pressure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.write_output_connector"><code class="docutils literal notranslate"><span class="pre">SystemModelHeating.write_output_connector()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.systemmodels.html#module-uesgraphs.systemmodels.templates">uesgraphs.systemmodels.templates module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.check_variable_name"><code class="docutils literal notranslate"><span class="pre">check_variable_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates"><code class="docutils literal notranslate"><span class="pre">UESTemplates</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.model_name"><code class="docutils literal notranslate"><span class="pre">UESTemplates.model_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.model_type"><code class="docutils literal notranslate"><span class="pre">UESTemplates.model_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.template_path"><code class="docutils literal notranslate"><span class="pre">UESTemplates.template_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.__init__"><code class="docutils literal notranslate"><span class="pre">UESTemplates.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.call_function"><code class="docutils literal notranslate"><span class="pre">UESTemplates.call_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.generate_new_template"><code class="docutils literal notranslate"><span class="pre">UESTemplates.generate_new_template()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.render"><code class="docutils literal notranslate"><span class="pre">UESTemplates.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.generate_bulk"><code class="docutils literal notranslate"><span class="pre">UESTemplates.generate_bulk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.generate_from_config"><code class="docutils literal notranslate"><span class="pre">UESTemplates.generate_from_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.Parameter"><code class="docutils literal notranslate"><span class="pre">Parameter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.Parameter.value"><code class="docutils literal notranslate"><span class="pre">Parameter.value</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.Parameter.type"><code class="docutils literal notranslate"><span class="pre">Parameter.type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.Parameter.category"><code class="docutils literal notranslate"><span class="pre">Parameter.category</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.Parameter.description"><code class="docutils literal notranslate"><span class="pre">Parameter.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.Parameter.unit"><code class="docutils literal notranslate"><span class="pre">Parameter.unit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#id7"><code class="docutils literal notranslate"><span class="pre">Parameter.value</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#id8"><code class="docutils literal notranslate"><span class="pre">Parameter.type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#id9"><code class="docutils literal notranslate"><span class="pre">Parameter.category</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#id10"><code class="docutils literal notranslate"><span class="pre">Parameter.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#id11"><code class="docutils literal notranslate"><span class="pre">Parameter.unit</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.Connector"><code class="docutils literal notranslate"><span class="pre">Connector</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.Connector.type"><code class="docutils literal notranslate"><span class="pre">Connector.type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.ModelInfoExtractor"><code class="docutils literal notranslate"><span class="pre">ModelInfoExtractor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.ModelInfoExtractor.__init__"><code class="docutils literal notranslate"><span class="pre">ModelInfoExtractor.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.ModelInfoExtractor.list_main_models"><code class="docutils literal notranslate"><span class="pre">ModelInfoExtractor.list_main_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.ModelInfoExtractor.extract_model_info"><code class="docutils literal notranslate"><span class="pre">ModelInfoExtractor.extract_model_info()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.systemmodels.html#module-uesgraphs.systemmodels.utilities">uesgraphs.systemmodels.utilities module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.prepare_graph"><code class="docutils literal notranslate"><span class="pre">prepare_graph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.create_model"><code class="docutils literal notranslate"><span class="pre">create_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.save_system_model_to_json"><code class="docutils literal notranslate"><span class="pre">save_system_model_to_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.load_system_model_from_json"><code class="docutils literal notranslate"><span class="pre">load_system_model_from_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.estimate_fac"><code class="docutils literal notranslate"><span class="pre">estimate_fac()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.estimate_m_flow_nominal"><code class="docutils literal notranslate"><span class="pre">estimate_m_flow_nominal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.estimate_m_flow_nominal_tablebased"><code class="docutils literal notranslate"><span class="pre">estimate_m_flow_nominal_tablebased()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.size_hydronic_network"><code class="docutils literal notranslate"><span class="pre">size_hydronic_network()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.estimate_m_flow_demand_based"><code class="docutils literal notranslate"><span class="pre">estimate_m_flow_demand_based()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.build_flow_paths"><code class="docutils literal notranslate"><span class="pre">build_flow_paths()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.get_pipe_catalog_DN_m_flow"><code class="docutils literal notranslate"><span class="pre">get_pipe_catalog_DN_m_flow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.load_pipe_catalog"><code class="docutils literal notranslate"><span class="pre">load_pipe_catalog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.get_inner_diameter_from_DN"><code class="docutils literal notranslate"><span class="pre">get_inner_diameter_from_DN()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="uesgraphs.systemmodels_pp.html">uesgraphs.systemmodels_pp package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.systemmodels_pp.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.systemmodels_pp.html#uesgraphs-systemmodels-pp-systemmodelheating-module">uesgraphs.systemmodels_pp.systemmodelheating module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.systemmodels_pp.html#uesgraphs-systemmodels-pp-utilities-module">uesgraphs.systemmodels_pp.utilities module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-uesgraphs.uesgraph">
+<span id="uesgraphs-uesgraph-module"></span><h2>uesgraphs.uesgraph module<a class="headerlink" href="#module-uesgraphs.uesgraph" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">uesgraphs.uesgraph.</span></span><span class="sig-name descname"><span class="pre">UESGraph</span></span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a></p>
+<p>A networkx Graph enhanced for use to describe urban energy systems.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.name" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">#</span> <span class="pre">TODO</span></span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>delete input ids</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.input_ids">
+<span class="sig-name descname"><span class="pre">input_ids</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.input_ids" title="Permalink to this definition"></a></dt>
+<dd><p>When input is read from json files with ids in their meta data,
+these ids are stored in this dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.nodelist_street">
+<span class="sig-name descname"><span class="pre">nodelist_street</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.nodelist_street" title="Permalink to this definition"></a></dt>
+<dd><p>List of node ids for all street nodes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.nodelist_building">
+<span class="sig-name descname"><span class="pre">nodelist_building</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.nodelist_building" title="Permalink to this definition"></a></dt>
+<dd><p>List of node ids for all building nodes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.nodelists_heating">
+<span class="sig-name descname"><span class="pre">nodelists_heating</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.nodelists_heating" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary contains nodelists for all heating networks. Keys are names
+of the networks in str format, values are lists of all node ids that
+belong to the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.nodelists_cooling">
+<span class="sig-name descname"><span class="pre">nodelists_cooling</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.nodelists_cooling" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary contains nodelists for all cooling networks. Keys are names
+of the networks in str format, values are lists of all node ids that
+belong to the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.nodelists_electricity">
+<span class="sig-name descname"><span class="pre">nodelists_electricity</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.nodelists_electricity" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary contains nodelists for all electricity networks. Keys are
+names of the networks in str format, values are lists of all node
+ids that belong to the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.nodelists_gas">
+<span class="sig-name descname"><span class="pre">nodelists_gas</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.nodelists_gas" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary contains nodelists for all gas networks. Keys are names
+of the networks in str format, values are lists of all node ids that
+belong to the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.nodelists_others">
+<span class="sig-name descname"><span class="pre">nodelists_others</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.nodelists_others" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary contains nodelists for all other networks. Keys are names
+of the networks in str format, values are lists of all node ids that
+belong to the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.network_types">
+<span class="sig-name descname"><span class="pre">network_types</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.network_types" title="Permalink to this definition"></a></dt>
+<dd><p>A list of all supported network types with their names in str format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.nodes_by_name">
+<span class="sig-name descname"><span class="pre">nodes_by_name</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.nodes_by_name" title="Permalink to this definition"></a></dt>
+<dd><p>A dictionary with building names for keys and node numbers for values.
+Used to retrieve node numbers for a given building name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.positions">
+<span class="sig-name descname"><span class="pre">positions</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.positions" title="Permalink to this definition"></a></dt>
+<dd><p>In general, positions in uesgraphs are defined by
+<cite>shapely.geometry.point</cite> objects. This attribute converts the positions
+into a dict of numpy arrays only for use in uesgraphs.visuals, as the
+networkx drawing functions need this format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.min_position">
+<span class="sig-name descname"><span class="pre">min_position</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.min_position" title="Permalink to this definition"></a></dt>
+<dd><p>Position with smallest x and y values in the graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>shapely.geometry.point object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.max_position">
+<span class="sig-name descname"><span class="pre">max_position</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.max_position" title="Permalink to this definition"></a></dt>
+<dd><p>Position with largest x and y values in the graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>shapely.geometry.point object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.next_node_number">
+<span class="sig-name descname"><span class="pre">next_node_number</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.next_node_number" title="Permalink to this definition"></a></dt>
+<dd><p>Node number for the next node to be added</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.simplification_level">
+<span class="sig-name descname"><span class="pre">simplification_level</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.simplification_level" title="Permalink to this definition"></a></dt>
+<dd><p>Higher values indicate more simplification of the graph
+0: no simplification
+1: pipes connected in series are simplified to 1 aggregate pipe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.pipeIDs">
+<span class="sig-name descname"><span class="pre">pipeIDs</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.pipeIDs" title="Permalink to this definition"></a></dt>
+<dd><p>List of pipeIDs used in the graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Constructor for UESGraph class.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.node">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">node</span></span><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.node" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">positions</span></span><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
+<dd><p>Set position.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.new_node_number">
+<span class="sig-name descname"><span class="pre">new_node_number</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.new_node_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.new_node_number" title="Permalink to this definition"></a></dt>
+<dd><p>Return a new 4 digits node number that is not yet used in graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_number</strong> – 4 digit number not yet used for nodes in graph</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.add_network">
+<span class="sig-name descname"><span class="pre">add_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.add_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.add_network" title="Permalink to this definition"></a></dt>
+<dd><p>Add a new network of specified type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Specifies the type of the new network as {‘heating’, ‘cooling’,
+‘electricity’, ‘gas’, ‘others’}</p></li>
+<li><p><strong>network_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the new network</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.add_building">
+<span class="sig-name descname"><span class="pre">add_building</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_heating</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_cooling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_electricity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_gas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_supply_other</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replaced_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.add_building"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.add_building" title="Permalink to this definition"></a></dt>
+<dd><p>Add a building node to the UESGraph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – A name for the building represented by this node. If None is given,
+the newly assigned node number will also be used as name.</p></li>
+<li><p><strong>position</strong> (<em>shapely.geometry.Point object</em>) – New node’s position</p></li>
+<li><p><strong>is_supply_heating</strong> (<em>boolean</em>) – True if the building contains a heat supply unit, False if not</p></li>
+<li><p><strong>is_supply_cooling</strong> (<em>boolean</em>) – True if the building contains a cooling supply unit, False if not</p></li>
+<li><p><strong>is_supply_electricity</strong> (<em>boolean</em>) – True if the building contains an electricity supply unit, False if
+not</p></li>
+<li><p><strong>is_supply_gas</strong> (<em>boolean</em>) – True if the building contains a gas supply unit, False if not</p></li>
+<li><p><strong>is_supply_other</strong> (<em>boolean</em>) – True if the building contains a supply unit for a network of
+network type other, False if not</p></li>
+<li><p><strong>attr_dict</strong> (<em>dictionary</em><em>, </em><em>optional</em><em> (</em><em>default= no attributes</em><em>)</em>) – Dictionary of building attributes. Key/value pairs set data
+associated with the building</p></li>
+<li><p><strong>attr</strong> (<em>keyword arguments</em><em>, </em><em>optional</em>) – Set attributes of building using key=value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>node_number</strong> – Number of the added node in the graph</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.remove_building">
+<span class="sig-name descname"><span class="pre">remove_building</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.remove_building"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.remove_building" title="Permalink to this definition"></a></dt>
+<dd><p>Remove the specified building node from the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node_number</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Identifier of the node in the graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.add_street_node">
+<span class="sig-name descname"><span class="pre">add_street_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_overlap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.add_street_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.add_street_node" title="Permalink to this definition"></a></dt>
+<dd><p>Add a street node to the UESGraph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>position</strong> (<em>shapely.geometry.Point</em>) – Definition of the node position with a shapely Point object</p></li>
+<li><p><strong>resolution</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Minimum distance between two points in m. If new position is closer
+than resolution to another existing node, the existing node will be
+returned, no new node will be created.</p></li>
+<li><p><strong>check_overlap</strong> (<em>boolean</em>) – By default, the method checks whether the new position overlaps
+an existing network node. This can be skipped for performance
+reasons by setting check_overlap=False</p></li>
+<li><p><strong>attr_dict</strong> (<em>dictionary</em><em>, </em><em>optional</em><em> (</em><em>default= no attributes</em><em>)</em>) – Dictionary of node attributes. Key/value pairs set data
+associated with the node</p></li>
+<li><p><strong>attr</strong> (<em>keyword arguments</em><em>, </em><em>optional</em>) – Set attributes of node using key=value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>node_number</strong> – Number of the added node in the graph</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.remove_street_node">
+<span class="sig-name descname"><span class="pre">remove_street_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.remove_street_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.remove_street_node" title="Permalink to this definition"></a></dt>
+<dd><p>Remove the specified street node from the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node_number</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Identifier of the node in the graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.add_network_node">
+<span class="sig-name descname"><span class="pre">add_network_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_overlap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.add_network_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.add_network_node" title="Permalink to this definition"></a></dt>
+<dd><p>Add a network node to the UESGraph.</p>
+<p>A network node should not be placed at positions where there is already
+a node of the same network or a building node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Defines the network type into which to add the node. The string
+must be one of the network_types defined in <cite>self.network_types</cite>.</p></li>
+<li><p><strong>network_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Specifies, to which network of the given type the node belongs.
+If no value is given, the network ‘default’ will be used. Before
+using a <cite>network_id</cite>, it must be added to the UESGraph with
+<cite>self.add_network()</cite></p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – A name for the network junction represented by this node. If
+None is given, the newly assigned node number will also be used
+as name.</p></li>
+<li><p><strong>position</strong> (<em>shapely.geometry.Point</em>) – Optional definition of the node position with a shapely Point
+object</p></li>
+<li><p><strong>resolution</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Minimum distance between two points in m. If new position is
+closer
+than resolution to another existing node, the existing node will
+be
+returned, no new node will be created.</p></li>
+<li><p><strong>check_overlap</strong> (<em>boolean</em>) – By default, the method checks whether the new position overlaps
+an existing network node. This can be skipped for performance
+reasons by setting check_overlap=False</p></li>
+<li><p><strong>attr_dict</strong> (<em>dictionary</em><em>, </em><em>optional</em><em> (</em><em>default= no attributes</em><em>)</em>) – Dictionary of node attributes. Key/value pairs set data
+associated with the node</p></li>
+<li><p><strong>attr</strong> (<em>keyword arguments</em><em>, </em><em>optional</em>) – Set attributes of node using key=value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>node_number</strong> – Number of the added node in the graph</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.remove_network_node">
+<span class="sig-name descname"><span class="pre">remove_network_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.remove_network_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.remove_network_node" title="Permalink to this definition"></a></dt>
+<dd><p>Remove the specified network node from the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node_number</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Identifier of the node in the graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.get_building_node">
+<span class="sig-name descname"><span class="pre">get_building_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.get_building_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.get_building_node" title="Permalink to this definition"></a></dt>
+<dd><p>Return the node number for a given building name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the building</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>node_number</strong> – Number of the corresponding node</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.get_node_by_position">
+<span class="sig-name descname"><span class="pre">get_node_by_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.get_node_by_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.get_node_by_position" title="Permalink to this definition"></a></dt>
+<dd><p>Return node name and node_nb for node(s) on input position.</p>
+<p>If no node is placed on position, returns empty dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>position</strong> (<em>shapely.geometry.Point</em>) – Queried position</p></li>
+<li><p><strong>resolution</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Minimum distance between two points in m. If  position is closer
+than resolution to another existing node, the existing node will be
+returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>result_dict</strong> – Dictionary of nodes on input position (key: node_id, value: name)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.create_subgraphs">
+<span class="sig-name descname"><span class="pre">create_subgraphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_buildings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.create_subgraphs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.create_subgraphs" title="Permalink to this definition"></a></dt>
+<dd><p>Return a list of subgraphs for each network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – One of the network types defined in <cite>self.network_types</cite>. The
+subgraphs for all networks of the chosen network type will be
+returned</p></li>
+<li><p><strong>all_buildings</strong> (<em>boolean</em>) – Subgraphs will contain all buildings of uesgraph when
+<cite>all_buildings</cite> is True. If False, only those buildings connected
+to a subgraph’s network will be part of the corresponding subgraph</p></li>
+<li><p><strong>streets</strong> (<em>boolean</em>) – Subgraphs will contain streets if <cite>streets</cite> is True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>subgraphs</strong> – List of uesgraph elements for all networks of chosen <cite>network_type</cite></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.from_json">
+<span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_overlap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.from_json" title="Permalink to this definition"></a></dt>
+<dd><p>Import network from json input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path, where input files <cite>substations.json</cite>, <cite>nodes.json</cite>,
+<cite>pipes.json</cite> and <cite>supply.json</cite> are located.</p></li>
+<li><p><strong>network_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Specifies the type of the destination network as {‘heating’,
+‘cooling’, ‘electricity’, ‘gas’, ‘others’}</p></li>
+<li><p><strong>check_overlap</strong> (<em>Boolean</em>) – By default, the method does not check whether network node
+positions overlap existing network nodes. For <cite>True</cite>, this check
+becomes active.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'json</span> <span class="pre">export</span> <span class="pre">from</span> <span class="pre">uesgraph'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prettyprint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.to_json" title="Permalink to this definition"></a></dt>
+<dd><p>Save UESGraph structure to json files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path where a directory with output files will be created. If
+<cite>None</cite> is given, the json data will not be written to file, but
+only returned. This only works for <cite>format_old=False</cite>.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The newly created output directory at <cite>path</cite> will be named
+<cite>&lt;name&gt;HeatingUES</cite></p></li>
+<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A description string that will be written to all json output
+files’ meta data.</p></li>
+<li><p><strong>all_data</strong> (<em>boolean</em>) – If False, only the main data (x, y, name, node_type) will be
+written to the json output. If True, all node data is exported.</p></li>
+<li><p><strong>prettyprint</strong> (<em>boolean</em>) – If <cite>True</cite>, the JSON file will use an indent of 4 spaces to pretty-
+print the file. By default, a more efficient output without
+indents will be generated</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>output_data</strong> – Contents of the nodes.json file following the new format. For
+<cite>format_old=True</cite> the method returns <cite>None</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.from_osm">
+<span class="sig-name descname"><span class="pre">from_osm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">osm_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform_positions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.from_osm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.from_osm" title="Permalink to this definition"></a></dt>
+<dd><p>Import buildings and streets from OpenStreetMap data in osm_file.</p>
+<p>If available, the following attributes will be written to the imported
+elements:</p>
+<p>For streets:
+- ‘street type’ (motorway, trunk,primary, secondary, tertiary,
+residential, unclassified, service, living_street, pedestrian)</p>
+<p>For buildings
+- ‘position’
+- ‘outlines’
+- ‘area’
+- ‘addr_street’
+- ‘addr_housenumber’
+- ‘building_levels’
+- ‘building_height’
+- ‘building_buildyear’
+- ‘building_condition’
+- ‘building_roof_shape’
+- ‘comments’
+- type of usage (‘amenity’, ‘shop’, ‘leisure’)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>osm_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Full path to osm input file</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the city for boundary check</p></li>
+<li><p><strong>check_boundary</strong> (<em>boolean</em>) – If True, the city boundary will be extracted from the osm file and
+only nodes within this boundary will be accepted</p></li>
+<li><p><strong>transform_positions</strong> (<em>boolean</em>) – By default, positions are transformed to a coordinate system
+that gives distances in Meter setting the origin (0, 0) at the
+minimum position of the graph. If transform_positions is False,
+the positions will remain in longitude and latitude as read from
+the OSM file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – UESGraph for the urban energy system read from osm data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>uesgraph object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.from_geojson">
+<span class="sig-name descname"><span class="pre">from_geojson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buildings_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supply_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generate_visualizations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.from_geojson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.from_geojson" title="Permalink to this definition"></a></dt>
+<dd><p>Import district heating network from GeoJSON files.</p>
+<p>Creates a complete UESGraph model from three GeoJSON input files containing
+network topology, supply points, and building locations. All geometries must
+use CRS84 coordinate system and will be automatically transformed to a local
+coordinate system with distances in meters.</p>
+<p>The import process follows these steps:
+1. Process network pipes to create nodes and edges
+2. Add supply points as buildings with is_supply_heating=True
+3. Connect buildings to network nodes
+4. Transform to local coordinate system and calculate network length</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to network GeoJSON file containing LineString or MultiLineString
+geometries representing pipes. Optional DN property specifies nominal
+diameter in mm.</p></li>
+<li><p><strong>buildings_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to buildings GeoJSON file containing Point or Polygon geometries.
+Must include ‘name’ property for each building.</p></li>
+<li><p><strong>supply_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to supply points GeoJSON file containing Point geometries.
+Must include ‘name’ property. Points must coincide with network nodes.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name identifier for this network model</p></li>
+<li><p><strong>save_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Directory path for saving JSON output and visualizations.
+If None, no files are saved.</p></li>
+<li><p><strong>generate_visualizations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>default False</em>) – Whether to generate and save network visualization PDFs at each
+processing step. Requires save_path to be specified.</p></li>
+<li><p><strong>tolerance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>default 1e-8</em>) – Distance tolerance in degrees for Point-to-Point matching between
+buildings and network nodes. Default (1e-8) handles floating-point
+precision errors (~1mm). Increase (e.g., 1e-6 = ~11cm) if GeoJSON
+files have been processed through tools that reduce coordinate precision.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Network nodes are created at pipe endpoints and junctions</p></li>
+<li><p>Buildings replace network nodes at matching locations</p></li>
+<li><p>Supply points must exactly match existing network node positions</p></li>
+<li><p>Edge lengths are calculated automatically in meters</p></li>
+<li><p>All custom properties from GeoJSON are preserved as edge attributes</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span> <span class="o">=</span> <span class="n">UESGraph</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span><span class="o">.</span><span class="n">from_geojson</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">network_path</span><span class="o">=</span><span class="s1">&#39;data/network.geojson&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">buildings_path</span><span class="o">=</span><span class="s1">&#39;data/buildings.geojson&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">supply_path</span><span class="o">=</span><span class="s1">&#39;data/supply.geojson&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;district_1&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;output/&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">generate_visualizations</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total network length: </span><span class="si">{</span><span class="n">graph</span><span class="o">.</span><span class="n">network_length</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.number_of_nodes">
+<span class="sig-name descname"><span class="pre">number_of_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.number_of_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.number_of_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Return number of nodes for given <cite>node_type</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – {‘building’, ‘street’, ‘heating’, ‘cooling’, ‘electricity’,
+‘gas’, ‘other’}</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>number_of_nodes</strong> – The number of nodes for the given <cite>node_type</cite></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.calc_network_length">
+<span class="sig-name descname"><span class="pre">calc_network_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.calc_network_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.calc_network_length" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate the length of all edges for given <cite>network_type</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>network_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – One of the network types defined in <cite>self.network_types</cite></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>total_length</strong> – Total length of all edges for given <cite>network_type</cite> in m</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.calc_total_building_ground_area">
+<span class="sig-name descname"><span class="pre">calc_total_building_ground_area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.calc_total_building_ground_area"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.calc_total_building_ground_area" title="Permalink to this definition"></a></dt>
+<dd><p>Return the sum of all available building ground areas in m**2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>total_ground_area</strong> – Sum of all available building ground areas in m**2</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.rotate">
+<span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degrees</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.rotate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.rotate" title="Permalink to this definition"></a></dt>
+<dd><p>Rotate all nodes of the graph by <cite>degrees</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>degrees</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Value of degrees for rotation</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.network_simplification">
+<span class="sig-name descname"><span class="pre">network_simplification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.network_simplification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.network_simplification" title="Permalink to this definition"></a></dt>
+<dd><p>Simplify a pipe network by replacing serial pipes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Specifies the type of the network as {‘heating’, ‘cooling’,
+‘electricity’, ‘gas’, ‘others’}</p></li>
+<li><p><strong>network_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the network</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.remove_unconnected_nodes">
+<span class="sig-name descname"><span class="pre">remove_unconnected_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.remove_unconnected_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.remove_unconnected_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Remove any edges and network nodes not connected to a supply node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Specifies the type of the network as {‘heating’, ‘cooling’,
+‘electricity’, ‘gas’, ‘others’}</p></li>
+<li><p><strong>network_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the network</p></li>
+<li><p><strong>max_iter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Maximum number of iterations</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>removed</strong> – Names of removed network nodes</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.remove_self_edges">
+<span class="sig-name descname"><span class="pre">remove_self_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.remove_self_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.remove_self_edges" title="Permalink to this definition"></a></dt>
+<dd><p>Remove edges with length 0 m.</p>
+<blockquote>
+<div><p>Parameters</p>
+</div></blockquote>
+<blockquote>
+<div><p>‘electricity’, ‘gas’, ‘others’}</p>
+</div></blockquote>
+<dl class="simple">
+<dt>network_id<span class="classifier">str</span></dt><dd><p>Name of the network</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_removed_edges</strong> – Number of removed network edges</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.remove_dead_ends">
+<span class="sig-name descname"><span class="pre">remove_dead_ends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.remove_dead_ends"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.remove_dead_ends" title="Permalink to this definition"></a></dt>
+<dd><p>Remove any nodes and edges that lead to dead ends in the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Specifies the type of the network as {‘heating’, ‘cooling’,
+‘electricity’, ‘gas’, ‘others’}</p></li>
+<li><p><strong>network_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the network</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>removed</strong> – Names of removed network nodes</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.remove_streets">
+<span class="sig-name descname"><span class="pre">remove_streets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.remove_streets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.remove_streets" title="Permalink to this definition"></a></dt>
+<dd><p>Remove all street elements from the graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>graph</strong> (<a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>uesgraphs.UESGraph</em></a>) – Network graph</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>graph</strong> – Network graph</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph">uesgraphs.UESGraph</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.calc_angle">
+<span class="sig-name descname"><span class="pre">calc_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rad'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.calc_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.calc_angle" title="Permalink to this definition"></a></dt>
+<dd><p>Return the angle of a line from point a to b in rad or degrees.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>shapely.geometry.point object</em>) – </p></li>
+<li><p><strong>b</strong> (<em>shapely.geometry.point object</em>) – </p></li>
+<li><p><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Selection of output unit between ‘rad’ and ‘degrees’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>angle</strong> – Angle of a line from point a to b in rad or degrees</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.uesgraph.UESGraph.get_min_max">
+<span class="sig-name descname"><span class="pre">get_min_max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/uesgraph.html#UESGraph.get_min_max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.uesgraph.UESGraph.get_min_max" title="Permalink to this definition"></a></dt>
+<dd><p>Get minimum and maximum values for a specific attribute from nodes or edges.</p>
+<p>Takes a UESGraph object and returns the minimum and maximum values for a given
+attribute key, either from all nodes or all edges depending on the specified mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Attribute key to look up (e.g. ‘capacity’, ‘flow’, etc.)</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Either ‘node’ or ‘edge’ to specify whether to look at node or edge attributes</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(minimum value, maximum value) for the specified attribute</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If no values are found or mode is invalid</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.14)"><strong>KeyError</strong></a> – If the specified attribute key doesn’t exist for all nodes/edges</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-uesgraphs.utilities">
+<span id="uesgraphs-utilities-module"></span><h2>uesgraphs.utilities module<a class="headerlink" href="#module-uesgraphs.utilities" title="Permalink to this heading"></a></h2>
+<p>Utilies: Collection of all utility functions that are useful in several classes.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.utilities.default_json_path">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.utilities.</span></span><span class="sig-name descname"><span class="pre">default_json_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/utilities.html#default_json_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.utilities.default_json_path" title="Permalink to this definition"></a></dt>
+<dd><p>Creates default output file UESgraphOutput in the user dictionary.</p>
+<section id="paramters">
+<h3>Paramters<a class="headerlink" href="#paramters" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>UESgraph_defaul_path<span class="classifier">str</span></dt><dd><p>Path, where uesgraph files will be saved.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> – Path, where to save uesgraph files</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.utilities.make_workspace">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.utilities.</span></span><span class="sig-name descname"><span class="pre">make_workspace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_workspace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/utilities.html#make_workspace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.utilities.make_workspace" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a local workspace with given name</p>
+<p>If no name is given, the general workspace directory will be used</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name_workspace</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the local workspace to be created</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>workspace</strong> – Full path to the new workspace</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.utilities.name_uesgraph">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.utilities.</span></span><span class="sig-name descname"><span class="pre">name_uesgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_workspace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/utilities.html#name_uesgraph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.utilities.name_uesgraph" title="Permalink to this definition"></a></dt>
+<dd><p>Gives the uesgraph a name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name_workspace</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the workspace of the current uesgraph</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>name_uesgraph</strong> – Name of the uesgraph according to its workspace</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.utilities.set_up_terminal_logger">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_terminal_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><span class="pre">Logger</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/utilities.html#set_up_terminal_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.utilities.set_up_terminal_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Set up a simple console-only logger for small functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Logger name</p></li>
+<li><p><strong>level</strong> – Logging level (default: INFO)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured console logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.utilities.set_up_file_logger">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_file_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><span class="pre">Logger</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/utilities.html#set_up_file_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.utilities.set_up_file_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Set up a full file+console logger for major functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Logger name</p></li>
+<li><p><strong>log_dir</strong> – Directory for log files (default: temp directory)</p></li>
+<li><p><strong>level</strong> – Logging level (default: ERROR)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured file+console logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.utilities.get_attribute_case_insensitive">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.utilities.</span></span><span class="sig-name descname"><span class="pre">get_attribute_case_insensitive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/utilities.html#get_attribute_case_insensitive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.utilities.get_attribute_case_insensitive" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieve an attribute value from a dictionary, handling case insensitivity.</p>
+<p>This function tries to access the attribute with the original name first,
+then attempts to access it with different capitalizations if the original
+attempt fails.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – The dictionary containing the data</p></li>
+<li><p><strong>attribute_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The base name of the attribute to retrieve</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value associated with the attribute, or None if not found</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-uesgraphs.visuals">
+<span id="uesgraphs-visuals-module"></span><h2>uesgraphs.visuals module<a class="headerlink" href="#module-uesgraphs.visuals" title="Permalink to this heading"></a></h2>
+<p>This module contains visualization tools for uesgraphs</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.visuals.set_up_logger">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.visuals.</span></span><span class="sig-name descname"><span class="pre">set_up_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#set_up_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.visuals.set_up_logger" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="uesgraphs.visuals.Visuals">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">uesgraphs.visuals.</span></span><span class="sig-name descname"><span class="pre">Visuals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.visuals.Visuals" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Visualizes a uesgraph by networkX graph drawing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>uesgraph</strong> (<em>uesgraphs.uesgraph.UESGraph object</em>) – The visualization output will be following the graph layout
+specified in the input uesgraph</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.visuals.Visuals.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.visuals.Visuals.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Constructor for <cite>Visuals</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.visuals.Visuals.create_plot_simple">
+<span class="sig-name descname"><span class="pre">create_plot_simple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.create_plot_simple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.visuals.Visuals.create_plot_simple" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a very simple plot setup for fast performance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>maplotlib ax object</em>) – </p></li>
+<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
+the edge widths</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ax</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>maplotlib ax object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.visuals.Visuals.create_plot">
+<span class="sig-name descname"><span class="pre">create_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_diameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_mass_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_press_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_press_drop_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_temperature_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_markers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_markers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_diameter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_temperatures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_pressures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_pressure_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_temperature_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_temperature_diff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor_diameter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxtemp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmflow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmpress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmpressdrop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmvelocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmtempdrop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generic_intensive_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generic_extensive_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.create_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.visuals.Visuals.create_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Creates the plot setup, that can be shown or saved to file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>maplotlib ax object</em>) – </p></li>
+<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to <cite>‘street’</cite>, node numbers of street nodes are shown in
+plot</p></li>
+<li><p><strong>show_diameters</strong> (<em>boolean</em>) – True if edges of heating networks should show the relative diameter
+of the pipe, False if not</p></li>
+<li><p><strong>show_mass_flows</strong> (<em>boolean</em>) – True if edges of heating networks should show the mass flow rate
+through the pipe, False if not</p></li>
+<li><p><strong>show_press_flows</strong> (<em>boolean</em>) – True if edges of heating networks should show the pressure
+through the pipe, False if not</p></li>
+<li><p><strong>show_press_drop_flows</strong> (<em>boolean</em>) – True if edges of heating networks should show the pressure drop
+through the pipe, False if not</p></li>
+<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Fontsize for optional labels</p></li>
+<li><p><strong>edge_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of edges that should be marked in the plot</p></li>
+<li><p><strong>node_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of nodes that should be marked in the plot</p></li>
+<li><p><strong>add_edge_temperatures</strong> (<em>boolean</em>) – Plots edge temperatures on top of plot if True</p></li>
+<li><p><strong>add_edge_flows</strong> (<em>boolean</em>) – Plots edge width according to flow rates in the networks if True</p></li>
+<li><p><strong>add_edge_pressures</strong> (<em>boolean</em>) – Plots edge pressure on top of plot if True</p></li>
+<li><p><strong>add_edge_pressure_drop</strong> (<em>boolean</em>) – Plots edge pressure drop on top of plot if True</p></li>
+<li><p><strong>add_edge_electricity</strong> (<em>boolean</em>) – Plots edge electricity on top of plot if True</p></li>
+<li><p><strong>directions</strong> (<em>boolean</em>) – Plots arrows for flow directions if True; If add_edge_flows is
+False, these arrows will show the initial assumed flow direction.
+If add_edge_flows is True, the arrows show the calculated flow
+direction.</p></li>
+<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
+the edge widths</p></li>
+<li><p><strong>scaling_factor_diameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the width of lines for show_diameters = True</p></li>
+<li><p><strong>generic_intensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
+values of the attribute with the given string</p></li>
+<li><p><strong>generic_extensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
+values of the attribute with the given string</p></li>
+<li><p><strong>minmax</strong> (<em>array</em>) – Contains the minimum and maximum values for the generic size
+in format [min, max]</p></li>
+<li><p><strong>zero_alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Alpha value to paint certain edges transparent. Look at docstring
+of paint_edges_extensive_sizes for more information</p></li>
+<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the colormap to use for visualization (default=’viridis’).
+Common options include ‘viridis’, ‘coolwarm’, ‘RdYlGn’, ‘plasma’,
+‘Blues’. For temperature data, ‘coolwarm’ or ‘RdYlGn’ provide
+intuitive red=hot, blue=cold color semantics.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ax</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>maplotlib ax object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.visuals.Visuals.create_plot_3d">
+<span class="sig-name descname"><span class="pre">create_plot_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_attrib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pressure'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_flow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">110</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.create_plot_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.visuals.Visuals.create_plot_3d" title="Permalink to this definition"></a></dt>
+<dd><p>Creates the plot setup for a 3d view</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>maplotlib ax object</em>) – </p></li>
+<li><p><strong>z_attrib</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Keyword to control which attribute of nodes will be used for
+the z-coordinate</p></li>
+<li><p><strong>show_flow</strong> (<em>boolean</em>) – Varies linewidth of the edges if True</p></li>
+<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – View angle for 3d plot</p></li>
+<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Fontsize for labels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ax</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>maplotlib ax object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.visuals.Visuals.show_network">
+<span class="sig-name descname"><span class="pre">show_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_diameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_mass_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_press_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_press_drop_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_temperature_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_markers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_markers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_diameter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_temperatures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_temperature_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_temperature_diff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_pressures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_pressure_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor_diameter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simple</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">150</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxtemp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmflow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmpress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmpressdrop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmvelocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmtempdrop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generic_intensive_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generic_extensive_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.show_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.visuals.Visuals.show_network" title="Permalink to this definition"></a></dt>
+<dd><p>Shows a plot of the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – optional parameter, string denoting full path and file name +
+extension for saving the plot</p></li>
+<li><p><strong>show_plot</strong> (<em>boolean</em>) – True if the plot should be shown in the current Python instance,
+False if not</p></li>
+<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to <cite>‘street’</cite>, node numbers of street nodes are shown in
+plot</p></li>
+<li><p><strong>show_diameters</strong> (<em>boolean</em>) – True if edges of heating networks should show the relative diameter
+of the pipe, False if not</p></li>
+<li><p><strong>show_mass_flows</strong> (<em>boolean</em>) – True if edges of heating networks should show the mass flow rate
+through the pipe, False if not</p></li>
+<li><p><strong>show_press_flows</strong> (<em>boolean</em>) – True if edges of heating networks should show the pressure
+through the pipe, False if not</p></li>
+<li><p><strong>show_press_drop_flows</strong> (<em>boolean</em>) – True if edges of heating networks should show the pressure drop
+through the pipe, False if not</p></li>
+<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Fontsize for optional labels</p></li>
+<li><p><strong>edge_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of edges that should be marked in the plot</p></li>
+<li><p><strong>node_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of nodes that should be marked in the plot</p></li>
+<li><p><strong>add_edge_temperatures</strong> (<em>boolean</em>) – Plots edge temperatures on top of plot if True</p></li>
+<li><p><strong>add_edge_flows</strong> (<em>boolean</em>) – Plots edge width according to flow rates in the networks if True</p></li>
+<li><p><strong>add_edge_pressures</strong> (<em>boolean</em>) – Plots edge pressure on top of plot if True</p></li>
+<li><p><strong>add_edge_pressure_drop</strong> (<em>boolean</em>) – Plots edge pressure drop on top of plot if True</p></li>
+<li><p><strong>directions</strong> (<em>boolean</em>) – Plots arrows for flow directions if True; If add_edge_flows is
+False, these arrows will show the initial assumed flow direction.
+If add_edge_flows is True, the arrows show the calculated flow
+direction.</p></li>
+<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
+the edge widths</p></li>
+<li><p><strong>scaling_factor_diameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the width of lines</p></li>
+<li><p><strong>simple</strong> (<em>boolean</em>) – For very large uesgraphs, the standard plotting may take too long
+(hours…). In these cases, <cite>simple=True</cite> gives faster results</p></li>
+<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Integer to overwrite the standard resolution of 150 dpi</p></li>
+<li><p><strong>minmaxtemp</strong> (<em>array</em>) – Array with minimum and maximum temperature value for the scaling
+of the plot. If not set the values will be calculated automatically</p></li>
+<li><p><strong>minmaxmflow</strong> (<em>array</em>) – Array with minimum and maximum temperature value for the scaling
+of the plot. If not set the values will be calculated automatically</p></li>
+<li><p><strong>minmaxmpress</strong> (<em>array</em>) – Array with minimum and maximum pressure value for the scaling
+of the plot. If not set the values will be calculated automatically</p></li>
+<li><p><strong>minmaxmpressdrop</strong> (<em>array</em>) – Array with minimum and maximum pressure drop value for the scaling
+of the plot. If not set the values will be calculated automatically</p></li>
+<li><p><strong>timestamp</strong> (<em>datetime</em>) – prints the actual timestamp on the plot</p></li>
+<li><p><strong>generic_intensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
+values of the attribute with the given string</p></li>
+<li><p><strong>generic_extensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
+values of the attribute with the given string</p></li>
+<li><p><strong>minmax</strong> (<em>array</em>) – Contains the minimum and maximum values for the generic size
+in format [min, max]</p></li>
+<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Label for the color scale when plotting generic size</p></li>
+<li><p><strong>zero_alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Alpha value to paint certain edges transparent. Look at docstring
+of paint_edges_extensive_sizes for more information</p></li>
+<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the colormap to use for visualization (default=’viridis’).
+Common options include ‘viridis’, ‘coolwarm’, ‘RdYlGn’, ‘plasma’,
+‘Blues’. For temperature data, ‘coolwarm’ or ‘RdYlGn’ provide
+intuitive red=hot, blue=cold color semantics.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>fig</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.10.8)">matplotlib.figure.Figure</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.visuals.Visuals.show_3d">
+<span class="sig-name descname"><span class="pre">show_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_flow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_attrib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pressure'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">110</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.show_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.visuals.Visuals.show_3d" title="Permalink to this definition"></a></dt>
+<dd><p>Shows an explosion plot of stacked networks in 3d view</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – optional parameter, string denoting full path and file name +
+extension for saving the plot</p></li>
+<li><p><strong>show_plot</strong> (<em>boolean</em>) – True if the plot should be shown in the current Python instance,
+False if not</p></li>
+<li><p><strong>show_flow</strong> (<em>boolean</em>) – Varies linewidth of the edges if True</p></li>
+<li><p><strong>z_attrib</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Keyword to control which attribute of nodes will be used for
+the z-coordinate</p></li>
+<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – View angle for 3d plot</p></li>
+<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Fontsize for optional labels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>fig</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.10.8)">matplotlib.figure.Figure</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.visuals.Visuals.network_explosion">
+<span class="sig-name descname"><span class="pre">network_explosion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">networks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['all']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dotted_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.network_explosion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.visuals.Visuals.network_explosion" title="Permalink to this definition"></a></dt>
+<dd><p>Shows a plot of the network in 3d view</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – optional parameter, string denoting full path and file name +
+extension for saving the plot</p></li>
+<li><p><strong>show_plot</strong> (<em>boolean</em>) – True if the plot should be shown in the current Python instance,
+False if not</p></li>
+<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – View angle for 3d plot</p></li>
+<li><p><strong>networks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Instead of [‘all’], the networks list can specify which networks
+should be plotted. Accepted items are {‘heating’, ‘cooling’,
+‘electricity’, ‘gas’, ‘others’}</p></li>
+<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
+the edge widths</p></li>
+<li><p><strong>dotted_lines</strong> (<em>boolean</em>) – Optional dotted lines between different levels of network
+explosion if set to True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>fig</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.10.8)">matplotlib.figure.Figure</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

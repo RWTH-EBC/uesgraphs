@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.examples.e12_template_generation_example &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="uesgraphs.examples.e16_complete_geojson_to_modelica" href="uesgraphs.examples.e16_complete_geojson_to_modelica.html" />
+    <link rel="prev" title="uesgraphs.examples.e11_model_generation_example" href="uesgraphs.examples.e11_model_generation_example.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api_examples.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api_examples.html#python-script-examples">Python Script Examples</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.e1_readme_example.html">uesgraphs.examples.e1_readme_example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.e2_simple_dhc_example.html">uesgraphs.examples.e2_simple_dhc_example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.e3_add_network_example.html">uesgraphs.examples.e3_add_network_example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.e4_save_uesgraphs_example.html">uesgraphs.examples.e4_save_uesgraphs_example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.e5_add_street_nodes_example.html">uesgraphs.examples.e5_add_street_nodes_example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.e6_additional_building_attributes_example.html">uesgraphs.examples.e6_additional_building_attributes_example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.e7_plot_uesgraphs_example.html">uesgraphs.examples.e7_plot_uesgraphs_example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.e8_load_uesgraphs_example.html">uesgraphs.examples.e8_load_uesgraphs_example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.e9_generate_ues_from_osm_example.html">uesgraphs.examples.e9_generate_ues_from_osm_example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.e10_networks_example.html">uesgraphs.examples.e10_networks_example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.e11_model_generation_example.html">uesgraphs.examples.e11_model_generation_example</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">uesgraphs.examples.e12_template_generation_example</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#comprehensive-mako-template-generation-for-uesgraphs-modelica-components">Comprehensive Mako Template Generation for UESGraphs Modelica Components</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.examples.e12_template_generation_example.get_test_data"><code class="docutils literal notranslate"><span class="pre">get_test_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.examples.e12_template_generation_example.demonstrate_manual_generation"><code class="docutils literal notranslate"><span class="pre">demonstrate_manual_generation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.examples.e12_template_generation_example.demonstrate_bulk_generation"><code class="docutils literal notranslate"><span class="pre">demonstrate_bulk_generation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.examples.e12_template_generation_example.demonstrate_config_generation"><code class="docutils literal notranslate"><span class="pre">demonstrate_config_generation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.examples.e12_template_generation_example.get_user_choice"><code class="docutils literal notranslate"><span class="pre">get_user_choice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.examples.e12_template_generation_example.get_aixlib_path"><code class="docutils literal notranslate"><span class="pre">get_aixlib_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uesgraphs.examples.e12_template_generation_example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.e16_complete_geojson_to_modelica.html">uesgraphs.examples.e16_complete_geojson_to_modelica</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_examples.html#jupyter-notebook-examples">Jupyter Notebook Examples</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api_examples.html">Examples</a></li>
+      <li class="breadcrumb-item active">uesgraphs.examples.e12_template_generation_example</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/uesgraphs.examples.e12_template_generation_example.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-uesgraphs.examples.e12_template_generation_example">
+<span id="uesgraphs-examples-e12-template-generation-example"></span><h1>uesgraphs.examples.e12_template_generation_example<a class="headerlink" href="#module-uesgraphs.examples.e12_template_generation_example" title="Permalink to this heading"></a></h1>
+<section id="comprehensive-mako-template-generation-for-uesgraphs-modelica-components">
+<h2>Comprehensive Mako Template Generation for UESGraphs Modelica Components<a class="headerlink" href="#comprehensive-mako-template-generation-for-uesgraphs-modelica-components" title="Permalink to this heading"></a></h2>
+<p>This module demonstrates three different approaches to generating Mako templates
+for AixLib component types, providing a complete learning experience from manual
+step-by-step generation to automated production workflows.</p>
+<section id="template-generation-methods">
+<h3>Template Generation Methods:<a class="headerlink" href="#template-generation-methods" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Manual Method</strong>: Step-by-step individual template generation
+- Educational approach showing internal workings
+- Individual UESTemplates instantiation for each model
+- Custom save paths and immediate testing
+- Full visibility into the generation process</p></li>
+<li><p><strong>Bulk Method</strong>: Efficient batch generation
+- Single generate_bulk() call for multiple models
+- Organized error handling and reporting
+- Suitable for moderate-scale template generation</p></li>
+<li><p><strong>Configuration-Driven Method</strong>: Production-ready automation
+- Uses JSON configuration files
+- Environment variable integration
+- Rigorous mode for automated overwriting
+- Ideal for CI/CD and automated workflows</p></li>
+</ol>
+</section>
+<section id="component-types">
+<h3>Component Types:<a class="headerlink" href="#component-types" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Demand Models:
+- Variable supply temperature models
+- Heat pump models with Carnot cycle
+- Closed-loop DHC substation models
+- Templates include parameters for temperature differences and nominal conditions</p></li>
+<li><p>Pipe Models:
+- Static pipe model
+- Plug flow pipe models (standard and embedded)
+- Plug flow pipe with zeta value
+- DHC pipe models
+- Templates include thermal and geometric parameters</p></li>
+<li><p>Supply Models:
+- Ideal source models for open-loop systems
+- DHC supply models with heater/cooler/storage
+- Templates include pressure and temperature parameters</p></li>
+</ol>
+</section>
+<section id="educational-progression">
+<h3>Educational Progression:<a class="headerlink" href="#educational-progression" title="Permalink to this heading"></a></h3>
+<p>This example is designed for researchers and developers who want to understand:
+- How template generation works internally (Manual Method)
+- How to efficiently generate multiple templates (Bulk Method)
+- How to set up automated template generation workflows (Config Method)</p>
+</section>
+<section id="requirements">
+<h3>Requirements:<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>AixLib v2.1.0+ library installation</p></li>
+<li><p>UESGraphs package with systemmodels module</p></li>
+<li><p>Shapely for geometric operations</p></li>
+<li><p>Optional: AIXLIB_LIBRARY_PATH environment variable for automated workflows</p></li>
+</ul>
+</section>
+<section id="usage">
+<h3>Usage:<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h3>
+<p>Run the script and select from four demonstration modes:
+1. Manual demonstration - See step-by-step template creation
+2. Bulk demonstration - See efficient batch processing
+3. Config demonstration - See automated configuration-driven generation
+4. All methods - Experience the complete progression</p>
+</section>
+</section>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.demonstrate_bulk_generation" title="uesgraphs.examples.e12_template_generation_example.demonstrate_bulk_generation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">demonstrate_bulk_generation</span></code></a>(path_aixlib, ...)</p></td>
+<td><p>Method 2: Bulk template generation</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.demonstrate_config_generation" title="uesgraphs.examples.e12_template_generation_example.demonstrate_config_generation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">demonstrate_config_generation</span></code></a>(workspace)</p></td>
+<td><p>Method 3: Configuration-driven template generation</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.demonstrate_manual_generation" title="uesgraphs.examples.e12_template_generation_example.demonstrate_manual_generation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">demonstrate_manual_generation</span></code></a>(path_aixlib, ...)</p></td>
+<td><p>Method 1: Manual step-by-step template generation</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.get_aixlib_path" title="uesgraphs.examples.e12_template_generation_example.get_aixlib_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_aixlib_path</span></code></a>()</p></td>
+<td><p>Get AixLib library path via file dialog</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.get_test_data" title="uesgraphs.examples.e12_template_generation_example.get_test_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_test_data</span></code></a>(model_type, model_name)</p></td>
+<td><p>Get sample test data for different model types</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.get_user_choice" title="uesgraphs.examples.e12_template_generation_example.get_user_choice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_user_choice</span></code></a>()</p></td>
+<td><p>Get user's choice for demonstration method</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.main" title="uesgraphs.examples.e12_template_generation_example.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">main</span></code></a>()</p></td>
+<td><p>Main function with method selection</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e12_template_generation_example.get_test_data">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e12_template_generation_example.</span></span><span class="sig-name descname"><span class="pre">get_test_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e12_template_generation_example.html#get_test_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e12_template_generation_example.get_test_data" title="Permalink to this definition"></a></dt>
+<dd><p>Get sample test data for different model types</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e12_template_generation_example.demonstrate_manual_generation">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e12_template_generation_example.</span></span><span class="sig-name descname"><span class="pre">demonstrate_manual_generation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_aixlib</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">workspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e12_template_generation_example.html#demonstrate_manual_generation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e12_template_generation_example.demonstrate_manual_generation" title="Permalink to this definition"></a></dt>
+<dd><p>Method 1: Manual step-by-step template generation</p>
+<p>This approach shows exactly how template generation works internally.
+Each template is created individually with full control over the process.
+This is the best method for learning and debugging.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of successfully generated templates</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e12_template_generation_example.demonstrate_bulk_generation">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e12_template_generation_example.</span></span><span class="sig-name descname"><span class="pre">demonstrate_bulk_generation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_aixlib</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">workspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e12_template_generation_example.html#demonstrate_bulk_generation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e12_template_generation_example.demonstrate_bulk_generation" title="Permalink to this definition"></a></dt>
+<dd><p>Method 2: Bulk template generation</p>
+<p>This approach uses the generate_bulk() method to efficiently create
+multiple templates with organized error handling. Good for moderate
+scale template generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of successfully generated templates</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e12_template_generation_example.demonstrate_config_generation">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e12_template_generation_example.</span></span><span class="sig-name descname"><span class="pre">demonstrate_config_generation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e12_template_generation_example.html#demonstrate_config_generation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e12_template_generation_example.demonstrate_config_generation" title="Permalink to this definition"></a></dt>
+<dd><p>Method 3: Configuration-driven template generation</p>
+<p>This approach uses JSON configuration files and environment variables
+for fully automated template generation. Ideal for production workflows
+and CI/CD integration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of successfully generated templates</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e12_template_generation_example.get_user_choice">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e12_template_generation_example.</span></span><span class="sig-name descname"><span class="pre">get_user_choice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e12_template_generation_example.html#get_user_choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e12_template_generation_example.get_user_choice" title="Permalink to this definition"></a></dt>
+<dd><p>Get user’s choice for demonstration method</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e12_template_generation_example.get_aixlib_path">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e12_template_generation_example.</span></span><span class="sig-name descname"><span class="pre">get_aixlib_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e12_template_generation_example.html#get_aixlib_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e12_template_generation_example.get_aixlib_path" title="Permalink to this definition"></a></dt>
+<dd><p>Get AixLib library path via file dialog</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e12_template_generation_example.main">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e12_template_generation_example.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e12_template_generation_example.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e12_template_generation_example.main" title="Permalink to this definition"></a></dt>
+<dd><p>Main function with method selection</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="uesgraphs.examples.e11_model_generation_example.html" class="btn btn-neutral float-left" title="uesgraphs.examples.e11_model_generation_example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="uesgraphs.examples.e16_complete_geojson_to_modelica.html" class="btn btn-neutral float-right" title="uesgraphs.examples.e16_complete_geojson_to_modelica" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
