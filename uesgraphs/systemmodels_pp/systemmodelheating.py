@@ -495,7 +495,9 @@ class SystemModelHeating(UESGraph):
             # only take buildings
             if node_data.get("node_type") != "building" or node_data.get("is_supply_heating", False):
                 continue
-            heat = node_data.get("input_heat", []) # TODO: adding of Dhw or only taking heat?
+            heat_list = node_data.get("input_heat", [])
+            dhw_list = node_data.get("input_dhw", [0.0] * len(heat_list))
+            heat = [h + d for h, d in zip(heat_list, dhw_list)]
             data[node] = heat
             max_len = max(max_len, len(heat))
 
