@@ -15,6 +15,7 @@ Subpackages
    uesgraphs.analyze
    uesgraphs.examples
    uesgraphs.systemmodels
+   uesgraphs.systemmodels_pp
 
 Submodules
 ----------
