@@ -8,4 +8,5 @@ Core Modules
    uesgraphs.visuals
    uesgraphs.analyze
    uesgraphs.systemmodels
+   uesgraphs.systemmodels_pp
    uesgraphs.utilities
