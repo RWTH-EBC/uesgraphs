@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hydraulic Network Sizing &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Template Generation" href="Template_Generation.html" />
+    <link rel="prev" title="Model Generation Pipeline" href="model_generation_pipeline.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Hydraulic Network Sizing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it Works</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#demand-based-mass-flow-calculation">1. Demand-Based Mass Flow Calculation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#flow-path-aggregation">2. Flow Path Aggregation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#catalog-based-pipe-selection">3. Catalog-Based Pipe Selection</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mass-flow-calculation">Mass Flow Calculation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#complete-hydraulic-sizing">Complete Hydraulic Sizing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#output-attributes">Output Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#learn-more">Learn More</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-features">Advanced Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Hydraulic Network Sizing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guides/hydronic_sizing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hydraulic-network-sizing">
+<h1>Hydraulic Network Sizing<a class="headerlink" href="#hydraulic-network-sizing" title="Permalink to this heading"></a></h1>
+<p>A physics-based approach for automated mass flow calculation and pipe sizing in district heating networks.</p>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ug</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels.utilities</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sysm_ut</span>
+
+<span class="c1"># 1. Load your network</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s2">&quot;network.json&quot;</span><span class="p">,</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">)</span>
+
+<span class="c1"># 2. Set demand data and temperature differences</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodelist_building</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_supply_heating&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;input_heat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">15000</span>  <span class="c1"># W (example: 15 kW peak load)</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;dT_Network&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">30.0</span>   <span class="c1"># K</span>
+
+<span class="c1"># 3. Size the network</span>
+<span class="n">sized_graph</span> <span class="o">=</span> <span class="n">sysm_ut</span><span class="o">.</span><span class="n">size_hydronic_network</span><span class="p">(</span>
+    <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span>
+    <span class="n">catalog</span><span class="o">=</span><span class="s2">&quot;isoplus&quot;</span><span class="p">,</span>
+    <span class="n">load_scenario</span><span class="o">=</span><span class="s2">&quot;peak_load&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># 4. Analyze results</span>
+<span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">sized_graph</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">sized_graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pipe </span><span class="si">{</span><span class="n">edge</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;DN&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;m_flow_peak_load&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> kg/s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function accepts both <strong>scalar values</strong> and <strong>time-series</strong> for <code class="docutils literal notranslate"><span class="pre">input_heat</span></code>:</p>
+<ul class="simple">
+<li><p><strong>Scalar</strong>: <code class="docutils literal notranslate"><span class="pre">graph.nodes[node][&quot;input_heat&quot;]</span> <span class="pre">=</span> <span class="pre">15000</span></code> (single peak load value)</p></li>
+<li><p><strong>Time-series</strong>: <code class="docutils literal notranslate"><span class="pre">graph.nodes[node][&quot;input_heat&quot;]</span> <span class="pre">=</span> <span class="pre">[1000,</span> <span class="pre">5000,</span> <span class="pre">15000,</span> <span class="pre">...]</span></code> (automatically extracts peak/average based on <code class="docutils literal notranslate"><span class="pre">load_scenario</span></code>)</p></li>
+</ul>
+</div>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
+<p>Your graph needs these node attributes:</p>
+<ul class="simple">
+<li><p><strong>input_heat</strong>: Thermal demand [W] at each consumer node</p></li>
+<li><p><strong>dT_Network</strong>: Temperature difference [K] between supply and return</p></li>
+<li><p><strong>is_supply_heating</strong>: Boolean flag to identify supply nodes</p></li>
+</ul>
+</section>
+<section id="how-it-works">
+<h2>How it Works<a class="headerlink" href="#how-it-works" title="Permalink to this heading"></a></h2>
+<section id="demand-based-mass-flow-calculation">
+<h3>1. Demand-Based Mass Flow Calculation<a class="headerlink" href="#demand-based-mass-flow-calculation" title="Permalink to this heading"></a></h3>
+<p>The system calculates mass flows starting at consumer nodes using the fundamental equation:</p>
+<div class="math notranslate nohighlight">
+\[\dot{m} = \frac{Q}{c_p \cdot \Delta T}\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><strong>Q</strong>: Thermal load [W]</p></li>
+<li><p><strong>cp</strong>: Specific heat capacity (4184 J/kg·K for water)</p></li>
+<li><p><strong>ΔT</strong>: Temperature difference [K]</p></li>
+</ul>
+</section>
+<section id="flow-path-aggregation">
+<h3>2. Flow Path Aggregation<a class="headerlink" href="#flow-path-aggregation" title="Permalink to this heading"></a></h3>
+<p>Mass flows are aggregated backward through the network:</p>
+<ul class="simple">
+<li><p>Identifies all supply-to-demand paths</p></li>
+<li><p>Accumulates flows along each path</p></li>
+<li><p>Applies maximum flow principle for robust sizing</p></li>
+</ul>
+</section>
+<section id="catalog-based-pipe-selection">
+<h3>3. Catalog-Based Pipe Selection<a class="headerlink" href="#catalog-based-pipe-selection" title="Permalink to this heading"></a></h3>
+<p>Matches calculated flows to real pipe diameters:</p>
+<ul class="simple">
+<li><p>Uses manufacturer catalogs (e.g., Isoplus)</p></li>
+<li><p>Selects next larger pipe if no exact match</p></li>
+<li><p>Adds <code class="docutils literal notranslate"><span class="pre">DN</span></code> (nominal diameter) and <code class="docutils literal notranslate"><span class="pre">diameter</span></code> [m] attributes to edges</p></li>
+</ul>
+</section>
+</section>
+<section id="core-functions">
+<h2>Core Functions<a class="headerlink" href="#core-functions" title="Permalink to this heading"></a></h2>
+<section id="mass-flow-calculation">
+<h3>Mass Flow Calculation<a class="headerlink" href="#mass-flow-calculation" title="Permalink to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate mass flows based on demand</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">sysm_ut</span><span class="o">.</span><span class="n">estimate_m_flow_demand_based</span><span class="p">(</span>
+    <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span>
+    <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">,</span>
+    <span class="n">demand_attribute</span><span class="o">=</span><span class="s2">&quot;input_heat&quot;</span><span class="p">,</span>
+    <span class="n">load_scenario</span><span class="o">=</span><span class="s2">&quot;peak_load&quot;</span><span class="p">,</span>  <span class="c1"># or &quot;average_load&quot;</span>
+    <span class="n">dT_attribute</span><span class="o">=</span><span class="s2">&quot;dT_Network&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Key features:</strong></p>
+<ul class="simple">
+<li><p>Scenario-based calculations (peak vs. average load)</p></li>
+<li><p>Individual temperature differences per node</p></li>
+<li><p>Robust path-based flow aggregation</p></li>
+</ul>
+</section>
+<section id="complete-hydraulic-sizing">
+<h3>Complete Hydraulic Sizing<a class="headerlink" href="#complete-hydraulic-sizing" title="Permalink to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Full workflow: mass flows + pipe diameters</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">sysm_ut</span><span class="o">.</span><span class="n">size_hydronic_network</span><span class="p">(</span>
+    <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span>
+    <span class="n">catalog</span><span class="o">=</span><span class="s2">&quot;isoplus&quot;</span><span class="p">,</span>
+    <span class="n">dT_attribute</span><span class="o">=</span><span class="s2">&quot;dT_Network&quot;</span><span class="p">,</span>
+    <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">,</span>
+    <span class="n">load_scenario</span><span class="o">=</span><span class="s2">&quot;peak_load&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="output-attributes">
+<h2>Output Attributes<a class="headerlink" href="#output-attributes" title="Permalink to this heading"></a></h2>
+<p>After sizing, edges contain:</p>
+<ul class="simple">
+<li><p><strong>m_flow_peak_load</strong> or <strong>m_flow_average_load</strong>: Mass flow [kg/s]</p></li>
+<li><p><strong>DN</strong>: Nominal diameter designation (e.g., “DN50”)</p></li>
+<li><p><strong>diameter</strong>: Inner pipe diameter [m]</p></li>
+</ul>
+</section>
+<section id="learn-more">
+<h2>Learn More<a class="headerlink" href="#learn-more" title="Permalink to this heading"></a></h2>
+<p>For detailed examples, see the comprehensive tutorial notebook: <a class="reference internal" href="../api_examples.html"><span class="doc">Examples</span></a> (Example 14: Hydronic Sizing).</p>
+</section>
+<section id="advanced-features">
+<h2>Advanced Features<a class="headerlink" href="#advanced-features" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Custom pipe catalogs</strong>: Add your own manufacturer data</p></li>
+<li><p><strong>Multiple scenarios</strong>: Compare peak vs. average sizing</p></li>
+<li><p><strong>Temperature flexibility</strong>: Different ΔT per building type</p></li>
+<li><p><strong>Visualization</strong>: Integrated diameter plotting with <code class="docutils literal notranslate"><span class="pre">uesgraphs.visuals</span></code></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This feature replaces the deprecated <code class="docutils literal notranslate"><span class="pre">estimate_m_flow_nominal()</span></code> function with a more accurate demand-based approach.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="model_generation_pipeline.html" class="btn btn-neutral float-left" title="Model Generation Pipeline" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Template_Generation.html" class="btn btn-neutral float-right" title="Template Generation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

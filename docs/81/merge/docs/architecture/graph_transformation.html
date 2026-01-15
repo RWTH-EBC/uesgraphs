@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Graph Transformation &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="UESGraphs pandapipes simulation Pipeline" href="pandapipes_pipeline.html" />
+    <link rel="prev" title="UESGraphs Modelica Code Generation Pipeline" href="modelica_pipeline.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Graph Transformation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#conceptual-overview">Conceptual Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#graph-representation-comparison">Graph Representation Comparison</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#why-this-transformation-matters">Why This Transformation Matters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-mapping-process">The Mapping Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#identifying-corresponding-elements">1. Identifying Corresponding Elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#special-case-terminal-nodes">2. Special Case: Terminal Nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#validation-process">3. Validation Process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#core-functions">Core Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#map_ues_nodes_to_system_ports"><code class="docutils literal notranslate"><span class="pre">map_ues_nodes_to_system_ports()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get_pipes_for_node"><code class="docutils literal notranslate"><span class="pre">get_pipes_for_node()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#validate_structural_node_port_mapping"><code class="docutils literal notranslate"><span class="pre">validate_structural_node_port_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#validation-example">Validation Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#understanding-the-transformation">Understanding the Transformation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#physical-intuition">Physical Intuition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-scenario">Example Scenario</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#practical-applications">Practical Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#complete-workflow-example">Complete Workflow Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementation-notes">Implementation Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Graph Transformation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/architecture/graph_transformation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="graph-transformation">
+<h1>Graph Transformation<a class="headerlink" href="#graph-transformation" title="Permalink to this heading"></a></h1>
+<p>Mapping between UES Graph and System Model representations.</p>
+<section id="conceptual-overview">
+<h2>Conceptual Overview<a class="headerlink" href="#conceptual-overview" title="Permalink to this heading"></a></h2>
+<p>This framework addresses the challenge of mapping between two different graph representations of the same energy distribution system.</p>
+<section id="graph-representation-comparison">
+<h3>Graph Representation Comparison<a class="headerlink" href="#graph-representation-comparison" title="Permalink to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>UES Graph</p></th>
+<th class="head"><p>System Model Graph
+(Modelica)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Nodes</strong></p></td>
+<td><p>Junctions/connection
+points</p></td>
+<td><p>Pipes and components</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Edges</strong></p></td>
+<td><p>Physical pipes</p></td>
+<td><p>Connections between
+components</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>State changes</strong></p></td>
+<td><p>Constant at nodes</p></td>
+<td><p>Occur within pipes
+(nodes)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Purpose</strong></p></td>
+<td><p>Network topology</p></td>
+<td><p>Simulation model</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="why-this-transformation-matters">
+<h2>Why This Transformation Matters<a class="headerlink" href="#why-this-transformation-matters" title="Permalink to this heading"></a></h2>
+<p>The transformation is necessary because the uesgraphs gets transformed for simulation model generation ( link to model generation pipeline). In the uesgraphs an edge describes what in real life would be a pipe, it links nodes. The nodes can be a demand, supply or junction points of edges. In the systemmodelheating-graph, that is used as basis for the simulation model, the edges are translated into nodes. The underlying philosophy is that every node represents an object, which can be a demand, supply or pipe. The former junction points of the uesgraphs get translated into edges. They will only describe the connection of the different objects to each other. This transformation makes it not trivial to map simulation result data back onto the uesgraphs. The simulation contains for example a pipe with a port_a and port_b. The pipe is represented in our systemmodelheating-graph through a node. But in our uesgraphs it is an edge and the ports would be the nodes connected by the edge. Depending on the properties of interest, this becomes a tricky part. While extensove sizes are constant over an pipe e.g. mass flow, those can be easily mapped onto the according edge on the uesgraphs. But for intensive sizes e.g. temperature or pressure it matters if you regard the beginning or the end of the pipe (port_a or port_b). At the same time intensive sizes are “constant” in a node. The mapping process of these sizes is crucial when working with simulated data and uesgraphs.
+The transformation has not be to understood deeply. Using the newest version of uesgraphs will write the systemmodelgraph into a json file, which can be used by the proper analyze functions to map the data accordingly. The mapping process in more detail is described below:</p>
+</section>
+<section id="the-mapping-process">
+<h2>The Mapping Process<a class="headerlink" href="#the-mapping-process" title="Permalink to this heading"></a></h2>
+<section id="identifying-corresponding-elements">
+<h3>1. Identifying Corresponding Elements<a class="headerlink" href="#identifying-corresponding-elements" title="Permalink to this heading"></a></h3>
+<p>For each node in the UES Graph, we:</p>
+<ul class="simple">
+<li><p>Identify all connected pipes</p></li>
+<li><p>Find all connection ports where these pipes meet in the System Model</p></li>
+<li><p>Map the uesgraphs node to these connection ports</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>uesgraphs node → [Pipe1, Pipe2, ...] → [Port1, Port2, ...]
+</pre></div>
+</div>
+</section>
+<section id="special-case-terminal-nodes">
+<h3>2. Special Case: Terminal Nodes<a class="headerlink" href="#special-case-terminal-nodes" title="Permalink to this heading"></a></h3>
+<p>Building nodes (demand/supply) represent a special case:</p>
+<ul class="simple">
+<li><p>They connect to only one pipe</p></li>
+<li><p>They require special handling to identify the correct ports</p></li>
+</ul>
+</section>
+<section id="validation-process">
+<h3>3. Validation Process<a class="headerlink" href="#validation-process" title="Permalink to this heading"></a></h3>
+<p>The structural validation ensures:</p>
+<ul class="simple">
+<li><p>All uesgraphs nodes are mapped to ports</p></li>
+<li><p>Each node has either two connected pipes or is a demand/supply node</p></li>
+</ul>
+</section>
+</section>
+<section id="core-functions">
+<h2>Core Functions<a class="headerlink" href="#core-functions" title="Permalink to this heading"></a></h2>
+<p>The transformation is implemented through several functions in <code class="docutils literal notranslate"><span class="pre">uesgraphs.analyze.data_handling.graph_transformation</span></code>:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="map_ues_nodes_to_system_ports">
+<span class="sig-name descname"><span class="pre">map_ues_nodes_to_system_ports</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#map_ues_nodes_to_system_ports" title="Permalink to this definition"></a></dt>
+<dd><p>Main function that creates the complete mapping between UES graph nodes and system model ports.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uesgraph</strong> – The UESGraph object representing network topology</p></li>
+<li><p><strong>system_model</strong> – The SystemModelHeating object representing the simulation model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping UES node IDs to sets of port identifiers</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="get_pipes_for_node">
+<span class="sig-name descname"><span class="pre">get_pipes_for_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph_sysm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#get_pipes_for_node" title="Permalink to this definition"></a></dt>
+<dd><p>Identifies all pipes connected to a specified node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph_sysm</strong> – System model graph</p></li>
+<li><p><strong>node_id</strong> – Node identifier</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of connected pipe IDs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="validate_structural_node_port_mapping">
+<span class="sig-name descname"><span class="pre">validate_structural_node_port_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_to_ports_mapping</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#validate_structural_node_port_mapping" title="Permalink to this definition"></a></dt>
+<dd><p>Validates the structural integrity of the node-to-ports mapping.</p>
+</dd></dl>
+
+<section id="validation-example">
+<h3>Validation Example<a class="headerlink" href="#validation-example" title="Permalink to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.analyze.data_handling</span><span class="w"> </span><span class="kn">import</span> <span class="n">graph_transformation</span> <span class="k">as</span> <span class="n">gt</span>
+
+<span class="c1"># Create mapping</span>
+<span class="n">node_port_mapping</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">map_ues_nodes_to_system_ports</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">,</span> <span class="n">system_model</span><span class="p">)</span>
+
+<span class="c1"># Validate mapping</span>
+<span class="n">gt</span><span class="o">.</span><span class="n">validate_structural_node_port_mapping</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">,</span> <span class="n">node_port_mapping</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The validation function checks:</p>
+<ol class="arabic simple">
+<li><p>All nodes from the UES graph have a corresponding entry in the mapping</p></li>
+<li><p>Every node has at least two ports assigned (minimum requirement for connections)</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is a structural validation only. It does not verify the actual values or physical correctness of the ports.</p>
+</div>
+</section>
+</section>
+<section id="understanding-the-transformation">
+<h2>Understanding the Transformation<a class="headerlink" href="#understanding-the-transformation" title="Permalink to this heading"></a></h2>
+<section id="physical-intuition">
+<h3>Physical Intuition<a class="headerlink" href="#physical-intuition" title="Permalink to this heading"></a></h3>
+<p>Think of this mapping as translating between two views of the same physical system:</p>
+<p><strong>The Plumber’s View (UES Graph)</strong>:</p>
+<ul class="simple">
+<li><p>Pipes connect at junction points</p></li>
+<li><p>Fluid flows through pipes from source to destination</p></li>
+</ul>
+<p><strong>The Simulator’s View (System Model)</strong>:</p>
+<ul class="simple">
+<li><p>Each pipe is a component with internal state</p></li>
+<li><p>Components connect at ports with defined properties</p></li>
+</ul>
+</section>
+<section id="example-scenario">
+<h3>Example Scenario<a class="headerlink" href="#example-scenario" title="Permalink to this heading"></a></h3>
+<p>Consider a simple T-junction connecting three pipes:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>UES Graph:          System Model:
+    P1                P1
+     \                 |\
+      N -- P3    vs.   | P3
+     /                 |
+    P2                P2
+</pre></div>
+</div>
+<p>In the UES Graph, pipes P1, P2, and P3 meet at node N.</p>
+<p>In the System Model, pipes P1, P2, and P3 are nodes, with connections (edges) between them.</p>
+<p>The mapping finds the pipes P1, P2 and P3 around the desired UESGraph node N first. Since in the system model the UESGraph node N is represented by edges, the edges between P3, P1 and P2 are all different representations of the same node N. The current mapping saves all those edges for node N in a dictionary.</p>
+</section>
+</section>
+<section id="practical-applications">
+<h2>Practical Applications<a class="headerlink" href="#practical-applications" title="Permalink to this heading"></a></h2>
+<p>This mapping enables:</p>
+<ol class="arabic simple">
+<li><p><strong>Simulation Integration</strong>: Connecting network topology models with physics-based simulations</p></li>
+<li><p><strong>State Analysis</strong>: Tracking state changes across the entire system</p></li>
+<li><p><strong>Validation</strong>: Ensuring physical constraints are maintained at connection points</p></li>
+<li><p><strong>Error Detection</strong>: Identifying inconsistencies in the model structure</p></li>
+</ol>
+</section>
+<section id="complete-workflow-example">
+<h2>Complete Workflow Example<a class="headerlink" href="#complete-workflow-example" title="Permalink to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ug</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.analyze.data_handling</span><span class="w"> </span><span class="kn">import</span> <span class="n">graph_transformation</span> <span class="k">as</span> <span class="n">gt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">SystemModelHeating</span>
+
+<span class="c1"># 1. Load or create UESGraph</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s2">&quot;district_network.json&quot;</span><span class="p">)</span>
+
+<span class="c1"># 2. IMPORTANT: Save and reload to normalize internal structures</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="s2">&quot;normalized_network.json&quot;</span><span class="p">)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s2">&quot;normalized_network.json&quot;</span><span class="p">)</span>
+
+<span class="c1"># 3. Generate system model</span>
+<span class="n">system_model</span> <span class="o">=</span> <span class="n">SystemModelHeating</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+
+<span class="c1"># 4. Create port mapping</span>
+<span class="n">node_port_mapping</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">map_ues_nodes_to_system_ports</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">system_model</span><span class="p">)</span>
+
+<span class="c1"># 5. Validate mapping</span>
+<span class="n">gt</span><span class="o">.</span><span class="n">validate_structural_node_port_mapping</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">node_port_mapping</span><span class="p">)</span>
+
+<span class="c1"># 6. Use mapping for analysis</span>
+<span class="k">for</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">ports</span> <span class="ow">in</span> <span class="n">node_port_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Node </span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2"> connects to ports: </span><span class="si">{</span><span class="n">ports</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="implementation-notes">
+<h2>Implementation Notes<a class="headerlink" href="#implementation-notes" title="Permalink to this heading"></a></h2>
+<p>When implementing this transformation:</p>
+<ul class="simple">
+<li><p><strong>Ensure node names are consistent</strong> between graph representations</p></li>
+<li><p><strong>Handle special cases</strong> for terminal nodes (buildings)</p></li>
+<li><p><strong>Validate the structural integrity</strong> of the mapping</p></li>
+<li><p><strong>Save/reload via JSON</strong> before transformation to avoid inconsistencies</p></li>
+<li><p><strong>Consider performance optimizations</strong> for large networks (&gt;100 nodes)</p></li>
+</ul>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../guides/model_generation_pipeline.html"><span class="doc">Model Generation Pipeline</span></a> - How to generate Modelica models from UESGraphs</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">uesgraphs.analyze.data_handling.graph_transformation</span></code> - API reference</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modelica_pipeline.html" class="btn btn-neutral float-left" title="UESGraphs Modelica Code Generation Pipeline" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pandapipes_pipeline.html" class="btn btn-neutral float-right" title="UESGraphs pandapipes simulation Pipeline" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

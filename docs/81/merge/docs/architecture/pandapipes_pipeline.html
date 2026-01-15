@@ -1,0 +1,402 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UESGraphs pandapipes simulation Pipeline &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Core Modules" href="../api_core_modules.html" />
+    <link rel="prev" title="Graph Transformation" href="graph_transformation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">UESGraphs pandapipes simulation Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#architecture-documentation">Architecture Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#key-design-principles">Key Design Principles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#technology-stack">Technology Stack</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pipeline-architecture">Pipeline Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#high-level-flow">High-Level Flow</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#core-entry-point">Core Entry Point</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-assignment-flow">Parameter Assignment Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#demand-time-series-handling">Demand &amp; Time-Series Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pandapipes-model-generation">pandapipes Model Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#file-folder-structure">File &amp; Folder Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#validation-error-handling">Validation &amp; Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extension-guide">Extension Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">UESGraphs pandapipes simulation Pipeline</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/architecture/pandapipes_pipeline.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="uesgraphs-pandapipes-simulation-pipeline">
+<h1>UESGraphs pandapipes simulation Pipeline<a class="headerlink" href="#uesgraphs-pandapipes-simulation-pipeline" title="Permalink to this heading"></a></h1>
+<section id="architecture-documentation">
+<h2>Architecture Documentation<a class="headerlink" href="#architecture-documentation" title="Permalink to this heading"></a></h2>
+<p><strong>Version:</strong> — <strong>Last Updated:</strong> —</p>
+</section>
+<hr class="docutils" />
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="#overview">Overview</a></p></li>
+<li><p><a class="reference external" href="#pipeline-architecture">Pipeline Architecture</a></p></li>
+<li><p><a class="reference external" href="#core-entry-point">Core Entry Point</a></p></li>
+<li><p><a class="reference external" href="#parameter-assignment-flow">Parameter Assignment Flow</a></p></li>
+<li><p><a class="reference external" href="#demand--time-series-handling">Demand &amp; Time-Series Handling</a></p></li>
+<li><p><a class="reference external" href="#pandapipes-model-generation">pandapipes Model Generation</a></p></li>
+<li><p><a class="reference external" href="#file--folder-structure">File &amp; Folder Structure</a></p></li>
+<li><p><a class="reference external" href="#validation--error-handling">Validation &amp; Error Handling</a></p></li>
+<li><p><a class="reference external" href="#extension-guide">Extension Guide</a></p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>The UESGraphs pandapipes simulation pipeline enables the execution of
+thermo-hydraulic network simulations based on the graph-structure.</p>
+<section id="key-design-principles">
+<h3>Key Design Principles<a class="headerlink" href="#key-design-principles" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Graph as Single Source of Truth</strong>: All topology, parameters and
+time-series references are stored on the UESGraph before model generation</p></li>
+<li><p><strong>Excel-based Configuration</strong>: Uniform parameters (pipes, supply, demand,
+simulation setup) are read from Excel sheets</p></li>
+<li><p><strong>Fail Early</strong>: Missing files, invalid graphs or inconsistent parameters
+abort the pipeline with explicit error messages</p></li>
+<li><p><strong>Traceability</strong>: Every major processing step persists
+intermediate graph states to JSON</p></li>
+</ol>
+</section>
+<section id="technology-stack">
+<h3>Technology Stack<a class="headerlink" href="#technology-stack" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Graph Representation</strong>: NetworkX-based UESGraph</p></li>
+<li><p><strong>Simulation Engine</strong>: pandapipes</p></li>
+<li><p><strong>Configuration</strong>: Excel (openpyxl)</p></li>
+<li><p><strong>Time-Series Data</strong>: CSV files</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="pipeline-architecture">
+<h2>Pipeline Architecture<a class="headerlink" href="#pipeline-architecture" title="Permalink to this heading"></a></h2>
+<section id="high-level-flow">
+<h3>High-Level Flow<a class="headerlink" href="#high-level-flow" title="Permalink to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>UESGraph / JSON
+     ↓
+uesgraph_to_pandapipes
+     ↓
+┌─────────────────────────────────┐
+│ 1. Validate input paths         │
+│ 2. Load simulation settings     │
+│ 3. Normalize UESGraph           │
+│ 4. Assign demands               │
+│ 5. Assign pipe parameters       │
+│ 6. Assign supply parameters     │
+│ 7. Assign demand parameters     │
+│ 8. Load ground temperature      │
+│ 9. Generate pandapipes model    │
+└─────────────────────────────────┘
+     ↓
+pandapipes Results
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="core-entry-point">
+<h2>Core Entry Point<a class="headerlink" href="#core-entry-point" title="Permalink to this heading"></a></h2>
+<p>### <cite>uesgraph_to_pandapipes(…)</cite></p>
+<p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">systemmodels_pp/utilities.py</span></code>
+<strong>Responsibility</strong>: End-to-end orchestration of pandapipes simulations
+<strong>Inputs</strong>: UESGraph or JSON path, Excel config, demand CSVs, ground</p>
+<blockquote>
+<div><p>temperature data</p>
+</div></blockquote>
+<p><strong>Outputs</strong>: Timestamped directory with pandapipes files</p>
+</section>
+<hr class="docutils" />
+<section id="parameter-assignment-flow">
+<h2>Parameter Assignment Flow<a class="headerlink" href="#parameter-assignment-flow" title="Permalink to this heading"></a></h2>
+<p>### Execution Order</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.</span> <span class="n">Demand</span> <span class="n">data</span> <span class="n">assignment</span>
+<span class="mf">2.</span> <span class="n">Pipe</span> <span class="n">parameters</span> <span class="p">(</span><span class="n">Excel</span><span class="p">:</span> <span class="s2">&quot;Pipes&quot;</span><span class="p">)</span>
+<span class="mf">3.</span> <span class="n">Supply</span> <span class="n">parameters</span> <span class="p">(</span><span class="n">Excel</span><span class="p">:</span> <span class="s2">&quot;Supply&quot;</span><span class="p">)</span>
+<span class="mf">4.</span> <span class="n">Demand</span> <span class="n">parameters</span> <span class="p">(</span><span class="n">Excel</span><span class="p">:</span> <span class="s2">&quot;Demands&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>—</p>
+<p>### Pipe Parameters</p>
+<p>Assigned to <strong>edges</strong>:</p>
+<ul class="simple">
+<li><p><cite>dIns</cite></p></li>
+<li><p><cite>kIns</cite></p></li>
+<li><p><cite>roughness</cite></p></li>
+<li><p><cite>ground_depth</cite></p></li>
+<li><p><cite>sections</cite></p></li>
+</ul>
+<p>Source: Excel sheet <strong>“Pipes”</strong>
+Missing values fall back to hardcoded defaults.</p>
+<p>—</p>
+<p>### Supply Parameters</p>
+<p>Applied to <strong>building nodes</strong> flagged as supply:</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">is_supply_heating</span> <span class="pre">==</span> <span class="pre">True</span>
+<span class="pre">`</span></code></p>
+<p>Assigned attributes:</p>
+<ul class="simple">
+<li><p><cite>TIn</cite></p></li>
+<li><p><cite>TReturn</cite></p></li>
+<li><p><cite>dpIn</cite></p></li>
+<li><p><cite>pReturn</cite></p></li>
+<li><p><cite>dpFlow</cite></p></li>
+</ul>
+<p>Unit conversions (Pa → bar) are handled explicitly in the pipeline.</p>
+<p>The total number of supplies is stored as:</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">uesgraph.graph[&quot;number_of_supplies&quot;]</span>
+<span class="pre">`</span></code></p>
+<p>—</p>
+<p>### Demand Parameters</p>
+<p>Applied to <strong>non-supply building nodes</strong>:</p>
+<ul class="simple">
+<li><p><cite>dTDesign</cite></p></li>
+<li><p><cite>TReturn</cite></p></li>
+<li><p><cite>cp_default</cite></p></li>
+</ul>
+<p>Additionally, network-wide defaults are stored on graph level:</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">uesgraph.graph[&quot;dT_Net&quot;]</span>
+<span class="pre">uesgraph.graph[&quot;cp_default&quot;]</span>
+<span class="pre">`</span></code></p>
+<p>—</p>
+</section>
+<section id="demand-time-series-handling">
+<h2>Demand &amp; Time-Series Handling<a class="headerlink" href="#demand-time-series-handling" title="Permalink to this heading"></a></h2>
+<p>### Demand Assignment</p>
+<p>Demand CSVs are mapped via:</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
+assign_demand_data(uesgraph, {</p>
+<blockquote>
+<div><p>“heating”: input_heating,
+“cooling”: input_cooling,
+“dhw”: input_dhw</p>
+</div></blockquote>
+<p>Result:</p>
+<ul class="simple">
+<li><p>Time-series are attached as <strong>graph node attributes</strong></p></li>
+<li><p>Naming conventions are preserved for downstream processing</p></li>
+</ul>
+<p>### Ground Temperature</p>
+<p>Ground temperature CSV is loaded once and later sliced by <strong>ground
+depth</strong>, defined in the simulation Excel:</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">ground_temp_list</span> <span class="pre">=</span> <span class="pre">ground_temp_df[ground_depth].tolist()</span>
+<span class="pre">`</span></code></p>
+<p>—</p>
+</section>
+<section id="pandapipes-model-generation">
+<h2>pandapipes Model Generation<a class="headerlink" href="#pandapipes-model-generation" title="Permalink to this heading"></a></h2>
+<p>### Model Directory Creation</p>
+<p>Each simulation run creates a timestamped folder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>workspace/
+  └── models/
+      └── SimYYYYMMDD_HHMMSS/
+</pre></div>
+</div>
+<p>### Model Generation</p>
+<p>The final pandapipes model is created via:</p>
+<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a>python
+generate_simulation_model(</p>
+<blockquote>
+<div><p>uesgraph,
+sim_name,
+sim_params,
+ground_temp_list,
+sim_model_dir</p>
+</div></blockquote>
+<p><strong>Responsibilities of `generate_simulation_model`:</strong></p>
+<ul class="simple">
+<li><p>Convert UESGraph → pandapipes net</p></li>
+<li><p>Create pipes, junctions, sinks, sources</p></li>
+<li><p>Assign thermal &amp; hydraulic parameters</p></li>
+<li><p>Attach time-series data</p></li>
+<li><p>Execute simulation</p></li>
+</ul>
+<p><strong>Used components</strong>:</p>
+<ul class="simple">
+<li><p>pandapipes.pipe</p></li>
+<li><p>pandapipes.heat_consumer</p></li>
+<li><p>pandapipes.circ_pump_pressure</p></li>
+<li><p>pandapipes.circ_pump_mass (if multiple supplies)</p></li>
+<li><p>pandapipes.junction</p></li>
+</ul>
+<p><strong>Solver Settings</strong>:</p>
+<ul class="simple">
+<li><p>mode: ‘bidirectional’</p></li>
+<li><p>iter: 100</p></li>
+</ul>
+<p>—</p>
+</section>
+<section id="file-folder-structure">
+<h2>File &amp; Folder Structure<a class="headerlink" href="#file-folder-structure" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>workspace/
+  ├── uesgraphs_origin.json
+  ├── uesgraphs_with_demand.json
+  ├── uesgraphs_simplified.json
+  └── models/
+      └── Sim20250115_101530_MySimulation/
+          ├── uesgraphs.json
+          ├── [component models]
+          └── setup_params.csv   (optional)
+</pre></div>
+</div>
+<p>—</p>
+</section>
+<section id="validation-error-handling">
+<h2>Validation &amp; Error Handling<a class="headerlink" href="#validation-error-handling" title="Permalink to this heading"></a></h2>
+<p>### Validation Levels</p>
+<ol class="arabic simple">
+<li><p><strong>File System</strong>
+- Missing files → abort</p></li>
+<li><p><strong>Graph Consistency</strong>
+- Missing edge names → auto-generated
+- Invalid graph type → abort</p></li>
+<li><p><strong>Excel Parsing</strong>
+- Missing sheets → abort
+- Missing values → defaults or error (depending on context)</p></li>
+<li><p><strong>Simulation Generation</strong>
+- pandapipes errors are logged and re-raised</p></li>
+</ol>
+<p>### Logging Strategy</p>
+<ul class="simple">
+<li><p>DEBUG: Detailed processing steps</p></li>
+<li><p>INFO: Pipeline milestones</p></li>
+<li><p>ERROR: Abort conditions</p></li>
+</ul>
+<p>—</p>
+</section>
+<section id="extension-guide">
+<h2>Extension Guide<a class="headerlink" href="#extension-guide" title="Permalink to this heading"></a></h2>
+<p>### Adding New Parameters</p>
+<ol class="arabic simple">
+<li><p>Add attribute to UESGraph (node or edge)</p></li>
+<li><p>Reference or override via Excel</p></li>
+<li><p>Ensure <cite>generate_simulation_model</cite> consumes the parameter</p></li>
+</ol>
+<p>—</p>
+<p><em>This document describes the architecture of the UESGraphs pandapipes simulation pipeline.</em></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="graph_transformation.html" class="btn btn-neutral float-left" title="Graph Transformation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api_core_modules.html" class="btn btn-neutral float-right" title="Core Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

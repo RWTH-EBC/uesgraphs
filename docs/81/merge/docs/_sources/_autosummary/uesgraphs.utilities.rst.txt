@@ -1,0 +1,34 @@
+﻿uesgraphs.utilities
+===================
+
+.. automodule:: uesgraphs.utilities
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      default_json_path
+      get_attribute_case_insensitive
+      make_workspace
+      name_uesgraph
+      set_up_file_logger
+      set_up_terminal_logger
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,1116 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.analyze.data_handling.data_handling &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+
+  
+      <script src="../../../../_static/jquery.js"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+      <script src="../../../../_static/doctools.js"></script>
+      <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.analyze.data_handling.data_handling</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.analyze.data_handling.data_handling</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.parquet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pq</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ug</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels</span><span class="w"> </span><span class="kn">import</span> <span class="n">utilities</span> <span class="k">as</span> <span class="n">ut</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.analyze.data_handling</span><span class="w"> </span><span class="kn">import</span> <span class="n">graph_transformation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.analyze.data_handling.mat_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">mat_to_parquet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_up_terminal_logger</span><span class="p">,</span> <span class="n">set_up_file_logger</span>
+
+
+<span class="c1">#### Global Variables ####</span>
+<span class="n">AIXLIB_MASKS</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Dictionary to store masks for column names</span>
+
+
+
+<span class="c1">#### Functions 2: Data Aquisition ####</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check_input_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check and prepare input file for processing.</span>
+<span class="sd">    </span>
+<span class="sd">    Handles different file formats and converts .mat files to .gzip if needed.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        file_path: Path to the input file</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Path to the processed file (usually .gzip format)</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If file doesn&#39;t exist or conversion fails</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_terminal_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.check_input_file&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;File path cannot be empty&quot;</span><span class="p">)</span>
+
+    <span class="n">base_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">gzip_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">.gzip&quot;</span>
+
+    <span class="c1"># Check for gzip first (preferred format)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">gzip_path</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found existing gzip file: </span><span class="si">{</span><span class="n">gzip_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gzip_path</span>
+    
+    <span class="c1"># Check for .mat file and convert</span>
+    <span class="n">mat_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">.mat&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mat_path</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Converting .mat file to parquet: </span><span class="si">{</span><span class="n">mat_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">gzip_new</span> <span class="o">=</span> <span class="n">mat_to_parquet</span><span class="p">(</span><span class="n">save_as</span><span class="o">=</span><span class="n">base_path</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="n">mat_path</span><span class="p">,</span> <span class="n">with_unit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully converted .mat file to: </span><span class="si">{</span><span class="n">gzip_new</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">gzip_new</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to convert .mat file: </span><span class="si">{</span><span class="n">mat_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not convert .mat file to parquet: </span><span class="si">{</span><span class="n">mat_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+    
+    <span class="c1"># Finally check if original file exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File does not exist: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using original file: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">file_path</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_columns_exist</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">required_columns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                          <span class="n">logger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if all required columns exist in the simulation data file.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        file_path: Path to the parquet/simulation file</span>
+<span class="sd">        required_columns: List of exact column names that must exist</span>
+<span class="sd">        logger: Logger instance (optional)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Set of available columns from the file</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        KeyError: If any required columns are missing</span>
+<span class="sd">        ValueError: If file cannot be read</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_terminal_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.validate_columns_exist&quot;</span><span class="p">)</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validating </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">required_columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> required columns in: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Read file metadata (no data loading)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">parquet_file</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">ParquetFile</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="n">available_columns</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">parquet_file</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File contains </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">available_columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> total columns&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Could not read file metadata: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+    
+    <span class="c1"># Check for missing columns</span>
+    <span class="n">required_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">required_columns</span><span class="p">)</span>
+    <span class="n">missing_columns</span> <span class="o">=</span> <span class="n">required_set</span> <span class="o">-</span> <span class="n">available_columns</span>
+    
+    <span class="k">if</span> <span class="n">missing_columns</span><span class="p">:</span>
+        <span class="n">missing_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">missing_columns</span><span class="p">)</span>
+        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Missing required columns: </span><span class="si">{</span><span class="n">missing_list</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+        
+        <span class="c1"># Raise KeyError with first missing column for auto-retry compatibility</span>
+        <span class="n">first_missing</span> <span class="o">=</span> <span class="n">missing_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">first_missing</span><span class="p">)</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;SUCCESS: All required columns found in data file&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">available_columns</span>
+
+<div class="viewcode-block" id="process_simulation_result"><a class="viewcode-back" href="../../../../code/uesgraphs.analyze.html#uesgraphs.analyze.process_simulation_result">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">process_simulation_result</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filter_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> 
+                        <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Process a parquet file in chunks to reduce memory usage.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        file_path: Path to the parquet file</span>
+<span class="sd">        filter_list: List of column patterns to filter</span>
+<span class="sd">        chunk_size: Number of rows to process at once</span>
+<span class="sd">        logger: Optional logger instance</span>
+<span class="sd">        </span>
+<span class="sd">    Yields:</span>
+<span class="sd">        pd.DataFrame: Processed chunks of the parquet file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_terminal_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.process_parquet_file&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 1: Check if file exists and convert .mat if needed</span>
+    <span class="n">processed_file_path</span> <span class="o">=</span> <span class="n">check_input_file</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="c1"># Step 1: Validate all columns exist (will raise KeyError if missing)</span>
+    <span class="n">available_columns</span> <span class="o">=</span> <span class="n">validate_columns_exist</span><span class="p">(</span><span class="n">processed_file_path</span><span class="p">,</span> <span class="n">required_columns</span><span class="o">=</span><span class="n">filter_list</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    
+    <span class="c1"># Step 2: Check if any columns match the filter_list</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting parquet file processing: </span><span class="si">{</span><span class="n">processed_file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filter patterns: </span><span class="si">{</span><span class="n">filter_list</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chunk size: </span><span class="si">{</span><span class="n">chunk_size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Read parquet file metadata to get columns</span>
+        <span class="n">parquet_file</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">ParquetFile</span><span class="p">(</span><span class="n">processed_file_path</span><span class="p">,</span>
+                                  <span class="n">thrift_string_size_limit</span><span class="o">=</span><span class="mi">2_000_000_000</span><span class="p">,</span>
+                                  <span class="n">thrift_container_size_limit</span><span class="o">=</span><span class="mi">2_000_000_000</span><span class="p">)</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">total_rows</span> <span class="o">=</span> <span class="mi">0</span>
+       
+        
+        <span class="c1"># Read and process the file in chunks</span>
+        <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">parquet_file</span><span class="o">.</span><span class="n">iter_batches</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">filter_list</span><span class="p">):</span>
+            <span class="n">total_rows</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">chunk_df</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+            <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk_df</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Log every 10 chunks</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span><span class="si">}</span><span class="s2"> chunks, </span><span class="si">{</span><span class="n">total_rows</span><span class="si">}</span><span class="s2"> rows so far&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">chunks</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No data loaded from file&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        
+        <span class="n">result_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result_df</span><span class="p">)</span><span class="si">}</span><span class="s2"> rows, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DataFrame memory usage: </span><span class="si">{</span><span class="n">result_df</span><span class="o">.</span><span class="n">memory_usage</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="o">**</span><span class="mi">2</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result_df</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing parquet file </span><span class="si">{</span><span class="n">processed_file_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">e</span></div>
+
+
+
+<span class="c1">#### Functions 3: Data Processing ####</span>
+
+<div class="viewcode-block" id="prepare_DataFrame"><a class="viewcode-back" href="../../../../code/uesgraphs.analyze.html#uesgraphs.analyze.prepare_DataFrame">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">prepare_DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">time_interval</span><span class="o">=</span><span class="s2">&quot;15min&quot;</span><span class="p">,</span> 
+                      <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prepare a DataFrame with a datetime index using customizable parameters.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">        The DataFrame to be processed</span>
+<span class="sd">    base_date : datetime, optional</span>
+<span class="sd">        The starting date for the index (default: 2024-01-01)</span>
+<span class="sd">    time_interval : str, optional</span>
+<span class="sd">        Frequency of the time intervals (e.g., &#39;15min&#39;, &#39;1h&#39;, &#39;30min&#39;, default: &#39;15min&#39;)</span>
+<span class="sd">    start_date : datetime, optional</span>
+<span class="sd">        If provided, slice the DataFrame from this date (inclusive)</span>
+<span class="sd">    end_date : datetime, optional</span>
+<span class="sd">        If provided, slice the DataFrame until this date (inclusive)</span>
+<span class="sd">    logger : logging.Logger, optional</span>
+<span class="sd">        Logger instance for logging operations</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    DataFrame: A DataFrame containing the data from the parquet file for the specified time period.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_terminal_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.prepare_DataFrame&quot;</span><span class="p">)</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Preparing DataFrame with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2"> rows and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parameters - base_date: </span><span class="si">{</span><span class="n">base_date</span><span class="si">}</span><span class="s2">, time_interval: </span><span class="si">{</span><span class="n">time_interval</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Date filtering - start_date: </span><span class="si">{</span><span class="n">start_date</span><span class="si">}</span><span class="s2">, end_date: </span><span class="si">{</span><span class="n">end_date</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Create datetime index with specified frequency    </span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating datetime index with frequency &#39;</span><span class="si">{</span><span class="n">time_interval</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="n">datetime_index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">base_date</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">freq</span><span class="o">=</span><span class="n">time_interval</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created datetime index from </span><span class="si">{</span><span class="n">datetime_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">datetime_index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Set the index of the DataFrame to the datetime index</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">datetime_index</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;DateTime&#39;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Applied datetime index to DataFrame&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Filter by date range if specified</span>
+        <span class="n">original_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">start_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">end_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filtering DataFrame from </span><span class="si">{</span><span class="n">start_date</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">end_date</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">start_date</span><span class="p">:</span><span class="n">end_date</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">start_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filtering DataFrame from </span><span class="si">{</span><span class="n">start_date</span><span class="si">}</span><span class="s2"> onwards&quot;</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">start_date</span><span class="p">:]</span>
+        <span class="k">elif</span> <span class="n">end_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filtering DataFrame up to </span><span class="si">{</span><span class="n">end_date</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:</span><span class="n">end_date</span><span class="p">]</span>
+        
+        <span class="c1"># Log filtering results if any filtering was applied</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">!=</span> <span class="n">original_length</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Date filtering applied: </span><span class="si">{</span><span class="n">original_length</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2"> rows (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">/</span><span class="n">original_length</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">% retained)&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Date filtering resulted in empty DataFrame - check date range parameters&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No date filtering applied&quot;</span><span class="p">)</span>
+        
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully prepared DataFrame: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2"> rows, index range: </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">df</span>
+        
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Error creating date range with frequency </span><span class="si">{</span><span class="n">time_interval</span><span class="si">}</span><span class="s2"> and base date </span><span class="si">{</span><span class="n">base_date</span><span class="si">}</span><span class="s2">. Original error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Unexpected error in prepare_DataFrame: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+        <span class="k">raise</span></div>
+
+<span class="c1">#### Functions 4: Data Assignment to UESGraph ####</span>
+
+<span class="n">AIXLIB_MASKS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;2.1.0&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;edge&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="c1"># Extensive properties - same value at both ports</span>
+            <span class="s2">&quot;m_flow&quot;</span><span class="p">:</span> <span class="s2">&quot;networkModel.pipe</span><span class="si">{pipe_code}{type}</span><span class="s2">.port_a.m_flow&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dp&quot;</span><span class="p">:</span> <span class="s2">&quot;networkModel.pipe</span><span class="si">{pipe_code}{type}</span><span class="s2">.dp&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;node&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="c1"># Intensive properties - may differ between ports</span>
+            <span class="s2">&quot;pressure&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;port_a&quot;</span><span class="p">:</span> <span class="s2">&quot;networkModel.pipe</span><span class="si">{pipe_code}{type}</span><span class="s2">.port_a.p&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;port_b&quot;</span><span class="p">:</span> <span class="s2">&quot;networkModel.pipe</span><span class="si">{pipe_code}{type}</span><span class="s2">.port_b.p&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;port_a&quot;</span><span class="p">:</span> <span class="s2">&quot;networkModel.pipe</span><span class="si">{pipe_code}{type}</span><span class="s2">.sta_a.T&quot;</span><span class="p">,</span> 
+                <span class="s2">&quot;port_b&quot;</span><span class="p">:</span> <span class="s2">&quot;networkModel.pipe</span><span class="si">{pipe_code}{type}</span><span class="s2">.sta_b.T&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;2.0.0&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;edge&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="c1"># Extensive properties - same value at both ports</span>
+            <span class="s2">&quot;m_flow&quot;</span><span class="p">:</span> <span class="s2">&quot;networkModel.pipe</span><span class="si">{pipe_code}{type}</span><span class="s2">.port_a.m_flow&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;node&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="c1"># Intensive properties - may differ between ports</span>
+            <span class="s2">&quot;pressure&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;port_a&quot;</span><span class="p">:</span> <span class="s2">&quot;networkModel.pipe</span><span class="si">{pipe_code}{type}</span><span class="s2">.port_a.p&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;port_b&quot;</span><span class="p">:</span> <span class="s2">&quot;networkModel.pipe</span><span class="si">{pipe_code}{type}</span><span class="s2">.ports_b[1].p&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;port_a&quot;</span><span class="p">:</span> <span class="s2">&quot;networkModel.pipe</span><span class="si">{pipe_code}{type}</span><span class="s2">.sta_a.T&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;port_b&quot;</span><span class="p">:</span> <span class="s2">&quot;networkModel.pipe</span><span class="si">{pipe_code}{type}</span><span class="s2">.sta_b[1].T&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">build_filter_list_pipe</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build a list of filter variables for pipes in a district heating network graph.</span>
+<span class="sd">    </span>
+<span class="sd">    This function extracts patterns from a mask data structure and formats them</span>
+<span class="sd">    with specific pipe codes and type information for each edge (pipe) in the graph.</span>
+<span class="sd">    This is useful for filtering and analyzing district heating networks.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        graph : uesgraphs object.</span>
+<span class="sd">        mask (dict): Hierarchical data structure containing filter patterns.</span>
+<span class="sd">                    Expected categories are &#39;edge&#39; and &#39;node&#39;:</span>
+<span class="sd">                    - &#39;edge&#39;: Dict with direct pattern values</span>
+<span class="sd">                    - &#39;node&#39;: Dict with nested pattern values</span>
+<span class="sd">        logger (logging.Logger, optional): Logger instance for debug output.</span>
+<span class="sd">                                          Will be created automatically if None.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: List of formatted variable names for all pipes in the graph,</span>
+<span class="sd">              based on the mask patterns.</span>
+<span class="sd">    </span>
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; mask = {</span>
+<span class="sd">        ...     &#39;edge&#39;: {&#39;pressure&#39;: &#39;p_{pipe_code}_{type}&#39;},</span>
+<span class="sd">        ...     &#39;node&#39;: {&#39;inlet&#39;: {&#39;temp&#39;: &#39;T_in_{pipe_code}_{type}&#39;}}</span>
+<span class="sd">        ... }</span>
+<span class="sd">        &gt;&gt;&gt; filter_list = build_filter_list_pipe(graph, mask)</span>
+<span class="sd">        &gt;&gt;&gt; print(filter_list)</span>
+<span class="sd">        [&#39;p_PIPE001_supply&#39;, &#39;T_in_PIPE001_supply&#39;, ...]</span>
+<span class="sd">    </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        KeyError: If pipe edges don&#39;t have a &#39;name&#39; attribute</span>
+<span class="sd">        AttributeError: If graph doesn&#39;t have edges attribute</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize logger if not provided</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_terminal_logger</span><span class="p">(</span><span class="s2">&quot;BuildFilterListPipe&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Collection of all simulation patterns from the mask structure</span>
+    <span class="n">simulation_patterns</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c1"># Iterate through all categories in the mask</span>
+    <span class="k">for</span> <span class="n">category_name</span><span class="p">,</span> <span class="n">category_data</span> <span class="ow">in</span> <span class="n">mask</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">category_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;edge&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="p">]:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown category &#39;</span><span class="si">{</span><span class="n">category_name</span><span class="si">}</span><span class="s2">&#39; in mask, skipping&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+            
+        <span class="k">if</span> <span class="n">category_name</span> <span class="o">==</span> <span class="s2">&quot;edge&quot;</span><span class="p">:</span>
+            <span class="c1"># Edge category: direct extraction of pattern values</span>
+            <span class="c1"># Example: {&#39;m_flow&#39;: &#39;p_{pipe_code}_{type}&#39;} -&gt; [&#39;p_{pipe_code}_{type}&#39;]</span>
+            <span class="n">simulation_patterns</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">category_data</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">category_data</span><span class="p">)</span><span class="si">}</span><span class="s2"> edge patterns&quot;</span><span class="p">)</span>
+            
+        <span class="k">elif</span> <span class="n">category_name</span> <span class="o">==</span> <span class="s2">&quot;node&quot;</span><span class="p">:</span>
+            <span class="c1"># Node category: nested structure - extract all port patterns</span>
+            <span class="c1"># Example: {&#39;temperature&#39;: {&#39;port_a&#39;: &#39;T_in_{pipe_code}_{type}&#39;}} </span>
+            <span class="c1">#          -&gt; [&#39;T_in_{pipe_code}_{type}&#39;]</span>
+            <span class="k">for</span> <span class="n">port_name</span><span class="p">,</span> <span class="n">attribute_patterns</span> <span class="ow">in</span> <span class="n">category_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attribute_patterns</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">simulation_patterns</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">attribute_patterns</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">attribute_patterns</span><span class="p">)</span><span class="si">}</span><span class="s2"> node patterns &quot;</span>
+                               <span class="sa">f</span><span class="s2">&quot;for port &#39;</span><span class="si">{</span><span class="n">port_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected dict for node port &#39;</span><span class="si">{</span><span class="n">port_name</span><span class="si">}</span><span class="s2">&#39;, &quot;</span>
+                                 <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">attribute_patterns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracted </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">simulation_patterns</span><span class="p">)</span><span class="si">}</span><span class="s2"> simulation patterns total&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Get type prefix from graph (e.g., &#39;supply&#39;, &#39;return&#39;)</span>
+    <span class="n">type_prefix</span> <span class="o">=</span> <span class="n">get_supply_type_prefix</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using type prefix: &#39;</span><span class="si">{</span><span class="n">type_prefix</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># List for all generated filter variables</span>
+    <span class="n">filter_variables</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c1"># Generate filter variables for each edge (pipe) in the graph</span>
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Extract pipe code from edge attributes</span>
+            <span class="n">pipe_code</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+            
+            <span class="c1"># Generate a variable for each simulation pattern</span>
+            <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">simulation_patterns</span><span class="p">:</span>
+                <span class="c1"># Format pattern with specific values</span>
+                <span class="n">variable_name</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">pipe_code</span><span class="o">=</span><span class="n">pipe_code</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="n">type_prefix</span>
+                <span class="p">)</span>
+                <span class="n">filter_variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variable_name</span><span class="p">)</span>
+                
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">simulation_patterns</span><span class="p">)</span><span class="si">}</span><span class="s2"> variables &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;for pipe &#39;</span><span class="si">{</span><span class="n">pipe_code</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                        
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Edge </span><span class="si">{</span><span class="n">edge</span><span class="si">}</span><span class="s2"> missing required attribute: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing edge </span><span class="si">{</span><span class="n">edge</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created filter list with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">filter_variables</span><span class="p">)</span><span class="si">}</span><span class="s2"> entries &quot;</span>
+               <span class="sa">f</span><span class="s2">&quot;for </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> pipes&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">filter_variables</span>
+
+
+<span class="c1">##### Assign node values</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">assign_node_values</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">port_mapping</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">time_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Assigns node values from simulation data using flexible mask configuration.</span>
+<span class="sd">    </span>
+<span class="sd">    Processes intensive properties (pressure, temperature) that may differ between </span>
+<span class="sd">    ports of the same pipe, unlike extensive properties (mass flow) that are </span>
+<span class="sd">    identical at both ports.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        graph: NetworkX or uesgraphs graph with nodes to assign values to</span>
+<span class="sd">        df: DataFrame containing simulation data</span>
+<span class="sd">        port_mapping: Dict mapping node_ids to list of connected ports.</span>
+<span class="sd">                     Example: {1: [&#39;pipe001.port_a&#39;, &#39;pipe002.port_b&#39;], </span>
+<span class="sd">                              2: [&#39;pipe001.port_b&#39;, &#39;pipe003.port_a&#39;]}</span>
+<span class="sd">                     Source: [Method name if known, otherwise leave empty]</span>
+<span class="sd">        mask: Mask dictionary containing node configuration for intensive properties</span>
+<span class="sd">        time_index: Time step index to extract from df (default: 0)</span>
+<span class="sd">        logger: Logger instance (optional, creates terminal logger if None)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_terminal_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.assign_node_values&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Extract node configuration</span>
+    <span class="n">node_config</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">node_config</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;No &#39;node&#39; configuration found in mask&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="n">type_suffix</span> <span class="o">=</span> <span class="n">get_supply_type_prefix</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    
+    <span class="n">stats</span> <span class="o">=</span>  <span class="p">{</span>
+        <span class="s1">&#39;processed_count&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s1">&#39;inconsistency_count&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> 
+        <span class="s1">&#39;pattern_conflicts&#39;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">}</span>
+    
+    <span class="k">for</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">node_ports</span> <span class="ow">in</span> <span class="n">port_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">node_ports</span><span class="p">:</span>
+            <span class="k">continue</span>
+            
+        <span class="n">_assign_attributes_to_node</span><span class="p">(</span>
+            <span class="n">graph</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">node_ports</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">node_config</span><span class="p">,</span>
+            <span class="n">type_suffix</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">logger</span>
+        <span class="p">)</span>
+        
+        <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;processed_count&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Assignment completed:&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Processed nodes: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;processed_count&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Within-pattern inconsistencies: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;inconsistency_count&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Cross-pattern conflicts: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;pattern_conflicts&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_assign_attributes_to_node</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">node_ports</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> 
+                              <span class="n">type_suffix</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Assign all attributes to a single node.</span>
+<span class="sd">        config: {&quot;attribute&quot;: {&quot;port_suffix&quot;: &quot;pattern_with_{pipe_code}&quot;}}</span>
+<span class="sd">                ex.: {&quot;temperature&quot;: {&quot;port_a&quot;: &quot;networkModel.pipe{pipe_code}{type}.sta_a.T&quot;}}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">for</span> <span class="n">attribute_name</span><span class="p">,</span> <span class="n">port_patterns</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Collect values for a specific attribute from all relevant ports.</span>
+<span class="sd">        attribute_name: e.g. &quot;temperature&quot;</span>
+<span class="sd">        port_patterns: e.g. {&quot;port_a&quot;: &quot;networkModel.pipe{pipe_code}{type}.sta_a.T&quot;,</span>
+<span class="sd">                        &quot;port_b&quot;: &quot;networkModel.pipe{pipe_code}{type}.sta_b.T&quot;}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">series_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">node_ports</span><span class="p">:</span>
+            
+            <span class="n">pipe_name</span><span class="p">,</span> <span class="n">port_suffix</span> <span class="o">=</span> <span class="n">_parse_port_identifier</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">port_suffix</span> <span class="ow">in</span> <span class="n">port_patterns</span><span class="p">:</span>
+                <span class="n">pattern</span> <span class="o">=</span> <span class="n">port_patterns</span><span class="p">[</span><span class="n">port_suffix</span><span class="p">]</span>
+                <span class="n">column_name</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pipe_code</span><span class="o">=</span><span class="n">pipe_name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">type_suffix</span><span class="p">)</span>
+            
+                <span class="k">if</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                    <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span>
+                    <span class="n">series_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Column not found: </span><span class="si">{</span><span class="n">column_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">series_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No data found for </span><span class="si">{</span><span class="n">attribute_name</span><span class="si">}</span><span class="s2"> at node </span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Check if all series are identical</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">series_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">all_equal</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">series_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">series</span><span class="p">)</span> <span class="k">for</span> <span class="n">series</span> <span class="ow">in</span> <span class="n">series_list</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">all_equal</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Node </span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">: Inconsistent </span><span class="si">{</span><span class="n">attribute_name</span><span class="si">}</span><span class="s2"> time series found&quot;</span><span class="p">)</span>
+                <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;inconsistency_count&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+        <span class="c1"># Use first series as result</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_id</span><span class="p">][</span><span class="n">attribute_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">series_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>        
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_port_identifier</span><span class="p">(</span><span class="n">port</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse port identifier to extract pipe name and port suffix.&quot;&quot;&quot;</span>
+    <span class="n">port_parts</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">port_parts</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid port format: </span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">. Expected &#39;pipe_name.port_suffix&#39;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">port_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;pipe&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">port_parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1">##### Assign edge data</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">assign_edge_data</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">MASK</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+    <span class="n">type_suffix</span> <span class="o">=</span> <span class="n">get_supply_type_prefix</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">edge_variable</span><span class="p">,</span> <span class="n">variable_mask</span> <span class="ow">in</span> <span class="n">MASK</span><span class="p">[</span><span class="s2">&quot;edge&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">pipe_name</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+            <span class="n">variable_name</span> <span class="o">=</span> <span class="n">variable_mask</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pipe_code</span><span class="o">=</span><span class="n">pipe_name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">type_suffix</span><span class="p">)</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="n">edge_variable</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">variable_name</span><span class="p">]</span>
+        
+<span class="c1">##### Validation functions</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_edge_attributes</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">edge_attributes</span><span class="p">,</span> <span class="n">reference_df</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validates graph edge attributes against a reference DataFrame.</span>
+<span class="sd">    </span>
+<span class="sd">    Checks if the length of attribute arrays in edges matches the </span>
+<span class="sd">    number of rows in the reference DataFrame.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        graph: uesgraphs</span>
+<span class="sd">        edge_attributes (dict): Dictionary containing edge attributes to validate</span>
+<span class="sd">        reference_df (pd.DataFrame): Reference DataFrame for length comparison</span>
+<span class="sd">        logger (logging.Logger, optional): Logger instance. If None, a </span>
+<span class="sd">                                         terminal logger will be created.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if all validations pass, False otherwise</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: For critical validation errors</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_terminal_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.validate_edge_attributes&quot;</span><span class="p">)</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting edge attribute validation...&quot;</span><span class="p">)</span>
+    
+    <span class="n">expected_length</span> <span class="o">=</span> <span class="n">reference_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">validation_passed</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c1"># Validate edge attributes</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validating edge attributes for </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges...&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">edge_attributes</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">edge_idx</span><span class="p">,</span> <span class="n">edge</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">edge_attr</span> <span class="ow">in</span> <span class="n">edge_attributes</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">edge_attr</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">]:</span>
+                    <span class="n">actual_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="n">edge_attr</span><span class="p">])</span>
+                    
+                    <span class="k">if</span> <span class="n">actual_length</span> <span class="o">!=</span> <span class="n">expected_length</span><span class="p">:</span>
+                        <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Edge </span><span class="si">{</span><span class="n">edge</span><span class="si">}</span><span class="s2"> - Attribute &#39;</span><span class="si">{</span><span class="n">edge_attr</span><span class="si">}</span><span class="s2">&#39;: &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;length </span><span class="si">{</span><span class="n">actual_length</span><span class="si">}</span><span class="s2"> != expected length </span><span class="si">{</span><span class="n">expected_length</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+                        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+                        <span class="n">validation_passed</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Edge </span><span class="si">{</span><span class="n">edge</span><span class="si">}</span><span class="s2"> - Attribute &#39;</span><span class="si">{</span><span class="n">edge_attr</span><span class="si">}</span><span class="s2">&#39;: OK &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;(length: </span><span class="si">{</span><span class="n">actual_length</span><span class="si">}</span><span class="s2">)&quot;</span>
+                        <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">warning_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Edge </span><span class="si">{</span><span class="n">edge</span><span class="si">}</span><span class="s2"> - Attribute &#39;</span><span class="si">{</span><span class="n">edge_attr</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">warning_msg</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No edge attributes provided for validation&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Validation summary</span>
+    <span class="k">if</span> <span class="n">validation_passed</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;SUCCESS: Edge attribute validation completed successfully&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FAILED: Edge attribute validation failed: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="si">}</span><span class="s2"> errors&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>  <span class="c1"># Show maximum 5 errors in summary</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ... and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">5</span><span class="si">}</span><span class="s2"> more errors&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">validation_passed</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_node_attributes</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">node_attributes</span><span class="p">,</span> <span class="n">reference_df</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validates graph node attributes against a reference DataFrame.</span>
+<span class="sd">    </span>
+<span class="sd">    Checks if the length of attribute arrays in nodes matches the </span>
+<span class="sd">    number of rows in the reference DataFrame.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        graph: uesgraphs</span>
+<span class="sd">        node_attributes (dict): Dictionary containing node attributes to validate</span>
+<span class="sd">        reference_df (pd.DataFrame): Reference DataFrame for length comparison</span>
+<span class="sd">        logger (logging.Logger, optional): Logger instance. If None, a </span>
+<span class="sd">                                         terminal logger will be created.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if all validations pass, False otherwise</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: For critical validation errors</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_terminal_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.validate_node_attributes&quot;</span><span class="p">)</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting node attribute validation...&quot;</span><span class="p">)</span>
+    
+    <span class="n">expected_length</span> <span class="o">=</span> <span class="n">reference_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">validation_passed</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c1"># Validate node attributes</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validating node attributes for </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes...&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">node_attributes</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">node_idx</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">node_attr</span> <span class="ow">in</span> <span class="n">node_attributes</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">node_attr</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
+                    <span class="n">actual_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">node_attr</span><span class="p">])</span>
+                    
+                    <span class="k">if</span> <span class="n">actual_length</span> <span class="o">!=</span> <span class="n">expected_length</span><span class="p">:</span>
+                        <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Node </span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2"> - Attribute &#39;</span><span class="si">{</span><span class="n">node_attr</span><span class="si">}</span><span class="s2">&#39;: &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;length </span><span class="si">{</span><span class="n">actual_length</span><span class="si">}</span><span class="s2"> != expected length </span><span class="si">{</span><span class="n">expected_length</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+                        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+                        <span class="n">validation_passed</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Node </span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2"> - Attribute &#39;</span><span class="si">{</span><span class="n">node_attr</span><span class="si">}</span><span class="s2">&#39;: OK &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;(length: </span><span class="si">{</span><span class="n">actual_length</span><span class="si">}</span><span class="s2">)&quot;</span>
+                        <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">warning_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Node </span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2"> - Attribute &#39;</span><span class="si">{</span><span class="n">node_attr</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">warning_msg</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No node attributes provided for validation&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Validation summary</span>
+    <span class="k">if</span> <span class="n">validation_passed</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;SUCCESS: Node attribute validation completed successfully&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FAILED: Node attribute validation failed: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="si">}</span><span class="s2"> errors&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>  <span class="c1"># Show maximum 5 errors in summary</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ... and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">5</span><span class="si">}</span><span class="s2"> more errors&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">validation_passed</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">assess_dp_quality</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> 
+                      <span class="n">negligible_abs_threshold</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> 
+                      <span class="n">negligible_rel_threshold</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+                      <span class="n">acceptable_abs_threshold</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> 
+                      <span class="n">acceptable_rel_threshold</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Assesses the quality of node assignments based on pressure and pressure difference</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    graph : uesgraph</span>
+<span class="sd">        The district heating network graph object</span>
+<span class="sd">    negligible_abs_threshold : float, default=1.0</span>
+<span class="sd">        Absolute threshold for negligible deviations (Pa)</span>
+<span class="sd">    negligible_rel_threshold : float, default=0.001</span>
+<span class="sd">        Relative threshold for negligible deviations (0.1%)</span>
+<span class="sd">    acceptable_abs_threshold : float, default=10.0</span>
+<span class="sd">        Absolute threshold for acceptable deviations (Pa)</span>
+<span class="sd">    acceptable_rel_threshold : float, default=0.01</span>
+<span class="sd">        Relative threshold for acceptable deviations (1%)</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Dictionary with categories &#39;negligible&#39;, &#39;acceptable&#39;, &#39;investigate&#39;</span>
+<span class="sd">        and corresponding edges with timestamp information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;negligible&#39;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s1">&#39;acceptable&#39;</span><span class="p">:</span> <span class="p">[],</span> 
+        <span class="s1">&#39;investigate&#39;</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">}</span>
+    
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+        <span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node1</span><span class="p">][</span><span class="s2">&quot;pressure&quot;</span><span class="p">]</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node2</span><span class="p">][</span><span class="s2">&quot;pressure&quot;</span><span class="p">]</span>
+        <span class="n">dp_calc</span> <span class="o">=</span> <span class="n">p1</span> <span class="o">-</span> <span class="n">p2</span>
+        <span class="n">dp_sim</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;dp&quot;</span><span class="p">]</span>
+        
+        <span class="c1"># Check for each timestamp</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p1</span><span class="p">)):</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">i</span>
+            
+            <span class="n">abs_diff</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dp_calc</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">dp_sim</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">rel_error</span> <span class="o">=</span> <span class="p">(</span><span class="n">abs_diff</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dp_sim</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> 
+                        <span class="k">if</span> <span class="n">dp_sim</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">))</span>
+            
+            <span class="n">edge_info</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;edge&#39;</span><span class="p">:</span> <span class="n">edge</span><span class="p">,</span>
+                <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">timestamp</span><span class="p">,</span>
+                <span class="s1">&#39;abs_diff&#39;</span><span class="p">:</span> <span class="n">abs_diff</span><span class="p">,</span>
+                <span class="s1">&#39;rel_error&#39;</span><span class="p">:</span> <span class="n">rel_error</span><span class="p">,</span>
+                <span class="s1">&#39;dp_calculated&#39;</span><span class="p">:</span> <span class="n">dp_calc</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="s1">&#39;dp_simulated&#39;</span><span class="p">:</span> <span class="n">dp_sim</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="p">}</span>
+            
+            <span class="c1"># Categorization based on thresholds</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">abs_diff</span> <span class="o">&lt;</span> <span class="n">negligible_abs_threshold</span> <span class="ow">or</span> 
+                <span class="n">rel_error</span> <span class="o">&lt;</span> <span class="n">negligible_rel_threshold</span><span class="p">):</span>
+                <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;negligible&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge_info</span><span class="p">)</span>
+                
+            <span class="k">elif</span> <span class="p">(</span><span class="n">abs_diff</span> <span class="o">&lt;</span> <span class="n">acceptable_abs_threshold</span> <span class="ow">and</span> 
+                  <span class="n">rel_error</span> <span class="o">&lt;</span> <span class="n">acceptable_rel_threshold</span><span class="p">):</span>
+                <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;acceptable&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge_info</span><span class="p">)</span>
+                
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;investigate&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge_info</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">stats</span>
+
+
+<span class="c1">## Final pipeline function</span>
+
+
+<div class="viewcode-block" id="assign_data_pipeline"><a class="viewcode-back" href="../../../../code/uesgraphs.analyze.html#uesgraphs.analyze.assign_data_pipeline">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">assign_data_pipeline</span><span class="p">(</span>
+    <span class="n">graph</span><span class="p">:</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">,</span>
+    <span class="n">simulation_data_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> 
+    <span class="n">start_date</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+    <span class="n">end_date</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+    <span class="n">time_interval</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">MASK</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">aixlib_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2.1.0&quot;</span><span class="p">,</span>
+    <span class="n">system_model_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">node_to_port_mapping</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">logger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Assign simulation data to a UESGraph network.</span>
+<span class="sd">    </span>
+<span class="sd">    This function processes simulation results and assigns time series data</span>
+<span class="sd">    to network components (nodes and edges). It supports two modes:</span>
+<span class="sd">    </span>
+<span class="sd">    1. **Full assignment** (with node data): Requires either `node_to_port_mapping`</span>
+<span class="sd">       or `system_model_path` to map simulation variables to graph nodes</span>
+<span class="sd">    2. **Edge-only assignment**: When no mapping is available, only assigns</span>
+<span class="sd">       data to edges (mass flows, pressure drops)</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        graph: UESGraph instance to assign data to</span>
+<span class="sd">        simulation_data_path: Path to simulation results (.mat or .parquet)</span>
+<span class="sd">        start_date: Start date for data processing</span>
+<span class="sd">        end_date: End date for data processing  </span>
+<span class="sd">        time_interval: Time interval for resampling (e.g., &quot;15min&quot;, &quot;1H&quot;)</span>
+<span class="sd">                      No default - user must specify explicitly</span>
+<span class="sd">        MASK: Custom variable name masks. If None, uses AixLib standard masks</span>
+<span class="sd">        aixlib_version: AixLib version for standard masks (default: &quot;2.1.0&quot;)</span>
+<span class="sd">        system_model_path: Path to system model JSON (for creating port mapping)</span>
+<span class="sd">        node_to_port_mapping: Pre-computed mapping from nodes to simulation ports</span>
+<span class="sd">        logger: Logger instance. If None, creates a new file logger</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        UESGraph instance with assigned simulation data</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: If simulation_data_path doesn&#39;t exist</span>
+<span class="sd">        ValueError: If graph has no name set or data validation fails</span>
+<span class="sd">        KeyError: If required simulation variables are missing</span>
+<span class="sd">        </span>
+<span class="sd">    Notes:</span>
+<span class="sd">        - Either `node_to_port_mapping` OR `system_model_path` is required </span>
+<span class="sd">          for full data assignment including nodes</span>
+<span class="sd">        - If both are None, only edge data (mass flows) will be assigned</span>
+<span class="sd">        - Graph must have a name set in graph.graph[&quot;name&quot;]</span>
+<span class="sd">        </span>
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; import uesgraphs as ug</span>
+<span class="sd">        &gt;&gt;&gt; from datetime import datetime</span>
+<span class="sd">        &gt;&gt;&gt; </span>
+<span class="sd">        &gt;&gt;&gt; # Load your network</span>
+<span class="sd">        &gt;&gt;&gt; graph = ug.UESGraph()  </span>
+<span class="sd">        &gt;&gt;&gt; graph.from_json(&quot;network.json&quot;, network_type=&quot;heating&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; graph.graph[&quot;name&quot;] = &quot;my_network&quot;</span>
+<span class="sd">        &gt;&gt;&gt; </span>
+<span class="sd">        &gt;&gt;&gt; # Assign simulation data</span>
+<span class="sd">        &gt;&gt;&gt; graph_with_data = assign_data_pipeline(</span>
+<span class="sd">        ...     graph=graph,</span>
+<span class="sd">        ...     simulation_data_path=&quot;results.mat&quot;,</span>
+<span class="sd">        ...     start_date=datetime(2024, 1, 1),</span>
+<span class="sd">        ...     end_date=datetime(2024, 1, 7), </span>
+<span class="sd">        ...     time_interval=&quot;15min&quot;,</span>
+<span class="sd">        ...     system_model_path=&quot;system_model.json&quot;</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; </span>
+<span class="sd">        &gt;&gt;&gt; # With custom masks</span>
+<span class="sd">        &gt;&gt;&gt; custom_masks = {</span>
+<span class="sd">        ...     &quot;m_flow&quot;: &quot;custom.pipe{pipe_code}.flow&quot;,</span>
+<span class="sd">        ...     &quot;p_a&quot;: &quot;custom.pipe{pipe_code}.pressure_in&quot;, </span>
+<span class="sd">        ...     &quot;p_b&quot;: &quot;custom.pipe{pipe_code}.pressure_out&quot;</span>
+<span class="sd">        ... }</span>
+<span class="sd">        &gt;&gt;&gt; graph_with_data = assign_data_pipeline(</span>
+<span class="sd">        ...     graph=graph,</span>
+<span class="sd">        ...     simulation_data_path=&quot;results.mat&quot;, </span>
+<span class="sd">        ...     start_date=datetime(2024, 1, 1),</span>
+<span class="sd">        ...     end_date=datetime(2024, 1, 7),</span>
+<span class="sd">        ...     time_interval=&quot;1H&quot;,</span>
+<span class="sd">        ...     MASK=custom_masks</span>
+<span class="sd">        ... )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Set up logging</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_file_logger</span><span class="p">(</span><span class="s2">&quot;assign_data_pipeline&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    
+    <span class="c1"># Convert simulation_data_path to Path object  </span>
+    <span class="n">simulation_data_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">simulation_data_path</span><span class="p">)</span>
+    
+    <span class="c1"># Validate graph has a name</span>
+    <span class="n">network_name</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">network_name</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Graph must have a name set in graph.graph[&#39;name&#39;]&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Check supply type from graph</span>
+    <span class="n">supply_type</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;supply_type&quot;</span><span class="p">,</span> <span class="s2">&quot;supply&quot;</span><span class="p">)</span>
+    <span class="n">supply_type_prefix</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;supply&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;return&quot;</span><span class="p">:</span> <span class="s2">&quot;R&quot;</span><span class="p">}</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;STARTING DATA ASSIGNMENT PIPELINE&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Network: </span><span class="si">{</span><span class="n">network_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Graph: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulation data: </span><span class="si">{</span><span class="n">simulation_data_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time period: </span><span class="si">{</span><span class="n">start_date</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">end_date</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time interval: </span><span class="si">{</span><span class="n">time_interval</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Supply type: </span><span class="si">{</span><span class="n">supply_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Determine assignment mode based on available mapping options</span>
+    <span class="n">assignment_mode</span> <span class="o">=</span> <span class="n">_determine_assignment_mode</span><span class="p">(</span>
+        <span class="n">system_model_path</span><span class="p">,</span> <span class="n">node_to_port_mapping</span><span class="p">,</span> <span class="n">logger</span>
+    <span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Step 1: Determine variable masks</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Step 1/6: Setting up variable masks&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">MASK</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">MASK</span> <span class="o">=</span> <span class="n">AIXLIB_MASKS</span><span class="p">[</span><span class="n">aixlib_version</span><span class="p">]</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Using AixLib </span><span class="si">{</span><span class="n">aixlib_version</span><span class="si">}</span><span class="s2"> standard masks&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;SUCCESS: Using custom variable masks&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Step 2: Create or use port mapping (if available)</span>
+        <span class="n">port_mapping</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">assignment_mode</span> <span class="o">==</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Step 2/6: Setting up port mapping for node assignment&quot;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">node_to_port_mapping</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">port_mapping</span> <span class="o">=</span> <span class="n">node_to_port_mapping</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;SUCCESS: Using provided node-to-port mapping&quot;</span><span class="p">)</span>
+                
+            <span class="k">elif</span> <span class="n">system_model_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">system_model_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">system_model_path</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">system_model_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;System model file not found: </span><span class="si">{</span><span class="n">system_model_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="n">sysm_graph</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">load_system_model_from_json</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">system_model_path</span><span class="p">))</span>
+                <span class="n">port_mapping</span> <span class="o">=</span> <span class="n">graph_transformation</span><span class="o">.</span><span class="n">map_system_model_to_uesgraph</span><span class="p">(</span><span class="n">sysm_graph</span><span class="p">,</span> <span class="n">graph</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Created port mapping from system model (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">port_mapping</span><span class="p">)</span><span class="si">}</span><span class="s2"> components)&quot;</span><span class="p">)</span>
+                
+        <span class="k">elif</span> <span class="n">assignment_mode</span> <span class="o">==</span> <span class="s2">&quot;edges_only&quot;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Step 2/6: Skipping port mapping - edge-only assignment mode&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;WARNING: No node data will be assigned (temperatures, pressures)&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Step 3: Process simulation data</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Step 3/6: Processing simulation data&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Check if simulation data file exists and convert .mat files if needed</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">simulation_data_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulation data file not found: </span><span class="si">{</span><span class="n">simulation_data_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Convert .mat to .gzip if needed and get the processed file path</span>
+        <span class="n">processed_simulation_path</span> <span class="o">=</span> <span class="n">check_input_file</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">simulation_data_path</span><span class="p">),</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Using processed simulation file: </span><span class="si">{</span><span class="n">processed_simulation_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Build filter list for required variables</span>
+        <span class="n">filter_list</span> <span class="o">=</span> <span class="n">build_filter_list_pipe</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">MASK</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Built filter list with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">filter_list</span><span class="p">)</span><span class="si">}</span><span class="s2"> variables&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Validate that all required columns exist in the processed file</span>
+        <span class="n">column_validation</span> <span class="o">=</span> <span class="n">validate_columns_exist</span><span class="p">(</span>
+            <span class="n">file_path</span><span class="o">=</span><span class="n">processed_simulation_path</span><span class="p">,</span> 
+            <span class="n">required_columns</span><span class="o">=</span><span class="n">filter_list</span><span class="p">,</span>
+            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">column_validation</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Required simulation variables not found in data file&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Load and process simulation results</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">process_simulation_result</span><span class="p">(</span>
+            <span class="n">file_path</span><span class="o">=</span><span class="n">processed_simulation_path</span><span class="p">,</span> 
+            <span class="n">filter_list</span><span class="o">=</span><span class="n">filter_list</span><span class="p">,</span> 
+            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span>
+        <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Loaded simulation data: </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> timesteps&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Step 4: Prepare DataFrame</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Step 4/6: Preparing time series data&quot;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">prepare_DataFrame</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">,</span> 
+            <span class="n">start_date</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> 
+            <span class="n">end_date</span><span class="o">=</span><span class="n">end_date</span><span class="p">,</span>
+            <span class="n">time_interval</span><span class="o">=</span><span class="n">time_interval</span><span class="p">,</span> 
+            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span>
+        <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Prepared DataFrame: </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> timesteps after filtering&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Step 5: Assign data to graph components</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Step 5/6: Assigning data to graph components&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">assignment_mode</span> <span class="o">==</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span>
+            <span class="c1"># Assign values to nodes (temperature and pressure)</span>
+            <span class="n">assign_node_values</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">port_mapping</span><span class="p">,</span> <span class="n">MASK</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Assigned node data (temperature, pressure) to </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Assign values to edges (mass flow, pressure drop) - always done</span>
+        <span class="n">assign_edge_data</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">MASK</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Assigned edge data (mass flow, pressure drop) to </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Step 6: Validate results</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Step 6/6: Validating assignment results&quot;</span><span class="p">)</span>
+        
+        <span class="n">validate_edge_attributes</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">MASK</span><span class="p">[</span><span class="s2">&quot;edge&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;SUCCESS: Edge validation completed successfully&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">assignment_mode</span> <span class="o">==</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span>
+            <span class="n">validate_node_attributes</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span><span class="n">MASK</span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">],</span><span class="n">df</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+            <span class="c1">## Additional test to asses node assignment based on pressures</span>
+            <span class="n">stats</span> <span class="o">=</span> <span class="n">assess_dp_quality</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span> 
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;investigate&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;WARNING: Critical pressure difference deviations found!&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;SUCCESS: Full validation completed successfully&quot;</span><span class="p">)</span>
+
+        
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;PIPELINE COMPLETED SUCCESSFULLY&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Network &#39;</span><span class="si">{</span><span class="n">network_name</span><span class="si">}</span><span class="s2">&#39; ready for analysis&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Data period: </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Time resolution: </span><span class="si">{</span><span class="n">time_interval</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Assignment mode: </span><span class="si">{</span><span class="n">assignment_mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">graph</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pipeline failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        <span class="k">raise</span></div>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_determine_assignment_mode</span><span class="p">(</span>
+    <span class="n">system_model_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]],</span> 
+    <span class="n">node_to_port_mapping</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span>
+    <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine the assignment mode based on available mapping options.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        &quot;full&quot;: Full assignment including nodes (requires mapping)</span>
+<span class="sd">        &quot;edges_only&quot;: Only edge assignment (no node data)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">node_to_port_mapping</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Port mapping provided - Full assignment mode&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;full&quot;</span>
+    <span class="k">elif</span> <span class="n">system_model_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;System model provided - Full assignment mode&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;full&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No port mapping or system model - Edge-only assignment mode&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Node temperatures and pressures will NOT be assigned&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;edges_only&quot;</span>
+
+
+<span class="c1">##### Helper functions</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_supply_type_prefix</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+    <span class="n">supply_type</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;supply_type&quot;</span><span class="p">,</span> <span class="s2">&quot;supply&quot;</span><span class="p">)</span>
+    <span class="n">supply_type_prefix</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;supply&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;return&quot;</span><span class="p">:</span> <span class="s2">&quot;R&quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">supply_type_prefix</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">supply_type</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

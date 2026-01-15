@@ -1,0 +1,359 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.examples.e16_complete_geojson_to_modelica &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.examples.e16_complete_geojson_to_modelica</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.examples.e16_complete_geojson_to_modelica</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">GeoJSON Import to Modelica Code Generation</span>
+<span class="sd">==============================================================</span>
+
+<span class="sd">This example demonstrates the workflow for generating modelica simulation files.</span>
+
+<span class="sd">=== Main lesson: Know your template! ===</span>
+
+<span class="sd">The pipeline checks, which parameters are required for each component template. Following</span>
+<span class="sd">parameters are read from template:</span>
+<span class="sd">- MAIN, </span>
+<span class="sd">- AUX and </span>
+<span class="sd">- CONNECTOR</span>
+
+<span class="sd">Those parameters have to be provided either via graph attributes, excel template or references.</span>
+<span class="sd">This example shows how to use it.</span>
+
+
+
+<span class="sd">Workflow Overview:</span>
+<span class="sd">-----------------</span>
+<span class="sd">1. **GeoJSON Import**: Load network topology, buildings, and supply stations from GeoJSON files</span>
+<span class="sd">2. **Demand Data Assignment**: Attach heating, DHW, and cooling demand time series to buildings</span>
+<span class="sd">3. **Excel-Based Configuration**: Use Excel template to configure all simulation and component parameters</span>
+<span class="sd">4. **Modelica Generation**: Automatically generate ready-to-simulate Modelica code</span>
+
+<span class="sd">Excel Configuration Structure:</span>
+<span class="sd">------------------------------</span>
+<span class="sd">The Excel template has four sheets:</span>
+<span class="sd">1. **Simulation**: Simulation parameters (solver, time settings, medium, etc.)</span>
+<span class="sd">2. **Pipes**: Pipe network parameters (template, insulation, roughness, etc.)</span>
+<span class="sd">3. **Supply**: Supply station parameters (template, max heat demand, pressures, etc.)</span>
+<span class="sd">4. **Demands**: Demand substation parameters (template, temperatures, heat exchanger settings, etc.)</span>
+
+<span class="sd">Input Data Requirements:</span>
+<span class="sd">-----------------------</span>
+<span class="sd">- **Network GeoJSON**: LineString features representing the pipe network</span>
+<span class="sd">- **Buildings GeoJSON**: Point or Polygon features for demand buildings</span>
+<span class="sd">- **Supply GeoJSON**: Point features for supply stations (with is_supply_heating=True)</span>
+<span class="sd">- **Demand CSVs**: Time series for heating, DHW, and cooling demands (8760 hourly values)</span>
+<span class="sd">- **Ground Temperature CSV**: Ground temperature profiles at various depths</span>
+
+<span class="sd">Example Directory Structure:</span>
+<span class="sd">----------------------------</span>
+<span class="sd">workspace/e16/</span>
+<span class="sd">├── simple_district_graph.json          # Saved UESGraph after GeoJSON import</span>
+<span class="sd">├── models/                             # Generated Modelica files</span>
+<span class="sd">│   └── Sim20250102_123456_MySimulation/</span>
+<span class="sd">│       ├── MySimulation.mo             # Main Modelica model</span>
+<span class="sd">│       ├── package.mo                  # Modelica package definition</span>
+<span class="sd">│       └── [component models]          # Individual component files</span>
+<span class="sd">└── [demand and ground temp CSVs]       # Input time series data</span>
+
+<span class="sd">Notes:</span>
+<span class="sd">-----</span>
+<span class="sd">- The pipeline automatically handles parameter assignment and validation</span>
+<span class="sd">- Missing buildings in demand files will use dummy demand profiles</span>
+<span class="sd">- The Excel template can be customized for different simulation scenarios</span>
+<span class="sd">- Generated Modelica models are compatible with Dymola and require AixLib library</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="c1"># Add parent directory to path to ensure imports work from local development</span>
+<span class="n">script_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">uesgraphs_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">script_dir</span><span class="p">))</span>
+<span class="k">if</span> <span class="n">uesgraphs_root</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">uesgraphs_root</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="kn">import</span> <span class="n">UESGraph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels.model_generation_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">uesgraph_to_modelica</span>
+
+
+<div class="viewcode-block" id="workspace_example"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e16_complete_geojson_to_modelica.workspace_example">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">workspace_example</span><span class="p">(</span><span class="n">name_workspace</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a local workspace with given name (copied from e1_readme_example)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name_workspace : str</span>
+<span class="sd">        Name of the local workspace to be created</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    workspace : str</span>
+<span class="sd">        Full path to the new workspace</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">this_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+    <span class="n">ues_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">this_dir</span><span class="p">))</span>
+    <span class="n">workspace</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ues_dir</span><span class="p">,</span> <span class="s2">&quot;workspace&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">workspace</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">workspace</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">name_workspace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">workspace</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">name_workspace</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">workspace</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">workspace</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">workspace</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e16_complete_geojson_to_modelica.main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;E16: GeoJSON to Modelica Code Generation&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+
+    <span class="c1"># =========================================================================</span>
+    <span class="c1"># STEP 1: Setup Workspace and Paths</span>
+    <span class="c1"># =========================================================================</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> STEP 1: Setting up workspace and paths...&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Create workspace directory for this example</span>
+    <span class="n">workspace</span> <span class="o">=</span> <span class="n">workspace_example</span><span class="p">(</span><span class="s2">&quot;e16&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Workspace: </span><span class="si">{</span><span class="n">workspace</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get paths to example data files</span>
+    <span class="n">uesgraphs_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))))</span>
+    <span class="n">data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">uesgraphs_dir</span><span class="p">,</span> <span class="s1">&#39;uesgraphs&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;examples&#39;</span><span class="p">)</span>
+    <span class="n">geojson_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;e15_geojson&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Input file paths</span>
+    <span class="n">network_geojson</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">geojson_dir</span><span class="p">,</span> <span class="s1">&#39;network.geojson&#39;</span><span class="p">)</span>
+    <span class="n">buildings_geojson</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">geojson_dir</span><span class="p">,</span> <span class="s1">&#39;buildings.geojson&#39;</span><span class="p">)</span>
+    <span class="n">supply_geojson</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">geojson_dir</span><span class="p">,</span> <span class="s1">&#39;supply.geojson&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Demand and ground temperature files</span>
+    <span class="n">input_heating</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;demands-heat.csv&#39;</span><span class="p">)</span>
+    <span class="n">input_dhw</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;demands-dhw.csv&#39;</span><span class="p">)</span>
+    <span class="n">input_cooling</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;demands-cool.csv&#39;</span><span class="p">)</span>
+    <span class="n">ground_temp_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;ground_temps_hassel.csv&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Excel configuration template</span>
+    <span class="n">excel_config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">uesgraphs_dir</span><span class="p">,</span> <span class="s1">&#39;uesgraphs&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                                     <span class="s1">&#39;uesgraphs_parameters_template.xlsx&#39;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   ✓ All paths configured&quot;</span><span class="p">)</span>
+
+    <span class="c1"># =========================================================================</span>
+    <span class="c1"># STEP 2: Import District Network from GeoJSON</span>
+    <span class="c1"># =========================================================================</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  STEP 2: Importing district network from GeoJSON files...&quot;</span><span class="p">)</span>
+  
+
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">UESGraph</span><span class="p">()</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">from_geojson</span><span class="p">(</span>
+        <span class="n">network_path</span><span class="o">=</span><span class="n">network_geojson</span><span class="p">,</span>
+        <span class="n">buildings_path</span><span class="o">=</span><span class="n">buildings_geojson</span><span class="p">,</span>
+        <span class="n">supply_path</span><span class="o">=</span><span class="n">supply_geojson</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;simple_district&#39;</span><span class="p">,</span>
+        <span class="n">save_path</span><span class="o">=</span><span class="n">workspace</span><span class="p">,</span>
+        <span class="n">generate_visualizations</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Display network statistics</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   GeoJSON import successful!&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Save the imported graph</span>
+    <span class="n">graph_json_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s1">&#39;simple_district_graph.json&#39;</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">workspace</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;simple_district_graph&#39;</span><span class="p">,</span> <span class="n">all_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prettyprint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;     - Saved graph to: </span><span class="si">{</span><span class="n">graph_json_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># =========================================================================</span>
+    <span class="c1"># STEP 3: Generate Modelica Code using New Excel-Based Pipeline</span>
+    <span class="c1"># =========================================================================</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  STEP 3: Generating Modelica code using Excel-based pipeline...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   The pipeline will now:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   1. Validate/generate edge names (required for Modelica)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   2. Load simulation settings from Excel &#39;Simulation&#39; sheet&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   3. Assign heating, DHW, and cooling demand data to building nodes&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   4. Assign pipe parameters from Excel &#39;Pipes&#39; sheet&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   5. Assign supply station parameters from Excel &#39;Supply&#39; sheet&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   6. Assign demand substation parameters from Excel &#39;Demands&#39; sheet&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   7. Validate all required (MAIN) parameters are present&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   8. Generate Modelica model files with timestamped directory&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   Excel configuration: </span><span class="si">{</span><span class="n">excel_config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Demand files:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;     - Heating: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_heating</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;     - DHW: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_dhw</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;     - Cooling: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">input_cooling</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Ground temperature: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">ground_temp_path</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   Starting pipeline (this may take a few moments)...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Run the new Excel-based pipeline</span>
+        <span class="c1"># Note: You can pass either a UESGraph object OR a path to a JSON file</span>
+        <span class="n">uesgraph_to_modelica</span><span class="p">(</span>
+            <span class="n">uesgraph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span>                    <span class="c1"># UESGraph object (or JSON path string)</span>
+            <span class="n">simplification_level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>            <span class="c1"># No simplification (use full network)</span>
+            <span class="n">workspace</span><span class="o">=</span><span class="n">workspace</span><span class="p">,</span>               <span class="c1"># Output directory</span>
+            <span class="n">sim_setup_path</span><span class="o">=</span><span class="n">excel_config_path</span><span class="p">,</span>  <span class="c1"># Excel configuration file</span>
+            <span class="n">input_heating</span><span class="o">=</span><span class="n">input_heating</span><span class="p">,</span>       <span class="c1"># Heating demand time series</span>
+            <span class="n">input_dhw</span><span class="o">=</span><span class="n">input_dhw</span><span class="p">,</span>              <span class="c1"># DHW demand time series</span>
+            <span class="n">input_cooling</span><span class="o">=</span><span class="n">input_cooling</span><span class="p">,</span>       <span class="c1"># Cooling demand time series</span>
+            <span class="n">ground_temp_path</span><span class="o">=</span><span class="n">ground_temp_path</span><span class="p">,</span> <span class="c1"># Ground temperature data</span>
+            <span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span>            <span class="c1"># Logging level (INFO for moderate detail)</span>
+        <span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    SUCCESS: Modelica code generation completed!&quot;</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    ERROR: Pipeline failed with: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Check the log file for detailed error information&quot;</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+    <span class="c1"># =========================================================================</span>
+    <span class="c1"># STEP 4: Summary and Next Steps</span>
+    <span class="c1"># =========================================================================</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; E16 Example Completed Successfully!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Output Locations:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Workspace: </span><span class="si">{</span><span class="n">workspace</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Generated Models: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;models&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> What was generated:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   - UESGraph JSON file with network topology and attributes&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   - Modelica simulation model in timestamped directory&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Next Steps:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Run the simulation to analyze district heating performance&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span></div>
+
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;UESGraphs Example 16: Complete GeoJSON to Modelica Workflow&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using the new Excel-based parameter configuration system&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+
+    <span class="n">main</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Example script completed. Check your workspace for outputs!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
