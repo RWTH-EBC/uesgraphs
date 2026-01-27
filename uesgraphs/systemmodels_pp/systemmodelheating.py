@@ -12,6 +12,8 @@ from pandapipes.timeseries import run_timeseries
 from pandapower.timeseries import DFData, OutputWriter
 from datetime import datetime
 from collections import defaultdict, deque
+from tqdm import tqdm
+import numpy as np
 
 from uesgraphs.uesgraph import UESGraph
 from uesgraphs import get_versioning_info
@@ -114,7 +116,7 @@ class SystemModelHeating(UESGraph):
     def __init__(
         self,
         stop_time,
-        timesteps,
+        timestep,
         network_type="heating",
         logger=None
     ):
@@ -125,7 +127,7 @@ class SystemModelHeating(UESGraph):
 
         super(SystemModelHeating, self).__init__()
 
-        self.time_step = timesteps
+        self.time_step = timestep
         self.stop_time = stop_time
         self.timesteps = int(self.stop_time / self.time_step)
         logger.debug(f"Timesteps number: '{self.timesteps}'")
@@ -153,6 +155,9 @@ class SystemModelHeating(UESGraph):
 
         self.heat_to_mass_factor = 0
         self.number_of_supplies = 1
+
+        self.T_in = 0
+        self.T_return = 0
 
         logger.info(f"SystemModelHeating initialization completed")
 
@@ -204,6 +209,8 @@ class SystemModelHeating(UESGraph):
                         p_return = node_data["pReturn"]
                         T_in = node_data["TIn"]
                         T_return = node_data["TReturn"]
+                        self.T_in = T_in
+                        self.T_return = T_return
                         supply_junction = pp.create_junction(
                             net=self.pp_network,
                             pn_bar=p_in,
@@ -401,7 +408,6 @@ class SystemModelHeating(UESGraph):
         Tuple[list, dict]
             Tuple containing:
             - pipe_list: List of pipes with their details
-            - pipe_nodes: Mapping of pipe indices to uesgraph edges
         """
 
         if logger is None:
@@ -409,7 +415,6 @@ class SystemModelHeating(UESGraph):
             
         logger.info("=== Starting pipe import from UESGraph ===")
         pipe_list = []
-        pipe_nodes = {}
         pipe_index = 0
         for edge in uesgraph_input.edges():
             try:
@@ -429,12 +434,19 @@ class SystemModelHeating(UESGraph):
                         diameter_m=d_in,
                         k_mm=edge_data["roughness"],
                         loss_coefficient=loss_coefficient,
-                        alpha_w_per_m2k=heat_trans,
+                        u_w_per_m2k=heat_trans,
                         sections=edge_data["sections"],
                         text_k=T_ground,
                         name=f"{pipe_type}_{uesgraph_input.edges[edge]['diameter']}_{uesgraph_input.edges[edge]['pipeID']}"
                     )
-                    pipe_list.append({"index": pipe_index, "from": from_node, "to": to_node, "type": pipe_type})
+                    pipe_list.append({
+                        "index": pipe_index, 
+                        "from": junction_ids[int(str(edge[0]) + f"{idx}")],
+                        "to": junction_ids[int(str(edge[1]) + f"{idx}")],
+                        "type": pipe_type,
+                        "edge": edge,
+                        "flow_change": False,
+                    })
                     pipe_index += 1
                 
                 self.pipe_map_supply[pipe] = edge
@@ -445,7 +457,7 @@ class SystemModelHeating(UESGraph):
             except Exception as e:
                 logger.error(f"Unexpected error for edge {edge}: {e}")
 
-        return pipe_list, pipe_nodes
+        return pipe_list
 
     def import_from_uesgraph(self, uesgraph_input, logger=None):
         """Imports full UESGraph into pandapipes model.
@@ -465,7 +477,6 @@ class SystemModelHeating(UESGraph):
             Tuple containing:
             - junction_ids: Mapping of uesgraph node IDs to pandapipes junction IDs
             - pipe_list: List of pipes with their details
-            - pipe_nodes: Mapping of pipe indices to uesgraph edges
             - heat_source_id: ID of the heat source junction
             - heat_source_r_id: ID of the heat source return junction
         """
@@ -483,7 +494,7 @@ class SystemModelHeating(UESGraph):
         )
 
         # Step 2: Pipes
-        pipe_list, pipe_nodes = self.import_edges_from_uesgraph(
+        pipe_list = self.import_edges_from_uesgraph(
             uesgraph_input, junction_ids, logger=logger
         )
 
@@ -513,7 +524,7 @@ class SystemModelHeating(UESGraph):
         self.demand_data = df
 
         logger.info(f"Import completed: {len(junction_ids)} junctions, {len(pipe_list)} pipes")
-        return junction_ids, pipe_list, pipe_nodes, heat_source_id, heat_source_r_id
+        return junction_ids, pipe_list, heat_source_id, heat_source_r_id
     
     def find_pipe_parameter(self, pipe_dn: float):
         """Finds the inner diameter and insulation thickness for a given nominal pipe diameter.
@@ -639,7 +650,416 @@ class SystemModelHeating(UESGraph):
         logger.info(f"Circ_pump_pressure: {self.pp_network.res_circ_pump_pressure}")
         logger.info(f"Heat consumer: {self.pp_network.res_heat_consumer}")
 
-    def run_timeseries_spp(self, save_at, logger=None):
+    def pipe_order(self, pipe_list, heat_source_id, heat_source_r_id):
+        pp.pipeflow(
+            net=self.pp_network,
+            mode="hydraulics",
+            stop_condition="tol",
+            iter=100,
+            tol_p=1e-7,
+            tol_v=1e-7,
+            tol_T=1e-3,
+        )
+        """
+            This part is responsible for the sorting of the pipes in the way that we get
+            a list of the pipes names from the given heat source to the substations. After 
+            that the way back from all substations to the heat source is found. This is 
+            necessary later in the calculation of the temperature in the pipes, to prevent 
+            calculating temperatures in pipes before all other temperatures before that were
+            calculated. Layer-idea is based on Qin et al. (2019)
+        """
+        ###############################################################################
+        for pipe in pipe_list:
+            idx = pipe["index"]
+            if self.pp_network.res_pipe["mdot_from_kg_per_s"][idx] < 0:
+                pipe["from"], pipe["to"] = pipe["to"], pipe["from"]
+                pipe["flow_change"] = True
+
+        adjacency = defaultdict(list)         
+
+        for pipe in pipe_list:
+            idx = pipe["index"]
+            f = pipe["from"]
+            t = pipe["to"]
+            adjacency[f].append(idx)
+
+        layer_by_pipe = {}
+        queue = deque()
+
+        for pipe in pipe_list:
+            if pipe["from"] == heat_source_id:
+                layer_by_pipe[pipe["index"]] = 1
+                queue.append(pipe["index"])
+
+        # BFS-similar: Layer propagation
+        while queue:
+            current = queue.popleft()
+            current_layer = layer_by_pipe[current]
+            to_junc = pipe_list[current]["to"]
+
+            for next_pipe_idx in adjacency.get(to_junc, []):
+                prev_layer = layer_by_pipe.get(next_pipe_idx, 0)
+                new_layer = current_layer + 1
+                if new_layer > prev_layer:
+                    layer_by_pipe[next_pipe_idx] = new_layer
+                    queue.append(next_pipe_idx)
+
+        supply_pipes = [p for p in pipe_list if p["type"] == "supply"]
+        
+        sorted_supply_pipes = sorted(
+            supply_pipes, 
+            key=lambda p: layer_by_pipe.get(p["index"], 9999)
+        )
+
+        return_pipes = [p for p in pipe_list if p["type"] == "return"]
+
+        adj_return = defaultdict(list)
+
+        for pipe in return_pipes:
+            idx = pipe["index"]
+            f = pipe["from"]
+            t = pipe["to"]
+            adj_return[t].append(idx)
+
+        layer_by_pipe_return = {}
+        queue = deque()
+
+        for pipe in return_pipes:
+            if pipe["to"] == heat_source_r_id:
+                layer_by_pipe_return[pipe["index"]] = 1
+                queue.append(pipe["index"])
+
+        while queue:
+            current = queue.popleft()
+            current_layer = layer_by_pipe_return[current]
+            end_junction = pipe_list[current]["from"]
+
+            for next_pipe_idx in adj_return.get(end_junction, []):
+                prev_layer = layer_by_pipe_return.get(next_pipe_idx, 0)
+                new_layer = current_layer + 1
+                if new_layer > prev_layer:
+                    layer_by_pipe_return[next_pipe_idx] = new_layer
+                    queue.append(next_pipe_idx)
+
+        sorted_return_pipes = sorted(
+            return_pipes,
+            key=lambda p: layer_by_pipe_return.get(p["index"], 9999),
+            reverse=True 
+        )
+
+        return sorted_supply_pipes, sorted_return_pipes, layer_by_pipe, layer_by_pipe_return
+
+
+    def calculate_temperature_pipe_profile_implicit(self, T_in, T_prev, mdot, cp, alpha, d_in, T_ground, dx, dt, rho, sections):
+        """
+            This function calculates with an implicit euler scheme the temperature
+            distribution within one pipe.
+
+            Args:
+                T_in (float): Inflow temperature of the pipe in K
+                T_prev (list): Previous temperature distribution in the pipe, all values in K
+                m_dot (float): Mass flow in the pipe in kg/s
+                cp (float): Heat capacity in J/(kg K)
+                alpha (float): Heat transfer coefficient in W/(m^2 K)
+                d_in (float): Pipe diameter in m
+                T_ground (float): Ground temperature in K
+                dx (float): Step in the pipe length in m
+                dt (float): Timestep in s
+                rho (float): Density in kg/m^3
+                sections (float): Number of sections
+
+            Returns:
+                list: Temperature distrubtion list in the pipe for the next time step
+
+        """
+        
+        A = np.zeros((sections+1, sections+1))
+        b = np.zeros(sections+1)
+        
+        F_conv = 4 * mdot / (rho * np.pi * d_in**2 * dx)
+        F_loss = 4 * alpha / (rho * d_in * cp)
+        
+        A[0, 0] = 1
+        b[0] = T_in
+
+        for i in range(1, sections+1):
+            A[i, i-1] = -dt * F_conv
+            A[i, i] = 1 + dt * (F_conv + F_loss)
+            b[i] = T_prev[i] + dt * F_loss * T_ground
+        
+        T_next = np.linalg.solve(A, b)
+        return T_next.tolist()
+
+    def mix_junction_temperatures(self, pp_network, pipe_temp_history, pipe_subset, logger=None):
+        """
+            This function calculates a mixing temperature if two pipes flow into one pipe.
+
+            Args:
+                pp_network (pandapipes-network): Pandapipes network
+                pipe_temp_history (dict): Temperatures of pipes to different time steps
+                pipe_subset (list): Pipes that are used to find the inflowing pipes
+
+            Returns:
+                ---
+
+        """
+        relevant_junctions = defaultdict(list)
+
+        for pipe in pipe_subset:
+            idx = pipe["index"]
+            junc = pipe["to"]
+            relevant_junctions[junc].append(pipe)
+        
+
+        for junc_id, pipes in relevant_junctions.items():
+            numerator = 0
+            denominator = 0
+            i = 0
+            for pipe in pipes:
+                idx = pipe["index"]
+                T_out = pipe_temp_history[idx][-1][-1]  # last timestep, last section
+                if pipe["flow_change"]:
+                    mdot = pp_network.res_pipe["mdot_to_kg_per_s"][idx]
+                else:
+                    mdot = pp_network.res_pipe["mdot_from_kg_per_s"][idx]
+                if mdot > 0:
+                    numerator += mdot * T_out
+                    denominator += mdot
+                else:
+                    logger.info(f"mdot is negative for pipe {pipe['index']} with to_junction: {pipe['to']}")
+                i+=1
+            
+            if denominator > 0:
+                T_mixed = numerator / denominator
+                pp_network.res_junction.loc[junc_id,"t_k"] = T_mixed
+
+    """
+        This part mimics the OutputWriter of pandapipes to have more control of logging
+        current states, initializing the Writer and write the result in the same format.
+    """
+    ###############################################################################
+    def init_output_writer(self, log_variables):
+        output_data = {}
+        for comp, var in log_variables:
+            output_data[(comp, var)] = defaultdict(list)  
+        output_data["time"] = []  
+        return output_data
+
+    def log_current_state(self, pp_network, output_data, log_variables, current_time):
+        output_data["time"].append(current_time)
+
+        for comp, var in log_variables:
+            result_df = getattr(pp_network, comp)
+            for idx in result_df.index:
+                value = result_df.at[idx, var]
+                output_data[(comp, var)][idx].append(value)
+
+    def write_results_to_csv(self, output_data, log_variables, base_folder):
+        os.makedirs(base_folder, exist_ok=True)
+        
+        times = output_data["time"]
+        
+        for comp, var in log_variables:
+            comp_folder = os.path.join(base_folder, comp)
+            os.makedirs(comp_folder, exist_ok=True)
+            
+            variable_data = output_data[(comp, var)]
+            
+            df = pd.DataFrame(variable_data, index=times)
+
+            df.index.name = ""
+            df.to_csv(os.path.join(comp_folder, f"{var}.csv"), sep=";")
+
+    def run_timeseries_dpp_own(self, pipe_list, heat_source_id, heat_source_r_id, save_at, logger=None):
+        # Create pipe order for temperature calculation
+        sorted_supply_pipes, sorted_return_pipes, layer_by_pipe, layer_by_pipe_return = self.pipe_order(pipe_list, heat_source_id, heat_source_r_id)
+        
+        # Define output variables for the timeseries
+        log_variables = [
+            ("res_junction", "p_bar"),
+            ("res_junction", "t_k"),
+            ("res_heat_consumer", "t_from_k"),
+            ("res_heat_consumer", "t_outlet_k"),
+            ("res_heat_consumer", "mdot_from_kg_per_s"),
+            ("res_heat_consumer", "p_from_bar"),
+            ("res_heat_consumer", "p_to_bar"),
+            ("res_circ_pump_pressure", "mdot_from_kg_per_s"),
+            ("res_circ_pump_pressure", "t_from_k"),
+            ("res_circ_pump_pressure", "deltat_k"),
+            ("res_circ_pump_pressure", "qext_w"),
+            ("res_circ_pump_pressure", "vdot_m3_per_s"),
+            ("res_pipe", "v_mean_m_per_s"),
+            ("res_pipe", "mdot_from_kg_per_s"),
+            ("res_pipe", "p_from_bar"),
+            ("res_pipe", "p_to_bar"),
+        ]
+
+        output_data = self.init_output_writer(log_variables)
+
+        # Use the heat capacity values of the pandapipes simulation to calculate a mean
+        # The value is slightly different from a constant value but is still valid
+        cp_supply = pp.get_fluid(self.pp_network).get_property("heat_capacity", self.T_in + 273.15)
+        rho_supply = pp.get_fluid(self.pp_network).get_property("density", self.T_in + 273.15)
+        cp_return = pp.get_fluid(self.pp_network).get_property("heat_capacity", self.T_return + 273.15)
+
+        # Setting time step
+        self.time_step = 3600
+        factor = int(3600/ self.time_step)
+        self.timesteps *= factor
+        self.demand_data = self.resample_profile_constant(self.demand_data, factor)
+        self.ground_temp_data = self.resample_profile_constant(self.ground_temp_data, factor)
+
+        dt = self.time_step
+        n=0
+
+        pipe_temperatures_history = {pipe["index"]: [[self.pp_network.res_pipe["t_from_k"][pipe["index"]]] * (self.pp_network.pipe["sections"][pipe["index"]] + 1)]
+                                    for pipe in pipe_list}
+        progress_bar = tqdm(total=self.timesteps, unit="it")
+
+        # --- 5. Calculating temperatures ---
+        logger.info("Starting pandapipes dynamic year-simulation ...")
+        for t in range(0, (self.timesteps+1)*dt, dt):
+
+            max_layer = max(layer_by_pipe.values())
+
+            # Calculating temperatures from the heat source to the substations
+            for layer in range(1, max_layer + 1):
+                current_layer_pipes = [p for p in sorted_supply_pipes if layer_by_pipe.get(p["index"], 0) == layer]
+                
+                for pipe in current_layer_pipes:
+                    idx = pipe["index"]
+                    from_junc = pipe["from"]
+                    to_junc = pipe["to"]
+                    
+                    T_in = self.pp_network.res_junction["t_k"][from_junc]
+                    alpha = self.pp_network.pipe["u_w_per_m2k"][idx]
+                    if pipe["flow_change"]:
+                        mdot = self.pp_network.res_pipe["mdot_to_kg_per_s"][idx]
+                    else:
+                        mdot = self.pp_network.res_pipe["mdot_from_kg_per_s"][idx]
+                    d_in = self.pp_network.pipe["diameter_m"][idx]
+                    length = self.pp_network.pipe["length_km"][idx]*1000
+                    sections = self.pp_network.pipe["sections"][idx]
+                    T_ground = self.pp_network.pipe["text_k"][idx]
+                    dx = length/sections
+                    T_prev = pipe_temperatures_history[idx][-1]
+                    T_next = self.calculate_temperature_pipe_profile_implicit(T_in, T_prev, mdot, cp_supply, alpha, d_in, T_ground, dx, dt, rho_supply, sections)
+                    pipe_temperatures_history[idx].append(T_next)
+                    if pipe["flow_change"]:
+                        self.pp_network.res_pipe.loc[idx, "t_from_k"] = T_next[-1]
+                    else:
+                        self.pp_network.res_pipe.loc[idx, "t_to_k"] = T_next[-1]
+                
+                self.mix_junction_temperatures(self.pp_network, 
+                    pipe_temperatures_history,
+                    pipe_subset=current_layer_pipes)
+
+            # Processing the heat consumer with constant dT to get the output for the return pipes 
+            for consumer_id in range(len(self.pp_network.heat_consumer)):
+                q_dot = self.pp_network.heat_consumer["qext_w"][consumer_id]  
+                from_junc = self.pp_network.heat_consumer["from_junction"][consumer_id]
+                to_junc = self.pp_network.heat_consumer["to_junction"][consumer_id]
+                supply_pipe = self.pp_network.pipe[(self.pp_network.pipe["to_junction"] == from_junc)]
+                return_pipe = self.pp_network.pipe[(self.pp_network.pipe["to_junction"] == to_junc)]
+
+                pipe_idx = supply_pipe.index[0]
+                
+                m_dot = abs(self.pp_network.res_heat_consumer["mdot_from_kg_per_s"][consumer_id])
+                T_vorlauf = self.pp_network.res_pipe["t_to_k"][pipe_idx]
+                self.pp_network.res_heat_consumer.loc[consumer_id, "t_from_k"] = T_vorlauf
+
+                cp_mean = (cp_supply + cp_return)/2
+
+                T_rueck = T_vorlauf - q_dot/m_dot/cp_mean
+                self.pp_network.res_heat_consumer.loc[consumer_id, "t_outlet_k"] = T_rueck
+                self.pp_network.res_heat_consumer.loc[consumer_id, "t_to_k"] = T_rueck
+
+                self.pp_network.res_heat_consumer.loc[consumer_id, "deltat_k"] = T_vorlauf - T_rueck
+
+                pipe_idx = return_pipe.index[0]
+                self.pp_network.res_junction.loc[to_junc, "t_k"]  = T_rueck
+
+            max_layer_return = max(layer_by_pipe_return.values())
+
+            # Calculating temperatures from the substations back to the heat source
+            for layer in range(max_layer_return, 0, -1):  # Reverse order
+                
+                current_layer_return_pipes = [p for p in sorted_return_pipes if layer_by_pipe_return.get(p["index"], 0) == layer]
+
+                for pipe in current_layer_return_pipes:
+                    idx = pipe["index"]
+                    from_junc = pipe["from"]
+                    to_junc = pipe["to"]
+
+                    T_in = self.pp_network.res_junction["t_k"][from_junc]
+                    alpha = self.pp_network.pipe["u_w_per_m2k"][idx]
+                    if pipe["flow_change"]:
+                        mdot = self.pp_network.res_pipe["mdot_to_kg_per_s"][idx]
+                    else:
+                        mdot = self.pp_network.res_pipe["mdot_from_kg_per_s"][idx]
+                    d_in = self.pp_network.pipe["diameter_m"][idx]
+                    length = self.pp_network.pipe["length_km"][idx]*1000
+                    sections = self.pp_network.pipe["sections"][idx]
+                    T_ground = self.pp_network.pipe["text_k"][idx]
+                    dx = length/sections
+                    T_prev = pipe_temperatures_history[idx][-1]
+                    T_next = self.calculate_temperature_pipe_profile_implicit(T_in, T_prev, mdot, cp_supply, alpha, d_in, T_ground, dx, dt, rho_supply, sections)
+                    pipe_temperatures_history[idx].append(T_next)
+                    if pipe["flow_change"]:
+                        self.pp_network.res_pipe.loc[idx, "t_from_k"] = T_next[-1]
+                    else:
+                        self.pp_network.res_pipe.loc[idx, "t_to_k"] = T_next[-1]
+
+                self.mix_junction_temperatures(self.pp_network, 
+                    pipe_temperatures_history,
+                    current_layer_return_pipes)
+                
+            return_junc = self.pp_network.circ_pump_pressure["return_junction"][0]
+            self.pp_network.res_circ_pump_pressure.loc[0, "t_from_k"] = self.pp_network.res_junction["t_k"][return_junc]
+            self.pp_network.res_circ_pump_pressure.loc[0, "deltat_k"] = self.pp_network.res_circ_pump_pressure["t_from_k"][0] - self.pp_network.res_circ_pump_pressure["t_to_k"][0]
+
+            # Saving only for hours the temperatures and do new hydraulics simulation with new demand values
+            if t == dt*(n+1):
+                progress_bar.update(1)
+
+                self.log_current_state(self.pp_network, output_data, log_variables, n)
+
+                if n+1 == self.timesteps:
+                    break
+
+                for consumer_id in range(len(self.pp_network.heat_consumer)):
+                    heat_demand_w = self.demand_data.iloc[n+1, consumer_id]
+                    self.pp_network.heat_consumer.loc[consumer_id, "qext_w"] = heat_demand_w
+                T_ground = self.ground_temp_data.loc[self.ground_temp_data.index[n+1], "1.0 m"]
+                for pipe_id in range(len(self.pp_network.pipe)):
+                    self.pp_network.pipe.loc[pipe_id, "text_k"] = T_ground
+                pp.pipeflow(net=self.pp_network, mode="hydraulics",
+                    stop_condition="tol",
+                    iter=500,
+                    tol_p=1e-7,
+                    tol_v=1e-7,
+                    tol_T=1e-3,
+                )
+                n+=1
+
+        progress_bar.close()
+
+        # Saving the results to the folder
+        self.write_results_to_csv(output_data, log_variables, base_folder=save_at)
+
+    def resample_profile_constant(self, df, factor):
+        """
+        Dupliziert jede Zeile `factor`-mal, damit ein Profil bei kleineren Zeitschritten
+        konstant bleibt.
+        
+        df: DataFrame mit Zeitschritten als Index
+        factor: int, z.B. 2 für 30-min Schritte bei 1h Originalprofil
+        """
+        repeated = df.loc[df.index.repeat(factor)].reset_index(drop=True)
+        return repeated
+
+
+    def run_timeseries_pp(self, save_at, mode, logger=None):
         """Does timeseries calculation of the pandapipes network and saves the results in save_at.
 
         Parameters
@@ -682,9 +1102,15 @@ class SystemModelHeating(UESGraph):
             ("res_pipe", "p_to_bar"),
         ]
 
+        self.time_step = 3600 # TODO: Change in future depending on timestep input
+        factor = int(3600/ self.time_step) 
+        self.timesteps *= factor
+
+        self.demand_data = self.resample_profile_constant(self.demand_data, factor)
+        self.ground_temp_data = self.resample_profile_constant(self.ground_temp_data, factor)
+
         # --- heat-demand reading ---
         profiles_demand = self.demand_data
-        logger.info(len(profiles_demand))
         for building in profiles_demand.columns:
             profiles_demand.rename(
                columns={building: list(pp_network.heat_consumer["name"]).index(building)},
@@ -716,8 +1142,6 @@ class SystemModelHeating(UESGraph):
             profiles_mass_flow.columns = [
                 str(idx) for idx in pp_network.circ_pump_mass.index
             ]
-
-            logger.info(profiles_mass_flow)
             ds_mass = DFData(profiles_mass_flow)
 
             profile_names = [str(idx) for idx in pp_network.circ_pump_mass.index]
@@ -742,7 +1166,6 @@ class SystemModelHeating(UESGraph):
 
         # --- ground-temperatures reading ---
         if len(self.ground_temp_data["1.0 m"]) > 1:
-
             profiles_t_ground = self.ground_temp_data["1.0 m"]
             logger.info(len(profiles_t_ground))
             profiles_t_ground.reset_index(drop=True, inplace=True)
@@ -758,6 +1181,7 @@ class SystemModelHeating(UESGraph):
             ds_tground = DFData(profiles_t_ground)
 
             logger.info("Ground_temp")
+            logger.info(profiles_t_ground)
 
             profile_names = [str(idx) for idx in pp_network.pipe.index]
             control.ConstControl(
@@ -782,7 +1206,12 @@ class SystemModelHeating(UESGraph):
 
         # --- Simulation start ---
         try:
-            run_timeseries(pp_network, timesteps, mode="bidirectional", iter = 100)
+            if mode == "static":
+                logger.info("Running static simulation")
+                run_timeseries(pp_network, timesteps, mode="bidirectional", iter = 500)
+            else:
+                logger.info("Running dynamic simulation")
+                run_timeseries(pp_network, timesteps, mode="bidirectional", iter = 500, transient = True, dt = self.time_step)
             logger.info("Pandapipes timeseries simulation completed successfully!")
         except Exception as e:
             logger.error(f"Timeseries simulation failed: {e}")

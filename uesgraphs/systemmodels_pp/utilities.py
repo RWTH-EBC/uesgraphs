@@ -203,6 +203,7 @@ def create_model(
     graph,
     stop_time,
     timestep,
+    mode,
     t_ground_prescribed=None,
     logger=None
 ):
@@ -244,19 +245,25 @@ def create_model(
     
     assert not name[0].isdigit(), "Model name cannot start with a digit"
 
+    assert mode in ("static","dynamic"), "Mode must be either 'static' or 'dynamic'"
+
     logger.info("Creating SystemModelHeating instance")
-    new_model = spp.SystemModelHeating(stop_time = stop_time, timesteps= timestep, network_type=graph.graph["network_type"],logger=logger)
+    new_model = spp.SystemModelHeating(stop_time = stop_time, timestep = timestep, network_type=graph.graph["network_type"],logger=logger)
     
     logger.info("Importing UESGraph")
-    new_model.import_from_uesgraph(graph, logger=logger)
+    _, pipe_list, heat_source_id, heat_source_r_id = new_model.import_from_uesgraph(graph, logger=logger)
 
     if t_ground_prescribed is not None:
         logger.debug(f"Setting prescribed ground temperatures (length: {len(t_ground_prescribed)})")
         new_model.graph["T_ground"] = t_ground_prescribed
+        new_model.ground_temp_data = pd.DataFrame(
+            {"1.0 m": new_model.graph["T_ground"]}
+        )
 
     #new_model.run_test_simulation()
 
-    new_model.run_timeseries_spp(save_at, logger=logger)
+    new_model.run_timeseries_pp(save_at, mode, logger=logger)
+    #new_model.run_timeseries_dpp_own(pipe_list, heat_source_id, heat_source_r_id, save_at, logger=logger)
 
     mappings = {
         "supply": {
@@ -402,14 +409,10 @@ def uesgraph_to_pandapipes(uesgraph, simplification_level,
     else:
         raise ValueError(f"uesgraph must be either a JSON path or UESGraph object, got: {type(uesgraph)}")
 
-    # Step 3.1: Write simulation parameters to graph (needed for connector time-series generation)
-    logger.info("Writing simulation parameters to graph")
-    uesgraph.graph['stop_time'] = float(sim_params['stop_time'])
-    uesgraph.graph['timestep'] = sim_params.get('timestep', 3600)  # Default 3600s = 1h
+    logger.info("Writing network_type to UESGraph")
     uesgraph.graph["network_type"] = "heating"
-    logger.debug(f"Set graph parameters: stop_time={uesgraph.graph['stop_time']}, timestep={uesgraph.graph['timestep']}")
 
-    # Step 3.2: Ensure all edges have names (required for pandapipes simulation model)
+    # Step 3.1: Ensure all edges have names (required for pandapipes simulation model)
     # This is needed because from_geojson() doesn't set edge names automatically,
     # while from_json() does (via pipeID). We need consistent behavior.
     logger.info("Validating and generating edge names if needed")
@@ -607,7 +610,7 @@ def load_simulation_settings_from_excel(excel_path, logger=None):
     sim_params = _load_excel(excel_path, 'Simulation', logger)
 
     # Validate required simulation parameters
-    required = ['simulation_name', 'start_time', 'stop_time']
+    required = ['simulation_name', 'start_time', 'stop_time', 'mode']
     missing = [param for param in required if param not in sim_params]
 
     if missing:
@@ -809,6 +812,7 @@ def generate_simulation_model(uesgraph, sim_name, sim_params, ground_temp_list, 
         graph=uesgraph,
         stop_time=float(sim_params["stop_time"]),
         timestep=sim_params.get("timestep",3600),  # Could be made configurable
+        mode=sim_params.get("mode", "static"),
         t_ground_prescribed=ground_temp_list
     )
 
