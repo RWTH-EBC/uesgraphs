@@ -1,0 +1,45 @@
+uesgraphs package
+=================
+
+.. automodule:: uesgraphs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   uesgraphs.analyze
+   uesgraphs.examples
+   uesgraphs.systemmodels
+   uesgraphs.systemmodels_pp
+
+Submodules
+----------
+
+uesgraphs.uesgraph module
+-------------------------
+
+.. automodule:: uesgraphs.uesgraph
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.utilities module
+--------------------------
+
+.. automodule:: uesgraphs.utilities
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.visuals module
+------------------------
+
+.. automodule:: uesgraphs.visuals
+   :members:
+   :undoc-members:
+   :show-inheritance:

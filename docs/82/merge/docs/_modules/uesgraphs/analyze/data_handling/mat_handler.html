@@ -1,0 +1,500 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.analyze.data_handling.mat_handler &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+
+  
+      <script src="../../../../_static/jquery.js"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+      <script src="../../../../_static/doctools.js"></script>
+      <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guides/Template_Generation.html">Template Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.analyze.data_handling.mat_handler</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.analyze.data_handling.mat_handler</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module handles Dymola .mat result files.</span>
+
+<span class="sd">Code History and Attribution:</span>
+<span class="sd">---------------------------</span>
+<span class="sd">1. Original Implementation:</span>
+<span class="sd">   - Author: Kevin Davies</span>
+<span class="sd">   - Organization: Hawaii Natural Energy Institute (HNEI) and Georgia Tech Research Corporation (GTRC)</span>
+<span class="sd">   - Copyright: 2010-2014</span>
+<span class="sd">   - License: BSD</span>
+<span class="sd">   - link: https://github.com/kdavies4/ModelicaRes/tree/master</span>
+
+<span class="sd">2. First Modification:</span>
+<span class="sd">   - Project: ebcpy</span>
+<span class="sd">   - Modification: Updated for compatibility with newer Python versions</span>
+<span class="sd">   - Date: 2019 - 2024</span>
+<span class="sd">   - Changes made: Removal of matplotlib and natu dependencies</span>
+<span class="sd">   - link: https://github.com/RWTH-EBC/ebcpy/blob/master/ebcpy/modelica/simres.py</span>
+
+<span class="sd">3. Current Version:</span>
+<span class="sd">   - Extracted and adapted from ebcpy version</span>
+<span class="sd">   - Date: 23.01.2025</span>
+<span class="sd">   - Purpose: Minimise dependencies in uesgraphs</span>
+<span class="sd">   - Changes made: None</span>
+
+<span class="sd">Original Copyright Notice:</span>
+<span class="sd">------------------------</span>
+
+<span class="sd"># Copyright (c) 2010-2014, Kevin Davies, Hawaii Natural Energy Institute (HNEI),</span>
+<span class="sd"># and Georgia Tech Research Corporation (GTRC).</span>
+<span class="sd"># All rights reserved.</span>
+<span class="sd">#</span>
+<span class="sd"># Redistribution and use in source and binary forms, with or without</span>
+<span class="sd"># modification, are permitted provided that the following conditions are met:</span>
+<span class="sd">#</span>
+<span class="sd">#     * Redistributions of source code must retain the above copyright notice,</span>
+<span class="sd">#       this list of conditions and the following disclaimer.</span>
+<span class="sd">#     * Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="sd">#       this list of conditions and the following disclaimer in the documentation</span>
+<span class="sd">#       and/or other materials provided with the distribution.</span>
+<span class="sd">#     * Neither the name of Georgia Tech Research Corporation nor the names of</span>
+<span class="sd">#       its contributors may be used to endorse or promote products derived from</span>
+<span class="sd">#       this software without specific prior written permission.</span>
+<span class="sd">#     * This software is controlled under the jurisdiction of the United States</span>
+<span class="sd">#       Department of Commerce and subject to Export Administration Regulations.</span>
+<span class="sd">#       By downloading or using the Software, you are agreeing to comply with</span>
+<span class="sd">#       U. S. export controls.  Diversion contrary to law is prohibited.  The</span>
+<span class="sd">#       software cannot be exported or reexported to sanctioned countries that</span>
+<span class="sd">#       are controlled for Anti-Terrorism (15 CFR Part 738 Supplement 1) or to</span>
+<span class="sd">#       denied parties, http://beta-www.bis.doc.gov/index.php/policy-guidance/lists-of-parties-of-concern.</span>
+<span class="sd">#       EAR99 items cannot be exported or reexported to Iraq for a military</span>
+<span class="sd">#       purpose or to a military end-user (15 CFR Part 746.3).  Export and</span>
+<span class="sd">#       reexport include any release of technology to a foreign national within</span>
+<span class="sd">#       the United States.  Technology is released for export when it is</span>
+<span class="sd">#       available to foreign nationals for visual inspection, when technology is</span>
+<span class="sd">#       exchanged orally or when technology is made available by practice or</span>
+<span class="sd">#       application under the guidance of persons with knowledge of the</span>
+<span class="sd">#       technology.</span>
+<span class="sd">#</span>
+<span class="sd"># THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND</span>
+<span class="sd"># ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED</span>
+<span class="sd"># WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="sd"># DISCLAIMED. IN NO EVENT SHALL GEORGIA TECH RESEARCH CORPORATION BE LIABLE FOR</span>
+<span class="sd"># ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES</span>
+<span class="sd"># (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<span class="sd"># LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON</span>
+<span class="sd"># ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT</span>
+<span class="sd"># (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+<span class="sd"># SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+
+<span class="sd">Docstring of ebcpy-version:</span>
+
+<span class="sd">Module based on the simres module of modelicares. As no new content is going to be</span>
+<span class="sd">merged upstream, this &quot;fork&quot; of the to_pandas() function is used.</span>
+
+<span class="sd">Update 18.01.2021:</span>
+<span class="sd">As modelicares is no longer compatible with matplotlib &gt; 3.3.2, we integrated all</span>
+<span class="sd">necessary functions from modelicares to still be able and use loadsim functions.</span>
+
+<span class="sd">.. versionadded:: 0.1.7</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">count</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">loadmat</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+
+<span class="c1"># Namedtuple to store the time and value information of each variable</span>
+<span class="n">Samples</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Samples&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;times&#39;</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">,</span> <span class="s1">&#39;negated&#39;</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="loadsim"><a class="viewcode-back" href="../../../../code/uesgraphs.analyze.html#uesgraphs.analyze.loadsim">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">loadsim</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">constants_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Load Dymola\ :sup:`®` or OpenModelica simulation results.</span>
+
+<span class="sd">    **Arguments:**</span>
+
+<span class="sd">    - *fname*: Name of the results file, including the path</span>
+
+<span class="sd">         The file extension (&#39;.mat&#39;) is optional.</span>
+
+<span class="sd">    - *constants_only*: *True* to load only the variables from the first data</span>
+<span class="sd">      matrix</span>
+
+<span class="sd">         The first data matrix usually contains all of the constants,</span>
+<span class="sd">         parameters, and variables that don&#39;t vary.  If only that information is</span>
+<span class="sd">         needed, it may save resources to set *constants_only* to *True*.</span>
+
+<span class="sd">    **Returns:** An instance of dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># This does the task of mfiles/traj/tload.m from the Dymola installation.</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the variable description string into description, unit, and</span>
+<span class="sd">        displayUnit.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">)</span>
+        <span class="n">display_unit</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">description</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;[&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">unit</span><span class="p">,</span> <span class="n">display_unit</span> <span class="o">=</span> <span class="n">unit</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">pass</span> <span class="c1"># (displayUnit = &#39;&#39;)</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">description</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">display_unit</span>
+    
+    <span class="c1"># Load the file.</span>
+    <span class="n">mat</span><span class="p">,</span> <span class="n">aclass</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">constants_only</span><span class="p">)</span>
+
+    <span class="c1"># Check the type of results.</span>
+    <span class="k">if</span> <span class="n">aclass</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;AlinearSystem&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">fname</span> <span class="o">+</span> <span class="s1">&#39; is a linearization result.  Use LinRes &#39;</span>
+                             <span class="s1">&#39;instead.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">aclass</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;Atrajectory&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">fname</span> <span class="o">+</span> <span class="s1">&#39; is not a simulation or &#39;</span>
+                                     <span class="s1">&#39;linearization result.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Determine if the data is transposed.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">transposed</span> <span class="o">=</span> <span class="n">aclass</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;binTrans&#39;</span>
+    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+        <span class="n">transposed</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">transposed</span> <span class="ow">or</span> <span class="n">aclass</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;binNormal&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span>\
+                <span class="p">(</span><span class="s1">&#39;The orientation of the Dymola/OpenModelica results is not &#39;</span>
+                 <span class="s1">&#39;recognized.  The third line of the &quot;Aclass&quot; variable is &quot;</span><span class="si">%s</span><span class="s1">&quot;, but &#39;</span>
+                 <span class="s1">&#39;it should be &quot;binNormal&quot; or &quot;binTrans&quot;.&#39;</span> <span class="o">%</span> <span class="n">aclass</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+    <span class="c1"># Get the format version.</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">aclass</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Process the name, description, parts of dataInfo, and data_i variables.</span>
+    <span class="c1"># This section has been optimized for speed.  All time and value data</span>
+    <span class="c1"># remains linked to the memory location where it is loaded by scipy.  The</span>
+    <span class="c1"># negated variable is carried through so that copies are not necessary.  If</span>
+    <span class="c1"># changes are made to this code, be sure to compare the performance (e.g.,</span>
+    <span class="c1"># using %timeit in IPython).</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s1">&#39;1.0&#39;</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="k">if</span> <span class="n">transposed</span> <span class="k">else</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="n">get_strings</span><span class="p">(</span><span class="n">mat</span><span class="p">[</span><span class="s1">&#39;names&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="k">if</span> <span class="n">transposed</span> <span class="k">else</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;names&#39;</span><span class="p">])</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">Variable</span><span class="p">(</span><span class="n">Samples</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="kc">False</span><span class="p">),</span>
+                                    <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">names</span><span class="p">)}</span>
+    <span class="k">elif</span> <span class="n">version</span> <span class="o">!=</span> <span class="s1">&#39;1.1&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;The version of the Dymola/OpenModelica &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;result file (</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s1">) is not &#39;</span>
+                             <span class="s1">&#39;supported.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="n">get_strings</span><span class="p">(</span><span class="n">mat</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="k">if</span> <span class="n">transposed</span> <span class="k">else</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+        <span class="n">descriptions</span> <span class="o">=</span> <span class="n">get_strings</span><span class="p">(</span><span class="n">mat</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="k">if</span> <span class="n">transposed</span> <span class="k">else</span>
+                                   <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">])</span>
+        <span class="n">data_info</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;dataInfo&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">transposed</span> <span class="k">else</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;dataInfo&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">data_sets</span> <span class="o">=</span> <span class="n">data_info</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">sign_cols</span> <span class="o">=</span> <span class="n">data_info</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">mat</span><span class="p">[</span><span class="s1">&#39;data_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="k">if</span> <span class="n">transposed</span> <span class="k">else</span>
+                        <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;data_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">break</span> <span class="c1"># There are no more &quot;data_i&quot; variables.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># In case the data set is empty.</span>
+                    <span class="n">times</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+                    <span class="n">variables</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span><span class="p">:</span>
+                                      <span class="n">Variable</span><span class="p">(</span><span class="n">Samples</span><span class="p">(</span><span class="n">times</span><span class="p">,</span>
+                                                       <span class="n">data</span><span class="p">[:,</span>
+                                                            <span class="nb">abs</span><span class="p">(</span><span class="n">sign_col</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span>
+                                                       <span class="n">sign_col</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">),</span>
+                                               <span class="o">*</span><span class="n">parse</span><span class="p">(</span><span class="n">description</span><span class="p">))</span>
+                                      <span class="k">for</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">data_set</span><span class="p">,</span>
+                                           <span class="n">sign_col</span><span class="p">)</span>
+                                      <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">descriptions</span><span class="p">,</span> <span class="n">data_sets</span><span class="p">,</span>
+                                             <span class="n">sign_cols</span><span class="p">)</span>
+                                      <span class="k">if</span> <span class="n">data_set</span> <span class="o">==</span> <span class="n">i</span><span class="p">})</span>
+
+        <span class="c1"># Time is from the last data set.</span>
+        <span class="n">variables</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">Samples</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">times</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                                     <span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">variables</span></div>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">constants_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Read variables from a MATLAB\ :sup:`®` file with Dymola\ :sup:`®` or</span>
+<span class="sd">    OpenModelica results.</span>
+
+<span class="sd">    **Arguments:**</span>
+
+<span class="sd">    - *fname*: Name of the results file, including the path</span>
+
+<span class="sd">         This may be from a simulation or linearization.</span>
+
+<span class="sd">    - *constants_only*: *True* to load only the variables from the first data</span>
+<span class="sd">      matrix, if the result is from a simulation</span>
+
+<span class="sd">    **Returns:**</span>
+
+<span class="sd">    1. A dictionary of variables</span>
+
+<span class="sd">    2. A list of strings from the lines of the &#39;Aclass&#39; matrix</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Load the file.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">constants_only</span><span class="p">:</span>
+            <span class="n">mat</span> <span class="o">=</span> <span class="n">loadmat</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">chars_as_strings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">appendmat</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                          <span class="n">variable_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Aclass&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;names&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;dataInfo&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;data_1&#39;</span><span class="p">,</span> <span class="s1">&#39;ABCD&#39;</span><span class="p">,</span> <span class="s1">&#39;nx&#39;</span><span class="p">,</span> <span class="s1">&#39;xuyName&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mat</span> <span class="o">=</span> <span class="n">loadmat</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">chars_as_strings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">appendmat</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1">&quot; could not be opened.&#39;</span>
+                      <span class="s1">&#39;  Check that it exists.&#39;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+
+    <span class="c1"># Check if the file contains the Aclass variable.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">aclass</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s1">&#39;Aclass&#39;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1">&quot; does not appear to be a Dymola or OpenModelica &#39;</span>
+                        <span class="s1">&#39;result file.  The &quot;Aclass&quot; variable is &#39;</span>
+                        <span class="s1">&#39;missing.&#39;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+
+    <span class="k">return</span> <span class="n">mat</span><span class="p">,</span> <span class="n">get_strings</span><span class="p">(</span><span class="n">aclass</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_strings</span><span class="p">(</span><span class="n">str_arr</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a list of strings from a character array.</span>
+
+<span class="sd">    Strip the whitespace from the right and recode it as utf-8.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">word_arr</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">word_arr</span> <span class="ow">in</span> <span class="n">str_arr</span><span class="p">]</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Variable</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;VariableNamedTuple&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;samples&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;unit&#39;</span><span class="p">,</span> <span class="s1">&#39;displayUnit&#39;</span><span class="p">])):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Special namedtuple to represent a variable in a simulation, with</span>
+<span class="sd">    methods to retrieve and perform calculations on its values</span>
+
+<span class="sd">    This class is usually not instantiated directly by the user, but instances</span>
+<span class="sd">    are returned when indexing a variable name from a simulation result</span>
+<span class="sd">    (:class:`SimRes` instance).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">times</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return sample times&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="o">.</span><span class="n">times</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return sample values&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="o">.</span><span class="n">values</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="o">.</span><span class="n">negated</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="o">.</span><span class="n">values</span>
+
+
+<div class="viewcode-block" id="mat_to_pandas"><a class="viewcode-back" href="../../../../code/uesgraphs.analyze.html#uesgraphs.analyze.mat_to_pandas">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">mat_to_pandas</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="s1">&#39;dsres.mat&#39;</span><span class="p">,</span>
+                  <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">aliases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">with_unit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">constants_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a `pandas.DataFrame` with values from selected variables</span>
+<span class="sd">    for the given .mat file.</span>
+
+<span class="sd">    The index is time. The column headings indicate the variable names and</span>
+<span class="sd">    units.</span>
+
+<span class="sd">    :param str fname:</span>
+<span class="sd">        The mat file to load.</span>
+<span class="sd">    :param list names:</span>
+<span class="sd">        If None (default), then all variables are included.</span>
+<span class="sd">    :param dict aliases:</span>
+<span class="sd">        Dictionary of aliases for the variable names</span>
+
+<span class="sd">        The keys are the &quot;official&quot; variable names from the Modelica model</span>
+<span class="sd">        and the values are the names as they should be included in the</span>
+<span class="sd">        column headings. Any variables not in this list will not be</span>
+<span class="sd">        aliased. Any unmatched aliases will not be used.</span>
+<span class="sd">    :param bool with_unit:</span>
+<span class="sd">        Boolean to determine format of keys. Default value is True.</span>
+
+<span class="sd">        If set to True, the unit will be added to the key. As not all modelica-</span>
+<span class="sd">        result files export the unit information, using with_unit=True can lead</span>
+<span class="sd">        to errors.</span>
+<span class="sd">    :param bool constants_only:</span>
+<span class="sd">        The first data matrix usually contains all of the constants,</span>
+<span class="sd">        parameters, and variables that don&#39;t vary.  If only that information is</span>
+<span class="sd">        needed, it may save resources to set *constants_only* to *True*.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_variables</span> <span class="o">=</span> <span class="n">loadsim</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">constants_only</span><span class="p">)</span>
+    <span class="c1"># Avoid mutable argument</span>
+    <span class="k">if</span> <span class="n">aliases</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">aliases</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Create the list of variable names.</span>
+    <span class="k">if</span> <span class="n">names</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+        <span class="n">non_existing_variables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">_variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="n">non_existing_variables</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The following variable names are not in the given .mat file: &quot;</span>
+                           <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">non_existing_variables</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="n">_variables</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+    <span class="c1"># Create a dictionary of names and values.</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="n">_variables</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+
+        <span class="c1"># Get the values</span>
+        <span class="n">array_values</span> <span class="o">=</span> <span class="n">_variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">_variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">times</span><span class="p">(),</span> <span class="n">times</span><span class="p">):</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">array_values</span>  <span class="c1"># Save computation.</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">array_values</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">array_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Inf values can&#39;t be resampled</span>
+        <span class="c1"># Check if all values are constant to save resampling time</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">array_values</span> <span class="o">-</span>
+                              <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">array_values</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Passing a scalar converts automatically to an array.</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">array_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">_variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="n">times</span><span class="p">)</span>  <span class="c1"># Resample.</span>
+        <span class="n">unit</span> <span class="o">=</span> <span class="n">_variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">unit</span>
+
+        <span class="c1"># Apply an alias if available.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">aliases</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="n">unit</span> <span class="ow">and</span> <span class="n">with_unit</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; / &#39;</span> <span class="o">+</span> <span class="n">unit</span><span class="p">:</span> <span class="n">values</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span><span class="p">:</span> <span class="n">values</span><span class="p">})</span>
+
+    <span class="c1"># Create the pandas data frame.</span>
+    <span class="k">if</span> <span class="n">with_unit</span><span class="p">:</span>
+        <span class="n">time_key</span> <span class="o">=</span> <span class="s1">&#39;Time / s&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">time_key</span> <span class="o">=</span> <span class="s1">&#39;Time&#39;</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">time_key</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="mat_to_parquet"><a class="viewcode-back" href="../../../../code/uesgraphs.analyze.html#uesgraphs.analyze.mat_to_parquet">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">mat_to_parquet</span><span class="p">(</span><span class="n">save_as</span><span class="p">,</span>
+                      <span class="n">fname</span><span class="o">=</span><span class="s1">&#39;dsres.mat&#39;</span><span class="p">,</span>
+                  <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">aliases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">with_unit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">constants_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">mat_to_pandas</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">fname</span><span class="p">,</span>
+                       <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span>
+                       <span class="n">aliases</span><span class="o">=</span><span class="n">aliases</span><span class="p">,</span>
+                       <span class="n">with_unit</span><span class="o">=</span><span class="n">with_unit</span><span class="p">,</span>
+                       <span class="n">constants_only</span><span class="o">=</span><span class="n">constants_only</span><span class="p">)</span>
+    <span class="n">save_as</span> <span class="o">=</span> <span class="n">save_as</span> <span class="o">+</span> <span class="s1">&#39;.gzip&#39;</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">save_as</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">save_as</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

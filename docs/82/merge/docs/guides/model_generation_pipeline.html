@@ -1,0 +1,473 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model Generation Pipeline &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hydraulic Network Sizing" href="hydronic_sizing.html" />
+    <link rel="prev" title="UESgraphs: Automated graph-based simulation model generation and analysis tool" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Model Generation Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-you-need">What You Need</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#excel-configuration">Excel Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#simulation-sheet">Simulation Sheet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipes-sheet">Pipes Sheet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#supply-sheet">Supply Sheet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#demands-sheet">Demands Sheet</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-priority">Parameter Priority</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#common-issues">Common Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#debug-mode">Debug Mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Template_Generation.html">Template Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Model Generation Pipeline</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guides/model_generation_pipeline.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="model-generation-pipeline">
+<h1>Model Generation Pipeline<a class="headerlink" href="#model-generation-pipeline" title="Permalink to this heading"></a></h1>
+<p>Generate Modelica simulation models from UESGraph district heating networks using Excel-based configuration.</p>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h2>
+<p><strong>Workflow from GeoJSON to Modelica:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ug</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels.model_generation_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">uesgraph_to_modelica</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels.utilities</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sysm_ut</span>
+
+<span class="c1"># 1. Import network from GeoJSON</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">from_geojson</span><span class="p">(</span>
+     <span class="n">network_path</span><span class="o">=</span><span class="n">network_geojson</span><span class="p">,</span>
+     <span class="n">buildings_path</span><span class="o">=</span><span class="n">buildings_geojson</span><span class="p">,</span>
+     <span class="n">supply_path</span><span class="o">=</span><span class="n">supply_geojson</span><span class="p">,</span>
+     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;simple_district&#39;</span><span class="p">,</span>
+     <span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./output&quot;</span><span class="p">,</span>
+     <span class="n">generate_visualizations</span><span class="o">=</span><span class="kc">False</span>
+ <span class="p">)</span>
+
+<span class="c1"># 2. Generate Modelica model</span>
+<span class="n">uesgraph_to_modelica</span><span class="p">(</span>
+    <span class="n">uesgraph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span>
+    <span class="n">sim_setup_path</span><span class="o">=</span><span class="s2">&quot;config.xlsx&quot;</span><span class="p">,</span>               <span class="c1"># Excel configuration</span>
+    <span class="n">workspace</span><span class="o">=</span><span class="s2">&quot;./output&quot;</span><span class="p">,</span>                       <span class="c1"># Output directory</span>
+    <span class="n">simplification_level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>                     <span class="c1"># Network simplification (0 = none)</span>
+    <span class="n">input_heating</span><span class="o">=</span><span class="s2">&quot;demands_heating.csv&quot;</span><span class="p">,</span>        <span class="c1"># Heating demand profile</span>
+    <span class="n">input_dhw</span><span class="o">=</span><span class="s2">&quot;demands_dhw.csv&quot;</span><span class="p">,</span>                <span class="c1"># DHW demand profile</span>
+    <span class="n">input_cooling</span><span class="o">=</span><span class="s2">&quot;demands_cooling.csv&quot;</span><span class="p">,</span>        <span class="c1"># Cooling demand profile</span>
+    <span class="n">ground_temp_path</span><span class="o">=</span><span class="s2">&quot;ground_temperature.csv&quot;</span>   <span class="c1"># Ground temperature data</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>This generates a complete Modelica package in <code class="docutils literal notranslate"><span class="pre">./output/models/</span></code> ready for simulation.</p>
+<p><strong>If you already have a JSON file:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels.model_generation_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">uesgraph_to_modelica</span>
+
+<span class="n">uesgraph_to_modelica</span><span class="p">(</span>
+    <span class="n">uesgraph</span><span class="o">=</span><span class="s2">&quot;network.json&quot;</span><span class="p">,</span>        <span class="c1"># Your existing JSON file</span>
+    <span class="n">sim_setup_path</span><span class="o">=</span><span class="s2">&quot;config.xlsx&quot;</span><span class="p">,</span>
+    <span class="n">workspace</span><span class="o">=</span><span class="s2">&quot;./output&quot;</span><span class="p">,</span>
+    <span class="n">simplification_level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">input_heating</span><span class="o">=</span><span class="s2">&quot;demands_heating.csv&quot;</span><span class="p">,</span>
+    <span class="n">input_dhw</span><span class="o">=</span><span class="s2">&quot;demands_dhw.csv&quot;</span><span class="p">,</span>
+    <span class="n">input_cooling</span><span class="o">=</span><span class="s2">&quot;demands_cooling.csv&quot;</span><span class="p">,</span>
+    <span class="n">ground_temp_path</span><span class="o">=</span><span class="s2">&quot;ground_temperature.csv&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="what-you-need">
+<h2>What You Need<a class="headerlink" href="#what-you-need" title="Permalink to this heading"></a></h2>
+<p><strong>Required Files:</strong></p>
+<ol class="arabic">
+<li><p><strong>UESGraph</strong> (JSON format)</p>
+<ul class="simple">
+<li><p>Network topology with nodes and edges</p></li>
+<li><p>Created from GeoJSON, OSM, or manually</p></li>
+</ul>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><strong>GeoJSON Import</strong>: See <a class="reference internal" href="../api_examples.html"><span class="doc">Examples</span></a> (Example 15: Import from GeoJSON)</p></li>
+<li><p><strong>Known Issues</strong>: <a class="reference external" href="https://github.com/RWTH-EBC/uesgraphs/issues/69">GitHub Issue #69</a> for GeoJSON import improvements</p></li>
+</ul>
+</div>
+</li>
+<li><p><strong>Excel Configuration</strong> (<code class="docutils literal notranslate"><span class="pre">uesgraphs_parameters_template.xlsx</span></code>)</p>
+<ul class="simple">
+<li><p>Simulation settings (solver, duration, timestep)</p></li>
+<li><p>Component parameters (pipes, supply, demand)</p></li>
+</ul>
+</li>
+<li><p><strong>Demand Data</strong> (CSV files)</p>
+<ul class="simple">
+<li><p>Heating demand profile (W)</p></li>
+<li><p>DHW demand profile (W)</p></li>
+<li><p>Cooling demand profile (W)</p></li>
+<li><p>One row per timestep</p></li>
+</ul>
+</li>
+<li><p><strong>Ground Temperature</strong> (CSV file)</p>
+<ul class="simple">
+<li><p>Temperature profile (K)</p></li>
+<li><p>Same timesteps as demand data</p></li>
+</ul>
+</li>
+</ol>
+<p><strong>Output:</strong></p>
+<p>Generated Modelica package in timestamped directory:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>workspace/models/Sim20250121_143022_MyProject/
+├── Sim20250121_143022_MyProject.mo    # Main model file
+├── package.mo                          # Package definition
+├── package.order                       # Load order
+└── Resources/Inputs/                   # CSV input files
+</pre></div>
+</div>
+</section>
+<section id="excel-configuration">
+<h2>Excel Configuration<a class="headerlink" href="#excel-configuration" title="Permalink to this heading"></a></h2>
+<p>The Excel file has <strong>4 sheets</strong>:</p>
+<section id="simulation-sheet">
+<h3>Simulation Sheet<a class="headerlink" href="#simulation-sheet" title="Permalink to this heading"></a></h3>
+<p>Global simulation settings.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Example Value</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>simulation_name</p></td>
+<td><p>MyProject</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><p>Name for the generated model</p></td>
+</tr>
+<tr class="row-odd"><td><p>solver</p></td>
+<td><p>Cvode</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><p>Modelica solver (Cvode, Dassl, etc.)</p></td>
+</tr>
+<tr class="row-even"><td><p>start_time</p></td>
+<td><p>0</p></td>
+<td><p>s</p></td>
+<td><p>Simulation start time</p></td>
+</tr>
+<tr class="row-odd"><td><p>stop_time</p></td>
+<td><p>31536000</p></td>
+<td><p>s</p></td>
+<td><p>Simulation end time (1 year)</p></td>
+</tr>
+<tr class="row-even"><td><p>timestep</p></td>
+<td><p>900</p></td>
+<td><p>s</p></td>
+<td><p>Time resolution (15 min)</p></td>
+</tr>
+<tr class="row-odd"><td><p>tolerance</p></td>
+<td><p>1e-6</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><p>Solver tolerance</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pipes-sheet">
+<h3>Pipes Sheet<a class="headerlink" href="#pipes-sheet" title="Permalink to this heading"></a></h3>
+<p>Parameters for pipe components.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Example Value</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>template</p></td>
+<td><p>AixLib.Fluid..</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><p>Modelica template name</p></td>
+</tr>
+<tr class="row-odd"><td><p>diameter</p></td>
+<td><p>&#64;diameter</p></td>
+<td><p>m</p></td>
+<td><p>Pipe inner diameter (from graph)</p></td>
+</tr>
+<tr class="row-even"><td><p>roughness</p></td>
+<td><p>2.5e-5</p></td>
+<td><p>m</p></td>
+<td><p>Surface roughness</p></td>
+</tr>
+<tr class="row-odd"><td><p>dp_nominal</p></td>
+<td><p>0.1</p></td>
+<td><p>bar</p></td>
+<td><p>Nominal pressure drop</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="supply-sheet">
+<h3>Supply Sheet<a class="headerlink" href="#supply-sheet" title="Permalink to this heading"></a></h3>
+<p>Parameters for supply station components.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Example Value</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>template</p></td>
+<td><p>AixLib.Fluid..</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><p>Modelica template name</p></td>
+</tr>
+<tr class="row-odd"><td><p>TIn</p></td>
+<td><p>353.15</p></td>
+<td><p>K</p></td>
+<td><p>Supply temperature (constant)</p></td>
+</tr>
+<tr class="row-even"><td><p>dpIn</p></td>
+<td><p>150000</p></td>
+<td><p>Pa</p></td>
+<td><p>Pressure difference</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="demands-sheet">
+<h3>Demands Sheet<a class="headerlink" href="#demands-sheet" title="Permalink to this heading"></a></h3>
+<p>Parameters for demand substation components.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>&#64;References</strong>: Parameters starting with <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> reference graph attributes.</p>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">&#64;diameter</span></code> reads the <code class="docutils literal notranslate"><span class="pre">diameter</span></code> attribute from each edge in your graph.</p>
+</div>
+</section>
+</section>
+<section id="parameter-priority">
+<h2>Parameter Priority<a class="headerlink" href="#parameter-priority" title="Permalink to this heading"></a></h2>
+<p>When a parameter is defined in multiple places, the pipeline uses this priority order (highest to lowest):</p>
+<p><strong>1. Graph attributes</strong> (your UESGraph)</p>
+<blockquote>
+<div><p>Values you set directly in your graph always take precedence.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">][</span><span class="s1">&#39;dp_nominal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># This value wins!</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>2. Excel values</strong> (configuration file)</p>
+<blockquote>
+<div><p>Default values from your Excel configuration.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Excel Pipes Sheet:
+dp_nominal = 0.1
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>3. Modelica defaults</strong> (built-in)</p>
+<blockquote>
+<div><p>For optional (AUX) parameters only. If neither graph nor Excel has a value, Modelica uses its built-in default.</p>
+</div></blockquote>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scenario:</span>
+<span class="c1"># - Graph: dp_nominal = 0.05</span>
+<span class="c1"># - Excel: dp_nominal = 0.1</span>
+<span class="c1"># - Modelica default: 0.0</span>
+
+<span class="c1"># Result: dp_nominal = 0.05  ← Graph wins!</span>
+</pre></div>
+</div>
+<p>This allows you to:</p>
+<ul class="simple">
+<li><p>Set <strong>general defaults</strong> in Excel (applied to all components)</p></li>
+<li><p>Override <strong>specific components</strong> in your graph (component-specific values)</p></li>
+<li><p>Rely on <strong>Modelica defaults</strong> for optional parameters you don’t care about</p></li>
+</ul>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h2>
+<section id="common-issues">
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Permalink to this heading"></a></h3>
+<p><strong>“Required MAIN parameter missing”</strong></p>
+<blockquote>
+<div><p>Excel doesn’t have this parameter. Add it to the corresponding sheet (Pipes/Supply/Demands).</p>
+</div></blockquote>
+<p><strong>“Attribute not found” for &#64;reference</strong></p>
+<blockquote>
+<div><p>Graph doesn’t have this attribute. Either:</p>
+<ul class="simple">
+<li><p>Add it to your graph: <code class="docutils literal notranslate"><span class="pre">graph.nodes[node]['attr_name']</span> <span class="pre">=</span> <span class="pre">value</span></code></p></li>
+<li><p>Change Excel to use a direct value instead of <code class="docutils literal notranslate"><span class="pre">&#64;attr_name</span></code></p></li>
+</ul>
+</div></blockquote>
+<p><strong>“Connector not linked”</strong></p>
+<blockquote>
+<div><p>Wrong attribute name convention. For demand connectors:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Q_flow_input</span></code> expects <code class="docutils literal notranslate"><span class="pre">input_heat</span></code> in graph</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Q_flow_cool</span></code> expects <code class="docutils literal notranslate"><span class="pre">input_cool</span></code> in graph</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Q_flow_dhw</span></code> expects <code class="docutils literal notranslate"><span class="pre">input_dhw</span></code> in graph</p></li>
+</ul>
+</div></blockquote>
+<p><strong>CSV files have wrong length</strong></p>
+<blockquote>
+<div><p>Demand and ground temperature CSV files must have the same number of timesteps.</p>
+<p>Calculate expected rows: <code class="docutils literal notranslate"><span class="pre">(stop_time</span> <span class="pre">/</span> <span class="pre">timestep)</span> <span class="pre">+</span> <span class="pre">1</span></code></p>
+</div></blockquote>
+<p><strong>Template not found</strong></p>
+<blockquote>
+<div><p>Template name in Excel doesn’t match filename. Check:</p>
+<ul class="simple">
+<li><p>Template files in <code class="docutils literal notranslate"><span class="pre">uesgraphs/data/templates/network/{pipe,supply,demand}/</span></code></p></li>
+<li><p>Exact filename (without <code class="docutils literal notranslate"><span class="pre">.mako</span></code> extension)</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="debug-mode">
+<h3>Debug Mode<a class="headerlink" href="#debug-mode" title="Permalink to this heading"></a></h3>
+<p>Enable detailed logging:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="n">uesgraph_to_modelica</span><span class="p">(</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span>  <span class="c1"># Shows all processing steps</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../architecture/modelica_pipeline.html"><span class="doc">UESGraphs Modelica Code Generation Pipeline</span></a> - Technical architecture details</p></li>
+<li><p><a class="reference internal" href="hydronic_sizing.html"><span class="doc">Hydraulic Network Sizing</span></a> - How to size your network before model generation</p></li>
+<li><p><a class="reference internal" href="../architecture/graph_transformation.html"><span class="doc">Graph Transformation</span></a> - Mapping simulation results back to UESGraph</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="UESgraphs: Automated graph-based simulation model generation and analysis tool" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hydronic_sizing.html" class="btn btn-neutral float-right" title="Hydraulic Network Sizing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

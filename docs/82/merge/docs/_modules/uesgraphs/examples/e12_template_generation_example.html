@@ -1,0 +1,596 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.examples.e12_template_generation_example &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/Template_Generation.html">Template Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.examples.e12_template_generation_example</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.examples.e12_template_generation_example</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Comprehensive Mako Template Generation for UESGraphs Modelica Components</span>
+<span class="sd">=====================================================================</span>
+
+<span class="sd">This module demonstrates three different approaches to generating Mako templates </span>
+<span class="sd">for AixLib component types, providing a complete learning experience from manual </span>
+<span class="sd">step-by-step generation to automated production workflows.</span>
+
+<span class="sd">Template Generation Methods:</span>
+<span class="sd">---------------------------</span>
+<span class="sd">1. **Manual Method**: Step-by-step individual template generation</span>
+<span class="sd">   - Educational approach showing internal workings</span>
+<span class="sd">   - Individual UESTemplates instantiation for each model</span>
+<span class="sd">   - Custom save paths and immediate testing</span>
+<span class="sd">   - Full visibility into the generation process</span>
+
+<span class="sd">2. **Bulk Method**: Efficient batch generation</span>
+<span class="sd">   - Single generate_bulk() call for multiple models</span>
+<span class="sd">   - Organized error handling and reporting</span>
+<span class="sd">   - Suitable for moderate-scale template generation</span>
+
+<span class="sd">3. **Configuration-Driven Method**: Production-ready automation</span>
+<span class="sd">   - Uses JSON configuration files</span>
+<span class="sd">   - Environment variable integration</span>
+<span class="sd">   - Rigorous mode for automated overwriting</span>
+<span class="sd">   - Ideal for CI/CD and automated workflows</span>
+
+<span class="sd">Component Types:</span>
+<span class="sd">--------------</span>
+<span class="sd">1. Demand Models:</span>
+<span class="sd">   - Variable supply temperature models</span>
+<span class="sd">   - Heat pump models with Carnot cycle</span>
+<span class="sd">   - Closed-loop DHC substation models</span>
+<span class="sd">   - Templates include parameters for temperature differences and nominal conditions</span>
+
+<span class="sd">2. Pipe Models:</span>
+<span class="sd">   - Static pipe model</span>
+<span class="sd">   - Plug flow pipe models (standard and embedded)</span>
+<span class="sd">   - Plug flow pipe with zeta value</span>
+<span class="sd">   - DHC pipe models</span>
+<span class="sd">   - Templates include thermal and geometric parameters</span>
+
+<span class="sd">3. Supply Models:</span>
+<span class="sd">   - Ideal source models for open-loop systems</span>
+<span class="sd">   - DHC supply models with heater/cooler/storage</span>
+<span class="sd">   - Templates include pressure and temperature parameters</span>
+
+<span class="sd">Educational Progression:</span>
+<span class="sd">----------------------</span>
+<span class="sd">This example is designed for researchers and developers who want to understand:</span>
+<span class="sd">- How template generation works internally (Manual Method)</span>
+<span class="sd">- How to efficiently generate multiple templates (Bulk Method) </span>
+<span class="sd">- How to set up automated template generation workflows (Config Method)</span>
+
+<span class="sd">Requirements:</span>
+<span class="sd">-----------</span>
+<span class="sd">- AixLib v2.1.0+ library installation</span>
+<span class="sd">- UESGraphs package with systemmodels module</span>
+<span class="sd">- Shapely for geometric operations</span>
+<span class="sd">- Optional: AIXLIB_LIBRARY_PATH environment variable for automated workflows</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">-----</span>
+<span class="sd">Run the script and select from four demonstration modes:</span>
+<span class="sd">1. Manual demonstration - See step-by-step template creation</span>
+<span class="sd">2. Bulk demonstration - See efficient batch processing  </span>
+<span class="sd">3. Config demonstration - See automated configuration-driven generation</span>
+<span class="sd">4. All methods - Experience the complete progression</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels.templates</span><span class="w"> </span><span class="kn">import</span> <span class="n">UESTemplates</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tkinter</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tk</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tkinter.filedialog</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">filedialog</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.examples</span><span class="w"> </span><span class="kn">import</span> <span class="n">e1_readme_example</span> <span class="k">as</span> <span class="n">e1</span>
+
+
+<div class="viewcode-block" id="get_test_data"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.get_test_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_test_data</span><span class="p">(</span><span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get sample test data for different model types&quot;&quot;&quot;</span>
+    <span class="n">base_data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">sg</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mf">64.76</span><span class="p">,</span> <span class="mf">217.14</span><span class="p">),</span>
+        <span class="s2">&quot;comp_model&quot;</span><span class="p">:</span> <span class="n">model_name</span><span class="p">,</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Demand&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="o">**</span><span class="n">base_data</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;B1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="p">:</span> <span class="s2">&quot;building&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_heating&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_cooling&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_electricity&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_gas&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_other&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;has_table&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;dTDesign&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+            <span class="s2">&quot;dTBuilding&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;TSupplyBuilding&quot;</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span>
+            <span class="s2">&quot;m_flow_nominal&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;m_flo_bypass&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="s2">&quot;Q_flow_nominal&quot;</span><span class="p">:</span> <span class="mf">22719.1187448</span><span class="p">,</span>
+            <span class="s2">&quot;TReturn&quot;</span><span class="p">:</span> <span class="mf">323.15</span><span class="p">,</span>
+            <span class="s2">&quot;_dp_start&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Pipe&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="o">**</span><span class="n">base_data</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;P1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="p">:</span> <span class="s2">&quot;pipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;m_flow_nominal&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mi">666</span><span class="p">,</span>
+            <span class="s2">&quot;dIns&quot;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+            <span class="s2">&quot;kIns&quot;</span><span class="p">:</span> <span class="mf">0.0032</span><span class="p">,</span>
+            <span class="s2">&quot;nPorts&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Supply&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="o">**</span><span class="n">base_data</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;S1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="p">:</span> <span class="s2">&quot;building&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_heating&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_cooling&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_electricity&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_gas&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;is_supply_other&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;has_table&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;pReturn&quot;</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span>
+            <span class="s2">&quot;TReturn&quot;</span><span class="p">:</span> <span class="mf">293.15</span><span class="p">,</span>
+        <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="demonstrate_manual_generation"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.demonstrate_manual_generation">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">demonstrate_manual_generation</span><span class="p">(</span><span class="n">path_aixlib</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">workspace</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Method 1: Manual step-by-step template generation</span>
+
+<span class="sd">    This approach shows exactly how template generation works internally.</span>
+<span class="sd">    Each template is created individually with full control over the process.</span>
+<span class="sd">    This is the best method for learning and debugging.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: Number of successfully generated templates</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;METHOD 1: MANUAL TEMPLATE GENERATION&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This method demonstrates step-by-step individual template creation.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You&#39;ll see exactly how each template is generated and tested.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Define models for manual generation (smaller set for clarity)</span>
+    <span class="n">manual_models</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Demand&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Demands.OpenLoop.VarTSupplyDp&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Pipe&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Pipes.StaticPipe&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Supply&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Supplies.OpenLoop.SourceIdeal&quot;</span><span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="n">total_models</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">models</span><span class="p">)</span> <span class="k">for</span> <span class="n">models</span> <span class="ow">in</span> <span class="n">manual_models</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">successful</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Generating </span><span class="si">{</span><span class="n">total_models</span><span class="si">}</span><span class="s2"> templates manually...&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Process each model type individually</span>
+    <span class="k">for</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">model_names</span> <span class="ow">in</span> <span class="n">manual_models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- Processing </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2"> Models ---&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">model_names</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Step 1: Creating UESTemplates instance for </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">template_gen</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="n">model_type</span><span class="p">)</span>
+
+            <span class="c1"># Custom save path (demonstrates flexibility of manual approach)</span>
+            <span class="n">custom_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;manual_&quot;</span> <span class="o">+</span> <span class="n">model_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.mako&quot;</span><span class="p">)</span>
+            <span class="n">template_gen</span><span class="o">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="n">custom_path</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step 2: Setting custom save path to </span><span class="si">{</span><span class="n">custom_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step 3: Generating new template from AixLib library...&quot;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">template_gen</span><span class="o">.</span><span class="n">generate_new_template</span><span class="p">(</span><span class="n">path_library</span><span class="o">=</span><span class="n">path_aixlib</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Template generated successfully&quot;</span><span class="p">)</span>
+                <span class="n">successful</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c1"># Immediate testing (advantage of manual approach)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step 4: Testing template with sample data...&quot;</span><span class="p">)</span>
+                <span class="n">test_data</span> <span class="o">=</span> <span class="n">get_test_data</span><span class="p">(</span><span class="n">model_type</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">test_data</span><span class="p">:</span>
+                    <span class="c1"># Create fresh instance for rendering</span>
+                    <span class="n">render_gen</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="n">model_type</span><span class="p">)</span>
+                    <span class="n">mo</span> <span class="o">=</span> <span class="n">render_gen</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">node_data</span><span class="o">=</span><span class="n">test_data</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">number_of_instances</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                    <span class="c1"># Show full generated code (educational value)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Template test successful!&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated Modelica code (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mo</span><span class="p">)</span><span class="si">}</span><span class="s2"> characters):&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">mo</span><span class="p">[:</span><span class="mi">300</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mo</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">300</span> <span class="k">else</span> <span class="n">mo</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: No test data available for </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FAILED: Error generating template: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- Manual Generation Summary ---&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">successful</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: </span><span class="si">{</span><span class="n">successful</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total_models</span><span class="si">}</span><span class="s2"> templates generated successfully&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Templates saved in: </span><span class="si">{</span><span class="n">workspace</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FAILED: No templates were generated successfully (</span><span class="si">{</span><span class="n">successful</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total_models</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">successful</span></div>
+
+
+<div class="viewcode-block" id="demonstrate_bulk_generation"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.demonstrate_bulk_generation">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">demonstrate_bulk_generation</span><span class="p">(</span><span class="n">path_aixlib</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">workspace</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Method 2: Bulk template generation</span>
+
+<span class="sd">    This approach uses the generate_bulk() method to efficiently create</span>
+<span class="sd">    multiple templates with organized error handling. Good for moderate</span>
+<span class="sd">    scale template generation.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: Number of successfully generated templates</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;METHOD 2: BULK TEMPLATE GENERATION&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This method demonstrates efficient batch processing of multiple templates.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Better error handling and reporting compared to manual approach.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Extended model set for bulk generation</span>
+    <span class="n">bulk_models</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Demand&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Demands.OpenLoop.VarTSupplyDp&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Demands.OpenLoop.HeatPumpCarnot&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Pipe&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Pipes.StaticPipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;AixLib.Fluid.FixedResistances.PlugFlowPipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Pipes.PlugFlowPipeZeta&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Supply&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;AixLib.Fluid.DistrictHeatingCooling.Supplies.OpenLoop.SourceIdeal&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="n">total_models</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">models</span><span class="p">)</span> <span class="k">for</span> <span class="n">models</span> <span class="ow">in</span> <span class="n">bulk_models</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Generating </span><span class="si">{</span><span class="n">total_models</span><span class="si">}</span><span class="s2"> templates using bulk method...&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Single call to generate all templates</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Calling UESTemplates.generate_bulk()...&quot;</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="o">.</span><span class="n">generate_bulk</span><span class="p">(</span>
+        <span class="n">bulk_models</span><span class="p">,</span>
+        <span class="n">path_aixlib</span><span class="p">,</span>
+        <span class="n">workspace</span><span class="o">=</span><span class="n">workspace</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Organized result reporting</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- Bulk Generation Results ---&quot;</span><span class="p">)</span>
+    <span class="n">successful</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully generated: </span><span class="si">{</span><span class="n">successful</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total_models</span><span class="si">}</span><span class="s2"> templates&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">successful</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">SUCCESS: Successful templates:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  • </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">successful</span> <span class="o">&lt;</span> <span class="n">total_models</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">FAILED: Failed templates:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  • </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Test rendering for successful templates</span>
+    <span class="k">if</span> <span class="n">successful</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- Testing Template Rendering ---&quot;</span><span class="p">)</span>
+        <span class="n">tested</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">model_names</span> <span class="ow">in</span> <span class="n">bulk_models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">model_names</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">results</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">results</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">):</span>
+                    <span class="n">test_data</span> <span class="o">=</span> <span class="n">get_test_data</span><span class="p">(</span><span class="n">model_type</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">test_data</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">template_gen</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="n">model_type</span><span class="p">)</span>
+                            <span class="n">mo</span> <span class="o">=</span> <span class="n">template_gen</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">node_data</span><span class="o">=</span><span class="n">test_data</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">number_of_instances</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                            <span class="n">tested</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> - Rendered </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mo</span><span class="p">)</span><span class="si">}</span><span class="s2"> characters&quot;</span><span class="p">)</span>
+                        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FAILED: </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> - Render error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- Bulk Generation Summary ---&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: </span><span class="si">{</span><span class="n">tested</span><span class="si">}</span><span class="s2"> templates tested successfully&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Templates saved in: </span><span class="si">{</span><span class="n">workspace</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- Bulk Generation Summary ---&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FAILED: No templates were generated successfully&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">successful</span></div>
+
+
+<div class="viewcode-block" id="demonstrate_config_generation"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.demonstrate_config_generation">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">demonstrate_config_generation</span><span class="p">(</span><span class="n">workspace</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Method 3: Configuration-driven template generation</span>
+
+<span class="sd">    This approach uses JSON configuration files and environment variables</span>
+<span class="sd">    for fully automated template generation. Ideal for production workflows</span>
+<span class="sd">    and CI/CD integration.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: Number of successfully generated templates</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;METHOD 3: CONFIGURATION-DRIVEN GENERATION&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This method demonstrates automated template generation from configuration.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Uses JSON files and environment variables - ideal for production use.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Check for environment variable (production approach)</span>
+    <span class="n">aixlib_env</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;AIXLIB_LIBRARY_PATH&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">aixlib_env</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Found AIXLIB_LIBRARY_PATH environment variable: </span><span class="si">{</span><span class="n">aixlib_env</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">path_info</span> <span class="o">=</span> <span class="s2">&quot;environment variable&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: AIXLIB_LIBRARY_PATH not set - will use interactive file selection&quot;</span><span class="p">)</span>
+        <span class="n">path_info</span> <span class="o">=</span> <span class="s2">&quot;interactive selection&quot;</span>
+
+    <span class="n">config_file</span> <span class="o">=</span> <span class="s2">&quot;data/templates/template_aixlib_components.json&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using configuration file: </span><span class="si">{</span><span class="n">config_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="c1"># Rigorous mode (automated overwriting)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- Rigorous Mode ---&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Regenerating with rigorous mode (auto-overwrite for automation)...&quot;</span><span class="p">)</span>
+        <span class="n">results_rigorous</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="o">.</span><span class="n">generate_from_config</span><span class="p">(</span>
+            <span class="n">config_file</span><span class="p">,</span>
+            <span class="n">workspace</span><span class="o">=</span><span class="n">workspace</span><span class="p">,</span>
+            <span class="n">rigorous</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># Flag that enforces overwriting</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Report final results</span>
+        <span class="n">successful</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results_rigorous</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">))</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results_rigorous</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- Configuration Generation Results ---&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully generated: </span><span class="si">{</span><span class="n">successful</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2"> templates&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AixLib path source: </span><span class="si">{</span><span class="n">path_info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">successful</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">SUCCESS: Successfully generated templates:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">template_path</span> <span class="ow">in</span> <span class="n">results_rigorous</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">template_path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  • </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Templates saved in: </span><span class="si">{</span><span class="n">workspace</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">successful</span> <span class="o">&lt;</span> <span class="n">total</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">FAILED: Failed templates:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results_rigorous</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  • </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">successful</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">FAILED: No templates were generated successfully&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">successful</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FAILED: Configuration generation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This might happen if the JSON config file is not found or AixLib path is invalid.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="get_user_choice"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.get_user_choice">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_user_choice</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get user&#39;s choice for demonstration method&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;UESGRAPHS TEMPLATE GENERATION DEMONSTRATION&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Choose a demonstration method:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1. Manual Method - Step-by-step individual template generation (Educational)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2. Bulk Method - Efficient batch processing (Practical)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3. Config Method - Automated configuration-driven generation (Production)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4. All Methods - Complete demonstration of all approaches&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5. Exit&quot;</span><span class="p">)</span>
+    
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">choice</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Enter your choice (1-5): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">choice</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please enter a number between 1 and 5.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Exiting...&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">5</span></div>
+
+
+<div class="viewcode-block" id="get_aixlib_path"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.get_aixlib_path">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_aixlib_path</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get AixLib library path via file dialog&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- AixLib Library Path Selection ---&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; A file dialog will open to select the AixLib &#39;package.mo&#39; file. If you cant see it, check all open windows.&quot;</span><span class="p">)</span>
+    <span class="c1"># Hide the root Tkinter window</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Tk</span><span class="p">()</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">withdraw</span><span class="p">()</span>
+    
+    <span class="c1"># Open file dialog</span>
+    <span class="n">path_aixlib</span> <span class="o">=</span> <span class="n">filedialog</span><span class="o">.</span><span class="n">askopenfilename</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Select AixLib package.mo file&quot;</span><span class="p">,</span>
+        <span class="n">filetypes</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;Modelica package file&quot;</span><span class="p">,</span> <span class="s2">&quot;package.mo&quot;</span><span class="p">)]</span>
+    <span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">path_aixlib</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Selected AixLib path: </span><span class="si">{</span><span class="n">path_aixlib</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">path_aixlib</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FAILED: No file selected.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main function with method selection&quot;&quot;&quot;</span>
+    <span class="n">choice</span> <span class="o">=</span> <span class="n">get_user_choice</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Goodbye!&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Create workspace</span>
+    <span class="n">workspace</span> <span class="o">=</span> <span class="n">e1</span><span class="o">.</span><span class="n">workspace_example</span><span class="p">(</span><span class="s2">&quot;e12&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: Created workspace: </span><span class="si">{</span><span class="n">workspace</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get AixLib path for methods that need it</span>
+    <span class="n">path_aixlib</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">choice</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+        <span class="n">path_aixlib</span> <span class="o">=</span> <span class="n">get_aixlib_path</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path_aixlib</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AixLib path is required for the selected method(s). Exiting.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+    <span class="c1"># Execute selected demonstration(s) and track success</span>
+    <span class="n">total_successful</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">total_successful</span> <span class="o">=</span> <span class="n">demonstrate_manual_generation</span><span class="p">(</span><span class="n">path_aixlib</span><span class="p">,</span> <span class="n">workspace</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">total_successful</span> <span class="o">=</span> <span class="n">demonstrate_bulk_generation</span><span class="p">(</span><span class="n">path_aixlib</span><span class="p">,</span> <span class="n">workspace</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">total_successful</span> <span class="o">=</span> <span class="n">demonstrate_config_generation</span><span class="p">(</span><span class="n">workspace</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="c1"># All methods demonstration</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🚀 Running complete demonstration of all template generation methods...&quot;</span><span class="p">)</span>
+        <span class="n">manual_success</span> <span class="o">=</span> <span class="n">demonstrate_manual_generation</span><span class="p">(</span><span class="n">path_aixlib</span><span class="p">,</span> <span class="n">workspace</span><span class="p">)</span>
+        <span class="n">bulk_success</span> <span class="o">=</span> <span class="n">demonstrate_bulk_generation</span><span class="p">(</span><span class="n">path_aixlib</span><span class="p">,</span> <span class="n">workspace</span><span class="p">)</span>
+        <span class="n">config_success</span> <span class="o">=</span> <span class="n">demonstrate_config_generation</span><span class="p">(</span><span class="n">workspace</span><span class="p">)</span>
+        <span class="n">total_successful</span> <span class="o">=</span> <span class="n">manual_success</span> <span class="o">+</span> <span class="n">bulk_success</span> <span class="o">+</span> <span class="n">config_success</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;COMPLETE DEMONSTRATION FINISHED&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You have now seen all three approaches to template generation:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;• Manual: Best for learning and debugging&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;• Bulk: Best for moderate-scale generation&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;• Config: Best for production and automation&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Total templates generated across all methods: </span><span class="si">{</span><span class="n">total_successful</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Final summary</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">total_successful</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUCCESS: </span><span class="si">{</span><span class="n">total_successful</span><span class="si">}</span><span class="s2"> template(s) generated successfully&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Templates saved to: </span><span class="si">{</span><span class="n">workspace</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FAILED: No templates were generated successfully&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please check the error messages above for details&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

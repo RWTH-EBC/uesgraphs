@@ -1,0 +1,396 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.Visuals &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">uesgraphs.Visuals</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/uesgraphs.Visuals.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="uesgraphs-visuals">
+<h1>uesgraphs.Visuals<a class="headerlink" href="#uesgraphs-visuals" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="uesgraphs.Visuals">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">uesgraphs.</span></span><span class="sig-name descname"><span class="pre">Visuals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.Visuals" title="Permalink to this definition"></a></dt>
+<dd><p>Visualizes a uesgraph by networkX graph drawing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>uesgraph</strong> (<em>uesgraphs.uesgraph.UESGraph object</em>) – The visualization output will be following the graph layout
+specified in the input uesgraph</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.Visuals.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.Visuals.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Constructor for <cite>Visuals</cite></p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id0" title="uesgraphs.Visuals.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(uesgraph[, log_level])</p></td>
+<td><p>Constructor for <cite>Visuals</cite></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.Visuals.create_plot" title="uesgraphs.Visuals.create_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_plot</span></code></a>(ax[, labels, show_diameters, ...])</p></td>
+<td><p>Creates the plot setup, that can be shown or saved to file</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.Visuals.create_plot_3d" title="uesgraphs.Visuals.create_plot_3d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_plot_3d</span></code></a>(ax[, z_attrib, show_flow, ...])</p></td>
+<td><p>Creates the plot setup for a 3d view</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.Visuals.create_plot_simple" title="uesgraphs.Visuals.create_plot_simple"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_plot_simple</span></code></a>(ax[, scaling_factor])</p></td>
+<td><p>Creates a very simple plot setup for fast performance</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.Visuals.network_explosion" title="uesgraphs.Visuals.network_explosion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">network_explosion</span></code></a>([save_as, show_plot, ...])</p></td>
+<td><p>Shows a plot of the network in 3d view</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#uesgraphs.Visuals.show_3d" title="uesgraphs.Visuals.show_3d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_3d</span></code></a>([save_as, show_plot, show_flow, ...])</p></td>
+<td><p>Shows an explosion plot of stacked networks in 3d view</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uesgraphs.Visuals.show_network" title="uesgraphs.Visuals.show_network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_network</span></code></a>([save_as, show_plot, labels, ...])</p></td>
+<td><p>Shows a plot of the network</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
+<dd><p>Constructor for <cite>Visuals</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.Visuals.create_plot_simple">
+<span class="sig-name descname"><span class="pre">create_plot_simple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.create_plot_simple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.Visuals.create_plot_simple" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a very simple plot setup for fast performance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>maplotlib ax object</em>) – </p></li>
+<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
+the edge widths</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ax</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>maplotlib ax object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.Visuals.create_plot">
+<span class="sig-name descname"><span class="pre">create_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_diameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_mass_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_press_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_press_drop_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_temperature_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_markers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_markers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_diameter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_temperatures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_pressures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_pressure_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_temperature_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_temperature_diff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor_diameter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxtemp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmflow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmpress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmpressdrop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmvelocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmtempdrop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generic_intensive_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generic_extensive_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.create_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.Visuals.create_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Creates the plot setup, that can be shown or saved to file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>maplotlib ax object</em>) – </p></li>
+<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to <cite>‘street’</cite>, node numbers of street nodes are shown in
+plot</p></li>
+<li><p><strong>show_diameters</strong> (<em>boolean</em>) – True if edges of heating networks should show the relative diameter
+of the pipe, False if not</p></li>
+<li><p><strong>show_mass_flows</strong> (<em>boolean</em>) – True if edges of heating networks should show the mass flow rate
+through the pipe, False if not</p></li>
+<li><p><strong>show_press_flows</strong> (<em>boolean</em>) – True if edges of heating networks should show the pressure
+through the pipe, False if not</p></li>
+<li><p><strong>show_press_drop_flows</strong> (<em>boolean</em>) – True if edges of heating networks should show the pressure drop
+through the pipe, False if not</p></li>
+<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Fontsize for optional labels</p></li>
+<li><p><strong>edge_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of edges that should be marked in the plot</p></li>
+<li><p><strong>node_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of nodes that should be marked in the plot</p></li>
+<li><p><strong>add_edge_temperatures</strong> (<em>boolean</em>) – Plots edge temperatures on top of plot if True</p></li>
+<li><p><strong>add_edge_flows</strong> (<em>boolean</em>) – Plots edge width according to flow rates in the networks if True</p></li>
+<li><p><strong>add_edge_pressures</strong> (<em>boolean</em>) – Plots edge pressure on top of plot if True</p></li>
+<li><p><strong>add_edge_pressure_drop</strong> (<em>boolean</em>) – Plots edge pressure drop on top of plot if True</p></li>
+<li><p><strong>add_edge_electricity</strong> (<em>boolean</em>) – Plots edge electricity on top of plot if True</p></li>
+<li><p><strong>directions</strong> (<em>boolean</em>) – Plots arrows for flow directions if True; If add_edge_flows is
+False, these arrows will show the initial assumed flow direction.
+If add_edge_flows is True, the arrows show the calculated flow
+direction.</p></li>
+<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
+the edge widths</p></li>
+<li><p><strong>scaling_factor_diameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the width of lines for show_diameters = True</p></li>
+<li><p><strong>generic_intensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
+values of the attribute with the given string</p></li>
+<li><p><strong>generic_extensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
+values of the attribute with the given string</p></li>
+<li><p><strong>minmax</strong> (<em>array</em>) – Contains the minimum and maximum values for the generic size
+in format [min, max]</p></li>
+<li><p><strong>zero_alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Alpha value to paint certain edges transparent. Look at docstring
+of paint_edges_extensive_sizes for more information</p></li>
+<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the colormap to use for visualization (default=’viridis’).
+Common options include ‘viridis’, ‘coolwarm’, ‘RdYlGn’, ‘plasma’,
+‘Blues’. For temperature data, ‘coolwarm’ or ‘RdYlGn’ provide
+intuitive red=hot, blue=cold color semantics.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ax</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>maplotlib ax object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.Visuals.create_plot_3d">
+<span class="sig-name descname"><span class="pre">create_plot_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_attrib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pressure'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_flow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">110</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.create_plot_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.Visuals.create_plot_3d" title="Permalink to this definition"></a></dt>
+<dd><p>Creates the plot setup for a 3d view</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>maplotlib ax object</em>) – </p></li>
+<li><p><strong>z_attrib</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Keyword to control which attribute of nodes will be used for
+the z-coordinate</p></li>
+<li><p><strong>show_flow</strong> (<em>boolean</em>) – Varies linewidth of the edges if True</p></li>
+<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – View angle for 3d plot</p></li>
+<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Fontsize for labels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ax</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>maplotlib ax object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.Visuals.show_network">
+<span class="sig-name descname"><span class="pre">show_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_diameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_mass_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_press_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_press_drop_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_temperature_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_markers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_markers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_diameter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_temperatures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_temperature_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_temperature_diff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_flows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_pressures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_pressure_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_edge_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor_diameter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simple</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">150</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxtemp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmflow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmpress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmpressdrop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmvelocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmaxmtempdrop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generic_intensive_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generic_extensive_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.show_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.Visuals.show_network" title="Permalink to this definition"></a></dt>
+<dd><p>Shows a plot of the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – optional parameter, string denoting full path and file name +
+extension for saving the plot</p></li>
+<li><p><strong>show_plot</strong> (<em>boolean</em>) – True if the plot should be shown in the current Python instance,
+False if not</p></li>
+<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to <cite>‘street’</cite>, node numbers of street nodes are shown in
+plot</p></li>
+<li><p><strong>show_diameters</strong> (<em>boolean</em>) – True if edges of heating networks should show the relative diameter
+of the pipe, False if not</p></li>
+<li><p><strong>show_mass_flows</strong> (<em>boolean</em>) – True if edges of heating networks should show the mass flow rate
+through the pipe, False if not</p></li>
+<li><p><strong>show_press_flows</strong> (<em>boolean</em>) – True if edges of heating networks should show the pressure
+through the pipe, False if not</p></li>
+<li><p><strong>show_press_drop_flows</strong> (<em>boolean</em>) – True if edges of heating networks should show the pressure drop
+through the pipe, False if not</p></li>
+<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Fontsize for optional labels</p></li>
+<li><p><strong>edge_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of edges that should be marked in the plot</p></li>
+<li><p><strong>node_markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of nodes that should be marked in the plot</p></li>
+<li><p><strong>add_edge_temperatures</strong> (<em>boolean</em>) – Plots edge temperatures on top of plot if True</p></li>
+<li><p><strong>add_edge_flows</strong> (<em>boolean</em>) – Plots edge width according to flow rates in the networks if True</p></li>
+<li><p><strong>add_edge_pressures</strong> (<em>boolean</em>) – Plots edge pressure on top of plot if True</p></li>
+<li><p><strong>add_edge_pressure_drop</strong> (<em>boolean</em>) – Plots edge pressure drop on top of plot if True</p></li>
+<li><p><strong>directions</strong> (<em>boolean</em>) – Plots arrows for flow directions if True; If add_edge_flows is
+False, these arrows will show the initial assumed flow direction.
+If add_edge_flows is True, the arrows show the calculated flow
+direction.</p></li>
+<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
+the edge widths</p></li>
+<li><p><strong>scaling_factor_diameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the width of lines</p></li>
+<li><p><strong>simple</strong> (<em>boolean</em>) – For very large uesgraphs, the standard plotting may take too long
+(hours…). In these cases, <cite>simple=True</cite> gives faster results</p></li>
+<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Integer to overwrite the standard resolution of 150 dpi</p></li>
+<li><p><strong>minmaxtemp</strong> (<em>array</em>) – Array with minimum and maximum temperature value for the scaling
+of the plot. If not set the values will be calculated automatically</p></li>
+<li><p><strong>minmaxmflow</strong> (<em>array</em>) – Array with minimum and maximum temperature value for the scaling
+of the plot. If not set the values will be calculated automatically</p></li>
+<li><p><strong>minmaxmpress</strong> (<em>array</em>) – Array with minimum and maximum pressure value for the scaling
+of the plot. If not set the values will be calculated automatically</p></li>
+<li><p><strong>minmaxmpressdrop</strong> (<em>array</em>) – Array with minimum and maximum pressure drop value for the scaling
+of the plot. If not set the values will be calculated automatically</p></li>
+<li><p><strong>timestamp</strong> (<em>datetime</em>) – prints the actual timestamp on the plot</p></li>
+<li><p><strong>generic_intensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
+values of the attribute with the given string</p></li>
+<li><p><strong>generic_extensive_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If set to a string, the edges will be colored according to the
+values of the attribute with the given string</p></li>
+<li><p><strong>minmax</strong> (<em>array</em>) – Contains the minimum and maximum values for the generic size
+in format [min, max]</p></li>
+<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Label for the color scale when plotting generic size</p></li>
+<li><p><strong>zero_alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Alpha value to paint certain edges transparent. Look at docstring
+of paint_edges_extensive_sizes for more information</p></li>
+<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the colormap to use for visualization (default=’viridis’).
+Common options include ‘viridis’, ‘coolwarm’, ‘RdYlGn’, ‘plasma’,
+‘Blues’. For temperature data, ‘coolwarm’ or ‘RdYlGn’ provide
+intuitive red=hot, blue=cold color semantics.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>fig</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.10.8)">matplotlib.figure.Figure</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.Visuals.show_3d">
+<span class="sig-name descname"><span class="pre">show_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_flow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_attrib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pressure'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">110</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.show_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.Visuals.show_3d" title="Permalink to this definition"></a></dt>
+<dd><p>Shows an explosion plot of stacked networks in 3d view</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – optional parameter, string denoting full path and file name +
+extension for saving the plot</p></li>
+<li><p><strong>show_plot</strong> (<em>boolean</em>) – True if the plot should be shown in the current Python instance,
+False if not</p></li>
+<li><p><strong>show_flow</strong> (<em>boolean</em>) – Varies linewidth of the edges if True</p></li>
+<li><p><strong>z_attrib</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Keyword to control which attribute of nodes will be used for
+the z-coordinate</p></li>
+<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – View angle for 3d plot</p></li>
+<li><p><strong>label_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Fontsize for optional labels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>fig</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.10.8)">matplotlib.figure.Figure</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="uesgraphs.Visuals.network_explosion">
+<span class="sig-name descname"><span class="pre">network_explosion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">networks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['all']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dotted_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/visuals.html#Visuals.network_explosion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.Visuals.network_explosion" title="Permalink to this definition"></a></dt>
+<dd><p>Shows a plot of the network in 3d view</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_as</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – optional parameter, string denoting full path and file name +
+extension for saving the plot</p></li>
+<li><p><strong>show_plot</strong> (<em>boolean</em>) – True if the plot should be shown in the current Python instance,
+False if not</p></li>
+<li><p><strong>angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – View angle for 3d plot</p></li>
+<li><p><strong>networks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Instead of [‘all’], the networks list can specify which networks
+should be plotted. Accepted items are {‘heating’, ‘cooling’,
+‘electricity’, ‘gas’, ‘others’}</p></li>
+<li><p><strong>scaling_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Factor that scales the sized of node dots in the plot relative to
+the edge widths</p></li>
+<li><p><strong>dotted_lines</strong> (<em>boolean</em>) – Optional dotted lines between different levels of network
+explosion if set to True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>fig</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.10.8)">matplotlib.figure.Figure</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

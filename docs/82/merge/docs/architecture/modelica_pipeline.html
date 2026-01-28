@@ -1,0 +1,860 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UESGraphs Modelica Code Generation Pipeline &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Graph Transformation" href="graph_transformation.html" />
+    <link rel="prev" title="Template Generation" href="../guides/Template_Generation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">UESGraphs Modelica Code Generation Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#architecture-documentation">Architecture Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#key-design-principles">Key Design Principles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#technology-stack">Technology Stack</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pipeline-architecture">Pipeline Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#high-level-flow">High-Level Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#core-components">Core Components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main-pipeline-function-uesgraph-to-modelica">1. Main Pipeline Function (<code class="docutils literal notranslate"><span class="pre">uesgraph_to_modelica</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#parameter-assignment-functions">2. Parameter Assignment Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#template-system">3. Template System</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#code-generation">4. Code Generation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#component-interaction">Component Interaction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-flow-diagram">Data Flow Diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#excel-template-system">Excel-Template System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#design-philosophy">Design Philosophy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#template-parameter-declaration">Template Parameter Declaration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#excel-sheet-structure">Excel Sheet Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-system-notation">Reference System (&#64;-notation)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-assignment-flow">Parameter Assignment Flow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#execution-order">Execution Order</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#priority-rules">Priority Rules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#resolution-process">Resolution Process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#connector-handling">Connector Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#purpose">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#declaration">Declaration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#convention-demand-data-mapping">Convention: Demand Data Mapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#time-series-conversion">Time-Series Conversion</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#validation-system">Validation System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#multi-level-validation">Multi-Level Validation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#file-validation">1. File Validation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#template-parsing">2. Template Parsing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#parameter-validation">3. Parameter Validation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#connector-validation">4. Connector Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#validation-reports">Validation Reports</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#code-generation-process">Code Generation Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#template-rendering">Template Rendering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#file-organization">File Organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code-structure">Code Structure</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#extension-guide">Extension Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#adding-a-new-component-template">Adding a New Component Template</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#for-users">For Users</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#for-developers">For Developers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#common-issues">Common Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#debug-workflow">Debug Workflow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="graph_transformation.html">Graph Transformation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">UESGraphs Modelica Code Generation Pipeline</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/architecture/modelica_pipeline.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="uesgraphs-modelica-code-generation-pipeline">
+<h1>UESGraphs Modelica Code Generation Pipeline<a class="headerlink" href="#uesgraphs-modelica-code-generation-pipeline" title="Permalink to this heading"></a></h1>
+<section id="architecture-documentation">
+<h2>Architecture Documentation<a class="headerlink" href="#architecture-documentation" title="Permalink to this heading"></a></h2>
+<p><strong>Version:</strong> 2.1 <strong>Last Updated:</strong> November 2025</p>
+</section>
+<hr class="docutils" />
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="#overview">Overview</a></p></li>
+<li><p><a class="reference external" href="#pipeline-architecture">Pipeline Architecture</a></p></li>
+<li><p><a class="reference external" href="#component-interaction">Component Interaction</a></p></li>
+<li><p><a class="reference external" href="#excel-template-system">Excel-Template System</a></p></li>
+<li><p><a class="reference external" href="#parameter-assignment-flow">Parameter Assignment Flow</a></p></li>
+<li><p><a class="reference external" href="#connector-handling">Connector Handling</a></p></li>
+<li><p><a class="reference external" href="#validation-system">Validation System</a></p></li>
+<li><p><a class="reference external" href="#code-generation-process">Code Generation Process</a></p></li>
+<li><p><a class="reference external" href="#extension-guide">Extension Guide</a></p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>The UESGraphs Modelica code generation pipeline converts district
+heating network graphs into executable Modelica simulation models. The
+pipeline uses an Excel-based configuration system that integrates with
+Mako templates to generate component-specific Modelica code.</p>
+<section id="key-design-principles">
+<h3>Key Design Principles<a class="headerlink" href="#key-design-principles" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Separation of Concerns</strong>: Network topology (graph), parameters
+(Excel), and code structure (templates) are separated</p></li>
+<li><p><strong>Convention over Configuration</strong>: Standardized naming conventions
+reduce explicit configuration</p></li>
+<li><p><strong>Validation by Design</strong>: Templates define their own requirements via
+introspection</p></li>
+<li><p><strong>Flexible Parameter Sources</strong>: Support for graph attributes, Excel
+values, and cross-references</p></li>
+</ol>
+</section>
+<section id="technology-stack">
+<h3>Technology Stack<a class="headerlink" href="#technology-stack" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Graph Representation</strong>: NetworkX-based UESGraph</p></li>
+<li><p><strong>Configuration</strong>: Excel (openpyxl)</p></li>
+<li><p><strong>Templates</strong>: Mako templating engine</p></li>
+<li><p><strong>Target Language</strong>: Modelica (AixLib components)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="pipeline-architecture">
+<h2>Pipeline Architecture<a class="headerlink" href="#pipeline-architecture" title="Permalink to this heading"></a></h2>
+<section id="high-level-flow">
+<h3>High-Level Flow<a class="headerlink" href="#high-level-flow" title="Permalink to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>GeoJSON/Graph Input
+        ↓
+   UESGraph Creation
+        ↓
+┌───────────────────────┐
+│  uesgraph_to_modelica │ ← Main Entry Point
+└───────────────────────┘
+        ↓
+   ┌─────────────────────────────┐
+   │ 1. Validate Input Files     │
+   │ 2. Load Excel Configuration │
+   │ 3. Assign Demand Data       │
+   │ 4. Assign Pipe Parameters   │
+   │ 5. Assign Supply Parameters │
+   │ 6. Assign Demand Parameters │
+   │ 7. Generate Modelica Code   │
+   └─────────────────────────────┘
+        ↓
+   Modelica .mo Files
+</pre></div>
+</div>
+</section>
+<section id="core-components">
+<h3>Core Components<a class="headerlink" href="#core-components" title="Permalink to this heading"></a></h3>
+<section id="main-pipeline-function-uesgraph-to-modelica">
+<h4>1. Main Pipeline Function (<code class="docutils literal notranslate"><span class="pre">uesgraph_to_modelica</span></code>)<a class="headerlink" href="#main-pipeline-function-uesgraph-to-modelica" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">systemmodels/model_generation_pipeline.py</span></code></p></li>
+<li><p><strong>Responsibility</strong>: Orchestrate the complete workflow</p></li>
+<li><p><strong>Input</strong>: UESGraph or JSON path, Excel config, demand CSVs, ground
+temperature data</p></li>
+<li><p><strong>Output</strong>: Timestamped directory with Modelica files</p></li>
+</ul>
+</section>
+<section id="parameter-assignment-functions">
+<h4>2. Parameter Assignment Functions<a class="headerlink" href="#parameter-assignment-functions" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">assign_pipe_parameters()</span></code>: Configure pipe network</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">assign_supply_parameters()</span></code>: Configure supply stations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">assign_demand_parameters()</span></code>: Configure demand substations</p></li>
+</ul>
+</section>
+<section id="template-system">
+<h4>3. Template System<a class="headerlink" href="#template-system" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">systemmodels/templates.py</span></code> (UESTemplates class)</p></li>
+<li><p><strong>Templates</strong>: <code class="docutils literal notranslate"><span class="pre">data/templates/network/{pipe,supply,demand}/*.mako</span></code></p></li>
+<li><p><strong>Responsibility</strong>: Define component structure and parameters</p></li>
+</ul>
+</section>
+<section id="code-generation">
+<h4>4. Code Generation<a class="headerlink" href="#code-generation" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">systemmodels/systemmodelheating.py</span></code>
+(SystemModelHeating class)</p></li>
+<li><p><strong>Responsibility</strong>: Render templates and write Modelica files</p></li>
+</ul>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="component-interaction">
+<h2>Component Interaction<a class="headerlink" href="#component-interaction" title="Permalink to this heading"></a></h2>
+<section id="data-flow-diagram">
+<h3>Data Flow Diagram<a class="headerlink" href="#data-flow-diagram" title="Permalink to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                         ┌─────────────────┐
+                         │  Excel Config   │
+                         │  (.xlsx)        │
+                         └────────┬────────┘
+                                  │
+                    ┌─────────────┴─────────────┐
+                    │                           │
+                    ↓                           ↓
+         ┌──────────────────┐        ┌─────────────────┐
+         │   Simulation     │        │  Component      │
+         │   Settings       │        │  Parameters     │
+         │   (Sheet 1)      │        │  (Sheets 2-4)   │
+         └──────────┬───────┘        └────────┬────────┘
+                    │                         │
+                    └──────────┬──────────────┘
+                               ↓
+                    ┌──────────────────────┐
+                    │  parse_template_     │
+                    │  parameters()        │
+                    │  - Reads .mako       │
+                    │  - Extracts MAIN/AUX │
+                    │  - Extracts connectors│
+                    └──────────┬───────────┘
+                               ↓
+┌─────────────┐     ┌──────────────────────┐     ┌──────────────┐
+│  UESGraph   │────→│  assign_*_parameters │────→│  UESGraph    │
+│  (input)    │     │  - Validate MAIN     │     │  (enriched)  │
+│             │     │  - Assign from Excel │     │              │
+│  - Topology │     │  - Resolve @refs     │     │  + Parameters│
+│  - Geometry │     │  - Process connectors│     │  + Connectors│
+└─────────────┘     └──────────────────────┘     └──────┬───────┘
+                                                          │
+                                                          ↓
+                                                  ┌───────────────┐
+                                                  │  Template     │
+                                                  │  Rendering    │
+                                                  │  (.mako)      │
+                                                  └───────┬───────┘
+                                                          │
+                                                          ↓
+                                                  ┌───────────────┐
+                                                  │  Modelica     │
+                                                  │  Code (.mo)   │
+                                                  └───────────────┘
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="excel-template-system">
+<h2>Excel-Template System<a class="headerlink" href="#excel-template-system" title="Permalink to this heading"></a></h2>
+<section id="design-philosophy">
+<h3>Design Philosophy<a class="headerlink" href="#design-philosophy" title="Permalink to this heading"></a></h3>
+<p>The Excel-Template system provides a <strong>declarative</strong> approach to
+parameter configuration:</p>
+<ol class="arabic simple">
+<li><p><strong>Templates Define Requirements</strong>: Templates specify their own
+parameter needs</p></li>
+<li><p><strong>Excel Provides Values</strong>: Excel sheets provide uniform values for
+component types</p></li>
+<li><p><strong>Graph Preserves Specifics</strong>: Graph attributes override Excel for
+component-specific values</p></li>
+</ol>
+</section>
+<section id="template-parameter-declaration">
+<h3>Template Parameter Declaration<a class="headerlink" href="#template-parameter-declaration" title="Permalink to this heading"></a></h3>
+<p>Templates use <strong>Python-executable defs</strong> to declare their parameters:</p>
+<div class="highlight-mako notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;%</span><span class="nb">def</span> <span class="na">name=</span><span class="s">&quot;get_main_parameters()&quot;</span><span class="cp">&gt;</span>
+<span class="x">   Q_flow_nominal dTDesign TReturn dTBuilding TSupplyBuilding</span>
+<span class="cp">&lt;/%</span><span class="nb">def</span><span class="cp">&gt;</span>
+
+<span class="cp">&lt;%</span><span class="nb">def</span> <span class="na">name=</span><span class="s">&quot;get_aux_parameters()&quot;</span><span class="cp">&gt;</span>
+<span class="x">   cp_default dp_nominal deltaM tau allowFlowReversal</span>
+<span class="cp">&lt;/%</span><span class="nb">def</span><span class="cp">&gt;</span>
+
+<span class="cp">&lt;%</span><span class="nb">def</span> <span class="na">name=</span><span class="s">&quot;get_connector_names()&quot;</span><span class="cp">&gt;</span>
+<span class="x">   Q_flow_input</span>
+<span class="cp">&lt;/%</span><span class="nb">def</span><span class="cp">&gt;</span>
+</pre></div>
+</div>
+<p><strong>Categories:</strong> - <strong>MAIN</strong>: Required parameters (pipeline fails if
+missing) - <strong>AUX</strong>: Optional parameters (Modelica defaults used if
+missing) - <strong>Connectors</strong>: Input variables requiring time-series data</p>
+</section>
+<section id="excel-sheet-structure">
+<h3>Excel Sheet Structure<a class="headerlink" href="#excel-sheet-structure" title="Permalink to this heading"></a></h3>
+<p>Each component type has a dedicated sheet:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Sheet</p></th>
+<th class="head"><p>Component Type</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Simulation</p></td>
+<td><p>System-wide</p></td>
+<td><p>Solver, time settings, medium</p></td>
+</tr>
+<tr class="row-odd"><td><p>Pipes</p></td>
+<td><p>Edges</p></td>
+<td><p>Insulation, roughness, diameter refs</p></td>
+</tr>
+<tr class="row-even"><td><p>Supply</p></td>
+<td><p>Supply nodes</p></td>
+<td><p>Max demand, pressures, temperatures</p></td>
+</tr>
+<tr class="row-odd"><td><p>Demands</p></td>
+<td><p>Demand nodes</p></td>
+<td><p>Heat exchanger settings, temperatures</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Excel Format:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Parameter</span>         <span class="o">|</span> <span class="n">Value</span>                    <span class="o">|</span> <span class="n">Unit</span>      <span class="o">|</span> <span class="n">Templates</span> <span class="o">|</span> <span class="n">Description</span>
+<span class="o">------------------|--------------------------|-----------|-----------|-------------</span>
+<span class="n">template</span>          <span class="o">|</span> <span class="n">AixLib_Fluid_</span><span class="o">...</span>         <span class="o">|</span> <span class="o">-</span>         <span class="o">|</span>           <span class="o">|</span> <span class="n">Template</span> <span class="n">name</span>
+<span class="n">dp_nominal</span>        <span class="o">|</span> <span class="mf">0.1</span>                      <span class="o">|</span> <span class="n">bar</span>       <span class="o">|</span>           <span class="o">|</span> <span class="n">Nominal</span> <span class="n">pressure</span> <span class="n">drop</span>
+<span class="n">diameter</span>          <span class="o">|</span> <span class="nd">@diameter</span>                <span class="o">|</span> <span class="n">m</span>         <span class="o">|</span>           <span class="o">|</span> <span class="n">Reference</span> <span class="n">to</span> <span class="n">graph</span> <span class="n">attr</span>
+</pre></div>
+</div>
+</section>
+<section id="reference-system-notation">
+<h3>Reference System (&#64;-notation)<a class="headerlink" href="#reference-system-notation" title="Permalink to this heading"></a></h3>
+<p>Excel values starting with <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> reference graph attributes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Excel: diameter = &quot;@diameter&quot;</span>
+<span class="c1"># For edge (n1, n2) with graph.edges[n1, n2][&#39;diameter&#39;] = 0.15:</span>
+<span class="c1">#   → Resolves to 0.15</span>
+
+<span class="c1"># Excel: TSupply = &quot;@T_heat_supply&quot;</span>
+<span class="c1"># For node &#39;bldg1&#39; with graph.nodes[&#39;bldg1&#39;][&#39;T_heat_supply&#39;] = 343.15:</span>
+<span class="c1">#   → Resolves to 343.15</span>
+</pre></div>
+</div>
+<p><strong>Benefits:</strong> - Component-specific values from GeoJSON - Type safety
+(values must exist) - Traceability (explicit data flow)</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="parameter-assignment-flow">
+<h2>Parameter Assignment Flow<a class="headerlink" href="#parameter-assignment-flow" title="Permalink to this heading"></a></h2>
+<section id="execution-order">
+<h3>Execution Order<a class="headerlink" href="#execution-order" title="Permalink to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. Load Excel sheet for component type
+   ↓
+2. Parse template to get MAIN/AUX/CONNECTOR lists
+   ↓
+3. For each component (node/edge):
+   ├─ Check MAIN parameters:
+   │  ├─ In graph? → Keep (don&#39;t overwrite)
+   │  ├─ In Excel? → Resolve and assign
+   │  └─ Missing? → ERROR
+   │
+   ├─ Check AUX parameters:
+   │  ├─ In graph? → Keep
+   │  ├─ In Excel? → Resolve and assign
+   │  └─ Missing? → WARNING (use Modelica default)
+   │
+   └─ Check CONNECTORS:
+      ├─ In graph? → Keep or convert to time-series
+      ├─ In Excel? → Resolve and convert
+      └─ Missing? → INFO (connector optional)
+</pre></div>
+</div>
+</section>
+<section id="priority-rules">
+<h3>Priority Rules<a class="headerlink" href="#priority-rules" title="Permalink to this heading"></a></h3>
+<p><strong>Parameter Priority (highest to lowest):</strong> 1. <strong>Graph attributes</strong>
+(from GeoJSON or programmatically set) 2. <strong>Excel template values</strong>
+(uniform across component type) 3. <strong>Modelica defaults</strong> (for AUX
+parameters only)</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Excel: dp_nominal = 0.1</span>
+<span class="c1"># Graph edge: graph.edges[e1, e2][&#39;dp_nominal&#39;] = 0.05</span>
+
+<span class="c1"># Result: dp_nominal = 0.05  ← Graph wins</span>
+</pre></div>
+</div>
+</section>
+<section id="resolution-process">
+<h3>Resolution Process<a class="headerlink" href="#resolution-process" title="Permalink to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">resolve_parameter_value</span><span class="p">(</span><span class="n">excel_value</span><span class="p">,</span> <span class="n">component_data</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">component_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resolve Excel value to actual parameter value.</span>
+
+<span class="sd">    Cases:</span>
+<span class="sd">    1. Direct value (number/string): Use as-is</span>
+<span class="sd">    2. @reference: Look up in component_data</span>
+<span class="sd">    3. Missing attribute: Raise ValueError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">excel_value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">excel_value</span>  <span class="c1"># Direct value</span>
+
+    <span class="k">if</span> <span class="n">excel_value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">):</span>
+        <span class="n">attr_name</span> <span class="o">=</span> <span class="n">excel_value</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># Remove @</span>
+        <span class="k">if</span> <span class="n">attr_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">component_data</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attribute &#39;</span><span class="si">{</span><span class="n">attr_name</span><span class="si">}</span><span class="s2">&#39; not found in </span><span class="si">{</span><span class="n">component_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">component_data</span><span class="p">[</span><span class="n">attr_name</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">excel_value</span>  <span class="c1"># String value</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="connector-handling">
+<h2>Connector Handling<a class="headerlink" href="#connector-handling" title="Permalink to this heading"></a></h2>
+<section id="purpose">
+<h3>Purpose<a class="headerlink" href="#purpose" title="Permalink to this heading"></a></h3>
+<p>Connectors represent <strong>dynamic inputs</strong> to Modelica components (e.g.,
+demand profiles, supply temperatures). They require <strong>time-series data</strong>
+rather than scalar values.</p>
+</section>
+<section id="declaration">
+<h3>Declaration<a class="headerlink" href="#declaration" title="Permalink to this heading"></a></h3>
+<p>Templates declare connectors via <code class="docutils literal notranslate"><span class="pre">get_connector_names()</span></code>:</p>
+<div class="highlight-mako notranslate"><div class="highlight"><pre><span></span><span class="c1">## demand/HeatPumpCarnot.mako</span>
+<span class="cp">&lt;%</span><span class="nb">def</span> <span class="na">name=</span><span class="s">&quot;get_connector_names()&quot;</span><span class="cp">&gt;</span>
+<span class="x">   Q_flow_input</span>
+<span class="cp">&lt;/%</span><span class="nb">def</span><span class="cp">&gt;</span>
+
+<span class="c1">## Template usage:</span>
+<span class="x">Modelica.Blocks.Interfaces.RealInput </span><span class="cp">${</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;Q_flow_input&#39;</span><span class="p">)</span><span class="cp">}</span>
+</pre></div>
+</div>
+</section>
+<section id="convention-demand-data-mapping">
+<h3>Convention: Demand Data Mapping<a class="headerlink" href="#convention-demand-data-mapping" title="Permalink to this heading"></a></h3>
+<p>For demand substations, a <strong>naming convention</strong> links CSV data to
+connectors:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Graph Attribute</p></th>
+<th class="head"><p>Connector Variable</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">input_heat</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Q_flow_input</span></code></p></td>
+<td><p>Heating demand profile</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">input_cool</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Q_flow_cool</span></code></p></td>
+<td><p>Cooling demand profile</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">input_dhw</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Q_flow_dhw</span></code></p></td>
+<td><p>DHW demand profile</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pipeline behavior:</strong> 1. User provides demand CSVs (heating, cooling,
+DHW) 2. Pipeline assigns to <code class="docutils literal notranslate"><span class="pre">input_heat</span></code>, <code class="docutils literal notranslate"><span class="pre">input_cool</span></code>,
+<code class="docutils literal notranslate"><span class="pre">input_dhw</span></code> graph attributes 3. If template has <code class="docutils literal notranslate"><span class="pre">Q_flow_input</span></code>
+connector: - Pipeline looks for <code class="docutils literal notranslate"><span class="pre">input_heat</span></code> attribute - Converts to
+time-series format - Saves as CSV resource file - Links in Modelica code</p>
+</section>
+<section id="time-series-conversion">
+<h3>Time-Series Conversion<a class="headerlink" href="#time-series-conversion" title="Permalink to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_process_component_connectors</span><span class="p">(</span><span class="n">component_data</span><span class="p">,</span> <span class="n">connector_params</span><span class="p">,</span> <span class="n">time_array</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert connector data to time-series format.</span>
+
+<span class="sd">    Input: connector_data = [v1, v2, ..., vn]  (Python list)</span>
+<span class="sd">    Output: [[t1, v1], [t2, v2], ..., [tn, vn]]  (time-series)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">connector_name</span> <span class="ow">in</span> <span class="n">connector_params</span><span class="p">:</span>
+        <span class="n">attr_name</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">connector_name</span><span class="p">)</span>  <span class="c1"># e.g., &quot;@input_heat&quot;</span>
+
+        <span class="k">if</span> <span class="n">attr_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">component_data</span><span class="p">[</span><span class="n">attr_name</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>  <span class="c1"># Get list from graph</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="c1"># Convert to time-series</span>
+                <span class="n">time_series</span> <span class="o">=</span> <span class="p">[[</span><span class="n">t</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">time_array</span><span class="p">,</span> <span class="n">data</span><span class="p">)]</span>
+                <span class="n">component_data</span><span class="p">[</span><span class="n">connector_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_series</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="validation-system">
+<h2>Validation System<a class="headerlink" href="#validation-system" title="Permalink to this heading"></a></h2>
+<section id="multi-level-validation">
+<h3>Multi-Level Validation<a class="headerlink" href="#multi-level-validation" title="Permalink to this heading"></a></h3>
+<section id="file-validation">
+<h4>1. File Validation<a class="headerlink" href="#file-validation" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>When</strong>: Pipeline start</p></li>
+<li><p><strong>What</strong>: Check existence of Excel, CSVs, GeoJSON</p></li>
+<li><p><strong>Failure</strong>: Immediate error</p></li>
+</ul>
+</section>
+<section id="template-parsing">
+<h4>2. Template Parsing<a class="headerlink" href="#template-parsing" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>When</strong>: Before parameter assignment</p></li>
+<li><p><strong>What</strong>: Parse template to extract MAIN/AUX/CONNECTOR lists</p></li>
+<li><p><strong>Failure</strong>: Template syntax error</p></li>
+</ul>
+</section>
+<section id="parameter-validation">
+<h4>3. Parameter Validation<a class="headerlink" href="#parameter-validation" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>When</strong>: During parameter assignment</p></li>
+<li><p><strong>What</strong>:</p>
+<ul>
+<li><p>MAIN parameters: Error if missing</p></li>
+<li><p>AUX parameters: Warning if missing</p></li>
+<li><p>&#64;references: Error if attribute doesn’t exist</p></li>
+</ul>
+</li>
+<li><p><strong>Failure</strong>:</p>
+<ul>
+<li><p>MAIN missing → Error, stop pipeline</p></li>
+<li><p>AUX missing → Warning, continue (use Modelica default)</p></li>
+<li><p>Bad reference → Error, stop pipeline</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="connector-validation">
+<h4>4. Connector Validation<a class="headerlink" href="#connector-validation" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>When</strong>: During connector processing</p></li>
+<li><p><strong>What</strong>: Check if connector data is available</p></li>
+<li><p><strong>Failure</strong>: Info message (connectors optional unless required by
+template logic)</p></li>
+</ul>
+</section>
+</section>
+<section id="validation-reports">
+<h3>Validation Reports<a class="headerlink" href="#validation-reports" title="Permalink to this heading"></a></h3>
+<p>After each component type, the pipeline reports:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Processing</span> <span class="mi">15</span> <span class="n">pipe</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">...</span>
+  <span class="n">Parameters</span><span class="p">:</span> <span class="mi">45</span> <span class="kn">from</span><span class="w"> </span><span class="nn">graph</span><span class="p">,</span> <span class="mi">30</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Excel</span>
+  <span class="n">Connectors</span><span class="p">:</span> <span class="mi">2</span> <span class="n">found</span>
+  <span class="n">Missing</span> <span class="n">AUX</span><span class="p">:</span> <span class="n">roughness</span><span class="p">,</span> <span class="n">energyDynamics</span> <span class="p">(</span><span class="n">will</span> <span class="n">use</span> <span class="n">Modelica</span> <span class="n">defaults</span><span class="p">)</span>
+
+<span class="n">Processing</span> <span class="mi">3</span> <span class="n">demand</span> <span class="n">node</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">...</span>
+  <span class="n">Parameters</span><span class="p">:</span> <span class="mi">12</span> <span class="kn">from</span><span class="w"> </span><span class="nn">graph</span><span class="p">,</span> <span class="mi">18</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Excel</span>
+  <span class="n">Connectors</span><span class="p">:</span> <span class="mi">3</span> <span class="n">found</span>
+  <span class="n">Missing</span> <span class="n">MAIN</span><span class="p">:</span> <span class="n">Q_flow_nominal</span> <span class="k">for</span> <span class="n">node</span> <span class="s1">&#39;bldg3&#39;</span>
+    <span class="n">ERROR</span><span class="p">:</span> <span class="n">Required</span> <span class="n">parameters</span> <span class="n">missing</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="code-generation-process">
+<h2>Code Generation Process<a class="headerlink" href="#code-generation-process" title="Permalink to this heading"></a></h2>
+<section id="template-rendering">
+<h3>Template Rendering<a class="headerlink" href="#template-rendering" title="Permalink to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">UESTemplates</span></code> class renders Mako templates with component data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">UESTemplates</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Render template with component-specific data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node_data: Dictionary with all component attributes</span>
+<span class="sd">            **kwargs: Additional template variables (i, number_of_instances, etc.)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Mako templates have access to:</span>
+        <span class="c1"># - All node_data keys as variables (e.g., ${dp_nominal})</span>
+        <span class="c1"># - Additional kwargs (e.g., ${i} for instance index)</span>
+        <span class="c1"># - Python code blocks for conditional logic</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">render_unicode</span><span class="p">(</span><span class="o">**</span><span class="n">node_data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="file-organization">
+<h3>File Organization<a class="headerlink" href="#file-organization" title="Permalink to this heading"></a></h3>
+<p>Generated Modelica models follow this structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>workspace/
+  └── e16/
+      └── models/
+          └── Sim20250115_143022_MySimulation/
+              ├── Sim20250115_143022_MySimulation.mo    # Main model
+              ├── package.mo                             # Package definition
+              ├── package.order                          # Load order
+              └── Resources/
+                  └── Inputs/
+                      ├── bldg1_input_heat.csv           # Demand profiles
+                      ├── bldg2_input_heat.csv
+                      └── ground_temperature.csv
+</pre></div>
+</div>
+</section>
+<section id="code-structure">
+<h3>Code Structure<a class="headerlink" href="#code-structure" title="Permalink to this heading"></a></h3>
+<p><strong>Main model contains:</strong> 1. <strong>Medium packages</strong>: Fluid property
+definitions 2. <strong>Component declarations</strong>: Pipes, supplies, demands 3.
+<strong>Connector declarations</strong>: RealInput for time-series 4.
+<strong>Connections</strong>: Fluid ports between components 5. <strong>Ground model</strong>:
+Temperature boundary condition</p>
+<p><strong>Component rendering flow:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># For each demand node:</span>
+<span class="n">demand_template</span> <span class="o">=</span> <span class="n">UESTemplates</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;HeatPumpCarnot&quot;</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;Demand&quot;</span><span class="p">)</span>
+<span class="n">mo_code</span> <span class="o">=</span> <span class="n">demand_template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+    <span class="n">node_data</span><span class="o">=</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">],</span>  <span class="c1"># Contains all parameters + connectors</span>
+    <span class="n">i</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>                        <span class="c1"># Instance number</span>
+    <span class="n">number_of_instances</span><span class="o">=</span><span class="n">total</span>       <span class="c1"># Total count (for positioning)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="extension-guide">
+<h2>Extension Guide<a class="headerlink" href="#extension-guide" title="Permalink to this heading"></a></h2>
+<section id="adding-a-new-component-template">
+<h3>Adding a New Component Template<a class="headerlink" href="#adding-a-new-component-template" title="Permalink to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>See</strong> <span class="xref std std-doc">../guides/Template_generation</span></p></li>
+<li><p><strong>Add Graph Attribute</strong> (if component-specific)
+- Add individual attributes required by the new template directly to the uesgraphs
+.. code:: python</p>
+<blockquote>
+<div><p>graph.nodes[‘bldg1’][‘newParam’] = 2.0  # Override Excel value</p>
+</div></blockquote>
+</li>
+<li><p><strong>Update Excel</strong></p>
+<ul class="simple">
+<li><p>Specify new template name or custom template path in Excel</p></li>
+<li><p>Add necessary common parameters as rows (main,aux and connectors) when they are not already assigned to the uesgraphs (Step 2)</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this heading"></a></h2>
+<section id="for-users">
+<h3>For Users<a class="headerlink" href="#for-users" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Start with Template Inspection</strong>: Read the .mako files to
+understand parameter requirements</p></li>
+<li><p><strong>Use &#64;references</strong>: Prefer <code class="docutils literal notranslate"><span class="pre">&#64;diameter</span></code> over hardcoded values for
+component-specific parameters</p></li>
+<li><p><strong>Test Incrementally</strong>: Generate model after each configuration
+change</p></li>
+<li><p><strong>Check Logs</strong>: Set <code class="docutils literal notranslate"><span class="pre">log_level=logging.DEBUG</span></code> for detailed
+diagnostics</p></li>
+</ol>
+</section>
+<section id="for-developers">
+<h3>For Developers<a class="headerlink" href="#for-developers" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Document Parameters</strong>: Add comments in templates explaining
+physical meaning</p></li>
+<li><p><strong>Use Type Hints</strong>: Help users understand expected parameter types</p></li>
+<li><p><strong>Provide Clear Errors</strong>: Include component ID and parameter name in
+error messages</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h2>
+<section id="common-issues">
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Permalink to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Problem</p></th>
+<th class="head"><p>Cause</p></th>
+<th class="head"><p>Solution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>“Required MAIN
+parameter missing”</p></td>
+<td><p>Excel doesn’t
+have parameter</p></td>
+<td><p>Add to Excel or set as
+graph attribute</p></td>
+</tr>
+<tr class="row-odd"><td><p>“Attribute not found”
+for &#64;reference</p></td>
+<td><p>Graph doesn’t
+have attribute</p></td>
+<td><p>Check GeoJSON import or
+set programmatically</p></td>
+</tr>
+<tr class="row-even"><td><p>Connector not linked</p></td>
+<td><p>Wrong attribute
+name</p></td>
+<td><p>Use convention:
+<code class="docutils literal notranslate"><span class="pre">input_heat</span></code> →
+<code class="docutils literal notranslate"><span class="pre">Q_flow_input</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Template not found</p></td>
+<td><p>Wrong template
+name in Excel</p></td>
+<td><p>Check template filename
+(without .mako)</p></td>
+</tr>
+<tr class="row-even"><td><p>Type error in
+generated model</p></td>
+<td><p>Boolean rendered
+as integer</p></td>
+<td><p>Check template rendering
+logic
+(<code class="docutils literal notranslate"><span class="pre">str().lower()</span></code>)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="debug-workflow">
+<h3>Debug Workflow<a class="headerlink" href="#debug-workflow" title="Permalink to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Enable debug logging</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">uesgraph_to_modelica</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Inspect graph after assignment</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">assign_demand_parameters</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">excel_path</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodelist_building</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">])</span>  <span class="c1"># Check assigned parameters</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Check template parsing</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main</span><span class="p">,</span> <span class="n">aux</span><span class="p">,</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">parse_template_parameters</span><span class="p">(</span><span class="s1">&#39;Demand&#39;</span><span class="p">,</span> <span class="s1">&#39;HeatPumpCarnot&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MAIN: </span><span class="si">{</span><span class="n">main</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AUX: </span><span class="si">{</span><span class="n">aux</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CONN: </span><span class="si">{</span><span class="n">conn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Validate Excel structure</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;config.xlsx&#39;</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;Demands&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p><em>This document describes the architecture of UESGraphs version 2.1.</em></p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../guides/Template_Generation.html" class="btn btn-neutral float-left" title="Template Generation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="graph_transformation.html" class="btn btn-neutral float-right" title="Graph Transformation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
