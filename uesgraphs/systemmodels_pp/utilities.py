@@ -253,6 +253,9 @@ def create_model(
     if t_ground_prescribed is not None:
         logger.debug(f"Setting prescribed ground temperatures (length: {len(t_ground_prescribed)})")
         new_model.graph["T_ground"] = t_ground_prescribed
+        new_model.ground_temp_data = pd.DataFrame(
+            {"1.0 m": new_model.graph["T_ground"]}
+        )
 
     #new_model.run_test_simulation()
 
