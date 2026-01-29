@@ -251,7 +251,7 @@ def create_model(
     new_model = spp.SystemModelHeating(stop_time = stop_time, timestep = timestep, network_type=graph.graph["network_type"],logger=logger)
     
     logger.info("Importing UESGraph")
-    _, pipe_list, heat_source_id, heat_source_r_id = new_model.import_from_uesgraph(graph, logger=logger)
+    _, pipe_list, heat_source_ids, heat_source_r_ids = new_model.import_from_uesgraph(graph, logger=logger)
 
     if t_ground_prescribed is not None:
         logger.debug(f"Setting prescribed ground temperatures (length: {len(t_ground_prescribed)})")
@@ -259,11 +259,13 @@ def create_model(
         new_model.ground_temp_data = pd.DataFrame(
             {"1.0 m": new_model.graph["T_ground"]}
         )
+    
+    #mode = "static"
 
-    #new_model.run_test_simulation()
-
-    new_model.run_timeseries_pp(save_at, mode, logger=logger)
-    #new_model.run_timeseries_dpp_own(pipe_list, heat_source_id, heat_source_r_id, save_at, logger=logger)
+    if mode != "dynamic":
+        new_model.run_timeseries_spp(save_at, mode, logger=logger)
+    else:
+        new_model.run_timeseries_dpp(pipe_list, heat_source_ids, heat_source_r_ids, save_at, logger=logger)
 
     mappings = {
         "supply": {
