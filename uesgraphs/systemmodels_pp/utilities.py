@@ -1,4 +1,5 @@
-# heating_pipeline.py
+"This module collects the functions for creating a pandapipes model from a UESGraph and simulating it."
+
 from uesgraphs.uesgraph import UESGraph
 from uesgraphs.systemmodels_pp import systemmodelheating as spp 
 from uesgraphs.utilities import set_up_file_logger, set_up_terminal_logger 

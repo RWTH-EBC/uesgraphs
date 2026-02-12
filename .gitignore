@@ -11,6 +11,7 @@ workspace/
 *.idea
 build/
 dist/
+AixLib/
 
 #Unit tests #
 #####################

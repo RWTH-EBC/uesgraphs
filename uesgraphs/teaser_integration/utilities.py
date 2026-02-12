@@ -6,7 +6,7 @@ import os
 import json
 import pandas as pd
 import subprocess
-import simulate as sim
+from uesgraphs.teaser_integration import simulate as sim
 import datetime
 import multiprocessing
 from pathlib import Path
@@ -14,9 +14,46 @@ import shutil
 
 import logging
 import tempfile
+from typing import Optional
 
 from teaser.project import Project
 from dymola.dymola_interface import DymolaInterface
+
+
+def set_up_file_logger(name: str, log_dir: Optional[str] = None, level: int = logging.ERROR) -> logging.Logger:
+    """
+    Set up a full file+console logger for major functions.
+
+    Args:
+        name: Logger name
+        log_dir: Directory for log files (default: temp directory)
+        level: Logging level (default: ERROR)
+
+    Returns:
+        Configured file+console logger
+    """
+    logger = logging.getLogger(name)
+
+   # if logger.handlers:
+    #    return logger
+
+    logger.setLevel(level)
+    if log_dir is None:
+        log_dir = tempfile.gettempdir()
+
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = os.path.join(log_dir, f"{name}{timestamp}.log")
+    print(f"Logfile findable here: {log_file}")
+
+    # File handler
+    file_handler = logging.FileHandler(log_file)
+    file_formatter = logging.Formatter('%(asctime)s - %(name)s - [%(filename)s:%(lineno)d] - %(levelname)s - %(message)s')
+    file_handler.setFormatter(file_formatter)
+    logger.addHandler(file_handler)
+
+    logger.propagate = False
+
+    return logger
 
 def set_up_logger(name,log_dir = None,level=int(logging.ERROR)):
     """Sets up a configured logger with file handler.
@@ -57,6 +94,193 @@ def set_up_logger(name,log_dir = None,level=int(logging.ERROR)):
     logger.addHandler(handler)
 
     return logger
+
+## Helper functions
+def load_simulation_settings_from_excel(excel_path, logger=None):
+    """
+    Load simulation settings from Excel 'Simulation' sheet.
+
+    Parameters
+    ----------
+    excel_path : str or Path
+        Path to Excel file containing simulation settings
+    logger : logging.Logger, optional
+        Logger instance
+
+    Returns
+    -------
+    sim_params : dict
+        Dictionary of simulation parameters
+
+    Raises
+    ------
+    ValueError
+        If required simulation parameters are missing
+    """
+    if logger is None:
+        logger = set_up_logger(f"{__name__}.load_simulation_settings_from_excel")
+
+    sim_params = _load_excel(excel_path, 'Simulation', logger)
+
+    # Validate required simulation parameters
+    required = ['timestep','stop_time']
+    missing = [param for param in required if param not in sim_params]
+
+    if missing:
+        raise ValueError(f"Missing required simulation parameters in 'Simulation' sheet: {missing}")
+
+    logger.info(f"Simulation settings loaded from Excel: {sim_params.get('simulation_name')}")
+    return sim_params
+
+def _load_excel(excel_path, excel_sheet_name, logger):
+    """
+    Load parameters from Excel file.
+    
+    Parameters
+    ----------
+    excel_path : str or Path or None
+        Path to Excel file (optional)
+    excel_sheet_name : str
+        Name of the Excel sheet to load
+    logger : logging.Logger
+        Logger instance
+        
+    Returns
+    -------
+    excel_params : dict
+        Dictionary of parameters from Excel (empty dict if excel_path is None)
+    """
+    excel_params = {}
+    
+    if excel_path is not None:
+        try:
+            logger.info(f"Loading parameters from Excel: {excel_path}")
+            excel_params = load_component_parameters(excel_path, excel_sheet_name)
+            logger.debug(f"Excel parameters loaded: {list(excel_params.keys())}")
+        except Exception as e:
+            warning_msg = f"Could not load Excel parameters: {e}"
+            logger.warning(warning_msg)
+    else:
+        logger.info("No Excel file provided, using only graph attributes")
+    
+    return excel_params
+
+def load_component_parameters(excel_path, component_type):
+    """
+    Load component parameters from an Excel file.
+    
+    Reads a specific sheet from an Excel file and returns parameters as a dictionary.
+    Expected Excel structure:
+    - Column A: Parameter (parameter names)
+    - Column B: Value (parameter values)
+    
+    Parameters
+    ----------
+    excel_path : str or Path
+        Path to the Excel file containing component parameters
+    component_type : str
+        Type of component, must be one of: 'pipes', 'supply', 'demands', 'simulation'
+        This determines which sheet to read from the Excel file
+        
+    Returns
+    -------
+    dict
+        Dictionary with parameter names as keys and their values
+        Returns empty dict if sheet not found
+        
+    Raises
+    ------
+    FileNotFoundError
+        If the Excel file does not exist
+    ValueError
+        If the component_type is not valid or Excel structure is incorrect
+        
+    Examples
+    --------
+    >>> params = load_component_parameters('parameters.xlsx', 'pipes')
+    >>> print(params['dp_nominal'])
+    0.10
+    """
+    # Validate component type
+    valid_types = ['Pipes', 'Supply', 'Demands', 'Simulation']
+    if component_type not in valid_types:
+        raise ValueError(
+            f"Invalid component_type '{component_type}'. "
+            f"Must be one of: {', '.join(valid_types)}"
+        )
+    
+    # Check if file exists
+    if not os.path.exists(excel_path):
+        raise FileNotFoundError(f"Excel file not found: {excel_path}")
+    
+    try:
+        # Read the specific sheet
+        df = pd.read_excel(excel_path, sheet_name=component_type)
+        
+        # Validate Excel structure
+        if len(df.columns) < 2:
+            raise ValueError(
+                f"Excel sheet '{component_type}' must have at least 2 columns "
+                "(Parameter and Value)"
+            )
+        
+        # Check if first row contains expected column names
+        if 'Parameter' not in df.columns and 'parameter' not in df.columns.str.lower():
+            # Assume first two columns are Parameter and Value
+            df.columns = ['Parameter', 'Value'] + list(df.columns[2:])
+        
+        # Create dictionary from Parameter and Value columns
+        # Drop rows where Parameter is NaN
+        df_clean = df[['Parameter', 'Value']].dropna(subset=['Parameter'])
+
+        # Convert to dictionary
+        param_dict = dict(zip(df_clean['Parameter'], df_clean['Value']))
+
+        # Convert and clean values
+        import math
+        for key, value in param_dict.items():
+            # Convert NaN to None
+            if isinstance(value, float) and math.isnan(value):
+                param_dict[key] = None
+            # Try to convert string values to appropriate types
+            elif isinstance(value, str):
+                value_stripped = value.strip()
+
+                # Skip if it looks like a reference (@something) or template path/name
+                if value_stripped.startswith('@') or '/' in value_stripped or '.' in value_stripped and not value_stripped.replace('.', '').replace('e', '').replace('E', '').replace('-', '').replace('+', '').isdigit():
+                    continue
+
+                # Try boolean conversion
+                if value_stripped.upper() in ('TRUE', 'FALSE'):
+                    param_dict[key] = value_stripped.upper() == 'TRUE'
+                # Try numeric conversion (handles scientific notation like '1e5')
+                else:
+                    try:
+                        # Try float first (handles both '123' and '1.23' and '1e5')
+                        param_dict[key] = float(value_stripped)
+                    except ValueError:
+                        # Keep as string if conversion fails (e.g., template names)
+                        pass
+
+        return param_dict
+        
+    except ValueError as e:
+        if "Worksheet named" in str(e):
+            # Sheet doesn't exist
+            logging.warning(
+                f"Sheet '{component_type}' not found in {excel_path}. "
+                f"Returning empty dictionary."
+            )
+            return {}
+        else:
+            raise
+    
+    except Exception as e:
+        raise Exception(
+            f"Error reading Excel file {excel_path}, sheet '{component_type}': {e}"
+        )
+
+## Main TEASER simulation functions
 
 def create_project():
     """Create a TEASER project for current version."""
@@ -288,18 +512,64 @@ def read_results(
 
     dymola.close()
 
-def run_simulation(buildings_info_path, weather_path=None, timestep=3600, stop_time=8760*3600 , logger=None):
+def run_sim_teaser(buildings_info_path, save_path, 
+                   weather_path=None, 
+                   timestep=3600, 
+                   stop_time=8760*3600,
+                   sim_setup_path=None, 
+                   logger=None,
+                   log_level=logging.DEBUG
+                   ):
+    """
+    Run TEASER simulations for demand estimation based on building information from a .geojson file.
+
+    Parameters:
+    -----------
+    buildings_info_path : str
+        The path to the .geojson file containing building information for TEASER model creation.
+    save_path : str or Path
+        Directory path where the resulting demand CSV files will be saved.
+    weather_path : str, optional
+        The path to the weather file (.mos) to be used in the simulation. If not provided, a default weather file will be used.
+    timestep : int, optinal
+        Simulation timestep in seconds (default is 3600 for hourly data)
+    stop_time : int, optional
+        Total simulation time in seconds (default is 8760*3600 for one year of hourly data)
+    sim_setup_path : str or Path, optional
+        Path to the simulation setup for timestep and stop time. If not provided, default values will be used.
+    logger : logging.Logger, optional
+        Logger instance. If None, creates a new file logger in temp directory
+    log_level : int, optional
+        Logging level (default is logging.DEBUG). Only used if logger is None
+
+    Returns:
+    --------
+    tuple
+        Paths to the generated demand CSV files: (heating_demand_csv, dhw_demand_csv, cooling_demand_csv)
+
+    """
+    if logger is None:
+        logger = set_up_file_logger("TEASERSim", level=int(log_level))
+
     DIR_SCRIPT = os.path.abspath(os.path.dirname(__file__))
     DIR_TOP = os.path.abspath(DIR_SCRIPT)
 
-    timesteps = int(stop_time / timestep)
+    if sim_setup_path is not None:
+        try:
+            sim_params = load_simulation_settings_from_excel(sim_setup_path, logger)
+            timestep = int(sim_params.get('timestep', timestep))
+            stop_time = int(sim_params.get('stop_time', stop_time))
+            logger.info(f"Loaded simulation settings from Excel: timestep={timestep}, stop_time={stop_time}")
+        except Exception as e:
+            logger.warning(f"Could not load simulation settings from Excel: {e}. Using default values.")
 
+    timesteps = int(stop_time / timestep)
     index = pd.date_range(datetime.datetime(2025, 1, 1), periods=timesteps, freq="1h")
 
     # Check if weather files exist
     if weather_path is None or not os.path.exists(weather_path):
         logger.info(f"Warning: Weather file not found or given at {weather_path}, using default weather file.")
-        weather_path = os.path.join(DIR_SCRIPT, "weather-seestadt-ref-2015.mos")
+        weather_path = os.path.join(os.path.dirname(DIR_SCRIPT), "data", "examples", "weather-seestadt-ref-2015.mos")
 
     # === Reference Scenario ===
     prj = create_project()
@@ -311,9 +581,9 @@ def run_simulation(buildings_info_path, weather_path=None, timestep=3600, stop_t
     )
     logger.info(f"Created {len(prj.buildings)} buildings")
 
-    RESULTS_PATH = os.path.join(DIR_TOP, "tmp_TEASER_results")
-    if not os.path.exists(RESULTS_PATH):
-        os.makedirs(RESULTS_PATH)
+    tmp_results = os.path.join(DIR_TOP, "tmp_TEASER_results")
+    if not os.path.exists(tmp_results):
+        os.makedirs(tmp_results)
 
     logger.info("Exporting AixLib models...")
     export_path = prj.export_aixlib()  # This returns the export path
@@ -335,7 +605,7 @@ def run_simulation(buildings_info_path, weather_path=None, timestep=3600, stop_t
     logger.info(f"Using AixLib from: {path_aixlib}")
 
 
-    demand_csv_path = os.path.join(DIR_SCRIPT, "demands_TEASER")
+    demand_csv_path = os.path.join(save_path, "demand_csv")
     if not os.path.exists(demand_csv_path):
         os.makedirs(demand_csv_path)
 
@@ -343,7 +613,7 @@ def run_simulation(buildings_info_path, weather_path=None, timestep=3600, stop_t
     sim.queue_simulation(
         sim_function=sim.simulate,
         prj=prj,
-        results_path=RESULTS_PATH,
+        results_path=tmp_results,
         stop_time=stop_time,
         output_interval=timestep,
         number_of_workers=max(1, multiprocessing.cpu_count() - 4),
@@ -363,8 +633,8 @@ def run_simulation(buildings_info_path, weather_path=None, timestep=3600, stop_t
             signals=signals,
             buildings=[bldg],
             index=index,
-            results_path=os.path.join(RESULTS_PATH, prj.name),
-            csv_path=os.path.join(RESULTS_PATH, prj.name, "demand_csv"),
+            results_path=os.path.join(tmp_results, prj.name),
+            csv_path=os.path.join(tmp_results, prj.name, "demand_csv"),
             stop_time=stop_time,
             timestep=timestep,
             logger=logger
@@ -372,11 +642,12 @@ def run_simulation(buildings_info_path, weather_path=None, timestep=3600, stop_t
     
     heat = pd.DataFrame(index=index)
     cool = pd.DataFrame(index=index)
+    dhw = pd.DataFrame(0.0, index=index, columns=[bldg.name for bldg in prj.buildings])
     heat_list = []
     cool_list = []
     for bldg in prj.buildings:
-        bldg_heat_df = pd.read_csv(os.path.join(RESULTS_PATH, prj.name, "demand_csv", bldg.name + "_heat.csv"), index_col=0, parse_dates=True)
-        bldg_cool_df = pd.read_csv(os.path.join(RESULTS_PATH, prj.name, "demand_csv", bldg.name + "_cool.csv"), index_col=0, parse_dates=True)
+        bldg_heat_df = pd.read_csv(os.path.join(tmp_results, prj.name, "demand_csv", bldg.name + "_heat.csv"), index_col=0, parse_dates=True)
+        bldg_cool_df = pd.read_csv(os.path.join(tmp_results, prj.name, "demand_csv", bldg.name + "_cool.csv"), index_col=0, parse_dates=True)
         heat_list.append(bldg_heat_df)
         cool_list.append(bldg_cool_df)
 
@@ -385,16 +656,8 @@ def run_simulation(buildings_info_path, weather_path=None, timestep=3600, stop_t
 
     heat.to_csv(os.path.join(demand_csv_path, "demands-heat.csv"))
     cool.to_csv(os.path.join(demand_csv_path, "demands-cool.csv"))
+    dhw.to_csv(os.path.join(demand_csv_path, "demands-dhw.csv"))
     
-    shutil.rmtree(RESULTS_PATH)
+    shutil.rmtree(tmp_results)
 
-if __name__ == "__main__":
-    uesgraphs_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    data_dir = os.path.join(uesgraphs_dir, 'uesgraphs', 'data', 'examples')
-    geojson_dir = os.path.join(data_dir, 'e15_geojson')
-
-    buildings_geojson = os.path.join(geojson_dir, 'buildings_teaser_info.geojson')
-
-    logger= set_up_logger("teaser_integration", level=logging.INFO)
-
-    run_simulation(buildings_geojson, logger=logger)
+    return os.path.join(demand_csv_path, "demands-heat.csv"),  os.path.join(demand_csv_path, "demands-dhw.csv"), os.path.join(demand_csv_path, "demands-cool.csv")
