@@ -46,16 +46,19 @@
 <li class="toctree-l1"><a class="reference internal" href="guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api_core_modules.html">Core Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_system_models_pp.html">System Models pandapipes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_examples.html">Examples</a></li>
 </ul>
 
@@ -124,6 +127,13 @@ The tool seamlessly integrates diverse data sources, including spatial (OpenStre
 </pre></div>
 </div>
 </li>
+<li><p><strong>For pandapipes simulations</strong>:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>uesgraphs<span class="o">[</span>pandapipes<span class="o">]</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
 <li><p><strong>For development (includes testing and coverage tools)</strong>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>uesgraphs<span class="o">[</span>dev<span class="o">]</span>
 </pre></div>
@@ -163,6 +173,13 @@ The tool seamlessly integrates diverse data sources, including spatial (OpenStre
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>&lt;path/to/your/uesgraphs&gt;<span class="o">[</span>templates<span class="o">]</span>
 </pre></div>
 </div>
+</li>
+<li><p><strong>For pandapipes simulations</strong>:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>&lt;path/to/your/uesgraphs&gt;<span class="o">[</span>pandapipes<span class="o">]</span>
+</pre></div>
+</div>
+</div></blockquote>
 </li>
 <li><p><strong>For development (includes testing and coverage tools)</strong>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>&lt;path/to/your/uesgraphs&gt;<span class="o">[</span>dev<span class="o">]</span>
@@ -253,6 +270,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li><p>The framework supports automated preprocessing steps such as network cleaning, topology simplification, and hydronic pipe sizing to prepare accurate system models.</p></li>
 <li><p>Multiple data input formats are supported, including OpenStreetMap, GIS files, and manual data, enabling integration of heterogeneous spatial and tabular data.</p></li>
 <li><p>UESgraphs automates the generation of dynamic simulation models by transforming graph representations into Modelica code through templated model export.</p></li>
+<li><p>UESgraphs allows the execution of pandapipes simulations based on the graph structure and the provided input data.</p></li>
 <li><p>The tool facilitates downstream analysis and visualization, including color-coded plots and KPI extraction, to support evaluation and decision-making.</p></li>
 </ul>
 </section>
@@ -292,6 +310,14 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li class="toctree-l2"><a class="reference internal" href="guides/Template_Generation.html#next-steps">Next Steps</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="guides/model_generation_pandapipes.html">Model Generation Pandapipes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pandapipes.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pandapipes.html#what-you-need">What You Need</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pandapipes.html#excel-configuration">Excel Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pandapipes.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/model_generation_pandapipes.html#see-also">See Also</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -325,6 +351,20 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li class="toctree-l2"><a class="reference internal" href="architecture/graph_transformation.html#see-also">See Also</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#architecture-documentation">Architecture Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#pipeline-architecture">Pipeline Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#core-entry-point">Core Entry Point</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#parameter-assignment-flow">Parameter Assignment Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#demand-time-series-handling">Demand &amp; Time-Series Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#pandapipes-model-generation">pandapipes Model Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#file-folder-structure">File &amp; Folder Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#validation-error-handling">Validation &amp; Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#extension-guide">Extension Guide</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -335,6 +375,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.visuals.html">uesgraphs.visuals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels.html">uesgraphs.systemmodels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels_pp.html">uesgraphs.systemmodels_pp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
 </ul>
 </li>
@@ -344,6 +385,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels.utilities.html">uesgraphs.systemmodels.utilities</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="api_system_models_pp.html">System Models pandapipes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api_examples.html#python-script-examples">Python Script Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_examples.html#jupyter-notebook-examples">Jupyter Notebook Examples</a></li>
