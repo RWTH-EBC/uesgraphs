@@ -116,6 +116,7 @@ class SystemModelHeating(UESGraph):
     def __init__(
         self,
         stop_time,
+        start_time,
         timestep,
         network_type="heating",
         logger=None
@@ -128,8 +129,9 @@ class SystemModelHeating(UESGraph):
         super(SystemModelHeating, self).__init__()
 
         self.time_step = timestep
+        self.start_time = start_time
         self.stop_time = stop_time
-        self.timesteps = int(self.stop_time / self.time_step)
+        self.timesteps = int((self.stop_time-self.start_time) / self.time_step)
         logger.debug(f"Timesteps number: '{self.timesteps}'")
 
         self.version_info = get_versioning_info()
@@ -293,7 +295,7 @@ class SystemModelHeating(UESGraph):
                         heat_source_r_ids.append(return_junction)
 
                         #m_flow = 0
-                        m_flow = self.demand_data.sum(axis=1).iloc[0]*self.heat_to_mass_factor
+                        m_flow = self.demand_data.sum(axis=1).iloc[int(self.start_time /self.time_step)]*self.heat_to_mass_factor
 
                         logger.info(f"Mass flow for supply node '{node}': {m_flow:.4f} kg/s")
 
@@ -344,7 +346,7 @@ class SystemModelHeating(UESGraph):
                     self.junction_map_supply[supply_junction] = node
                     self.junction_map_return[return_junction] = node
 
-                    heat_demand_w = node_data["input_heat"][0]
+                    heat_demand_w = node_data["input_heat"][int(self.start_time / self.time_step)]
 
                     pp.create_heat_consumer(
                         net=self.pp_network,
@@ -424,7 +426,7 @@ class SystemModelHeating(UESGraph):
                 edge_data = uesgraph_input.edges[edge]
                 heat_trans = 1 / (edge_data["dIns"]/ edge_data["kIns"])
                 loss_coefficient = self.estimate_xi(uesgraph_input.edges[edge]["length"])
-                T_ground = self.graph["T_ground"][0]
+                T_ground = self.graph["T_ground"][int(self.start_time / self.time_step)]
 
                 for idx, pipe_type in enumerate(["supply", "return"]):
                     pipe = pp.create_pipe_from_parameters(
@@ -901,12 +903,12 @@ class SystemModelHeating(UESGraph):
         rho_supply = pp.get_fluid(self.pp_network).get_property("density", self.T_in + 273.15)
         cp_return = pp.get_fluid(self.pp_network).get_property("heat_capacity", self.T_return + 273.15)
 
-        # Setting time step
-        self.time_step = 3600 # TODO: Change in future depending on timestep input
-        factor = int(3600/ self.time_step)
-        self.timesteps *= factor
-        self.demand_data = self.resample_profile_constant(self.demand_data, factor)
-        self.ground_temp_data = self.resample_profile_constant(self.ground_temp_data, factor)
+        # This part could be important if the timestep is lower than the original data, because then we need to resample the profiles to have the right length. 
+        # If the timestep is higher than the original data, it is not necessary to resample, because then we can just take every n-th value of the original data.
+        #factor = int(3600/ self.time_step) # TODO: Change this important because is dependent on data
+        #self.timesteps *= factor
+        #self.demand_data = self.resample_profile_constant(self.demand_data, factor)
+        #self.ground_temp_data = self.resample_profile_constant(self.ground_temp_data, factor)
 
         self.demand_data.reset_index(drop=True, inplace=True)
         
@@ -924,7 +926,7 @@ class SystemModelHeating(UESGraph):
 
         output_data = self.init_output_writer(log_variables)
         dt = self.time_step
-        n=0
+        n= int(self.start_time/dt)
 
         pipe_temperatures_history = {pipe["index"]: [[self.pp_network.res_pipe["t_from_k"][pipe["index"]]] * (self.pp_network.pipe["sections"][pipe["index"]] + 1)]
                                     for pipe in pipe_list}
@@ -932,7 +934,7 @@ class SystemModelHeating(UESGraph):
 
         # --- 5. Calculating temperatures ---
         logger.info("Starting pandapipes dynamic simulation ...")
-        for t in range(0, (self.timesteps+1)*dt, dt):
+        for t in range(int(self.start_time), int(self.stop_time+dt), dt):
 
             max_layer = max(layer_by_pipe.values())
 
@@ -1038,7 +1040,8 @@ class SystemModelHeating(UESGraph):
 
                 self.log_current_state(self.pp_network, output_data, log_variables, n)
 
-                if n+1 == self.timesteps:
+                if n+1 == int(self.stop_time/dt):
+                    logger.info("Reached end of simulation time, stopping dynamic simulation loop.")
                     break
 
                 for consumer_id in range(len(self.pp_network.heat_consumer)):
@@ -1059,7 +1062,9 @@ class SystemModelHeating(UESGraph):
                     tol_v=1e-7,
                     tol_T=1e-3,
                 )
+                logger.info(f"Completed hydraulic simulation for time step {n+1} at time {t+dt} seconds.")
                 n+=1
+                
 
         progress_bar.close()
 
@@ -1121,12 +1126,13 @@ class SystemModelHeating(UESGraph):
             ("res_pipe", "p_to_bar"),
         ]
 
-        self.time_step = 3600 # TODO: Change in future depending on timestep input
-        factor = int(3600/ self.time_step) 
-        self.timesteps *= factor
+        # This part could be important if the timestep is lower than the original data, because then we need to resample the profiles to have the right length. 
+        # If the timestep is higher than the original data, it is not necessary to resample, because then we can just take every n-th value of the original data.
+        #factor = int(3600/ self.time_step) # TODO: Change this important because is dependent on data
+        #self.timesteps *= factor
 
-        self.demand_data = self.resample_profile_constant(self.demand_data, factor)
-        self.ground_temp_data = self.resample_profile_constant(self.ground_temp_data, factor)
+        #self.demand_data = self.resample_profile_constant(self.demand_data, factor)
+        #self.ground_temp_data = self.resample_profile_constant(self.ground_temp_data, factor)
 
         # --- heat-demand reading ---
         profiles_demand = self.demand_data
@@ -1213,7 +1219,7 @@ class SystemModelHeating(UESGraph):
             )
 
         # --- Output configuration ---
-        timesteps = range(self.timesteps)
+        timesteps = range(int(self.start_time/self.time_step), int(self.stop_time/self.time_step))
         logger.info(timesteps)
         ow = OutputWriter(
             pp_network,

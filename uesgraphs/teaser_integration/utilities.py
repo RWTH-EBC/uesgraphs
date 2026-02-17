@@ -513,7 +513,7 @@ def read_results(
     dymola.close()
 
 def run_sim_teaser(buildings_info_path, save_path, 
-                   weather_path=None, 
+                   weather_path=None,
                    timestep=3600, 
                    stop_time=8760*3600,
                    sim_setup_path=None, 
@@ -551,6 +551,7 @@ def run_sim_teaser(buildings_info_path, save_path,
     if logger is None:
         logger = set_up_file_logger("TEASERSim", level=int(log_level))
 
+    # Step 0: Set up directories and load simulation settings
     DIR_SCRIPT = os.path.abspath(os.path.dirname(__file__))
     DIR_TOP = os.path.abspath(DIR_SCRIPT)
 
@@ -564,14 +565,18 @@ def run_sim_teaser(buildings_info_path, save_path,
             logger.warning(f"Could not load simulation settings from Excel: {e}. Using default values.")
 
     timesteps = int(stop_time / timestep)
-    index = pd.date_range(datetime.datetime(2025, 1, 1), periods=timesteps, freq="1h")
+    index = pd.date_range(
+        datetime.datetime(2025, 1, 1),
+        periods=timesteps,
+        freq=f"{int(timestep/3600)}h"
+    )
 
     # Check if weather files exist
     if weather_path is None or not os.path.exists(weather_path):
         logger.info(f"Warning: Weather file not found or given at {weather_path}, using default weather file.")
         weather_path = os.path.join(os.path.dirname(DIR_SCRIPT), "data", "examples", "weather-seestadt-ref-2015.mos")
 
-    # === Reference Scenario ===
+    # Step 1: Create TEASER project and district
     prj = create_project()
     prj.weather_file_path = weather_path
 
@@ -581,6 +586,7 @@ def run_sim_teaser(buildings_info_path, save_path,
     )
     logger.info(f"Created {len(prj.buildings)} buildings")
 
+    # Step 2: Make temporary directory for results and export AixLib
     tmp_results = os.path.join(DIR_TOP, "tmp_TEASER_results")
     if not os.path.exists(tmp_results):
         os.makedirs(tmp_results)
@@ -609,6 +615,7 @@ def run_sim_teaser(buildings_info_path, save_path,
     if not os.path.exists(demand_csv_path):
         os.makedirs(demand_csv_path)
 
+    # Step 3: Run simulations
     logger.info("Starting simulations...")
     sim.queue_simulation(
         sim_function=sim.simulate,
@@ -619,6 +626,8 @@ def run_sim_teaser(buildings_info_path, save_path,
         number_of_workers=max(1, multiprocessing.cpu_count() - 4),
         aixlib_path=str(path_aixlib.parent),
     )
+    
+    # Step 4: Read results and save each building's heating and cooling demand to csv
     for bldg in prj.buildings:
         signals = [
             "multizone.PHeater[{}]".format(i + 1)
@@ -640,6 +649,7 @@ def run_sim_teaser(buildings_info_path, save_path,
             logger=logger
         )
     
+    # Step 5: Combine individual building csv files into one csv for heating and one for cooling
     heat = pd.DataFrame(index=index)
     cool = pd.DataFrame(index=index)
     dhw = pd.DataFrame(0.0, index=index, columns=[bldg.name for bldg in prj.buildings])

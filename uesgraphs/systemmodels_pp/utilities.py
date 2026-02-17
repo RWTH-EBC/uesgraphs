@@ -202,6 +202,7 @@ def create_model(
     name,
     save_at,
     graph,
+    start_time,
     stop_time,
     timestep,
     mode,
@@ -218,6 +219,8 @@ def create_model(
         Directory where to store the generated model results
     graph : uesgraphs.uesgraph.UESGraph
         Network graph with all necessary data for model generation
+    start_time : int
+        Start time of the simulation in seconds
     stop_time : int
         Stop time of the simulation in seconds
     timestep : int
@@ -242,24 +245,24 @@ def create_model(
     logger.info(f"=== Starting create_model for '{name}' ===")
     logger.info(f"Target directory: {save_at}")
     logger.info(f"Network type: {graph.graph.get('network_type', 'unknown')}")
-    logger.debug(f"Simulation setup - stop_time: {stop_time}, timestep: {timestep}")
+    logger.debug(f"Simulation setup - start_time: {start_time}, stop_time: {stop_time}, timestep: {timestep}")
     
     assert not name[0].isdigit(), "Model name cannot start with a digit"
 
     assert mode in ("static","dynamic"), "Mode must be either 'static' or 'dynamic'"
 
     logger.info("Creating SystemModelHeating instance")
-    new_model = spp.SystemModelHeating(stop_time = stop_time, timestep = timestep, network_type=graph.graph["network_type"],logger=logger)
+    new_model = spp.SystemModelHeating(start_time = start_time, stop_time = stop_time, timestep = timestep, network_type=graph.graph["network_type"],logger=logger)
     
-    logger.info("Importing UESGraph")
-    _, pipe_list, heat_source_ids, heat_source_r_ids = new_model.import_from_uesgraph(graph, logger=logger)
-
     if t_ground_prescribed is not None:
         logger.debug(f"Setting prescribed ground temperatures (length: {len(t_ground_prescribed)})")
         new_model.graph["T_ground"] = t_ground_prescribed
         new_model.ground_temp_data = pd.DataFrame(
             {"1.0 m": new_model.graph["T_ground"]}
         )
+    
+    logger.info("Importing UESGraph")
+    _, pipe_list, heat_source_ids, heat_source_r_ids = new_model.import_from_uesgraph(graph, logger=logger)
     
     #mode = "static"
 
@@ -813,6 +816,7 @@ def generate_simulation_model(uesgraph, sim_name, sim_params, ground_temp_list, 
         name=sim_name,
         save_at=sim_model_dir,
         graph=uesgraph,
+        start_time=float(sim_params["start_time"]),
         stop_time=float(sim_params["stop_time"]),
         timestep=sim_params.get("timestep",3600),  # Could be made configurable
         mode=sim_params.get("mode", "static"),
@@ -825,7 +829,7 @@ def generate_simulation_model(uesgraph, sim_name, sim_params, ground_temp_list, 
 
 ### Process demand data and assign to uesgraph
 
-def assign_demand_data(uesgraph, input_paths_dict, input_types = ["heating", "cooling", "dhw"],demand_mode = 0):
+def assign_demand_data(uesgraph, input_paths_dict, input_types = ["heating", "cooling", "dhw"]):
     """
     Assigns energy demand data to buildings in a UES (Urban Energy Systems) graph.
     
@@ -843,9 +847,6 @@ def assign_demand_data(uesgraph, input_paths_dict, input_types = ["heating", "co
         Expected keys: 'heating', 'cooling', 'dhw'.
     input_types : list, optional
         List of demand types to process. Default is ["heating", "cooling", "dhw"].
-    demand_mode : int, optional
-        Mode for demand calculation. Currently only mode 0 is implemented,
-        which combines heating and DHW demands for peak load calculation.
 
     Returns
     -------
