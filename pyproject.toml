@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "uesgraphs"
-version = "2.1.4"
+version = "2.1.5"
 description = "Automated graph-based simulation model generation and analysis tool"
 authors = [{name = "Rahul Mohandasan Karuvingal", email = "rahul.karuvingal@eonerc.rwth-aachen.de"}]
 license = {text = "MIT"}
@@ -48,6 +48,7 @@ full = [
     "pytest-cov>=4.0.0,<5.0.0",
     "coverage>=7.0.0,<8.0.0",
     "OMPython>=3.4.0,<4.0.0",
+    "pandapipes==0.13.0"
 ]
 
 pandapipes = [
