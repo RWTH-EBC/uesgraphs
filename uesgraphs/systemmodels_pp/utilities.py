@@ -12,6 +12,7 @@ import os
 from datetime import datetime
 import warnings
 from pathlib import Path
+import copy
 
 from typing import Optional
 
@@ -94,7 +95,7 @@ def set_up_logger(name, log_dir=None, level=int(logging.INFO)):  # Changed to IN
     return logger
 
 
-def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, logger=None):
+def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, supply_type=None, logger=None):
     """
     Reads CSV-pandapipes results (Junctions & Pipes)
     and saves them as Pandas Series in UESGraph.
@@ -130,7 +131,8 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, logger=No
     base_folder = Path(base_folder)
 
     # Mappings depend on supply_type
-    supply_type = uesgraph_input.graph.get("supply_type", "supply")
+    if supply_type is None:
+        supply_type = uesgraph_input.graph.get("supply_type", "supply")
 
     logger.info(supply_type)
 
@@ -166,11 +168,12 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, logger=No
                 uesgraph_input.nodes[node_id][var_name] = df[col].tolist()  # Pandas Series
 
     p_in = None
+    T_in = None
     # --- Pipe-Data ---------------------------------------------------------
     pipe_folder = base_folder / "res_pipe"
     for fname, var_name in [("mdot_from_kg_per_s.csv", "m_flow"),
                                 ("p_from_bar.csv", "pressure_from"),
-                                ("p_to_bar.csv", "pressure_to")]:
+                                ("p_to_bar.csv", "pressure_to"), ("t_from_k.csv", "t_from"), ("t_to_k.csv", "t_to")]:
         fpath = pipe_folder / fname
         if not fpath.exists():
             continue
@@ -185,6 +188,15 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, logger=No
             if p_in is not None:
                 df = p_in - df
                 var_name = "dp"
+            else:
+                df = df
+        if var_name == "t_from":
+            T_in = df
+            continue
+        elif var_name == "t_to":
+            if T_in is not None:
+                df = (T_in + df)/2.0
+                var_name = "Tmean"
             else:
                 df = df
 
@@ -249,7 +261,7 @@ def create_model(
     
     assert not name[0].isdigit(), "Model name cannot start with a digit"
 
-    assert mode in ("static","dynamic"), "Mode must be either 'static' or 'dynamic'"
+    assert mode in ("static","dynamic", "transient"), "Mode must be either 'static' or 'dynamic' or 'transient'"
 
     logger.info("Creating SystemModelHeating instance")
     new_model = spp.SystemModelHeating(start_time = start_time, stop_time = stop_time, timestep = timestep, network_type=graph.graph["network_type"],logger=logger)
@@ -285,10 +297,14 @@ def create_model(
     with open(Path(save_at) / "mappings.pkl", "wb") as f:
         pickle.dump(mappings, f)
 
-    graph = assign_csv_data_to_uesgraph(graph, save_at, mappings, logger=logger)
+    graph_supply = copy.deepcopy(graph)
+    graph_return = copy.deepcopy(graph)
+
+    graph_in = assign_csv_data_to_uesgraph(graph_supply, save_at, mappings, supply_type="supply", logger=logger)
+    graph_out = assign_csv_data_to_uesgraph(graph_return, save_at, mappings, supply_type="return", logger=logger)
 
     logger.info(f"=== create_model completed successfully for '{name}' ===")
-    return new_model, graph
+    return new_model, graph_in, graph_out
 
 def uesgraph_to_pandapipes(uesgraph, simplification_level,
                          workspace,
@@ -559,7 +575,7 @@ def uesgraph_to_pandapipes(uesgraph, simplification_level,
 
         try:
             logger.info(f"Start creating model for simulation: {sim_name_ix}")
-            graph = generate_simulation_model(
+            graph_s, graph_r = generate_simulation_model(
                 uesgraph=uesgraph,
                 sim_name=sim_name_ix,
                 sim_params=sim_params,
@@ -568,12 +584,16 @@ def uesgraph_to_pandapipes(uesgraph, simplification_level,
                 logger=logger
             )
             try:
-                graph.to_json(path=str(workspace),
+                graph_s.to_json(path=str(workspace),
                             name = "uesgraphs",
                             all_data = True,
                             prettyprint = True)
-                graph.to_json(path=str(sim_model_dir),
+                graph_s.to_json(path=str(sim_model_dir),
                             name = "uesgraphs",
+                            all_data = True,
+                            prettyprint = True)
+                graph_r.to_json(path=str(sim_model_dir),
+                            name = "uesgraphs_return",
                             all_data = True,
                             prettyprint = True)
                 logger.info("UESGraph after simulation saved")
@@ -812,7 +832,7 @@ def generate_simulation_model(uesgraph, sim_name, sim_params, ground_temp_list, 
     # Create system model
     logger.info("Creating system model with pre-assigned parameters")
 
-    _, graph = create_model(
+    _, graph_s, graph_r = create_model(
         name=sim_name,
         save_at=sim_model_dir,
         graph=uesgraph,
@@ -825,7 +845,7 @@ def generate_simulation_model(uesgraph, sim_name, sim_params, ground_temp_list, 
 
     logger.info(f"pandapipes Model generated: {sim_name}")
 
-    return graph 
+    return graph_s, graph_r 
 
 ### Process demand data and assign to uesgraph
 

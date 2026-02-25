@@ -1124,6 +1124,8 @@ class SystemModelHeating(UESGraph):
             ("res_pipe", "mdot_from_kg_per_s"),
             ("res_pipe", "p_from_bar"),
             ("res_pipe", "p_to_bar"),
+            ("res_pipe", "t_from_k"),
+            ("res_pipe", "t_to_k"),
         ]
 
         # This part could be important if the timestep is lower than the original data, because then we need to resample the profiles to have the right length. 
@@ -1160,6 +1162,7 @@ class SystemModelHeating(UESGraph):
         
         if self.number_of_supplies > 1:
             log_variables.append(("res_circ_pump_mass", "mdot_from_kg_per_s"))
+            log_variables.append(("res_circ_pump_mass", "qext_w"))
             profiles_mass_flow = profiles_demand.sum(axis=1)*self.heat_to_mass_factor
             profiles_mass_flow = pd.concat(
                 [profiles_mass_flow] * (self.number_of_supplies-1), axis=1
