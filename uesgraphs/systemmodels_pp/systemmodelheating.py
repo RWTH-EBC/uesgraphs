@@ -161,6 +161,8 @@ class SystemModelHeating(UESGraph):
         self.T_in = 0
         self.T_return = 0
 
+        self.density = self.pp_network.fluid.get_density(temperature=self.T_in)
+
         logger.info(f"SystemModelHeating initialization completed")
 
     def import_nodes_from_uesgraph(self, uesgraph_input, logger=None):
@@ -644,10 +646,10 @@ class SystemModelHeating(UESGraph):
                 tol_v=1e-7,
                 tol_T=1e-3,
             )
-            logger.info("✅ Test simulation finished successfully!")
+            logger.info("Test simulation finished successfully!")
 
         except Exception as e:
-            logger.error(f"❌ Test simulation failed: {e}")
+            logger.error(f"Test simulation failed: {e}")
             raise
         
         logger.info(f"Circ_pump_pressure: {self.pp_network.res_circ_pump_pressure}")

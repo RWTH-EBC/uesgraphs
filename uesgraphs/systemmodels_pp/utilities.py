@@ -13,6 +13,7 @@ from datetime import datetime
 import warnings
 from pathlib import Path
 import copy
+import numpy as np
 
 from typing import Optional
 
@@ -166,6 +167,8 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, supply_ty
             if col_idx in junction_map:
                 node_id = junction_map[col_idx]
                 uesgraph_input.nodes[node_id][var_name] = df[col].tolist()  # Pandas Series
+                if uesgraph_input.nodes[node_id].get("is_supply_heating", False):
+                    uesgraph_input.nodes[node_id]["rho"] = float(uesgraph_input.graph["density"])
 
     p_in = None
     T_in = None
@@ -195,16 +198,42 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, supply_ty
             continue
         elif var_name == "t_to":
             if T_in is not None:
-                df = (T_in + df)/2.0
-                var_name = "Tmean"
-            else:
-                df = df
+                Tmean_df = (T_in + df)/2.0
+                # Ground temperature from graph
+                T_ground = uesgraph_input.graph.get("T_ground", None)
+                if T_ground is None:
+                    raise ValueError("T_ground not found in graph.graph")
 
-        for col in df.columns:
-            col_idx = int(col)
-            if col_idx in pipe_map:
-                edge = pipe_map[col_idx]
-                uesgraph_input.edges[edge][var_name] = df[col].tolist()  # Pandas Series
+                T_ground_series = pd.Series(T_ground)
+
+                for col in Tmean_df.columns:
+                    col_idx = int(col)
+                    if col_idx in pipe_map:
+
+                        edge = pipe_map[col_idx]
+                        edge_data = uesgraph_input.edges[edge]
+
+                        kIns = edge_data.get("kIns")
+                        dIns = edge_data.get("dIns")
+                        length = edge_data.get("length")
+                        diameter = edge_data.get("diameter")
+
+                        if None in (kIns, dIns, length, diameter):
+                            continue
+
+                        Tmean = Tmean_df[col].reset_index(drop=True)
+                        Tamb = T_ground_series.iloc[:len(Tmean)].reset_index(drop=True)
+
+                        Q_loss = (
+                            (kIns / dIns)
+                            * np.pi
+                            * length
+                            * diameter
+                            * (Tmean - Tamb)
+                        )
+
+                        uesgraph_input.edges[edge]["Q_loss"] = Q_loss.tolist()
+                continue
 
     return uesgraph_input
 
@@ -265,6 +294,11 @@ def create_model(
 
     logger.info("Creating SystemModelHeating instance")
     new_model = spp.SystemModelHeating(start_time = start_time, stop_time = stop_time, timestep = timestep, network_type=graph.graph["network_type"],logger=logger)
+
+    graph.graph["density"] = new_model.density
+
+    logger.info(graph.graph["density"])
+    logger.info(type(graph.graph["density"]))
     
     if t_ground_prescribed is not None:
         logger.debug(f"Setting prescribed ground temperatures (length: {len(t_ground_prescribed)})")
@@ -272,11 +306,13 @@ def create_model(
         new_model.ground_temp_data = pd.DataFrame(
             {"1.0 m": new_model.graph["T_ground"]}
         )
+        graph.graph["T_ground"] = t_ground_prescribed
     
     logger.info("Importing UESGraph")
     _, pipe_list, heat_source_ids, heat_source_r_ids = new_model.import_from_uesgraph(graph, logger=logger)
     
     #mode = "static"
+    #new_model.run_test_simulation(logger=logger)
 
     if mode != "dynamic":
         new_model.run_timeseries_spp(save_at, mode, logger=logger)
