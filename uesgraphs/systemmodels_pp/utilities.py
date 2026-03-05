@@ -234,6 +234,11 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, supply_ty
 
                         uesgraph_input.edges[edge]["Q_loss"] = Q_loss.tolist()
                 continue
+        for col in df.columns:
+            col_idx = int(col)
+            if col_idx in pipe_map:
+                edge = pipe_map[col_idx]
+                uesgraph_input.edges[edge][var_name] = df[col].tolist()
 
     return uesgraph_input
 
