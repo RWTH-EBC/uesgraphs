@@ -5,6 +5,15 @@ Example for analyzing pandapipes simulation results using the analysis_pp class.
 This example demonstrates the workflow if for analyzing pandapipes simulation results using the analysis_pp class.
 Ensure that this example is run after completing E18, which generates the necessary simulation results and UESGraph JSON files for analysis.
 
+Here are the steps covered in this example:
+1. **Setup Workspace and Paths**: 
+    Create a local workspace for this example and define paths to the simulation results generated in E18.
+2. **Generate analysis class and run analysis**: 
+    Create an instance of the analysis_pp class with the path to the simulation results and optionally set the timestep. 
+    Then, call the thermal_loss_analysis and pump_power_analysis methods to perform the analyses.
+    For the pump power analysis a parameter eta_total is set to 0.65, adjust this value as needed for your specific system by setting it in the method call.
+3. **Summary and Next Steps**:
+    Summarize the results printed in the terminal and suggest next steps for further analysis or visualization.
 
 """
 
@@ -65,7 +74,7 @@ def main():
     print(f"   Workspace: {workspace}")
 
     # Define paths to input files (these should have been generated in E18)
-    sim_path = os.path.join(workspace, "models", "Sim20260226_133500") # Example path - adjust if your simulation results are in a different location
+    sim_path = os.path.join(workspace, "models", "Sim20260305_134559") # Example path - adjust if your simulation results are in a different location
 
     print("   ✓ All paths configured")
 

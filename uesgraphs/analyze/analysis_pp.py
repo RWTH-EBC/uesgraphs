@@ -31,7 +31,7 @@ class analysis_pp:
 
 
     def thermal_loss_analysis(self):
-        """Main execution"""
+        """Thermal loss analysis for the sum over all pipes in the system"""
         logger = set_up_file_logger("thermal_loss_analysis", level=20)
 
         logger.info("=" * 80)
@@ -84,11 +84,17 @@ class analysis_pp:
 
             print("\n" + "-" * 60)
             print("TOTAL PIPE HEAT LOSSES")
-            print(f" Maximum Heat Loss over all pipes: {system_peak_loss:.2f} kW")
+            print(f" Maximum Heat Loss over all pipes: {system_peak_loss:.2f} kW at timestep {system_loss_series.argmax()}")
             print(f"  Annual Heat Loss: {system_annual_loss:.3f} kWh")
 
     def pump_power_analysis(self, eta_total: float = 0.65):
-        """Main execution"""
+        """Pump power analysis for the supply pumps in the system, based on mass flow and pressure drop data from the simulation
+        
+        Parameters:
+        
+        eta_total : float Default 0.65, can be set as required to reflect pump efficiency
+
+        """
         logger = set_up_file_logger("pump_power_analysis", level=20)
 
         logger.info("=" * 80)
@@ -125,8 +131,7 @@ class analysis_pp:
             supply_mflow = None
 
             for u, v, e_attrs in connected_edges:
-                
-                print(u, v, e_attrs.keys())
+
                 if "m_flow" not in e_attrs:
                     continue
                 
@@ -156,6 +161,6 @@ class analysis_pp:
             annual_energy_kWh = Pel.sum() * self.timestep / 1e3
 
             print(f"\nSupply Pump: {node_id}")
-            print(f"  Max Power: {max_power:.2f} W")
+            print(f"  Max Power: {max_power:.2f} W at timestep {Pel.argmax()}")
             print(f"  Annual Energy: {annual_energy_kWh:.3f} kWh")
         
