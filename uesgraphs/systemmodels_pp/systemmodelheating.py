@@ -444,6 +444,10 @@ class SystemModelHeating(UESGraph):
                         text_k=T_ground,
                         name=f"{pipe_type}_{uesgraph_input.edges[edge]['diameter']}_{uesgraph_input.edges[edge]['pipeID']}"
                     )
+                    if pipe_type == "supply":
+                        self.pipe_map_supply[pipe] = edge
+                    else:
+                        self.pipe_map_return[pipe] = edge
                     pipe_list.append({
                         "index": pipe_index, 
                         "from": junction_ids[int(str(edge[0]) + f"{idx}")],
@@ -453,9 +457,6 @@ class SystemModelHeating(UESGraph):
                         "flow_change": False,
                     })
                     pipe_index += 1
-                
-                self.pipe_map_supply[pipe] = edge
-                self.pipe_map_return[pipe] = edge
 
             except KeyError as e:
                 logger.error(f"Key error for edge {edge}: {e}")
@@ -654,7 +655,7 @@ class SystemModelHeating(UESGraph):
         
         logger.info(f"Circ_pump_pressure: {self.pp_network.res_circ_pump_pressure}")
         logger.info(f"Heat consumer: {self.pp_network.res_heat_consumer}")
-
+        logger.info(f"Circ_pump_pressure: {self.pp_network.res_pipe}")
     def pipe_order(self, pipe_list, heat_source_ids, heat_source_r_ids, logger=None):
         pp.pipeflow(
             net=self.pp_network,
@@ -895,6 +896,8 @@ class SystemModelHeating(UESGraph):
             ("res_circ_pump_pressure", "vdot_m3_per_s"),
             ("res_pipe", "v_mean_m_per_s"),
             ("res_pipe", "mdot_from_kg_per_s"),
+            ("res_pipe", "t_from_k"),
+            #("res_pipe", "t_outlet_k"),
             ("res_pipe", "p_from_bar"),
             ("res_pipe", "p_to_bar"),
         ]
@@ -1124,10 +1127,11 @@ class SystemModelHeating(UESGraph):
             ("res_circ_pump_pressure", "vdot_m3_per_s"),
             ("res_pipe", "v_mean_m_per_s"),
             ("res_pipe", "mdot_from_kg_per_s"),
+            ("res_pipe", "mdot_to_kg_per_s"),
             ("res_pipe", "p_from_bar"),
             ("res_pipe", "p_to_bar"),
             ("res_pipe", "t_from_k"),
-            ("res_pipe", "t_to_k"),
+            ("res_pipe", "t_outlet_k"),
         ]
 
         # This part could be important if the timestep is lower than the original data, because then we need to resample the profiles to have the right length. 

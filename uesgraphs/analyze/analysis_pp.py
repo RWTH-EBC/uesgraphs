@@ -14,6 +14,7 @@ from pathlib import Path
 import uesgraphs as ug
 import numpy as np
 from uesgraphs.utilities import set_up_file_logger
+import matplotlib.pyplot as plt
 
 # ============================================================================
 # ANALYSIS functions
@@ -138,13 +139,7 @@ class analysis_pp:
                 logger.info(f"Found m_flow for edge ({u}, {v}) connected to supply {node_id}")
                 m_flow_series = np.array(e_attrs["m_flow"])
 
-                # Check direction:
-                if node_id == u:
-                    supply_mflow = np.array(m_flow_series)
-                    break
-                elif node_id == v:
-                    supply_mflow = -np.array(m_flow_series)
-                    break
+                supply_mflow = abs(np.array(m_flow_series))
 
             if supply_mflow is None:
                 logger.warning(f"No usable m_flow found for {node_id}")
@@ -163,4 +158,152 @@ class analysis_pp:
             print(f"\nSupply Pump: {node_id}")
             print(f"  Max Power: {max_power:.2f} W at timestep {Pel.argmax()}")
             print(f"  Annual Energy: {annual_energy_kWh:.3f} kWh")
+
+    def pipe_plots(self):
+        logger = set_up_file_logger("graph_analysis", level=20)
+
+        logger.info("="*60)
+        logger.info("Graph ANALYSIS (Config-Based)")
+        logger.info("="*60)
+
+        logger.info(f"Analyzing: {self.root_path}")
+        logger.info(f"Supply Side UESGraph: {self.graph_supply_json}")
+
+        # Load UESGraph
+        logger.info("\n" + "=" * 80)
+        logger.info("STEP 1: LOAD SUPPLY NETWORK")
+        logger.info("=" * 80)
+
+        logger.info(f"Loading from JSON: {self.graph_supply_json}")
+        graph = ug.UESGraph()
+        graph.from_json(path=str(self.graph_supply_json), network_type="heating")
+        logger.info(f"Loaded {len(graph.nodes)} nodes, {len(graph.edges)} edges")
+
+        logger.info("\n" + "=" * 80)
+        logger.info("STEP 2: PLOT PIPE TEMPERATURES")
+        logger.info("=" * 80)
+
+        output_dir = self.root_path / "analysis_outputs" / "pipe_temperatures"
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        for edge in graph.edges:
+            edge_data = graph.edges[edge]
+            temp_from_list = np.array(edge_data.get("t_from", None))
+            temp_to_list = np.array(edge_data.get("t_outlet", None)) 
+            '''
+            plt.figure(figsize=(14, 5))
+            plt.plot(temp_from_list, label="T_from")
+            plt.plot(temp_to_list, label="T_to")
+            plt.xlabel("Date")
+            plt.ylabel("Temperature in °C")
+            plt.title(f"PipeID {edge_data.get('pipeID', None)} Temperatures")
+            plt.legend()
+            plt.tight_layout()
+            plt.grid(True)
+            plt.savefig(output_dir/ f"pipe_temp_{edge_data.get('pipeID', None)}.png", dpi=300)
+            plt.close()
+            '''
+            if temp_from_list.all() != None and temp_to_list.all() != None:
+                plt.figure(figsize=(14, 5))
+                plt.plot(temp_from_list - temp_to_list, label="dT")
+                plt.xlabel("Index")
+                plt.ylabel("Temperature in °C")
+                plt.title(f"PipeID {edge_data.get('pipeID', None)} Temperatures")
+                plt.legend()
+                plt.tight_layout()
+                plt.grid(True)
+                plt.savefig(output_dir/ f"pipe_temp_df_{edge_data.get('pipeID', None)}.png", dpi=300)
+                plt.close()
+
+            m_flow_from_list = edge_data.get("m_flow", None)
+            if m_flow_from_list != None:
+                plt.figure(figsize=(14, 5))
+                plt.plot(m_flow_from_list, label="m_flow")
+                plt.xlabel("Date")
+                plt.ylabel("Mass flow in kg/s")
+                plt.title(f"PipeID {edge_data.get('pipeID', None)} Mass flow")
+                plt.legend()
+                plt.tight_layout()
+                plt.grid(True)
+                plt.savefig(output_dir/ f"pipe_m_flow_{edge_data.get('pipeID', None)}.png", dpi=300)
+                plt.close()
+
+            Q_loss_list = edge_data.get("Q_loss", None)
+            plt.figure(figsize=(14, 5))
+            plt.plot(Q_loss_list, label="m_flow")
+            plt.xlabel("Date")
+            plt.ylabel("Thermal losses in W")
+            plt.title(f"PipeID {edge_data.get('pipeID', None)} Themal loss")
+            plt.legend()
+            plt.tight_layout()
+            plt.grid(True)
+            plt.savefig(output_dir/ f"pipe_Q_loss_{edge_data.get('pipeID', None)}.png", dpi=300)
+            plt.close()
+        
+        logger.info(f"Loading from JSON: {self.graph_return_json}")
+        graph_return = ug.UESGraph()
+        graph_return.from_json(path=str(self.graph_return_json), network_type="heating")
+        logger.info(f"Loaded {len(graph_return.nodes)} nodes, {len(graph_return.edges)} edges")
+
+        logger.info("\n" + "=" * 80)
+        logger.info("STEP 2: PLOT PIPE TEMPERATURES")
+        logger.info("=" * 80)
+
+        output_dir = self.root_path / "analysis_outputs" / "pipe_temperatures"
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        for edge in graph_return.edges:
+            edge_data = graph_return.edges[edge]
+            temp_from_list = np.array(edge_data.get("t_from", None))
+            temp_to_list = np.array(edge_data.get("t_outlet", None)) 
+            '''
+            plt.figure(figsize=(14, 5))
+            plt.plot(temp_from_list, label="T_from")
+            plt.plot(temp_to_list, label="T_to")
+            plt.xlabel("Date")
+            plt.ylabel("Temperature in °C")
+            plt.title(f"PipeID {edge_data.get('pipeID', None)} Temperatures")
+            plt.legend()
+            plt.tight_layout()
+            plt.grid(True)
+            plt.savefig(output_dir/ f"pipe_temp_{edge_data.get('pipeID', None)}.png", dpi=300)
+            plt.close()
+            '''
+            if temp_from_list.all() != None and temp_to_list.all() != None:
+                plt.figure(figsize=(14, 5))
+                plt.plot(temp_from_list - temp_to_list, label="dT")
+                plt.xlabel("Index")
+                plt.ylabel("Temperature in °C")
+                plt.title(f"PipeID {edge_data.get('pipeID', None)} Temperatures")
+                plt.legend()
+                plt.tight_layout()
+                plt.grid(True)
+                plt.savefig(output_dir/ f"R_pipe_temp_df_{edge_data.get('pipeID', None)}.png", dpi=300)
+                plt.close()
+
+            m_flow_from_list = edge_data.get("m_flow", None)
+            if m_flow_from_list != None:
+                plt.figure(figsize=(14, 5))
+                plt.plot(m_flow_from_list, label="m_flow")
+                plt.xlabel("Date")
+                plt.ylabel("Mass flow in kg/s")
+                plt.title(f"PipeID {edge_data.get('pipeID', None)} Mass flow")
+                plt.legend()
+                plt.tight_layout()
+                plt.grid(True)
+                plt.savefig(output_dir/ f"R_pipe_m_flow_{edge_data.get('pipeID', None)}.png", dpi=300)
+                plt.close()
+
+            Q_loss_list = edge_data.get("Q_loss", None)
+            plt.figure(figsize=(14, 5))
+            plt.plot(Q_loss_list, label="m_flow")
+            plt.xlabel("Date")
+            plt.ylabel("Thermal losses in W")
+            plt.title(f"PipeID {edge_data.get('pipeID', None)} Themal loss")
+            plt.legend()
+            plt.tight_layout()
+            plt.grid(True)
+            plt.savefig(output_dir/ f"R_pipe_Q_loss_{edge_data.get('pipeID', None)}.png", dpi=300)
+            plt.close()
+
         

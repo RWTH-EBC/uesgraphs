@@ -145,7 +145,7 @@ def main():
     print(f"     - Cooling: {os.path.basename(input_cooling)}")
     print(f"   Ground temperature: {os.path.basename(ground_temp_path)}")
 
-    print("\n   Starting pipeline (this may take a few moments)...\n")
+    print("\n  STEP 4: Run the pandapipes simulation on the uesgraph...")
 
     try:
         # Run the new Excel-based pipeline

@@ -74,7 +74,7 @@ def main():
     print(f"   Workspace: {workspace}")
 
     # Define paths to input files (these should have been generated in E18)
-    sim_path = os.path.join(workspace, "models", "Sim20260305_134559") # Example path - adjust if your simulation results are in a different location
+    sim_path = os.path.join(workspace, "models", "Sim20260326_132807") # Example path - adjust if your simulation results are in a different location
 
     print("   ✓ All paths configured")
 
@@ -92,6 +92,9 @@ def main():
 
         print("\n   Running pump power analysis...")
         analysis.pump_power_analysis()
+
+        print("\n   Running analysis plots for pipes!")
+        analysis.pipe_plots()
 
     except Exception as e:
         print(f"\n    ERROR: Analysis failed with: {e}")

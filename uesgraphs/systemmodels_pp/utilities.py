@@ -176,12 +176,14 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, supply_ty
     pipe_folder = base_folder / "res_pipe"
     for fname, var_name in [("mdot_from_kg_per_s.csv", "m_flow"),
                                 ("p_from_bar.csv", "pressure_from"),
-                                ("p_to_bar.csv", "pressure_to"), ("t_from_k.csv", "t_from"), ("t_to_k.csv", "t_to")]:
+                                ("p_to_bar.csv", "pressure_to"), ("t_from_k.csv", "t_from"), ("t_outlet_k.csv", "t_outlet")]:
         fpath = pipe_folder / fname
         if not fpath.exists():
             continue
 
         df = pd.read_csv(fpath, index_col=0, sep=';')
+        if var_name == "m_flow":
+            m_flow_df = df
         if var_name == "pressure_from":
             df = df*100000
             p_in = df
@@ -195,45 +197,28 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, supply_ty
                 df = df
         if var_name == "t_from":
             T_in = df
-            continue
-        elif var_name == "t_to":
+        elif var_name == "t_outlet":
             if T_in is not None:
-                Tmean_df = (T_in + df)/2.0
-                # Ground temperature from graph
-                T_ground = uesgraph_input.graph.get("T_ground", None)
-                if T_ground is None:
-                    raise ValueError("T_ground not found in graph.graph")
+                dT_df = T_in - df
 
-                T_ground_series = pd.Series(T_ground)
-
-                for col in Tmean_df.columns:
+                for col in T_in.columns:
                     col_idx = int(col)
                     if col_idx in pipe_map:
 
                         edge = pipe_map[col_idx]
-                        edge_data = uesgraph_input.edges[edge]
 
-                        kIns = edge_data.get("kIns")
-                        dIns = edge_data.get("dIns")
-                        length = edge_data.get("length")
-                        diameter = edge_data.get("diameter")
+                        cp_default = uesgraph_input.graph["cp_default"]  # J/kgK, default value for water
 
-                        if None in (kIns, dIns, length, diameter):
-                            continue
 
-                        Tmean = Tmean_df[col].reset_index(drop=True)
-                        Tamb = T_ground_series.iloc[:len(Tmean)].reset_index(drop=True)
+                        dT = dT_df[col].reset_index(drop=True)
+
+                        m_flow = m_flow_df[col].reset_index(drop=True)
 
                         Q_loss = (
-                            (kIns / dIns)
-                            * np.pi
-                            * length
-                            * diameter
-                            * (Tmean - Tamb)
+                            m_flow*cp_default*dT
                         )
 
                         uesgraph_input.edges[edge]["Q_loss"] = Q_loss.tolist()
-                continue
         for col in df.columns:
             col_idx = int(col)
             if col_idx in pipe_map:
