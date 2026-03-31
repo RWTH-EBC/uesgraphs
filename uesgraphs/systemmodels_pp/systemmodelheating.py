@@ -1131,7 +1131,7 @@ class SystemModelHeating(UESGraph):
             ("res_pipe", "p_from_bar"),
             ("res_pipe", "p_to_bar"),
             ("res_pipe", "t_from_k"),
-            ("res_pipe", "t_outlet_k"),
+            ("res_pipe", "t_to_k"),
         ]
 
         # This part could be important if the timestep is lower than the original data, because then we need to resample the profiles to have the right length. 

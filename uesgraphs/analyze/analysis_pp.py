@@ -15,6 +15,8 @@ import uesgraphs as ug
 import numpy as np
 from uesgraphs.utilities import set_up_file_logger
 import matplotlib.pyplot as plt
+import json
+import copy
 
 # ============================================================================
 # ANALYSIS functions
@@ -305,5 +307,85 @@ class analysis_pp:
             plt.grid(True)
             plt.savefig(output_dir/ f"R_pipe_Q_loss_{edge_data.get('pipeID', None)}.png", dpi=300)
             plt.close()
+
+    def retransform_pipe_geojson_data(self, geojson_path: Path):
+        """Transforms the data of the pipe onto the geojson that are given back"""
+        logger = set_up_file_logger("retransform_pipe_geojson_data", level=20)
+
+        logger.info("=" * 80)
+        logger.info("RETRANSFORM PIPE DATA TO GEOJSON")
+        logger.info("=" * 80)
+
+        logger.info(f"Analyzing: {self.root_path}")
+        logger.info(f"Supply Side UESGraph: {self.graph_supply_json}")
+        logger.info(f"Return Side UESGraph: {self.graph_return_json}")
+
+        # Load UESGraph
+        logger.info("\n" + "=" * 80)
+        logger.info("STEP 1: LOAD SUPPLY and RETURN NETWORK")
+        logger.info("=" * 80)
+
+        logger.info(f"Loading from JSON: {self.graph_supply_json}")
+        graph = ug.UESGraph()
+        graph.from_json(path=str(self.graph_supply_json), network_type="heating")
+        logger.info(f"Loaded {len(graph.nodes)} nodes, {len(graph.edges)} edges")
+        
+        logger.info(f"Loading from JSON: {self.graph_return_json}")
+        graph_return = ug.UESGraph()
+        graph_return.from_json(path=str(self.graph_return_json), network_type="heating")
+        logger.info(f"Loaded {len(graph_return.nodes)} nodes, {len(graph_return.edges)} edges")
+
+        with open(geojson_path, 'r') as f:
+            geo_data = json.load(f)
+
+        # Add Q_loss from simulation data (should already be in edges if assigned correctly)
+        logger.info("\n" + "=" * 80)
+        logger.info("STEP 2: RETRANSFORM DATA TO GEOJSON")
+        logger.info("=" * 80)
+
+        output_dir = self.root_path / "analysis_outputs" / "geojsons"
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        edge_dict = {}
+        for edge in graph.edges():
+            edge_data = graph.edges[edge]
+            edge_data_R = graph_return.edges[edge]
+
+            edge_id = edge_data["attr_dict"].get("id") 
+
+            if edge_id is None:
+                continue
+
+            edge_dict[edge_id] = {
+                "supply": {
+                    "m_flow": edge_data.get("m_flow"),
+                    "T_in": edge_data.get("T_in"),
+                },
+                "return": {
+                    "m_flow": edge_data_R.get("m_flow"),
+                    "T_in": edge_data_R.get("T_in"),
+                }
+            }
+
+        geo_data_supply = copy.deepcopy(geo_data)
+        geo_data_return = copy.deepcopy(geo_data)
+
+        for feature_s, feature_r in zip(geo_data_supply["features"], geo_data_return["features"]):
+            geo_id = feature_s["properties"].get("id")
+
+            if geo_id in edge_dict:
+                # Supply
+                feature_s["properties"].update(edge_dict[geo_id]["supply"])
+
+                # Return
+                feature_r["properties"].update(edge_dict[geo_id]["return"])
+
+        with open(output_dir / "network_S_data.geojson", 'w') as f:
+            json.dump(geo_data_supply, f, indent=4)
+
+        with open(output_dir / "network_R_data.geojson", 'w') as f:
+            json.dump(geo_data_return, f, indent=4)
+
+            
 
         

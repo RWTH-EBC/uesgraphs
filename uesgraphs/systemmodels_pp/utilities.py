@@ -171,19 +171,20 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, supply_ty
                     uesgraph_input.nodes[node_id]["rho"] = float(uesgraph_input.graph["density"])
 
     p_in = None
-    T_in = None
+    T_from = None
     # --- Pipe-Data ---------------------------------------------------------
     pipe_folder = base_folder / "res_pipe"
     for fname, var_name in [("mdot_from_kg_per_s.csv", "m_flow"),
                                 ("p_from_bar.csv", "pressure_from"),
-                                ("p_to_bar.csv", "pressure_to"), ("t_from_k.csv", "t_from"), ("t_outlet_k.csv", "t_outlet")]:
+                                ("p_to_bar.csv", "pressure_to"), ("t_from_k.csv", "t_from"), ("t_to_k.csv", "t_to")]:
         fpath = pipe_folder / fname
         if not fpath.exists():
             continue
 
         df = pd.read_csv(fpath, index_col=0, sep=';')
         if var_name == "m_flow":
-            m_flow_df = df
+            m_flow_df = df.copy()
+            df = df.abs()
         if var_name == "pressure_from":
             df = df*100000
             p_in = df
@@ -196,29 +197,46 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, supply_ty
             else:
                 df = df
         if var_name == "t_from":
-            T_in = df
-        elif var_name == "t_outlet":
-            if T_in is not None:
-                dT_df = T_in - df
+            T_from = df
+            continue
+        elif var_name == "t_to":
+            T_to = df
+            for col in T_from.columns:
+                col_idx = int(col)
+                if col_idx in pipe_map:
+                    edge = pipe_map[col_idx]
+                    m_list = m_flow_df[col].tolist()
+                    if any( i > 0 for i in m_list):
+                        #logger.info(f"Assigning T_in for edge {edge} based on t_from because m_flow > 0")
+                        #logger.info(f"m_flow values for edge {edge}: {m_list[0]}")
+                        uesgraph_input.edges[edge]["T_in"] = T_from[col].tolist()
+                    else:
+                        #logger.info(f"Assigning T_in for edge {edge} based on t_to because m_flow <= 0")
+                        #logger.info(f"m_flow values for edge {edge}: {m_list[0]}")
+                        uesgraph_input.edges[edge]["T_in"] = T_to[col].tolist()
 
-                for col in T_in.columns:
-                    col_idx = int(col)
-                    if col_idx in pipe_map:
+            continue
+            """
+            for col in T_in.columns:
+                col_idx = int(col)
+                if col_idx in pipe_map:
 
-                        edge = pipe_map[col_idx]
+                    edge = pipe_map[col_idx]
+                    edge_data = uesgraph_input.edges[edge]
 
-                        cp_default = uesgraph_input.graph["cp_default"]  # J/kgK, default value for water
+                    cp_default = uesgraph_input.graph["cp_default"]  # J/kgK, default value for water
 
 
-                        dT = dT_df[col].reset_index(drop=True)
+                    dT = dT_df[col].reset_index(drop=True)
 
-                        m_flow = m_flow_df[col].reset_index(drop=True)
+                    m_flow = m_flow_df[col].reset_index(drop=True)
 
-                        Q_loss = (
-                            m_flow*cp_default*dT
-                        )
+                    Q_loss = (
+                        m_flow*cp_default*dT
+                    )
 
-                        uesgraph_input.edges[edge]["Q_loss"] = Q_loss.tolist()
+                    uesgraph_input.edges[edge]["Q_loss"] = Q_loss.tolist()
+            """
         for col in df.columns:
             col_idx = int(col)
             if col_idx in pipe_map:
