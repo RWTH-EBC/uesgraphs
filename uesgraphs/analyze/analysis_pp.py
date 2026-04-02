@@ -17,6 +17,7 @@ from uesgraphs.utilities import set_up_file_logger
 import matplotlib.pyplot as plt
 import json
 import copy
+import pandas as pd
 
 # ============================================================================
 # ANALYSIS functions
@@ -181,6 +182,14 @@ class analysis_pp:
         graph.from_json(path=str(self.graph_supply_json), network_type="heating")
         logger.info(f"Loaded {len(graph.nodes)} nodes, {len(graph.edges)} edges")
 
+        logger.info(f"Loading from JSON: {self.graph_return_json}")
+        graph_return = ug.UESGraph()
+        graph_return.from_json(path=str(self.graph_return_json), network_type="heating")
+        logger.info(f"Loaded {len(graph_return.nodes)} nodes, {len(graph_return.edges)} edges")
+
+        ground_temp_df = pd.read_csv(self.root_path / "ground_temps_hassel.csv", index_col=0, parse_dates=True)
+        T_ground = ground_temp_df["1.0 m"].tolist()
+
         logger.info("\n" + "=" * 80)
         logger.info("STEP 2: PLOT PIPE TEMPERATURES")
         logger.info("=" * 80)
@@ -190,24 +199,39 @@ class analysis_pp:
 
         for edge in graph.edges:
             edge_data = graph.edges[edge]
-            temp_from_list = np.array(edge_data.get("t_from", None))
-            temp_to_list = np.array(edge_data.get("t_outlet", None)) 
-            '''
-            plt.figure(figsize=(14, 5))
-            plt.plot(temp_from_list, label="T_from")
-            plt.plot(temp_to_list, label="T_to")
-            plt.xlabel("Date")
-            plt.ylabel("Temperature in °C")
-            plt.title(f"PipeID {edge_data.get('pipeID', None)} Temperatures")
-            plt.legend()
-            plt.tight_layout()
-            plt.grid(True)
-            plt.savefig(output_dir/ f"pipe_temp_{edge_data.get('pipeID', None)}.png", dpi=300)
-            plt.close()
-            '''
-            if temp_from_list.all() != None and temp_to_list.all() != None:
+            temp_in_list = np.array(edge_data.get("T_in", None))
+            temp_out_list = np.array(edge_data.get("T_out", None)) 
+            edge_data_R = graph_return.edges[edge]
+            temp_in_R_list = np.array(edge_data_R.get("T_in", None))
+            temp_out_R_list = np.array(edge_data_R.get("T_out", None))
+
+            T_in = edge_data_R.get("T_in")
+            T_out = edge_data_R.get("T_out")
+
+
+            if T_ground is not None:
+                T_in_arr = np.array(T_in)
+                T_out_arr = np.array(T_out)
+                Tamb = np.array(T_ground[:len(T_in_arr)])
+
+                mask_problem = (T_out_arr - T_in_arr) > 0.1
+
+                if mask_problem.any():
+                    idx = np.where(mask_problem)[0][:5]
+                    logger.warning(f"\nEdge {edge_data_R.get('pipeID')} hat T_out > T_in!")
+                    logger.warning(f"Indices: {idx}")
+                    logger.warning(f"T_in: {T_in_arr[idx]}")
+                    logger.warning(f"T_out: {T_out_arr[idx]}")
+                    logger.warning(f"T_amb: {Tamb[idx]}")
+
+                    if (Tamb[idx] > T_in_arr[idx]).all():
+                        logger.warning("Physikalisch OK (Umgebung wärmer)")
+                    else:
+                        logger.error("UNPHYSIKALISCH! Check deine Simulation!")
+
+            if edge_data.get("T_in") is not None and edge_data.get("T_out") is not None:
                 plt.figure(figsize=(14, 5))
-                plt.plot(temp_from_list - temp_to_list, label="dT")
+                plt.plot(temp_in_list - temp_out_list, label="dT")
                 plt.xlabel("Index")
                 plt.ylabel("Temperature in °C")
                 plt.title(f"PipeID {edge_data.get('pipeID', None)} Temperatures")
@@ -231,49 +255,21 @@ class analysis_pp:
                 plt.close()
 
             Q_loss_list = edge_data.get("Q_loss", None)
-            plt.figure(figsize=(14, 5))
-            plt.plot(Q_loss_list, label="m_flow")
-            plt.xlabel("Date")
-            plt.ylabel("Thermal losses in W")
-            plt.title(f"PipeID {edge_data.get('pipeID', None)} Themal loss")
-            plt.legend()
-            plt.tight_layout()
-            plt.grid(True)
-            plt.savefig(output_dir/ f"pipe_Q_loss_{edge_data.get('pipeID', None)}.png", dpi=300)
-            plt.close()
-        
-        logger.info(f"Loading from JSON: {self.graph_return_json}")
-        graph_return = ug.UESGraph()
-        graph_return.from_json(path=str(self.graph_return_json), network_type="heating")
-        logger.info(f"Loaded {len(graph_return.nodes)} nodes, {len(graph_return.edges)} edges")
-
-        logger.info("\n" + "=" * 80)
-        logger.info("STEP 2: PLOT PIPE TEMPERATURES")
-        logger.info("=" * 80)
-
-        output_dir = self.root_path / "analysis_outputs" / "pipe_temperatures"
-        output_dir.mkdir(parents=True, exist_ok=True)
-
-        for edge in graph_return.edges:
-            edge_data = graph_return.edges[edge]
-            temp_from_list = np.array(edge_data.get("t_from", None))
-            temp_to_list = np.array(edge_data.get("t_outlet", None)) 
-            '''
-            plt.figure(figsize=(14, 5))
-            plt.plot(temp_from_list, label="T_from")
-            plt.plot(temp_to_list, label="T_to")
-            plt.xlabel("Date")
-            plt.ylabel("Temperature in °C")
-            plt.title(f"PipeID {edge_data.get('pipeID', None)} Temperatures")
-            plt.legend()
-            plt.tight_layout()
-            plt.grid(True)
-            plt.savefig(output_dir/ f"pipe_temp_{edge_data.get('pipeID', None)}.png", dpi=300)
-            plt.close()
-            '''
-            if temp_from_list.all() != None and temp_to_list.all() != None:
+            if Q_loss_list != None:
                 plt.figure(figsize=(14, 5))
-                plt.plot(temp_from_list - temp_to_list, label="dT")
+                plt.plot(Q_loss_list, label="Q_loss")
+                plt.xlabel("Date")
+                plt.ylabel("Thermal losses in W")
+                plt.title(f"PipeID {edge_data.get('pipeID', None)} Themal loss")
+                plt.legend()
+                plt.tight_layout()
+                plt.grid(True)
+                plt.savefig(output_dir/ f"pipe_Q_loss_{edge_data.get('pipeID', None)}.png", dpi=300)
+                plt.close()
+
+            if edge_data_R.get("T_in") is not None and edge_data_R.get("T_out") is not None:
+                plt.figure(figsize=(14, 5))
+                plt.plot(temp_in_R_list - temp_out_R_list, label="dT")
                 plt.xlabel("Index")
                 plt.ylabel("Temperature in °C")
                 plt.title(f"PipeID {edge_data.get('pipeID', None)} Temperatures")
@@ -283,30 +279,31 @@ class analysis_pp:
                 plt.savefig(output_dir/ f"R_pipe_temp_df_{edge_data.get('pipeID', None)}.png", dpi=300)
                 plt.close()
 
-            m_flow_from_list = edge_data.get("m_flow", None)
+            m_flow_from_list = edge_data_R.get("m_flow", None)
             if m_flow_from_list != None:
                 plt.figure(figsize=(14, 5))
                 plt.plot(m_flow_from_list, label="m_flow")
                 plt.xlabel("Date")
                 plt.ylabel("Mass flow in kg/s")
-                plt.title(f"PipeID {edge_data.get('pipeID', None)} Mass flow")
+                plt.title(f"PipeID {edge_data_R.get('pipeID', None)} Mass flow")
                 plt.legend()
                 plt.tight_layout()
                 plt.grid(True)
-                plt.savefig(output_dir/ f"R_pipe_m_flow_{edge_data.get('pipeID', None)}.png", dpi=300)
+                plt.savefig(output_dir/ f"R_pipe_m_flow_{edge_data_R.get('pipeID', None)}.png", dpi=300)
                 plt.close()
 
-            Q_loss_list = edge_data.get("Q_loss", None)
-            plt.figure(figsize=(14, 5))
-            plt.plot(Q_loss_list, label="m_flow")
-            plt.xlabel("Date")
-            plt.ylabel("Thermal losses in W")
-            plt.title(f"PipeID {edge_data.get('pipeID', None)} Themal loss")
-            plt.legend()
-            plt.tight_layout()
-            plt.grid(True)
-            plt.savefig(output_dir/ f"R_pipe_Q_loss_{edge_data.get('pipeID', None)}.png", dpi=300)
-            plt.close()
+            Q_loss_list = edge_data_R.get("Q_loss", None)
+            if Q_loss_list != None:
+                plt.figure(figsize=(14, 5))
+                plt.plot(Q_loss_list, label="Q_loss")
+                plt.xlabel("Date")
+                plt.ylabel("Thermal losses in W")
+                plt.title(f"PipeID {edge_data.get('pipeID', None)} Themal loss")
+                plt.legend()
+                plt.tight_layout()
+                plt.grid(True)
+                plt.savefig(output_dir/ f"R_pipe_Q_loss_{edge_data.get('pipeID', None)}.png", dpi=300)
+                plt.close()
 
     def retransform_pipe_geojson_data(self, geojson_path: Path):
         """Transforms the data of the pipe onto the geojson that are given back"""
@@ -360,10 +357,14 @@ class analysis_pp:
                 "supply": {
                     "m_flow": edge_data.get("m_flow"),
                     "T_in": edge_data.get("T_in"),
+                    "T_out": edge_data.get("T_out"),
+                    "Q_loss": edge_data.get("Q_loss"),
                 },
                 "return": {
                     "m_flow": edge_data_R.get("m_flow"),
                     "T_in": edge_data_R.get("T_in"),
+                    "T_out": edge_data.get("T_out"),
+                    "Q_loss": edge_data.get("Q_loss"),
                 }
             }
 

@@ -74,7 +74,7 @@ def main():
     print(f"   Workspace: {workspace}")
 
     # Define paths to input files (these should have been generated in E18)
-    sim_path = os.path.join(workspace, "models", "Sim20260331_122112") # Example path - adjust if your simulation results are in a different location
+    sim_path = os.path.join(workspace, "models", "Sim20260402_101253") # Example path - adjust if your simulation results are in a different location
 
     print("   ✓ All paths configured")
 
@@ -90,14 +90,14 @@ def main():
         #print("\n   Running thermal loss analysis...")
         #analysis.thermal_loss_analysis()
 
-        print("\n   Running pump power analysis...")
-        analysis.pump_power_analysis()
+        #print("\n   Running pump power analysis...")
+        #analysis.pump_power_analysis()
 
-        #print("\n   Running analysis plots for pipes!")
-        #analysis.pipe_plots()
+        print("\n   Running analysis plots for pipes!")
+        analysis.pipe_plots()
 
-        print("\n   Running retransformation of data...")
-        analysis.retransform_pipe_geojson_data(Path(sim_path) /"network_full_new_simulation.geojson")
+        #print("\n   Running retransformation of data...")
+        #analysis.retransform_pipe_geojson_data(Path(sim_path) /"network_full_new_simulation.geojson")
 
     except Exception as e:
         print(f"\n    ERROR: Analysis failed with: {e}")

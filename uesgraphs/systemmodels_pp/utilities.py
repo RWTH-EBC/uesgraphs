@@ -201,42 +201,74 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, supply_ty
             continue
         elif var_name == "t_to":
             T_to = df
-            for col in T_from.columns:
+            
+            cp_default = uesgraph_input.graph["cp_default"]
+            
+            T_ground = uesgraph_input.graph.get("T_ground", None)
+            T_ground_series = pd.Series(T_ground)
+            if T_ground is None:
+                    raise ValueError("T_ground not found in graph.graph")
+            
+            for col in m_flow.columns:
                 col_idx = int(col)
-                if col_idx in pipe_map:
-                    edge = pipe_map[col_idx]
-                    m_list = m_flow_df[col].tolist()
-                    if any( i > 0 for i in m_list):
-                        #logger.info(f"Assigning T_in for edge {edge} based on t_from because m_flow > 0")
-                        #logger.info(f"m_flow values for edge {edge}: {m_list[0]}")
-                        uesgraph_input.edges[edge]["T_in"] = T_from[col].tolist()
-                    else:
-                        #logger.info(f"Assigning T_in for edge {edge} based on t_to because m_flow <= 0")
-                        #logger.info(f"m_flow values for edge {edge}: {m_list[0]}")
-                        uesgraph_input.edges[edge]["T_in"] = T_to[col].tolist()
+                
+                if col_idx not in pipe_map:
+                    continue
 
+                edge = pipe_map[col_idx]
+                edge_data = uesgraph_input.edges[edge]
+
+                kIns = edge_data.get("kIns")
+                dIns = edge_data.get("dIns")
+                length = edge_data.get("length")
+                diameter = edge_data.get("diameter")
+
+                if None in (kIns, dIns, length, diameter):
+                    continue
+
+                m_flow = m_flow_df[col]
+                m_flow_abs = m_flow.abs()
+
+                Tamb = T_ground_series.iloc[:len(m_flow)].reset_index(drop=True)
+
+                T_in_series = pd.Series(index=m_flow.index, dtype=float)
+
+                mask_pos = m_flow > 0
+                mask_neg = m_flow <= 0
+
+                T_in_series[mask_pos] = T_from[col][mask_pos]
+                T_in_series[mask_neg] = T_to[col][mask_neg]
+
+                uesgraph_input.edges[edge]["T_in"] = T_in_series.tolist()
+
+                # --- T_out ----
+                T_out = pd.Series(index=m_flow.index, dtype=float)
+
+                mask_flow = m_flow_abs > 0
+                mask_zero = m_flow_abs == 0
+
+                T_out[mask_flow] = Tamb[mask_flow] + (
+                    (T_in_series[mask_flow] - Tamb[mask_flow]) *
+                    np.exp(-kIns * np.pi * diameter * length /
+                        (m_flow_abs[mask_flow] * cp_default * dIns))
+                )
+
+                T_out[mask_zero] = Tamb[mask_zero]
+
+                uesgraph_input.edges[edge]["T_out"] = T_out.tolist()
+
+                # --- Q_loss --------------------------------------------------
+                Q_loss = pd.Series(index=m_flow.index, dtype=float)
+
+                Q_loss[mask_flow] = (
+                    m_flow_abs[mask_flow] * cp_default *
+                    (T_in_series[mask_flow] - T_out[mask_flow])
+                )
+
+                Q_loss[mask_zero] = 0
+
+                uesgraph_input.edges[edge]["Q_loss"] = Q_loss.tolist()
             continue
-            """
-            for col in T_in.columns:
-                col_idx = int(col)
-                if col_idx in pipe_map:
-
-                    edge = pipe_map[col_idx]
-                    edge_data = uesgraph_input.edges[edge]
-
-                    cp_default = uesgraph_input.graph["cp_default"]  # J/kgK, default value for water
-
-
-                    dT = dT_df[col].reset_index(drop=True)
-
-                    m_flow = m_flow_df[col].reset_index(drop=True)
-
-                    Q_loss = (
-                        m_flow*cp_default*dT
-                    )
-
-                    uesgraph_input.edges[edge]["Q_loss"] = Q_loss.tolist()
-            """
         for col in df.columns:
             col_idx = int(col)
             if col_idx in pipe_map:
