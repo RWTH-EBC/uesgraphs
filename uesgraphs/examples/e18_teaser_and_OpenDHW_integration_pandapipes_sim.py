@@ -35,6 +35,7 @@ if uesgraphs_root not in sys.path:
 from uesgraphs import UESGraph
 from uesgraphs.systemmodels_pp.utilities import uesgraph_to_pandapipes
 from uesgraphs.teaser_integration.utilities import run_sim_teaser
+from uesgraphs.DHW_estimation.utilities import generate_DHW_profiles_from_geojson
 
 
 def workspace_example(name_workspace=None):
@@ -86,7 +87,7 @@ def main():
 
     # Input file paths
     network_geojson = os.path.join(geojson_dir, 'network.geojson')
-    buildings_geojson = os.path.join(geojson_dir, 'buildings_teaser_info.geojson')
+    buildings_geojson = os.path.join(geojson_dir, 'buildings_teaser_OpenDHW_info.geojson')
     supply_geojson = os.path.join(geojson_dir, 'supply.geojson')
 
     # Ground temperature file
@@ -94,7 +95,7 @@ def main():
 
     # Excel configuration template
     excel_config_path = os.path.join(uesgraphs_dir, 'uesgraphs', 'data',
-                                     'uesgraphs_parameters_template_pp.xlsx')
+                                     'uesgraphs_parameters_template_pp_full_year.xlsx')
 
     print("   ✓ All paths configured")
 
@@ -104,7 +105,19 @@ def main():
 
     print("\n  STEP 2: Demand estimation simualtion with TEASER...")
 
-    input_heating, input_dhw, input_cooling = run_sim_teaser(buildings_info_path=buildings_geojson,
+    input_heating, input_cooling = run_sim_teaser(buildings_info_path=buildings_geojson,
+                   save_path=workspace,
+                   sim_setup_path=excel_config_path,
+                   log_level=logging.INFO
+                   )
+    
+    # =========================================================================
+    # STEP 3: Demand estimation with OpenDHW
+    # =========================================================================
+
+    print("\n  STEP 3: Demand estimation simualtion with OpenDHW...")
+
+    input_dhw = generate_DHW_profiles_from_geojson(buildings_info_path=buildings_geojson,
                    save_path=workspace,
                    sim_setup_path=excel_config_path,
                    log_level=logging.INFO

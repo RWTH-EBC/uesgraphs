@@ -367,7 +367,7 @@ def create_district(info_path, prj, logger=None):
                     internal_gains_mode=bldg_info["internal_gains_mode"]
                 )
             else:
-                logger.info(f"⚠️  Warning: Unknown archetype '{archetype}' for building '{bldg_info['name']}' - skipping")
+                logger.info(f" Warning: Unknown archetype '{archetype}' for building '{bldg_info['name']}' - skipping")
                 continue
                 
             successful_buildings += 1
@@ -388,7 +388,7 @@ def create_district(info_path, prj, logger=None):
             #                     zone.model_attr.cool_load = zone.model_attr.cool_load * 4
                     
         except Exception as e:
-            logger.info(f"⚠️  Warning: Could not process building '{i}': {e}")
+            logger.info(f"  Warning: Could not process building '{i}': {e}")
             continue
     
     logger.info(f"Successfully created {successful_buildings}/{len(building_info)} buildings")
@@ -652,7 +652,6 @@ def run_sim_teaser(buildings_info_path, save_path,
     # Step 5: Combine individual building csv files into one csv for heating and one for cooling
     heat = pd.DataFrame(index=index)
     cool = pd.DataFrame(index=index)
-    dhw = pd.DataFrame(0.0, index=index, columns=[bldg.name for bldg in prj.buildings])
     heat_list = []
     cool_list = []
     for bldg in prj.buildings:
@@ -666,8 +665,7 @@ def run_sim_teaser(buildings_info_path, save_path,
 
     heat.to_csv(os.path.join(demand_csv_path, "demands-heat.csv"))
     cool.to_csv(os.path.join(demand_csv_path, "demands-cool.csv"))
-    dhw.to_csv(os.path.join(demand_csv_path, "demands-dhw.csv"))
     
     shutil.rmtree(tmp_results)
 
-    return os.path.join(demand_csv_path, "demands-heat.csv"),  os.path.join(demand_csv_path, "demands-dhw.csv"), os.path.join(demand_csv_path, "demands-cool.csv")
+    return os.path.join(demand_csv_path, "demands-heat.csv"), os.path.join(demand_csv_path, "demands-cool.csv")

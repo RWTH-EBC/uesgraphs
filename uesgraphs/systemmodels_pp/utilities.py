@@ -209,7 +209,7 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, supply_ty
             if T_ground is None:
                     raise ValueError("T_ground not found in graph.graph")
             
-            for col in m_flow.columns:
+            for col in T_to.columns:
                 col_idx = int(col)
                 
                 if col_idx not in pipe_map:
