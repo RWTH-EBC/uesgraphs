@@ -272,8 +272,9 @@ def load_component_parameters(excel_path, component_type):
     
 def create_profiles(info_path, 
                     timestep, 
-                    holidays= OpenDHW.get_holidays(country_code = "DE", year = 2019),
-                    mean_drawoff_vol_per_day = 40,
+                    mean_drawoff_vol_per_day,
+                    temp_dT_dhw,
+                    holidays= OpenDHW.get_holidays(country_code = "DE", year = 2025),
                     logger=None):
     """Create DHW profiles according to infos in geojson.
 
@@ -281,8 +282,21 @@ def create_profiles(info_path,
     ----------
     info_path : path
         Full path to json with building infos.
+    timestep : int
+        Timestep in seconds for the generated time-series.
+    holidays : list of datetime.date, optional
+        List of holiday dates to consider in the profile generation (default: German holidays for 2025).
+    mean_drawoff_vol_per_day : float
+        Average drawoff volume per day in liters per occupant
+    logger : logging.Logger, optional
+        Logger instance for logging progress and warnings (default: None, creates a new logger if not provided).
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame containing the generated DHW profiles for each building
     """
-    district_file = info_path
+    district_file = info_path       
     
     if not os.path.exists(district_file):
         raise FileNotFoundError(f"District file not found: {district_file}")
@@ -303,7 +317,7 @@ def create_profiles(info_path,
             if i % 5 == 0 or i <= 10:  # More frequent feedback
                 logger.info(f"  Processing building {i}/{len(building_info)}: {bldg_info['name']}")
                 
-            # Map archetype to TEASER geometry_data
+            # Map archetype to OpenDHW types
             archetype = bldg_info["archetype"]
             
             if archetype in ["OfficeExisting", "OfficeWithDataCenter", "OfficeHighRise", "OfficeHighRiseKita"]:
@@ -319,6 +333,7 @@ def create_profiles(info_path,
                 )
                 timeseries_df = OpenDHW.compute_heat(
                     timeseries_df=timeseries_df,
+                    temp_dT=temp_dT_dhw
                 )
             elif archetype in ["MultiFamilyHouse"]:
                 # generate time-series with OpenDHW
@@ -333,6 +348,7 @@ def create_profiles(info_path,
                 )
                 timeseries_df = OpenDHW.compute_heat(
                     timeseries_df=timeseries_df,
+                    temp_dT=temp_dT_dhw
                 )
             elif archetype in ["SingleFamilyHouse"]:
                 # generate time-series with OpenDHW
@@ -347,6 +363,7 @@ def create_profiles(info_path,
                 )
                 timeseries_df = OpenDHW.compute_heat(
                     timeseries_df=timeseries_df,
+                    temp_dT=temp_dT_dhw
                 )
             else:
                 logger.info(f"  Warning: Unknown archetype '{archetype}' for building '{bldg_info['name']}' - skipping")
@@ -375,14 +392,16 @@ def create_profiles(info_path,
     return df
 
 def generate_DHW_profiles_from_geojson(buildings_info_path, save_path, 
-                   timestep=3600, 
-                   sim_setup_path=None, 
-                   logger=None,
-                   log_level=logging.DEBUG
-                   ):
+                    timestep=3600,
+                    mean_drawoff_vol_per_day=40,
+                    temp_dT_dhw=35, 
+                    sim_setup_path=None, 
+                    logger=None,
+                    log_level=logging.DEBUG
+                    ):
     
     if logger is None:
-        logger = set_up_file_logger("TEASERSim", level=int(log_level))
+        logger = set_up_file_logger("OpenDHWRun", level=int(log_level))
 
     # Step 0: Load simulation settings
 
@@ -390,6 +409,8 @@ def generate_DHW_profiles_from_geojson(buildings_info_path, save_path,
         try:
             sim_params = load_simulation_settings_from_excel(sim_setup_path, logger)
             timestep = int(sim_params.get('timestep', timestep))
+            mean_drawoff_vol_per_day = float(sim_params['mean_drawoff_vol_per_day'])
+            temp_dT_dhw = float(sim_params['temp_dT_dhw'])
             logger.info(f"Loaded simulation settings from Excel: timestep={timestep}")
         except Exception as e:
             logger.warning(f"Could not load simulation settings from Excel: {e}. Using default values.")
@@ -405,12 +426,16 @@ def generate_DHW_profiles_from_geojson(buildings_info_path, save_path,
     if not os.path.exists(demand_csv_path):
         os.makedirs(demand_csv_path)
 
-    dhw = create_profiles(buildings_info_path, timestep, logger=logger)
+    # Step 1: Create DHW profiles
+
+    dhw = create_profiles(buildings_info_path, timestep, mean_drawoff_vol_per_day, temp_dT_dhw, logger=logger)
 
     if len(dhw) != len(index):
         logger.warning("Length mismatch between DHW data and index")
     else:
         dhw.index = index
+    
+    # Step 2: Save to CSV
 
     dhw.to_csv(os.path.join(demand_csv_path, "demands-dhw.csv"), index= True)
 

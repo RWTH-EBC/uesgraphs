@@ -1,14 +1,15 @@
 """
-TEASER Integration with pandapipes Simulation using GeoJSON Input
+TEASER and OpenDHW Integration with pandapipes Simulation using GeoJSON Input
 ==============================================================
 
-This example demonstrates the workflow if the TEASER integration is used on the example 17.
+This example demonstrates the workflow if the TEASER integration and the DHW estimation is used on the example 17.
 
 Main difference:
-    - The use of a different geojson which has the information required for TEASER integration
-    - The run_sim_teaser function is used to generate the building demands
+    - The use of a different geojson which has the information required for TEASER integration and DHW estimation
+    - The run_sim_teaser function is used to generate the building heating and (cooling) demands
+    - The generate_DHW_profiles_from_geojson function is used to generate the DHW demand profiles based on the OpenDHW estimation method.
 
-The run_sim_teaser function generates the heating, DHW, and cooling demand time series files 
+The run_sim_teaser function generates the heating and cooling demand time series files 
 based on the building information provided in the GeoJSON file.
 
 Therefore the input parameters:
@@ -20,6 +21,19 @@ Optional parameters:
     - The stop time in seconds for the simulation (default is 8760*3600 for one year of hourly data)
     - A specific sim_setup_path for TEASER configuration, which is given in the Modelica 
       or pandapipes example (E16 and E17) to set the timestep and stop time accordingly.
+
+The generate_DHW_profiles_from_geojson function generates the DHW demand time series files 
+based on the building information provided in the GeoJSON file.
+
+Therefore the input parameters:
+    - The path to the building GeoJSON file
+    - The save path for the generated demand files
+Optional parameters:
+    - The timestep in seconds for the simulation (default is 3600 for hourly data)
+    - The mean draw off volume per person in liters (default is 40L/person/day)
+    - The temperature difference between freshwater and average DHW outlet temperature in K (default is 35K)
+    - A specific sim_setup_path for OpenDHW configuration, which is given in the Modelica 
+      or pandapipes example (E16 and E17) to set the timestep, mean draw off volume and temperature difference accordingly.
 """
 
 import os
@@ -100,10 +114,10 @@ def main():
     print("   ✓ All paths configured")
 
     # =========================================================================
-    # STEP 2: Demand estimation simualtion with TEASER
+    # STEP 2.1: Demand estimation simulation with TEASER
     # =========================================================================
 
-    print("\n  STEP 2: Demand estimation simualtion with TEASER...")
+    print("\n  STEP 2.1: Demand estimation simulation with TEASER...")
 
     input_heating, input_cooling = run_sim_teaser(buildings_info_path=buildings_geojson,
                    save_path=workspace,
@@ -112,10 +126,10 @@ def main():
                    )
     
     # =========================================================================
-    # STEP 3: Demand estimation with OpenDHW
+    # STEP 2.2: Demand estimation with OpenDHW
     # =========================================================================
 
-    print("\n  STEP 3: Demand estimation simualtion with OpenDHW...")
+    print("\n  STEP 2.2: Demand estimation simulation with OpenDHW...")
 
     input_dhw = generate_DHW_profiles_from_geojson(buildings_info_path=buildings_geojson,
                    save_path=workspace,
