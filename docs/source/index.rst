@@ -66,6 +66,12 @@ Follow these steps to install **UESgraphs** using Conda:
 
         pip install uesgraphs[templates]
 
+   * **For pandapipes simulations**:
+
+       .. code-block:: bash
+   
+         pip install uesgraphs[pandapipes]
+
    * **For development (includes testing and coverage tools)**:
 
      .. code-block:: bash
@@ -110,6 +116,12 @@ Follow these steps to install **UESgraphs** using Conda:
      .. code-block:: bash
 
         pip install -e <path/to/your/uesgraphs>[templates]
+
+   * **For pandapipes simulations**:
+
+       .. code-block:: bash
+   
+         pip install -e <path/to/your/uesgraphs>[pandapipes]
 
    * **For development (includes testing and coverage tools)**:
 
@@ -201,7 +213,7 @@ For more detailed information, please check the ``pyproject.toml`` file.
 **UESgraphs** is built with `networkx` as its core library. The typical workflow for the tool involves:
 
 .. image:: _static/uesgraph_function_principle.png
-   :alt: Developed workflow using UESgraphs v 2.0.0
+   :alt: Developed workflow using UESgraphs v 3.0.0
    :align: center
    :width: 100%
 
@@ -217,6 +229,10 @@ The functional principle of **UESgraphs** can be summarized as under:
 
 * UESgraphs automates the generation of dynamic simulation models by transforming graph representations into Modelica code through templated model export.
 
+* UESgraphs allows the execution of static and dynamic pandapipes simulations based on the graph structure and the provided input data.
+
+* UESgraphs integrates a DHW and heat estimation with OpenDHW and TEASER and allows a direct simulation with the generated input data.
+
 * The tool facilitates downstream analysis and visualization, including color-coded plots and KPI extraction, to support evaluation and decision-making.
 
 
@@ -230,6 +246,8 @@ API Documentation
      guides/model_generation_pipeline
      guides/hydronic_sizing
      guides/Template_Generation.rst
+     guides/model_generation_pandapipes
+     guides/OpenDHW_and_TEASER_integration
 
   .. toctree::
      :maxdepth: 2
@@ -237,13 +255,18 @@ API Documentation
      
      architecture/modelica_pipeline
      architecture/graph_transformation
+     architecture/pandapipes_pipeline
+     architecture/teaser_opendhw_integration
 
   .. toctree::
      :maxdepth: 2
      :caption: API Reference:
 
      api_core_modules
+     api_OpenDHW_int
+     api_TEASER_int
      api_system_models
+     api_system_models_pp
      api_examples
 
 Indices and tables

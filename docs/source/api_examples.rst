@@ -21,6 +21,9 @@ Python Script Examples
    uesgraphs.examples.e12_template_generation_example
    uesgraphs.examples.e13_analyze_uesgraphs_example
    uesgraphs.examples.e16_complete_geojson_to_modelica
+   uesgraphs.examples.e17_complete_geojson_to_pandapipes
+   uesgraphs.examples.e18_teaser_and_OpenDHW_integration_pandapipes_sim
+   uesgraphs.examples.e19_pandapipes_analysis
 
 Jupyter Notebook Examples
 --------------------------
