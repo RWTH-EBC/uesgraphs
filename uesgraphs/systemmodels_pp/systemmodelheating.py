@@ -1088,8 +1088,6 @@ class SystemModelHeating(UESGraph):
                     self.pp_network.pipe.loc[pipe_id, "text_k"] = T_ground
                 
                 sorted_supply_pipes, sorted_return_pipes, layer_by_pipe, layer_by_pipe_return, pipe_list_in = self.pipe_order(pipe_list, heat_source_ids, heat_source_r_ids, logger)
-
-                logger.info(f"Completed hydraulic simulation for time step {n+1} at time {t+dt} seconds.")
                 n+=1
                 
 

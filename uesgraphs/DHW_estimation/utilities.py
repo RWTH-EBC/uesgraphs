@@ -399,6 +399,34 @@ def generate_DHW_profiles_from_geojson(buildings_info_path, save_path,
                     logger=None,
                     log_level=logging.DEBUG
                     ):
+    """
+    Run OpenDHW for demand estimation based on building information from a .geojson file.
+
+    Parameters:
+    -----------
+    buildings_info_path : str
+        The path to the .geojson file containing building information for TEASER model creation.
+    save_path : str or Path
+        Directory path where the resulting demand CSV files will be saved.
+    timestep : int, optinal
+        Simulation timestep in seconds (default is 3600 for hourly data)
+    mean_drawoff_vol_per_day : float, optional
+        Average drawoff volume per day in liters per occupant (default is 40 L/day/occupant)
+    temp_dT_dhw : float, optional
+        Temperature difference for Heat calculation from mass flows in K (default is 35 K)
+    sim_setup_path : str or Path, optional
+        Path to the simulation setup for timestep and stop time. If not provided, default values will be used.
+    logger : logging.Logger, optional
+        Logger instance. If None, creates a new file logger in temp directory
+    log_level : int, optional
+        Logging level (default is logging.DEBUG). Only used if logger is None
+
+    Returns:
+    --------
+    tuple
+        Paths to the generated demand CSV files: (heating_demand_csv, cooling_demand_csv)
+
+    """
     
     if logger is None:
         logger = set_up_file_logger("OpenDHWRun", level=int(log_level))

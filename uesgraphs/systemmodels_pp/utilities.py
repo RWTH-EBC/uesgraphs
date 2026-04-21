@@ -205,7 +205,6 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, supply_ty
             cp_default = uesgraph_input.graph["cp_default"]
             
             T_ground = uesgraph_input.graph.get("T_ground", None)
-            T_ground_series = pd.Series(T_ground)
             if T_ground is None:
                     raise ValueError("T_ground not found in graph.graph")
             
@@ -229,7 +228,9 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, supply_ty
                 m_flow = m_flow_df[col]
                 m_flow_abs = m_flow.abs()
 
-                Tamb = T_ground_series.iloc[:len(m_flow)].reset_index(drop=True)
+                Tamb = pd.Series(T_ground)
+                Tamb = Tamb.iloc[m_flow.index]
+                Tamb.index = m_flow.index
 
                 T_in_series = pd.Series(index=m_flow.index, dtype=float)
 

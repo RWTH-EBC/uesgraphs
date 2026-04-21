@@ -26,27 +26,25 @@ Table of Contents
 Overview
 --------
 
-The UESGraphs pandapipes simulation pipeline enables the execution of
-thermo-hydraulic network simulations based on the graph-structure.
+The TEASER and OpenDHW integration enables the estimations of 
+demands necessary for the simulation.
 
 Key Design Principles
 ~~~~~~~~~~~~~~~~~~~~~
 
-1. **Graph as Single Source of Truth**: All topology, parameters and 
-   time-series references are stored on the UESGraph before model generation
-2. **Excel-based Configuration**: Uniform parameters (pipes, supply, demand,
-   simulation setup) are read from Excel sheets
-3. **Fail Early**: Missing files, invalid graphs or inconsistent parameters 
-   abort the pipeline with explicit error messages
+1. **GeoJSON as main file for buildings**: All building properties are 
+   stored on in buildings_geojson before estimation.
+2. **Excel-based Configuration**: Uniform parameters (simulation setup) 
+   are read from Excel sheets.
 4. **Traceability**: Every major processing step persists 
-   intermediate graph states to JSON
+   intermediate states of data.
 
 Technology Stack
 ~~~~~~~~~~~~~~~~
 
-- **Graph Representation**: NetworkX-based UESGraph
+- **Buildings**: GeoJSON file
 - **Simulation Engine**: pandapipes
-- **Configuration**: Excel (openpyxl)
+- **Configuration**: Excel or directly
 - **Time-Series Data**: CSV files
 
 --------------
@@ -57,206 +55,92 @@ Pipeline Architecture
 High-Level Flow
 ~~~~~~~~~~~~~~~
 
+TEASER:
 ::
 
-   UESGraph / JSON
+   GeoJSON
         ↓
-   uesgraph_to_pandapipes
+   run_sim_teaser
         ↓
-   ┌─────────────────────────────────┐
-   │ 1. Validate input paths         │
-   │ 2. Load simulation settings     │
-   │ 3. Normalize UESGraph           │
-   │ 4. Assign demands               │
-   │ 5. Assign pipe parameters       │
-   │ 6. Assign supply parameters     │
-   │ 7. Assign demand parameters     │
-   │ 8. Load ground temperature      │  
-   │ 9. Generate pandapipes model    │
-   └─────────────────────────────────┘
+   ┌──────────────────────────────────┐
+   │ 0. Load simulation settings and  │
+   │    set up directories            │
+   │ 1. Create TEASER project         │
+   │ 2. Temporary directory and       │
+   │    AixLib export                 │
+   │ 3. Run simulations               │
+   │ 4. Read results and save data    │
+   │ 5. Combine results for demand CSV│
+   └──────────────────────────────────┘
         ↓
-   pandapipes Results
+   demands-heat.csv
+   demands-cool.csv
 
+OpenDHW:
+::
+
+   GeoJSON
+        ↓
+   generate_DHW_profiles_from_geojson
+        ↓
+   ┌──────────────────────────────────┐
+   │ 0. Load simulation settings and  │
+   │    set up directories            │
+   │ 1. Create DHW profiles           │
+   │ 2. Save profiles to CSV          │
+   └──────────────────────────────────┘
+        ↓
+   demands-dhw.csv
 -------------
 
-Core Entry Point
+Core Entry Points
 ----------------
 
-### `uesgraph_to_pandapipes(...)`
+### `run_sim_teaser(...)`
 
-**Location**: ``systemmodels_pp/utilities.py``
-**Responsibility**: End-to-end orchestration of pandapipes simulations
-**Inputs**: UESGraph or JSON path, Excel config, demand CSVs, ground
-  temperature data
-**Outputs**: Timestamped directory with pandapipes files
+**Location**: ``teaser_integration/utilities.py``
+**Responsibility**: End-to-end orchestration of TEASER integration
+**Inputs**: GeoJSON, either Excel config or timestep and stoptime,
+   weather data
+**Outputs**: Heat and cool demand files as CSV
 
-----------------
+### `generate_DHW_profiles_from_geojson(...)`
 
-Parameter Assignment Flow
--------------------------
+**Location**: ``DHW_estimation/utilities.py``
+**Responsibility**: End-to-end orchestration of OpenDHW integration
+**Inputs**: GeoJSON, either Excel config or timestep, mean draw-off and 
+   temperature difference for DHW
+**Outputs**: DHW demand file as CSV
 
-### Execution Order
+TEASER usage
+------------
 
-::
+1. TEASER is integrated with creating a TEASER project and assigning the buildings with the propertiers given from the geojson.
+   Here archetypes like "OfficeExisting", "OfficeWithDataCenter", "OfficeHighRise", "OfficeHighRiseKita" are set 
+   with construction_data= "iwu_heavy" and geometry_data="bmvbs_office".
+   For archetype "MultiFamilyHouse" construction_data= "tabula_de_standard" and geometry_data="tabula_de_multi_family_house" and
+   for "SingleFamilyHouse" construction_data= "tabula_de_standard" and geometry_data="tabula_de_single_family_house" are set.
+   The other properties are set directly. Other archetypes are not allowed in this implementation.
+2. Then exporting AixLib, so cloning the repository if necessary and creating temporary directory for the Modelica simulations.
+3. Running the simulations with specific simulation architecture in Dymola. 
+4. Reading the results and saving the data in a csv files for each building and after that combining the files to one demand csv.
 
-   1. Demand data assignment
-   2. Pipe parameters (Excel: "Pipes")
-   3. Supply parameters (Excel: "Supply")
-   4. Demand parameters (Excel: "Demands")
+Important notes:
+   - Dymola must be installed and Python has to recognize it
+   - Since only timestep and stoptime is used, it is not possible to change the start_time, so always start at 0 then.
 
----
-
-### Pipe Parameters
-
-Assigned to **edges**:
-
-- `dIns`
-- `kIns`
-- `roughness`
-- `ground_depth`
-- `sections`
-
-Source: Excel sheet **"Pipes"**  
-Missing values fall back to hardcoded defaults.
-
----
-
-### Supply Parameters
-
-Applied to **building nodes** flagged as supply:
-
-```python
-is_supply_heating == True
-```
-
-Assigned attributes:
-
-- `TIn`
-- `TReturn`
-- `dpIn`
-- `pReturn`
-- `dpFlow`
-
-Unit conversions (Pa → bar) are handled explicitly in the pipeline.
-
-The total number of supplies is stored as:
-
-```python
-uesgraph.graph["number_of_supplies"]
-```
-
----
-
-### Demand Parameters
-
-Applied to **non-supply building nodes**:
-
-- `dTDesign`
-- `TReturn`
-- `cp_default`
-
-Additionally, network-wide defaults are stored on graph level:
-
-```python
-uesgraph.graph["dT_Net"]
-uesgraph.graph["cp_default"]
-```
-
----
-
-Demand & Time-Series Handling
------------------------------
-
-### Demand Assignment
-
-Demand CSVs are mapped via:
-
-```python
-assign_demand_data(uesgraph, {
-    "heating": input_heating,
-    "cooling": input_cooling,
-    "dhw": input_dhw
-})
-```
-
-Result:
-
-- Time-series are attached as **graph node attributes**
-- Naming conventions are preserved for downstream processing
-
-### Ground Temperature
-
-Ground temperature CSV is loaded once and later sliced by **ground
-depth**, defined in the simulation Excel:
-
-```python
-ground_temp_list = ground_temp_df[ground_depth].tolist()
-```
-
----
-
-
-pandapipes Model Generation
+OpenDHW profiles generation
 ---------------------------
 
-### Model Directory Creation
+1. OpenDHW is integrated with creating the profiles for each building with the properties given from the geojson. 
+   Here the archetypes like "OfficeExisting", "OfficeWithDataCenter", "OfficeHighRise", "OfficeHighRiseKita" are set 
+   with building_type="OB", the archetype "MultiFamilyHouse" is set with building_type="MFH" and "SingleFamilyHouse" are set 
+   with building_type="SFH". The other properties are set directly. Other archetypes are not allowed in this implementation.
+2. The resulting DataFrame of the profiles is saved in a csv file.
 
-Each simulation run creates a timestamped folder:
-
-::
-
-   workspace/
-     └── models/
-         └── SimYYYYMMDD_HHMMSS/
-
-### Model Generation
-
-The final pandapipes model is created via:
-
-```python
-generate_simulation_model(
-    uesgraph,
-    sim_name,
-    sim_params,
-    ground_temp_list,
-    sim_model_dir
-)
-```
-
-**Responsibilities of `generate_simulation_model`:**
-
-- Convert UESGraph → pandapipes net
-- Create pipes, junctions, sinks, sources
-- Assign thermal & hydraulic parameters
-- Attach time-series data
-- Execute simulation
-
-**Used components**:
-
-- pandapipes.pipe
-- pandapipes.heat_consumer
-- pandapipes.circ_pump_pressure
-- pandapipes.circ_pump_mass (if multiple supplies)
-- pandapipes.junction
-
-**Solver Settings for static simulation**:
-
-- mode: 'bidirectional'
-- iter: 500
-- using full pandapipes calculation for all variables
-
-**Solver Settings for dynamic simulation**:
-
-- mode: 'hydraulics'
-- iter: 500
-- using only hydraulics pandapipes calculations
-- Layer-Structuring for order of temperature calculations
-- Implicit euler calculation for outlet pipe temperature
-- Mixing temperature calculation with averaging over mass flows
-
----
-
-
+Important notes:
+   - Since only timestep, it is not possible to change the start_time nor stop_time, so always start at 0 and stoptime is 
+   always set to one year because of OpenDHW's internal architecture.
 
 File & Folder Structure
 -----------------------
@@ -264,54 +148,20 @@ File & Folder Structure
 ::
 
    workspace/
-     ├── uesgraphs_origin.json
-     ├── uesgraphs_with_demand.json
-     ├── uesgraphs_simplified.json
-     └── models/
-         └── Sim20250115_101530_MySimulation/
-             ├── uesgraphs.json
-             ├── uesgraphs_return.json
-             ├── [component models]
-             └── setup_params.csv   (optional)
-
----
-
-Validation & Error Handling
----------------------------
-
-### Validation Levels
-
-1. **File System**
-   - Missing files → abort
-
-2. **Graph Consistency**
-   - Missing edge names → auto-generated
-   - Invalid graph type → abort
-
-3. **Excel Parsing**
-   - Missing sheets → abort
-   - Missing values → defaults or error (depending on context)
-
-4. **Simulation Generation**
-   - pandapipes errors are logged and re-raised
-
-### Logging Strategy
-
-- DEBUG: Detailed processing steps
-- INFO: Pipeline milestones
-- ERROR: Abort conditions
+     └── demand_csv/
+         ├── demands-cool.csv (from TEASER)
+         ├── demands-dhw.csv (from OpenDHW)
+         └── demands-heat.csv (from TEASER)
 
 ---
 
 Extension Guide
 ---------------
 
-### Adding New Parameters
+### Changing initial parameters of TEASER or OpenDHW integration
 
-1. Add attribute to UESGraph (node or edge)
-2. Reference or override via Excel
-3. Ensure `generate_simulation_model` consumes the parameter
+1. Some parameters could be also set via Excel if necessary
 
 ---
 
-*This document describes the architecture of the UESGraphs pandapipes simulation pipeline.*
+*This document describes the architecture of the TEASER and OpenDHW integration in UESGRAPH.*

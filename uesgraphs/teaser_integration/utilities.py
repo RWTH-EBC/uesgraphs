@@ -545,7 +545,7 @@ def run_sim_teaser(buildings_info_path, save_path,
     Returns:
     --------
     tuple
-        Paths to the generated demand CSV files: (heating_demand_csv, dhw_demand_csv, cooling_demand_csv)
+        Paths to the generated demand CSV files: (heating_demand_csv, cooling_demand_csv)
 
     """
     if logger is None:
