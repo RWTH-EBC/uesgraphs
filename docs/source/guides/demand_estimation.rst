@@ -3,6 +3,13 @@ Heat and DHW Demand Estimation
 
 Generate Heat and DHW estimation profiles, which can be used in the simulations with uesgraphs.
 
+Before Start
+------------
+
+Check that TEASER was installed with pip, also since TEASER does simulations with the Dymola interface in Python.
+Search in the installation Dymola folder C:\Program Files\YOUR_DYMOLA_FOLDER\Modelica\Library\python_interface for a .whl for installation with pip
+Do this manually in the environment you are working in, if the installation worked, The functions will recognize Dymola
+
 Quick Start
 -----------
 

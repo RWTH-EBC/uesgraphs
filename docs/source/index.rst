@@ -248,6 +248,7 @@ API Documentation
      guides/Template_Generation.rst
      guides/model_generation_pandapipes
      guides/OpenDHW_and_TEASER_integration
+     guides/analysis_tools_pp
 
   .. toctree::
      :maxdepth: 2

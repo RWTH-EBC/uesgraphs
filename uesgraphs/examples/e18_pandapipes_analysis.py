@@ -3,14 +3,17 @@ Example for analyzing pandapipes simulation results using the analysis_pp class.
 ==============================================================
 
 This example demonstrates the workflow if for analyzing pandapipes simulation results using the analysis_pp class.
-Ensure that this example is run after completing E18, which generates the necessary simulation results and UESGraph JSON files for analysis.
+Ensure that this example is run after completing E17, which generates the necessary simulation results and UESGraph JSON files for analysis.
 
 Here are the steps covered in this example:
 1. **Setup Workspace and Paths**: 
-    Create a local workspace for this example and define paths to the simulation results generated in E18.
+    Create a local workspace for this example and define paths to the simulation results generated in E17.
 2. **Generate analysis class and run analysis**: 
     Create an instance of the analysis_pp class with the path to the simulation results and optionally set the timestep. 
     Then, call the thermal_loss_analysis and pump_power_analysis methods to perform the analyses.
+    Also pipe_plots allows a deeper analysis of the pipe results, so you get plots of all avaible simulation variables for the whole timeseries. 
+    You can use retransform_pipe_geojson_data to retransform the data to the geojson that is used but the path has to bet set and the file will be overwritten,
+    so a copy of the original file should be made if you want to keep the original data.
     For the pump power analysis a parameter eta_total is set to 0.65, adjust this value as needed for your specific system by setting it in the method call.
 3. **Summary and Next Steps**:
     Summarize the results printed in the terminal and suggest next steps for further analysis or visualization.
@@ -61,7 +64,7 @@ def workspace_example(name_workspace=None):
 
 def main():
     print("="*80)
-    print("E19: Pandapipes simulation to analyze results")
+    print("E18: Pandapipes simulation to analyze results")
     print("="*80)
 
     # =========================================================================
@@ -70,10 +73,10 @@ def main():
     print("\n STEP 1: Setting up workspace and paths...")
 
     # Create workspace directory for this example
-    workspace = workspace_example("e18")
+    workspace = workspace_example("e17")
     print(f"   Workspace: {workspace}")
 
-    # Define paths to input files (these should have been generated in E18)
+    # Define paths to input files (these should have been generated in E17)
     sim_path = os.path.join(workspace, "models", "Sim20260402_101253") # Example path - adjust if your simulation results are in a different location
 
     print("   ✓ All paths configured")
@@ -87,17 +90,18 @@ def main():
     analysis = analysis_pp(root_path=Path(sim_path))
 
     try:
-        #print("\n   Running thermal loss analysis...")
-        #analysis.thermal_loss_analysis()
+        print("\n   Running thermal loss analysis...")
+        analysis.thermal_loss_analysis() 
 
-        #print("\n   Running pump power analysis...")
-        #analysis.pump_power_analysis()
+        print("\n   Running pump power analysis...")
+        analysis.pump_power_analysis()
 
-        print("\n   Running analysis plots for pipes!")
-        analysis.pipe_plots()
+        #print("\n   Running analysis plots for pipes...")
+        #analysis.pipe_plots()
+        # Adjust uesgraphs/analyze/analysis_pp.py if not all plots are needed or if you want to customize the plots
 
-        #print("\n   Running retransformation of data...")
-        #analysis.retransform_pipe_geojson_data(Path(sim_path) /"network_full_new_simulation.geojson")
+        print("\n   Running retransformation of data...")
+        analysis.retransform_pipe_geojson_data(Path(sim_path) /"network_full_new_simulation.geojson")
 
     except Exception as e:
         print(f"\n    ERROR: Analysis failed with: {e}")
@@ -108,7 +112,7 @@ def main():
     # STEP 3: Summary and Next Steps
     # =========================================================================
     print("\n" + "="*80)
-    print(" E19 Example Completed Successfully!")
+    print(" E18 Example Completed Successfully!")
     print("="*80)
 
     print(f"\n What was printed:")
@@ -121,7 +125,7 @@ def main():
 
 if __name__ == "__main__":
     print("\n" + "="*80)
-    print("UESGraphs Example 19: Analyzing pandapipes simulation results using analysis_pp class")
+    print("UESGraphs Example 18: Analyzing pandapipes simulation results using analysis_pp class")
     print("="*80)
 
     main()

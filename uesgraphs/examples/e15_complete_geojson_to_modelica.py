@@ -1,8 +1,20 @@
 """
-GeoJSON Import to pandapipes Simulation results
+GeoJSON Import to Modelica Code Generation
 ==============================================================
 
-This example demonstrates the workflow for generating and simulating pandapipes variant.
+This example demonstrates the workflow for generating modelica simulation files.
+
+=== Main lesson: Know your template! ===
+
+The pipeline checks, which parameters are required for each component template. Following
+parameters are read from template:
+- MAIN, 
+- AUX and 
+- CONNECTOR
+
+Those parameters have to be provided either via graph attributes, excel template or references.
+This example shows how to use it.
+
 
 
 Workflow Overview:
@@ -10,15 +22,15 @@ Workflow Overview:
 1. **GeoJSON Import**: Load network topology, buildings, and supply stations from GeoJSON files
 2. **Demand Data Assignment**: Attach heating, DHW, and cooling demand time series to buildings
 3. **Excel-Based Configuration**: Use Excel template to configure all simulation and component parameters
-4. **Pandapipes Simulation**: Automatically generates pandapipes model and simulates it
+4. **Modelica Generation**: Automatically generate ready-to-simulate Modelica code
 
 Excel Configuration Structure:
 ------------------------------
 The Excel template has four sheets:
-1. **Simulation**: Simulation parameters (time settings, medium, etc.)
-2. **Pipes**: Pipe network parameters (insulation, roughness, etc.)
-3. **Supply**: Supply station parameters (pressures, temperatures etc.)
-4. **Demands**: Demand substation parameters (temperatures and temperature differences etc.)
+1. **Simulation**: Simulation parameters (solver, time settings, medium, etc.)
+2. **Pipes**: Pipe network parameters (template, insulation, roughness, etc.)
+3. **Supply**: Supply station parameters (template, max heat demand, pressures, etc.)
+4. **Demands**: Demand substation parameters (template, temperatures, heat exchanger settings, etc.)
 
 Input Data Requirements:
 -----------------------
@@ -30,12 +42,13 @@ Input Data Requirements:
 
 Example Directory Structure:
 ----------------------------
-workspace/e17/
+workspace/e15/
 ├── simple_district_graph.json          # Saved UESGraph after GeoJSON import
-├── models/                             # Generated pandapipes files
+├── models/                             # Generated Modelica files
 │   └── Sim20250102_123456_MySimulation/
-│       ├── [component models]          # Individual component files
-│       └── Sim20250102_123456.csv      # Parameters summary CSV
+│       ├── MySimulation.mo             # Main Modelica model
+│       ├── package.mo                  # Modelica package definition
+│       └── [component models]          # Individual component files
 └── [demand and ground temp CSVs]       # Input time series data
 
 Notes:
@@ -43,6 +56,7 @@ Notes:
 - The pipeline automatically handles parameter assignment and validation
 - Missing buildings in demand files will use dummy demand profiles
 - The Excel template can be customized for different simulation scenarios
+- Generated Modelica models are compatible with Dymola and require AixLib library
 """
 
 import os
@@ -56,7 +70,7 @@ if uesgraphs_root not in sys.path:
     sys.path.insert(0, uesgraphs_root)
 
 from uesgraphs import UESGraph
-from uesgraphs.systemmodels_pp.utilities import uesgraph_to_pandapipes
+from uesgraphs.systemmodels.model_generation_pipeline import uesgraph_to_modelica
 
 
 def workspace_example(name_workspace=None):
@@ -89,7 +103,7 @@ def workspace_example(name_workspace=None):
 
 def main():
     print("="*80)
-    print("E17: GeoJSON to pandapipes simulation")
+    print("E15: GeoJSON to Modelica Code Generation")
     print("="*80)
 
     # =========================================================================
@@ -98,7 +112,7 @@ def main():
     print("\n STEP 1: Setting up workspace and paths...")
 
     # Create workspace directory for this example
-    workspace = workspace_example("e17")
+    workspace = workspace_example("e15")
     print(f"   Workspace: {workspace}")
 
     # Get paths to example data files
@@ -119,7 +133,7 @@ def main():
 
     # Excel configuration template
     excel_config_path = os.path.join(uesgraphs_dir, 'uesgraphs', 'data',
-                                     'uesgraphs_parameters_template_pp.xlsx')
+                                     'uesgraphs_parameters_template.xlsx')
 
     print("   ✓ All paths configured")
 
@@ -148,8 +162,18 @@ def main():
     print(f"     - Saved graph to: {graph_json_path}")
 
     # =========================================================================
-    # STEP 3: Generate pandapipes simulation results using New Excel-Based Pipeline
+    # STEP 3: Generate Modelica Code using New Excel-Based Pipeline
     # =========================================================================
+    print("\n  STEP 3: Generating Modelica code using Excel-based pipeline...")
+    print("   The pipeline will now:")
+    print("   1. Validate/generate edge names (required for Modelica)")
+    print("   2. Load simulation settings from Excel 'Simulation' sheet")
+    print("   3. Assign heating, DHW, and cooling demand data to building nodes")
+    print("   4. Assign pipe parameters from Excel 'Pipes' sheet")
+    print("   5. Assign supply station parameters from Excel 'Supply' sheet")
+    print("   6. Assign demand substation parameters from Excel 'Demands' sheet")
+    print("   7. Validate all required (MAIN) parameters are present")
+    print("   8. Generate Modelica model files with timestamped directory")
     print(f"\n   Excel configuration: {excel_config_path}")
     print(f"   Demand files:")
     print(f"     - Heating: {os.path.basename(input_heating)}")
@@ -162,7 +186,7 @@ def main():
     try:
         # Run the new Excel-based pipeline
         # Note: You can pass either a UESGraph object OR a path to a JSON file
-        uesgraph_to_pandapipes(
+        uesgraph_to_modelica(
             uesgraph=graph,                    # UESGraph object (or JSON path string)
             simplification_level=0,            # No simplification (use full network)
             workspace=workspace,               # Output directory
@@ -174,7 +198,7 @@ def main():
             log_level=logging.INFO            # Logging level (INFO for moderate detail)
         )
 
-        print("\n    SUCCESS: Pandapipes simulation completed!")
+        print("\n    SUCCESS: Modelica code generation completed!")
 
     except Exception as e:
         print(f"\n    ERROR: Pipeline failed with: {e}")
@@ -185,7 +209,7 @@ def main():
     # STEP 4: Summary and Next Steps
     # =========================================================================
     print("\n" + "="*80)
-    print(" E17 Example Completed Successfully!")
+    print(" E15 Example Completed Successfully!")
     print("="*80)
 
     print(f"\n Output Locations:")
@@ -194,7 +218,10 @@ def main():
 
     print(f"\n What was generated:")
     print(f"   - UESGraph JSON file with network topology and attributes")
-    print(f"   - pandapipes simulation results in timestamp directory")
+    print(f"   - Modelica simulation model in timestamped directory")
+
+    print(f"\n Next Steps:")
+    print(f"   Run the simulation to analyze district heating performance")
 
     print("\n" + "="*80)
 
@@ -203,7 +230,7 @@ def main():
 
 if __name__ == "__main__":
     print("\n" + "="*80)
-    print("UESGraphs Example 17: Complete GeoJSON to pandapipes Workflow")
+    print("UESGraphs Example 15: Complete GeoJSON to Modelica Workflow")
     print("Using the new Excel-based parameter configuration system")
     print("="*80)
 

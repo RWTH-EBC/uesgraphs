@@ -1,62 +1,41 @@
 """
-GeoJSON Import to Modelica Code Generation
-==============================================================
+TEASER and OpenDHW Integration with pandapipes Simulation using GeoJSON Input
+=============================================================================
 
-This example demonstrates the workflow for generating modelica simulation files.
+This example demonstrates the workflow if the TEASER integration and the DHW estimation is used on the example 16
+but with the additional data provided in the buildings geojson file for the TEASER and OpenDHW integration. Here a static
+pandapipes simulation is performed over a year.
 
-=== Main lesson: Know your template! ===
+Main difference:
+    - The use of a different geojson which has the information required for TEASER integration and DHW estimation
+    - The run_sim_teaser function is used to generate the building heating and (cooling) demands
+    - The generate_DHW_profiles_from_geojson function is used to generate the DHW demand profiles based on the OpenDHW estimation method.
 
-The pipeline checks, which parameters are required for each component template. Following
-parameters are read from template:
-- MAIN, 
-- AUX and 
-- CONNECTOR
+The run_sim_teaser function generates the heating and cooling demand time series files 
+based on the building information provided in the GeoJSON file.
 
-Those parameters have to be provided either via graph attributes, excel template or references.
-This example shows how to use it.
+Therefore the input parameters:
+    - The path to the building GeoJSON file
+    - The save path for the generated demand files
+Optional parameters:
+    - The weather file path for a specific weather scenario over the simulation period
+    - The timestep in seconds for the simulation (default is 3600 for hourly data)
+    - The stop time in seconds for the simulation (default is 8760*3600 for one year of hourly data)
+    - A specific sim_setup_path for TEASER configuration, which is given in the Modelica 
+      or pandapipes example (E15 and E16) to set the timestep and stop time accordingly.
 
+The generate_DHW_profiles_from_geojson function generates the DHW demand time series files 
+based on the building information provided in the GeoJSON file.
 
-
-Workflow Overview:
------------------
-1. **GeoJSON Import**: Load network topology, buildings, and supply stations from GeoJSON files
-2. **Demand Data Assignment**: Attach heating, DHW, and cooling demand time series to buildings
-3. **Excel-Based Configuration**: Use Excel template to configure all simulation and component parameters
-4. **Modelica Generation**: Automatically generate ready-to-simulate Modelica code
-
-Excel Configuration Structure:
-------------------------------
-The Excel template has four sheets:
-1. **Simulation**: Simulation parameters (solver, time settings, medium, etc.)
-2. **Pipes**: Pipe network parameters (template, insulation, roughness, etc.)
-3. **Supply**: Supply station parameters (template, max heat demand, pressures, etc.)
-4. **Demands**: Demand substation parameters (template, temperatures, heat exchanger settings, etc.)
-
-Input Data Requirements:
------------------------
-- **Network GeoJSON**: LineString features representing the pipe network
-- **Buildings GeoJSON**: Point or Polygon features for demand buildings
-- **Supply GeoJSON**: Point features for supply stations (with is_supply_heating=True)
-- **Demand CSVs**: Time series for heating, DHW, and cooling demands (8760 hourly values)
-- **Ground Temperature CSV**: Ground temperature profiles at various depths
-
-Example Directory Structure:
-----------------------------
-workspace/e16/
-├── simple_district_graph.json          # Saved UESGraph after GeoJSON import
-├── models/                             # Generated Modelica files
-│   └── Sim20250102_123456_MySimulation/
-│       ├── MySimulation.mo             # Main Modelica model
-│       ├── package.mo                  # Modelica package definition
-│       └── [component models]          # Individual component files
-└── [demand and ground temp CSVs]       # Input time series data
-
-Notes:
------
-- The pipeline automatically handles parameter assignment and validation
-- Missing buildings in demand files will use dummy demand profiles
-- The Excel template can be customized for different simulation scenarios
-- Generated Modelica models are compatible with Dymola and require AixLib library
+Therefore the input parameters:
+    - The path to the building GeoJSON file
+    - The save path for the generated demand files
+Optional parameters:
+    - The timestep in seconds for the simulation (default is 3600 for hourly data)
+    - The mean draw off volume per person in liters (default is 40L/person/day)
+    - The temperature difference between freshwater and average DHW outlet temperature in K (default is 35K)
+    - A specific sim_setup_path for OpenDHW configuration, which is given in the Modelica 
+      or pandapipes example (E15 and E16) to set the timestep, mean draw off volume and temperature difference accordingly.
 """
 
 import os
@@ -70,7 +49,9 @@ if uesgraphs_root not in sys.path:
     sys.path.insert(0, uesgraphs_root)
 
 from uesgraphs import UESGraph
-from uesgraphs.systemmodels.model_generation_pipeline import uesgraph_to_modelica
+from uesgraphs.systemmodels_pp.utilities import uesgraph_to_pandapipes
+from uesgraphs.teaser_integration.utilities import run_sim_teaser
+from uesgraphs.DHW_estimation.utilities import generate_DHW_profiles_from_geojson
 
 
 def workspace_example(name_workspace=None):
@@ -103,7 +84,7 @@ def workspace_example(name_workspace=None):
 
 def main():
     print("="*80)
-    print("E16: GeoJSON to Modelica Code Generation")
+    print("E17: GeoJSON to pandapipes simulation")
     print("="*80)
 
     # =========================================================================
@@ -112,7 +93,7 @@ def main():
     print("\n STEP 1: Setting up workspace and paths...")
 
     # Create workspace directory for this example
-    workspace = workspace_example("e16")
+    workspace = workspace_example("e17")
     print(f"   Workspace: {workspace}")
 
     # Get paths to example data files
@@ -122,25 +103,47 @@ def main():
 
     # Input file paths
     network_geojson = os.path.join(geojson_dir, 'network.geojson')
-    buildings_geojson = os.path.join(geojson_dir, 'buildings.geojson')
+    buildings_geojson = os.path.join(geojson_dir, 'buildings_teaser_OpenDHW_info.geojson')
     supply_geojson = os.path.join(geojson_dir, 'supply.geojson')
 
-    # Demand and ground temperature files
-    input_heating = os.path.join(data_dir, 'demands-heat.csv')
-    input_dhw = os.path.join(data_dir, 'demands-dhw.csv')
-    input_cooling = os.path.join(data_dir, 'demands-cool.csv')
+    # Ground temperature file
     ground_temp_path = os.path.join(data_dir, 'ground_temps_hassel.csv')
 
     # Excel configuration template
     excel_config_path = os.path.join(uesgraphs_dir, 'uesgraphs', 'data',
-                                     'uesgraphs_parameters_template.xlsx')
+                                     'uesgraphs_parameters_template_pp_full_year.xlsx')
 
     print("   ✓ All paths configured")
 
     # =========================================================================
-    # STEP 2: Import District Network from GeoJSON
+    # STEP 2.1: Demand estimation simulation with TEASER
     # =========================================================================
-    print("\n  STEP 2: Importing district network from GeoJSON files...")
+
+    print("\n  STEP 2.1: Demand estimation simulation with TEASER...")
+
+    input_heating, input_cooling = run_sim_teaser(buildings_info_path=buildings_geojson,
+                   save_path=workspace,
+                   sim_setup_path=excel_config_path,
+                   log_level=logging.INFO
+                   )
+    
+    # =========================================================================
+    # STEP 2.2: Demand estimation with OpenDHW
+    # =========================================================================
+
+    print("\n  STEP 2.2: Demand estimation simulation with OpenDHW...")
+
+    input_dhw = generate_DHW_profiles_from_geojson(buildings_info_path=buildings_geojson,
+                   save_path=workspace,
+                   sim_setup_path=excel_config_path,
+                   log_level=logging.INFO
+                   )
+
+    # =========================================================================
+    # STEP 3: Import District Network from GeoJSON
+    # =========================================================================
+    
+    print("\n  STEP 3: Importing district network from GeoJSON files...")
   
 
     graph = UESGraph()
@@ -162,18 +165,8 @@ def main():
     print(f"     - Saved graph to: {graph_json_path}")
 
     # =========================================================================
-    # STEP 3: Generate Modelica Code using New Excel-Based Pipeline
+    # STEP 4: Generate pandapipes simulation results using New Excel-Based Pipeline
     # =========================================================================
-    print("\n  STEP 3: Generating Modelica code using Excel-based pipeline...")
-    print("   The pipeline will now:")
-    print("   1. Validate/generate edge names (required for Modelica)")
-    print("   2. Load simulation settings from Excel 'Simulation' sheet")
-    print("   3. Assign heating, DHW, and cooling demand data to building nodes")
-    print("   4. Assign pipe parameters from Excel 'Pipes' sheet")
-    print("   5. Assign supply station parameters from Excel 'Supply' sheet")
-    print("   6. Assign demand substation parameters from Excel 'Demands' sheet")
-    print("   7. Validate all required (MAIN) parameters are present")
-    print("   8. Generate Modelica model files with timestamped directory")
     print(f"\n   Excel configuration: {excel_config_path}")
     print(f"   Demand files:")
     print(f"     - Heating: {os.path.basename(input_heating)}")
@@ -181,12 +174,12 @@ def main():
     print(f"     - Cooling: {os.path.basename(input_cooling)}")
     print(f"   Ground temperature: {os.path.basename(ground_temp_path)}")
 
-    print("\n   Starting pipeline (this may take a few moments)...\n")
+    print("\n  STEP 4: Run the pandapipes simulation on the uesgraph...")
 
     try:
         # Run the new Excel-based pipeline
         # Note: You can pass either a UESGraph object OR a path to a JSON file
-        uesgraph_to_modelica(
+        uesgraph_to_pandapipes(
             uesgraph=graph,                    # UESGraph object (or JSON path string)
             simplification_level=0,            # No simplification (use full network)
             workspace=workspace,               # Output directory
@@ -198,7 +191,7 @@ def main():
             log_level=logging.INFO            # Logging level (INFO for moderate detail)
         )
 
-        print("\n    SUCCESS: Modelica code generation completed!")
+        print("\n    SUCCESS: Pandapipes simulation completed!")
 
     except Exception as e:
         print(f"\n    ERROR: Pipeline failed with: {e}")
@@ -206,10 +199,10 @@ def main():
         raise
 
     # =========================================================================
-    # STEP 4: Summary and Next Steps
+    # STEP 5: Summary and Next Steps
     # =========================================================================
     print("\n" + "="*80)
-    print(" E16 Example Completed Successfully!")
+    print(" E17 Example Completed Successfully!")
     print("="*80)
 
     print(f"\n Output Locations:")
@@ -218,19 +211,15 @@ def main():
 
     print(f"\n What was generated:")
     print(f"   - UESGraph JSON file with network topology and attributes")
-    print(f"   - Modelica simulation model in timestamped directory")
-
-    print(f"\n Next Steps:")
-    print(f"   Run the simulation to analyze district heating performance")
+    print(f"   - pandapipes simulation results in timestamp directory")
 
     print("\n" + "="*80)
-
 
 
 
 if __name__ == "__main__":
     print("\n" + "="*80)
-    print("UESGraphs Example 16: Complete GeoJSON to Modelica Workflow")
+    print("UESGraphs Example 17: Complete GeoJSON to pandapipes Workflow")
     print("Using the new Excel-based parameter configuration system")
     print("="*80)
 

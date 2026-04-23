@@ -97,7 +97,7 @@ Generated pandapipes results in timestamped directory:
 
 .. code-block:: text
 
-   workspace/models/Sim20250121_143022_MyProject/
+   workspace/models/Sim20250121_143022/
    ├── res_circ_pump_pressure    # Main pump results
    ├── (res_circ_pump_mass)      # Secondary pump results
    ├── res_heat_consumer         # Buildings results
@@ -106,6 +106,11 @@ Generated pandapipes results in timestamped directory:
    ├── mappings.pkl              # pandapipes mappings
    ├── uesgraphs_return.json     # UESGraph with return_side results
    └── uesgraphs.json            # UESGraph with suppy_side results
+
+* uesgraphs_return.json and uesgraphs.json contain the district as a graph with all nodes and edges with their attributes.
+  Therefore the nodes should have pressure, temperature. The edges should have m_flow, dp, T_in, T_out and Q_loss, which 
+  are mass flow, pressure drop, intet and outlet temperature and heat loss of the pipe, respectively. The uesgraphs.json
+  for the supply side and the uesgraphs_return.json for the return side.
 
 Excel Configuration
 -------------------

@@ -191,10 +191,10 @@ class analysis_pp:
         T_ground = ground_temp_df["1.0 m"].tolist()
 
         logger.info("\n" + "=" * 80)
-        logger.info("STEP 2: PLOT PIPE TEMPERATURES")
+        logger.info("STEP 2: PLOT PIPE PLOTS")
         logger.info("=" * 80)
 
-        output_dir = self.root_path / "analysis_outputs" / "pipe_temperatures"
+        output_dir = self.root_path / "analysis_outputs" / "pipe_plots"
         output_dir.mkdir(parents=True, exist_ok=True)
 
         for edge in graph.edges:
