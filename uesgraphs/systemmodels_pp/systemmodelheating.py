@@ -18,6 +18,13 @@ import copy
 
 from uesgraphs.uesgraph import UESGraph
 from uesgraphs import get_versioning_info
+import warnings
+
+warnings.filterwarnings(
+    "ignore",
+    message="divide by zero encountered in log10",
+    category=RuntimeWarning
+)
 
 #For logging
 import logging
@@ -1261,10 +1268,10 @@ class SystemModelHeating(UESGraph):
         try:
             if mode == "static":
                 logger.info("Running static simulation")
-                run_timeseries(pp_network, timesteps, mode="bidirectional", iter = 500)
+                run_timeseries(pp_network, timesteps, mode="bidirectional", iter = 100)
             else:
                 logger.info("Running transient pandapipes simulation")
-                run_timeseries(pp_network, timesteps, mode="bidirectional", iter = 500, transient = True, dt = self.time_step)
+                run_timeseries(pp_network, timesteps, mode="bidirectional", iter = 100, transient = True, dt = self.time_step)
             logger.info("Pandapipes timeseries simulation completed successfully!")
         except Exception as e:
             logger.error(f"Timeseries simulation failed: {e}")

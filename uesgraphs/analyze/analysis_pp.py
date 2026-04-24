@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import json
 import copy
 import pandas as pd
+import os 
 
 # ============================================================================
 # ANALYSIS functions
@@ -118,6 +119,7 @@ class analysis_pp:
         graph.from_json(path=str(self.graph_supply_json), network_type="heating")
         logger.info(f"Loaded {len(graph.nodes)} nodes, {len(graph.edges)} edges")
 
+        logger.info("\n" + "=" * 80)
         logger.info("STEP 2: CALCULATE CENTRAL PUMP POWER")
         logger.info("=" * 80)
 
@@ -187,8 +189,10 @@ class analysis_pp:
         graph_return.from_json(path=str(self.graph_return_json), network_type="heating")
         logger.info(f"Loaded {len(graph_return.nodes)} nodes, {len(graph_return.edges)} edges")
 
-        ground_temp_df = pd.read_csv(self.root_path / "ground_temps_hassel.csv", index_col=0, parse_dates=True)
-        T_ground = ground_temp_df["1.0 m"].tolist()
+        """Note: This is only used if you want to check the physical consistency of the results by comparing pipe temperatures to ground temperatures."""
+        #ground_temp_df = pd.read_csv(self.root_path / "ground_temps_hassel.csv", index_col=0, parse_dates=True)
+        #T_ground = ground_temp_df["1.0 m"].tolist()
+        T_ground = None
 
         logger.info("\n" + "=" * 80)
         logger.info("STEP 2: PLOT PIPE PLOTS")
@@ -208,7 +212,8 @@ class analysis_pp:
             T_in = edge_data_R.get("T_in")
             T_out = edge_data_R.get("T_out")
 
-
+            """Note: This is only used if you want to check the physical consistency of the results 
+                by comparing pipe temperatures to ground temperatures."""
             if T_ground is not None:
                 T_in_arr = np.array(T_in)
                 T_out_arr = np.array(T_out)
@@ -386,6 +391,135 @@ class analysis_pp:
 
         with open(output_dir / "network_R_data.geojson", 'w') as f:
             json.dump(geo_data_return, f, indent=4)
+
+    def visualize_network(self, time_index: int):
+        """ Visualizes for a specified time index the network with mass flow, pressure difference, 
+            pressure and temperature as attributes for supply and return side
+        
+        Parameters:
+            time_index : int, the index of the timestep to visualize (0-based)    
+        """
+        logger = set_up_file_logger("visualize_network", level=20)
+
+        logger.info("=" * 80)
+        logger.info("Visualize Network at Timestep")
+        logger.info("=" * 80)
+
+        logger.info(f"Analyzing: {self.root_path}")
+        logger.info(f"Supply Side UESGraph: {self.graph_supply_json}")
+        logger.info(f"Return Side UESGraph: {self.graph_return_json}")
+
+        # Load UESGraph
+        logger.info("\n" + "=" * 80)
+        logger.info("STEP 1: LOAD SUPPLY and RETURN NETWORK")
+        logger.info("=" * 80)
+
+        logger.info(f"Loading from JSON: {self.graph_supply_json}")
+        graph = ug.UESGraph()
+        graph.from_json(path=str(self.graph_supply_json), network_type="heating")
+        logger.info(f"Loaded {len(graph.nodes)} nodes, {len(graph.edges)} edges")
+        
+        logger.info(f"Loading from JSON: {self.graph_return_json}")
+        graph_return = ug.UESGraph()
+        graph_return.from_json(path=str(self.graph_return_json), network_type="heating")
+        logger.info(f"Loaded {len(graph_return.nodes)} nodes, {len(graph_return.edges)} edges")
+        
+        output_dir = self.root_path / "analysis_outputs" / "network_visualization"
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        logger.info("\n" + "=" * 80)
+        logger.info("STEP 2: VISUALIZE NETWORK AT TIMESTEP")
+        logger.info("=" * 80)
+
+        vis = ug.Visuals(graph)
+        for edge in graph.edges:
+            graph.edges[edge]["m_flow"] = abs(graph.edges[edge]["m_flow"][time_index])
+            graph.edges[edge]["dp"] = abs(graph.edges[edge]["dp"][time_index])
+        vis.show_network(show_plot=False,
+                            scaling_factor=1,
+                            scaling_factor_diameter=50,
+                            label_size=15,
+                            ylabel="Mass flow in kg/s",
+                            generic_extensive_size="m_flow",
+                            save_as=os.path.join(output_dir,"m_flow.png"),
+                            timestamp="Mass flow"
+                            )
+        vis.show_network(show_plot=False,
+                            scaling_factor=1,
+                            scaling_factor_diameter=50,
+                            label_size=15,
+                            ylabel="Pressure difference in Pa",
+                            generic_extensive_size="dp",
+                            save_as=os.path.join(output_dir,"dp.png"),
+                            timestamp="Pressure difference"
+                            )
+        
+        for node in graph.nodes:
+            graph.nodes[node]["p"] = graph.nodes[node]["pressure"][time_index]
+            graph.nodes[node]["T"] = graph.nodes[node]["temperature"][time_index]
+        vis.show_network(show_plot=False,
+                            scaling_factor=1,
+                            scaling_factor_diameter=50,
+                            ylabel="Pressure in Pa",
+                            label_size=15,
+                            generic_intensive_size="p",
+                            save_as=os.path.join(output_dir,"pressure.png"),
+                            timestamp="Pressure"
+                            )
+        vis.show_network(show_plot=False,
+                            scaling_factor=1,
+                            scaling_factor_diameter=50,
+                            ylabel="Temperature in K",
+                            label_size=15,
+                            generic_intensive_size="T",
+                            save_as=os.path.join(output_dir,"temperature.png"),
+                            timestamp="Temperature"
+                            )
+
+        vis_return = ug.Visuals(graph_return)
+        for edge in graph.edges:
+            graph_return.edges[edge]["m_flow"] = abs(graph_return.edges[edge]["m_flow"][time_index])
+            graph_return.edges[edge]["dp"] = abs(graph_return.edges[edge]["dp"][time_index])
+        vis_return.show_network(show_plot=False,
+                            scaling_factor=1,
+                            scaling_factor_diameter=50,
+                            label_size=15,
+                            ylabel="Mass flow in kg/s",
+                            generic_extensive_size="m_flow",
+                            save_as=os.path.join(output_dir,"m_flow_R.png"),
+                            timestamp="Mass flow"
+                            )
+        vis_return.show_network(show_plot=False,
+                            scaling_factor=1,
+                            scaling_factor_diameter=50,
+                            label_size=15,
+                            ylabel="Pressure difference in Pa",
+                            generic_extensive_size="dp",
+                            save_as=os.path.join(output_dir,"dp_R.png"),
+                            timestamp="Pressure difference"
+                            )
+        
+        for node in graph.nodes:
+            graph_return.nodes[node]["p"] = graph_return.nodes[node]["pressure"][time_index]
+            graph_return.nodes[node]["T"] = graph_return.nodes[node]["temperature"][time_index]
+        vis_return.show_network(show_plot=False,
+                            scaling_factor=1,
+                            scaling_factor_diameter=50,
+                            ylabel="Pressure in Pa",
+                            label_size=15,
+                            generic_intensive_size="p",
+                            save_as=os.path.join(output_dir,"pressure_R.png"),
+                            timestamp="Pressure"
+                            )
+        vis_return.show_network(show_plot=False,
+                            scaling_factor=1,
+                            scaling_factor_diameter=50,
+                            ylabel="Temperature in K",
+                            label_size=15,
+                            generic_intensive_size="T",
+                            save_as=os.path.join(output_dir,"temperature_R.png"),
+                            timestamp="Temperature"
+                            )   
 
             
 

@@ -12,9 +12,11 @@ Here are the steps covered in this example:
     Create an instance of the analysis_pp class with the path to the simulation results and optionally set the timestep. 
     Then, call the thermal_loss_analysis and pump_power_analysis methods to perform the analyses.
     Also pipe_plots allows a deeper analysis of the pipe results, so you get plots of all avaible simulation variables for the whole timeseries. 
-    You can use retransform_pipe_geojson_data to retransform the data to the geojson that is used but the path has to bet set and the file will be overwritten,
-    so a copy of the original file should be made if you want to keep the original data.
-    For the pump power analysis a parameter eta_total is set to 0.65, adjust this value as needed for your specific system by setting it in the method call.
+    You can use retransform_pipe_geojson_data to retransform the data to the geojson that is used.
+    Also visualize_network allows you to visualize pressures, temperatures and mass flows of the whole district for a specific timestep,
+    which is the index of the saved timeseries data.
+    For the pump power analysis a parameter eta_total is set to 0.65, 
+    adjust this value as needed for your specific system by setting it in the method call.
 3. **Summary and Next Steps**:
     Summarize the results printed in the terminal and suggest next steps for further analysis or visualization.
 
@@ -77,7 +79,7 @@ def main():
     print(f"   Workspace: {workspace}")
 
     # Define paths to input files (these should have been generated in E17)
-    sim_path = os.path.join(workspace, "models", "Sim20260402_101253") # Example path - adjust if your simulation results are in a different location
+    sim_path = os.path.join(workspace, "models", "Sim20260424_111501") # Example path - adjust if your simulation results are in a different location
 
     print("   ✓ All paths configured")
 
@@ -99,9 +101,16 @@ def main():
         #print("\n   Running analysis plots for pipes...")
         #analysis.pipe_plots()
         # Adjust uesgraphs/analyze/analysis_pp.py if not all plots are needed or if you want to customize the plots
+        # Is commented out by default because it generates a lot of plots
 
         print("\n   Running retransformation of data...")
-        analysis.retransform_pipe_geojson_data(Path(sim_path) /"network_full_new_simulation.geojson")
+        
+        base_path = Path(__file__).resolve().parent
+        file_path = base_path / ".." / "data" / "examples" / "e15_geojson" / "network.geojson"
+        analysis.retransform_pipe_geojson_data(geojson_path=file_path)
+
+        print("\n   Running visualize network...")
+        analysis.visualize_network(time_index=487)
 
     except Exception as e:
         print(f"\n    ERROR: Analysis failed with: {e}")
