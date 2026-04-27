@@ -4,7 +4,7 @@ UESGraphs pandapipes simulation Pipeline
 Architecture Documentation
 --------------------------
 
-**Version:** --- **Last Updated:** ---
+**Version:** 2.2.0 **Last Updated:** 2.1.5
 
 --------------
 
@@ -239,6 +239,25 @@ generate_simulation_model(
 - pandapipes.circ_pump_mass (if multiple supplies)
 - pandapipes.junction
 
+**Solver Settings for static simulation**:
+
+- mode: 'bidirectional'
+- iter: 500
+- using full pandapipes calculation for all variables
+
+**Solver Settings for dynamic simulation**:
+
+- mode: 'hydraulics'
+- iter: 500
+- using only hydraulics pandapipes calculations
+- Layer-Structuring for order of temperature calculations
+- Implicit euler calculation for outlet pipe temperature
+- Mixing temperature calculation with averaging over mass flows
+
+---
+
+
+
 **Solver Settings**:
 
 - mode: 'bidirectional'
@@ -258,6 +277,7 @@ File & Folder Structure
      └── models/
          └── Sim20250115_101530_MySimulation/
              ├── uesgraphs.json
+             ├── uesgraphs_return.json
              ├── [component models]
              └── setup_params.csv   (optional)
 

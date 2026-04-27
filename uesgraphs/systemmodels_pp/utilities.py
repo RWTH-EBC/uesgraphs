@@ -1,4 +1,5 @@
-# heating_pipeline.py
+"This module collects the functions for creating a pandapipes model from a UESGraph and simulating it."
+
 from uesgraphs.uesgraph import UESGraph
 from uesgraphs.systemmodels_pp import systemmodelheating as spp 
 from uesgraphs.utilities import set_up_file_logger, set_up_terminal_logger 
@@ -11,6 +12,8 @@ import os
 from datetime import datetime
 import warnings
 from pathlib import Path
+import copy
+import numpy as np
 
 from typing import Optional
 
@@ -93,7 +96,7 @@ def set_up_logger(name, log_dir=None, level=int(logging.INFO)):  # Changed to IN
     return logger
 
 
-def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, logger=None):
+def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, supply_type=None, logger=None):
     """
     Reads CSV-pandapipes results (Junctions & Pipes)
     and saves them as Pandas Series in UESGraph.
@@ -129,7 +132,8 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, logger=No
     base_folder = Path(base_folder)
 
     # Mappings depend on supply_type
-    supply_type = uesgraph_input.graph.get("supply_type", "supply")
+    if supply_type is None:
+        supply_type = uesgraph_input.graph.get("supply_type", "supply")
 
     logger.info(supply_type)
 
@@ -163,18 +167,24 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, logger=No
             if col_idx in junction_map:
                 node_id = junction_map[col_idx]
                 uesgraph_input.nodes[node_id][var_name] = df[col].tolist()  # Pandas Series
+                if uesgraph_input.nodes[node_id].get("is_supply_heating", False):
+                    uesgraph_input.nodes[node_id]["rho"] = float(uesgraph_input.graph["density"])
 
     p_in = None
+    T_from = None
     # --- Pipe-Data ---------------------------------------------------------
     pipe_folder = base_folder / "res_pipe"
     for fname, var_name in [("mdot_from_kg_per_s.csv", "m_flow"),
                                 ("p_from_bar.csv", "pressure_from"),
-                                ("p_to_bar.csv", "pressure_to")]:
+                                ("p_to_bar.csv", "pressure_to"), ("t_from_k.csv", "t_from"), ("t_to_k.csv", "t_to")]:
         fpath = pipe_folder / fname
         if not fpath.exists():
             continue
 
         df = pd.read_csv(fpath, index_col=0, sep=';')
+        if var_name == "m_flow":
+            m_flow_df = df.copy()
+            df = df.abs()
         if var_name == "pressure_from":
             df = df*100000
             p_in = df
@@ -186,12 +196,85 @@ def assign_csv_data_to_uesgraph(uesgraph_input, base_folder, mappings, logger=No
                 var_name = "dp"
             else:
                 df = df
+        if var_name == "t_from":
+            T_from = df
+            continue
+        elif var_name == "t_to":
+            T_to = df
+            
+            cp_default = uesgraph_input.graph["cp_default"]
+            
+            T_ground = uesgraph_input.graph.get("T_ground", None)
+            if T_ground is None:
+                    raise ValueError("T_ground not found in graph.graph")
+            
+            for col in T_to.columns:
+                col_idx = int(col)
+                
+                if col_idx not in pipe_map:
+                    continue
 
+                edge = pipe_map[col_idx]
+                edge_data = uesgraph_input.edges[edge]
+
+                kIns = edge_data.get("kIns")
+                dIns = edge_data.get("dIns")
+                length = edge_data.get("length")
+                diameter = edge_data.get("diameter")
+
+                if None in (kIns, dIns, length, diameter):
+                    continue
+
+                m_flow = m_flow_df[col]
+                m_flow_abs = m_flow.abs()
+
+                Tamb = pd.Series(T_ground)
+                Tamb = Tamb.iloc[m_flow.index]
+                Tamb.index = m_flow.index
+
+                T_in_series = pd.Series(index=m_flow.index, dtype=float)
+
+                mask_pos = m_flow > 0
+                mask_neg = m_flow <= 0
+
+                T_in_series[mask_pos] = T_from[col][mask_pos]
+                T_in_series[mask_neg] = T_to[col][mask_neg]
+
+                uesgraph_input.edges[edge]["T_in"] = T_in_series.tolist()
+
+                # --- T_out ----
+                T_out = pd.Series(index=m_flow.index, dtype=float)
+
+                mask_flow = m_flow_abs > 0
+                mask_zero = m_flow_abs == 0
+
+                T_out[mask_flow] = Tamb[mask_flow] + (
+                    (T_in_series[mask_flow] - Tamb[mask_flow]) *
+                    np.exp(-kIns * np.pi * diameter * length /
+                        (m_flow_abs[mask_flow] * cp_default * dIns))
+                )
+
+                T_out[mask_zero] = Tamb[mask_zero]
+
+                uesgraph_input.edges[edge]["T_out"] = T_out.tolist()
+
+                # --- Q_loss --------------------------------------------------
+                Q_loss = pd.Series(index=m_flow.index, dtype=float)
+
+                Q_loss[mask_flow] = (
+                    m_flow_abs[mask_flow] * cp_default *
+                    (T_in_series[mask_flow] - T_out[mask_flow])
+                )
+
+                Q_loss[mask_zero] = 0
+
+                uesgraph_input.edges[edge]["Q_loss"] = Q_loss.tolist()
+            continue
         for col in df.columns:
             col_idx = int(col)
             if col_idx in pipe_map:
                 edge = pipe_map[col_idx]
-                uesgraph_input.edges[edge][var_name] = df[col].tolist()  # Pandas Series
+                uesgraph_input.edges[edge][var_name] = df[col].tolist()
 
     return uesgraph_input
 
@@ -201,8 +284,10 @@ def create_model(
     name,
     save_at,
     graph,
+    start_time,
     stop_time,
     timestep,
+    mode,
     t_ground_prescribed=None,
     logger=None
 ):
@@ -216,6 +301,8 @@ def create_model(
         Directory where to store the generated model results
     graph : uesgraphs.uesgraph.UESGraph
         Network graph with all necessary data for model generation
+    start_time : int
+        Start time of the simulation in seconds
     stop_time : int
         Stop time of the simulation in seconds
     timestep : int
@@ -240,26 +327,38 @@ def create_model(
     logger.info(f"=== Starting create_model for '{name}' ===")
     logger.info(f"Target directory: {save_at}")
     logger.info(f"Network type: {graph.graph.get('network_type', 'unknown')}")
-    logger.debug(f"Simulation setup - stop_time: {stop_time}, timestep: {timestep}")
+    logger.debug(f"Simulation setup - start_time: {start_time}, stop_time: {stop_time}, timestep: {timestep}")
     
     assert not name[0].isdigit(), "Model name cannot start with a digit"
 
-    logger.info("Creating SystemModelHeating instance")
-    new_model = spp.SystemModelHeating(stop_time = stop_time, timesteps= timestep, network_type=graph.graph["network_type"],logger=logger)
-    
-    logger.info("Importing UESGraph")
-    new_model.import_from_uesgraph(graph, logger=logger)
+    assert mode in ("static","dynamic", "transient"), "Mode must be either 'static' or 'dynamic' or 'transient'"
 
+    logger.info("Creating SystemModelHeating instance")
+    new_model = spp.SystemModelHeating(start_time = start_time, stop_time = stop_time, timestep = timestep, network_type=graph.graph["network_type"],logger=logger)
+
+    graph.graph["density"] = new_model.density
+
+    logger.info(graph.graph["density"])
+    logger.info(type(graph.graph["density"]))
+    
     if t_ground_prescribed is not None:
         logger.debug(f"Setting prescribed ground temperatures (length: {len(t_ground_prescribed)})")
         new_model.graph["T_ground"] = t_ground_prescribed
         new_model.ground_temp_data = pd.DataFrame(
             {"1.0 m": new_model.graph["T_ground"]}
         )
+        graph.graph["T_ground"] = t_ground_prescribed
+    
+    logger.info("Importing UESGraph")
+    _, pipe_list, heat_source_ids, heat_source_r_ids = new_model.import_from_uesgraph(graph, logger=logger)
+    
+    mode = "dynamic"
+    #new_model.run_test_simulation(logger=logger)
 
-    #new_model.run_test_simulation()
-
-    new_model.run_timeseries_spp(save_at, logger=logger)
+    if mode != "dynamic":
+        new_model.run_timeseries_spp(save_at, mode, logger=logger)
+    else:
+        new_model.run_timeseries_dpp(pipe_list, heat_source_ids, heat_source_r_ids, save_at, logger=logger)
 
     mappings = {
         "supply": {
@@ -275,10 +374,14 @@ def create_model(
     with open(Path(save_at) / "mappings.pkl", "wb") as f:
         pickle.dump(mappings, f)
 
-    graph = assign_csv_data_to_uesgraph(graph, save_at, mappings, logger=logger)
+    graph_supply = copy.deepcopy(graph)
+    graph_return = copy.deepcopy(graph)
+
+    graph_in = assign_csv_data_to_uesgraph(graph_supply, save_at, mappings, supply_type="supply", logger=logger)
+    graph_out = assign_csv_data_to_uesgraph(graph_return, save_at, mappings, supply_type="return", logger=logger)
 
     logger.info(f"=== create_model completed successfully for '{name}' ===")
-    return new_model, graph
+    return new_model, graph_in, graph_out
 
 def uesgraph_to_pandapipes(uesgraph, simplification_level,
                          workspace,
@@ -405,14 +508,10 @@ def uesgraph_to_pandapipes(uesgraph, simplification_level,
     else:
         raise ValueError(f"uesgraph must be either a JSON path or UESGraph object, got: {type(uesgraph)}")
 
-    # Step 3.1: Write simulation parameters to graph (needed for connector time-series generation)
-    logger.info("Writing simulation parameters to graph")
-    uesgraph.graph['stop_time'] = float(sim_params['stop_time'])
-    uesgraph.graph['timestep'] = sim_params.get('timestep', 3600)  # Default 3600s = 1h
+    logger.info("Writing network_type to UESGraph")
     uesgraph.graph["network_type"] = "heating"
-    logger.debug(f"Set graph parameters: stop_time={uesgraph.graph['stop_time']}, timestep={uesgraph.graph['timestep']}")
 
-    # Step 3.2: Ensure all edges have names (required for pandapipes simulation model)
+    # Step 3.1: Ensure all edges have names (required for pandapipes simulation model)
     # This is needed because from_geojson() doesn't set edge names automatically,
     # while from_json() does (via pipeID). We need consistent behavior.
     logger.info("Validating and generating edge names if needed")
@@ -553,7 +652,7 @@ def uesgraph_to_pandapipes(uesgraph, simplification_level,
 
         try:
             logger.info(f"Start creating model for simulation: {sim_name_ix}")
-            graph = generate_simulation_model(
+            graph_s, graph_r = generate_simulation_model(
                 uesgraph=uesgraph,
                 sim_name=sim_name_ix,
                 sim_params=sim_params,
@@ -562,12 +661,16 @@ def uesgraph_to_pandapipes(uesgraph, simplification_level,
                 logger=logger
             )
             try:
-                graph.to_json(path=str(workspace),
+                graph_s.to_json(path=str(workspace),
                             name = "uesgraphs",
                             all_data = True,
                             prettyprint = True)
-                graph.to_json(path=str(sim_model_dir),
+                graph_s.to_json(path=str(sim_model_dir),
                             name = "uesgraphs",
+                            all_data = True,
+                            prettyprint = True)
+                graph_r.to_json(path=str(sim_model_dir),
+                            name = "uesgraphs_return",
                             all_data = True,
                             prettyprint = True)
                 logger.info("UESGraph after simulation saved")
@@ -610,7 +713,7 @@ def load_simulation_settings_from_excel(excel_path, logger=None):
     sim_params = _load_excel(excel_path, 'Simulation', logger)
 
     # Validate required simulation parameters
-    required = ['simulation_name', 'start_time', 'stop_time']
+    required = ['simulation_name', 'start_time', 'stop_time', 'mode']
     missing = [param for param in required if param not in sim_params]
 
     if missing:
@@ -806,22 +909,24 @@ def generate_simulation_model(uesgraph, sim_name, sim_params, ground_temp_list, 
     # Create system model
     logger.info("Creating system model with pre-assigned parameters")
 
-    _, graph = create_model(
+    _, graph_s, graph_r = create_model(
         name=sim_name,
         save_at=sim_model_dir,
         graph=uesgraph,
+        start_time=float(sim_params["start_time"]),
         stop_time=float(sim_params["stop_time"]),
         timestep=sim_params.get("timestep",3600),  # Could be made configurable
+        mode=sim_params.get("mode", "static"),
         t_ground_prescribed=ground_temp_list
     )
 
     logger.info(f"pandapipes Model generated: {sim_name}")
 
-    return graph 
+    return graph_s, graph_r 
 
 ### Process demand data and assign to uesgraph
 
-def assign_demand_data(uesgraph, input_paths_dict, input_types = ["heating", "cooling", "dhw"],demand_mode = 0):
+def assign_demand_data(uesgraph, input_paths_dict, input_types = ["heating", "cooling", "dhw"]):
     """
     Assigns energy demand data to buildings in a UES (Urban Energy Systems) graph.
     
@@ -839,9 +944,6 @@ def assign_demand_data(uesgraph, input_paths_dict, input_types = ["heating", "co
         Expected keys: 'heating', 'cooling', 'dhw'.
     input_types : list, optional
         List of demand types to process. Default is ["heating", "cooling", "dhw"].
-    demand_mode : int, optional
-        Mode for demand calculation. Currently only mode 0 is implemented,
-        which combines heating and DHW demands for peak load calculation.
 
     Returns
     -------

@@ -110,6 +110,20 @@ Follow these steps to install **UESgraphs** using Conda:
      pip install -e <path/to/your/uesgraphs>[dev]
      ```
 
+   - **For pandapipes simulations**:
+     ```bash
+     pip install -e <path/to/your/uesgraphs>[pandapipes]
+     ```
+
+   - **For TEASER integration**:
+     ```bash
+     pip install -e <path/to/your/uesgraphs>[TEASER]
+     ```
+   - **For OpenDHW integration usage**:
+     ```bash
+     pip install -e <path/to/your/uesgraphs>[DHW]
+     ```
+
    - **Complete installation with all dependencies**:
      ```bash
      pip install -e <path/to/your/uesgraphs>[full]
