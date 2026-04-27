@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="uesgraphs.uesgraph" href="_autosummary/uesgraphs.uesgraph.html" />
-    <link rel="prev" title="UESGraphs pandapipes simulation Pipeline" href="architecture/pandapipes_pipeline.html" /> 
+    <link rel="prev" title="UESGraphs pandapipes simulation Pipeline" href="architecture/teaser_opendhw_integration.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,12 +48,14 @@
 <li class="toctree-l1"><a class="reference internal" href="guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/Template_Generation.html">Template Generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/graph_transformation.html">Graph Transformation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
@@ -63,9 +65,13 @@
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.analyze.html">uesgraphs.analyze</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels.html">uesgraphs.systemmodels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.systemmodels_pp.html">uesgraphs.systemmodels_pp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.teaser_integration.html">uesgraphs.teaser_integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.DHW_estimation.html">uesgraphs.DHW_estimation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_autosummary/uesgraphs.utilities.html">uesgraphs.utilities</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_TEASER_int.html">TEASER Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_system_models.html">System Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_system_models_pp.html">System Models pandapipes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_examples.html">Examples</a></li>
@@ -119,6 +125,12 @@ UESGraphs Analysis Module
 <tr class="row-odd"><td><p><a class="reference internal" href="code/uesgraphs.systemmodels_pp.html#module-uesgraphs.systemmodels_pp" title="uesgraphs.systemmodels_pp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.systemmodels_pp</span></code></a></p></td>
 <td><p></p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="code/uesgraphs.teaser_integration.html#module-uesgraphs.teaser_integration" title="uesgraphs.teaser_integration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.teaser_integration</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="code/uesgraphs.DHW_estimation.html#module-uesgraphs.DHW_estimation" title="uesgraphs.DHW_estimation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.DHW_estimation</span></code></a></p></td>
+<td><p>This package contains the script that stores all function of the DHWcalc package as well as a utils package.</p></td>
+</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="code/uesgraphs.html#module-uesgraphs.utilities" title="uesgraphs.utilities"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraphs.utilities</span></code></a></p></td>
 <td><p>Utilies: Collection of all utility functions that are useful in several classes.</p></td>
 </tr>
@@ -130,7 +142,7 @@ UESGraphs Analysis Module
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="architecture/pandapipes_pipeline.html" class="btn btn-neutral float-left" title="UESGraphs pandapipes simulation Pipeline" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="architecture/teaser_opendhw_integration.html" class="btn btn-neutral float-left" title="UESGraphs pandapipes simulation Pipeline" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="_autosummary/uesgraphs.uesgraph.html" class="btn btn-neutral float-right" title="uesgraphs.uesgraph" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

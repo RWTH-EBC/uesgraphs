@@ -5,3 +5,14 @@ uesgraphs.analyze package
    :members:
    :undoc-members:
    :show-inheritance:
+
+Submodules
+----------
+
+uesgraphs.analyze.analysis\_pp module
+-------------------------------------
+
+.. automodule:: uesgraphs.analyze.analysis_pp
+   :members:
+   :undoc-members:
+   :show-inheritance:

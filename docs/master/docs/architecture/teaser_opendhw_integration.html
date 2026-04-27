@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UESGraphs pandapipes simulation Pipeline &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Core Modules" href="../api_core_modules.html" />
+    <link rel="prev" title="UESGraphs pandapipes simulation Pipeline" href="pandapipes_pipeline.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">UESGraphs pandapipes simulation Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#architecture-documentation">Architecture Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#key-design-principles">Key Design Principles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#technology-stack">Technology Stack</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pipeline-architecture">Pipeline Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#high-level-flow">High-Level Flow</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#core-entry-points">Core Entry Points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#teaser-usage">TEASER usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#opendhw-profiles-generation">OpenDHW profiles generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#file-folder-structure">File &amp; Folder Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extension-guide">Extension Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_TEASER_int.html">TEASER Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">UESGraphs pandapipes simulation Pipeline</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/architecture/teaser_opendhw_integration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="uesgraphs-pandapipes-simulation-pipeline">
+<h1>UESGraphs pandapipes simulation Pipeline<a class="headerlink" href="#uesgraphs-pandapipes-simulation-pipeline" title="Permalink to this heading"></a></h1>
+<section id="architecture-documentation">
+<h2>Architecture Documentation<a class="headerlink" href="#architecture-documentation" title="Permalink to this heading"></a></h2>
+<p><strong>Version:</strong> — <strong>Last Updated:</strong> —</p>
+</section>
+<hr class="docutils" />
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="#overview">Overview</a></p></li>
+<li><p><a class="reference external" href="#pipeline-architecture">Pipeline Architecture</a></p></li>
+<li><p><a class="reference external" href="#core-entry-point">Core Entry Point</a></p></li>
+<li><p><a class="reference external" href="#parameter-assignment-flow">Parameter Assignment Flow</a></p></li>
+<li><p><a class="reference external" href="#demand--time-series-handling">Demand &amp; Time-Series Handling</a></p></li>
+<li><p><a class="reference external" href="#pandapipes-model-generation">pandapipes Model Generation</a></p></li>
+<li><p><a class="reference external" href="#file--folder-structure">File &amp; Folder Structure</a></p></li>
+<li><p><a class="reference external" href="#validation--error-handling">Validation &amp; Error Handling</a></p></li>
+<li><p><a class="reference external" href="#extension-guide">Extension Guide</a></p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>The TEASER and OpenDHW integration enables the estimations of
+demands necessary for the simulation.</p>
+<section id="key-design-principles">
+<h3>Key Design Principles<a class="headerlink" href="#key-design-principles" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>GeoJSON as main file for buildings</strong>: All building properties are
+stored on in buildings_geojson before estimation.</p></li>
+<li><p><strong>Excel-based Configuration</strong>: Uniform parameters (simulation setup)
+are read from Excel sheets.</p></li>
+</ol>
+<ol class="arabic simple" start="4">
+<li><p><strong>Traceability</strong>: Every major processing step persists
+intermediate states of data.</p></li>
+</ol>
+</section>
+<section id="technology-stack">
+<h3>Technology Stack<a class="headerlink" href="#technology-stack" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Buildings</strong>: GeoJSON file</p></li>
+<li><p><strong>Simulation Engine</strong>: pandapipes</p></li>
+<li><p><strong>Configuration</strong>: Excel or directly</p></li>
+<li><p><strong>Time-Series Data</strong>: CSV files</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="pipeline-architecture">
+<h2>Pipeline Architecture<a class="headerlink" href="#pipeline-architecture" title="Permalink to this heading"></a></h2>
+<section id="high-level-flow">
+<h3>High-Level Flow<a class="headerlink" href="#high-level-flow" title="Permalink to this heading"></a></h3>
+<p>TEASER:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>GeoJSON
+     ↓
+run_sim_teaser
+     ↓
+┌──────────────────────────────────┐
+│ 0. Load simulation settings and  │
+│    set up directories            │
+│ 1. Create TEASER project         │
+│ 2. Temporary directory and       │
+│    AixLib export                 │
+│ 3. Run simulations               │
+│ 4. Read results and save data    │
+│ 5. Combine results for demand CSV│
+└──────────────────────────────────┘
+     ↓
+demands-heat.csv
+demands-cool.csv
+</pre></div>
+</div>
+<p>OpenDHW:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>GeoJSON
+     ↓
+generate_DHW_profiles_from_geojson
+     ↓
+┌──────────────────────────────────┐
+│ 0. Load simulation settings and  │
+│    set up directories            │
+│ 1. Create DHW profiles           │
+│ 2. Save profiles to CSV          │
+└──────────────────────────────────┘
+     ↓
+demands-dhw.csv
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="core-entry-points">
+<h2>Core Entry Points<a class="headerlink" href="#core-entry-points" title="Permalink to this heading"></a></h2>
+<p>### <cite>run_sim_teaser(…)</cite></p>
+<p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">teaser_integration/utilities.py</span></code>
+<strong>Responsibility</strong>: End-to-end orchestration of TEASER integration
+<strong>Inputs</strong>: GeoJSON, either Excel config or timestep and stoptime,</p>
+<blockquote>
+<div><p>weather data</p>
+</div></blockquote>
+<p><strong>Outputs</strong>: Heat and cool demand files as CSV</p>
+<p>### <cite>generate_DHW_profiles_from_geojson(…)</cite></p>
+<p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">DHW_estimation/utilities.py</span></code>
+<strong>Responsibility</strong>: End-to-end orchestration of OpenDHW integration
+<strong>Inputs</strong>: GeoJSON, either Excel config or timestep, mean draw-off and</p>
+<blockquote>
+<div><p>temperature difference for DHW</p>
+</div></blockquote>
+<p><strong>Outputs</strong>: DHW demand file as CSV</p>
+</section>
+<section id="teaser-usage">
+<h2>TEASER usage<a class="headerlink" href="#teaser-usage" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>TEASER is integrated with creating a TEASER project and assigning the buildings with the propertiers given from the geojson.
+Here archetypes like “OfficeExisting”, “OfficeWithDataCenter”, “OfficeHighRise”, “OfficeHighRiseKita” are set
+with construction_data= “iwu_heavy” and geometry_data=”bmvbs_office”.
+For archetype “MultiFamilyHouse” construction_data= “tabula_de_standard” and geometry_data=”tabula_de_multi_family_house” and
+for “SingleFamilyHouse” construction_data= “tabula_de_standard” and geometry_data=”tabula_de_single_family_house” are set.
+The other properties are set directly. Other archetypes are not allowed in this implementation.</p></li>
+<li><p>Then exporting AixLib, so cloning the repository if necessary and creating temporary directory for the Modelica simulations.</p></li>
+<li><p>Running the simulations with specific simulation architecture in Dymola.</p></li>
+<li><p>Reading the results and saving the data in a csv files for each building and after that combining the files to one demand csv.</p></li>
+</ol>
+<dl class="simple">
+<dt>Important notes:</dt><dd><ul class="simple">
+<li><p>Dymola must be installed and Python has to recognize it</p></li>
+<li><p>Since only timestep and stoptime is used, it is not possible to change the start_time, so always start at 0 then.</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="opendhw-profiles-generation">
+<h2>OpenDHW profiles generation<a class="headerlink" href="#opendhw-profiles-generation" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>OpenDHW is integrated with creating the profiles for each building with the properties given from the geojson.
+Here the archetypes like “OfficeExisting”, “OfficeWithDataCenter”, “OfficeHighRise”, “OfficeHighRiseKita” are set
+with building_type=”OB”, the archetype “MultiFamilyHouse” is set with building_type=”MFH” and “SingleFamilyHouse” are set
+with building_type=”SFH”. The other properties are set directly. Other archetypes are not allowed in this implementation.</p></li>
+<li><p>The resulting DataFrame of the profiles is saved in a csv file.</p></li>
+</ol>
+<dl>
+<dt>Important notes:</dt><dd><ul class="simple">
+<li><p>Since only timestep, it is not possible to change the start_time nor stop_time, so always start at 0 and stoptime is</p></li>
+</ul>
+<p>always set to one year because of OpenDHW’s internal architecture.</p>
+</dd>
+</dl>
+</section>
+<section id="file-folder-structure">
+<h2>File &amp; Folder Structure<a class="headerlink" href="#file-folder-structure" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>workspace/
+  └── demand_csv/
+      ├── demands-cool.csv (from TEASER)
+      ├── demands-dhw.csv (from OpenDHW)
+      └── demands-heat.csv (from TEASER)
+</pre></div>
+</div>
+<p>—</p>
+</section>
+<section id="extension-guide">
+<h2>Extension Guide<a class="headerlink" href="#extension-guide" title="Permalink to this heading"></a></h2>
+<p>### Changing initial parameters of TEASER or OpenDHW integration</p>
+<ol class="arabic simple">
+<li><p>Some parameters could be also set via Excel if necessary</p></li>
+</ol>
+<p>—</p>
+<p><em>This document describes the architecture of the TEASER and OpenDHW integration in UESGRAPH.</em></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pandapipes_pipeline.html" class="btn btn-neutral float-left" title="UESGraphs pandapipes simulation Pipeline" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api_core_modules.html" class="btn btn-neutral float-right" title="Core Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

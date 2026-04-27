@@ -1,0 +1,211 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analysis of pandapipes simulation results with UESGraph return and supply side graphs &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="UESGraphs Modelica Code Generation Pipeline" href="../architecture/modelica_pipeline.html" />
+    <link rel="prev" title="Model Generation Pandapipes" href="model_generation_pandapipes.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-you-need">What You Need</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_TEASER_int.html">TEASER Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guides/analysis_tools_pp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="analysis-of-pandapipes-simulation-results-with-uesgraph-return-and-supply-side-graphs">
+<h1>Analysis of pandapipes simulation results with UESGraph return and supply side graphs<a class="headerlink" href="#analysis-of-pandapipes-simulation-results-with-uesgraph-return-and-supply-side-graphs" title="Permalink to this heading"></a></h1>
+<p>Generates analysis calculations or plots for deeper insights on the simulation results.</p>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h2>
+<p><strong>Workflow from GeoJSON to Pandapipes:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.analyze.analysis_pp</span><span class="w"> </span><span class="kn">import</span> <span class="n">analysis_pp</span>
+
+<span class="c1"># 1. Import network from GeoJSON</span>
+<span class="n">sim_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;models&quot;</span><span class="p">,</span> <span class="s2">&quot;Sim20260402_101253&quot;</span><span class="p">)</span>
+
+<span class="c1"># 2. Generate pandapipes simulation</span>
+<span class="n">analysis</span> <span class="o">=</span> <span class="n">analysis_pp</span><span class="p">(</span><span class="n">root_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">sim_path</span><span class="p">))</span>
+
+<span class="c1"># Calculates for all pipes the timestep with the maximum heat loss and the total heat loss over the simulation period</span>
+<span class="n">analysis</span><span class="o">.</span><span class="n">thermal_loss_analysis</span><span class="p">()</span>
+
+<span class="c1"># Calculates for the supply pumps the maximum power at a given time step and the total energy consumption over the simulation period</span>
+<span class="n">analysis</span><span class="o">.</span><span class="n">pump_power_analysis</span><span class="p">()</span>
+
+<span class="c1"># Generates for each pipe a plot of mass flow, pressure drop, temperature in and out and heat loss over time</span>
+<span class="n">analysis</span><span class="o">.</span><span class="n">pipe_plots</span><span class="p">()</span>
+
+<span class="c1"># Retransforms the mass flow, in- and oultet temperatures and heat loss for all pipes to the geojson</span>
+<span class="n">analysis</span><span class="o">.</span><span class="n">retransform_pipe_geojson_data</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">sim_path</span><span class="p">)</span> <span class="o">/</span><span class="s2">&quot;network_full_new_simulation.geojson&quot;</span><span class="p">)</span>
+
+<span class="c1"># Visualizes the mass flow, pressure drops, temperatures and pressures for the supply and return side in the network at a specific time step</span>
+<span class="n">analysis</span><span class="o">.</span><span class="n">visualize_network_results</span><span class="p">(</span><span class="n">time_index</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This analysis workflow allows you to extract detailed insights from your pandapipes simulations, focusing on thermal losses and pump performance.</p>
+</section>
+<section id="what-you-need">
+<h2>What You Need<a class="headerlink" href="#what-you-need" title="Permalink to this heading"></a></h2>
+<p><strong>Required Files:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>UESGraph</strong> (JSON format)</p>
+<ul class="simple">
+<li><p>Network topology with nodes and edges with the data</p></li>
+<li><p>Created from previous simulations, should contain all simulated variables for the nodes and edges (e.g. pressure, temperature, mass flow, etc.)</p></li>
+</ul>
+</li>
+<li><p><strong>Network of pipes</strong> (GeoJSON format)</p>
+<ul class="simple">
+<li><p>network.json which has all pipes included, only used in the retransformation of the pipe data to this specific geojson</p></li>
+</ul>
+</li>
+</ol>
+<p><strong>Output:</strong></p>
+<p>Generated pandapipes results in timestamped directory:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>workspace/models/Sim20250121_143022/analysis_outputs
+├── geojsons
+   ├── network_R_data.geojson       # Return side pipes results
+   └── network_S_data.geojson       # Supply side pipes results
+├── network_visualization
+   ├── dp_R.png                     # Return side pressure drops
+   ├── dp.png                       # Supply side pressure drops
+   ├── m_flow_R.png                 # Return side mass flows
+   ├── m_flow.png                   # Supply side mass flows
+   ├── pressure_R.png               # Return side pressures
+   ├── pressure.png                 # Supply side pressures
+   ├── temperature_R.png            # Return side temperatures
+   └── temperature.png              # Supply side temperatures
+└── pipe_plots                      # Following plots for each pipe (supply and return side):
+   ├── pipe_m_flow_10011026.png     # Mass flow pipe plot
+   ├── pipe_Q_loss_10011026.png     # Heat loss pipe plot
+   ├── pipe_temp_df_10011026.png    # Temperture difference pipe plot
+   ├── R_pipe_m_flow_10011026.png   # Mass flow pipe plot for return side
+   ├── R_pipe_Q_loss_10011026.png   # Heat loss pipe plot for return side
+   └── R_pipe_temp_df_10011026.png  # Temperture difference pipe plot for return side
+</pre></div>
+</div>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../architecture/pandapipes_pipeline.html"><span class="doc">UESGraphs pandapipes simulation Pipeline</span></a> - Technical details on the pandapipes pipeline and the generated data</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="model_generation_pandapipes.html" class="btn btn-neutral float-left" title="Model Generation Pandapipes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../architecture/modelica_pipeline.html" class="btn btn-neutral float-right" title="UESGraphs Modelica Code Generation Pipeline" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

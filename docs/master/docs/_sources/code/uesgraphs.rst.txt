@@ -12,10 +12,12 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   uesgraphs.DHW_estimation
    uesgraphs.analyze
    uesgraphs.examples
    uesgraphs.systemmodels
    uesgraphs.systemmodels_pp
+   uesgraphs.teaser_integration
 
 Submodules
 ----------

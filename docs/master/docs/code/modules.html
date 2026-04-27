@@ -46,16 +46,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_TEASER_int.html">TEASER Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
@@ -92,6 +96,13 @@
 <li class="toctree-l1"><a class="reference internal" href="uesgraphs.html">uesgraphs package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="uesgraphs.html#uesgraphs.get_versioning_info"><code class="docutils literal notranslate"><span class="pre">get_versioning_info()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="uesgraphs.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.DHW_estimation.html">uesgraphs.DHW_estimation package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.DHW_estimation.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.DHW_estimation.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.DHW_estimation.html#uesgraphs-dhw-estimation-opendhw-module">uesgraphs.DHW_estimation.OpenDHW module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.DHW_estimation.html#uesgraphs-dhw-estimation-utilities-module">uesgraphs.DHW_estimation.utilities module</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.analyze.html">uesgraphs.analyze package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs-analysis-module">UESGraphs Analysis Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.assign_data_pipeline"><code class="docutils literal notranslate"><span class="pre">assign_data_pipeline()</span></code></a></li>
@@ -103,6 +114,8 @@
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.map_system_model_to_uesgraph"><code class="docutils literal notranslate"><span class="pre">map_system_model_to_uesgraph()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.set_up_terminal_logger"><code class="docutils literal notranslate"><span class="pre">set_up_terminal_logger()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#uesgraphs.analyze.set_up_file_logger"><code class="docutils literal notranslate"><span class="pre">set_up_file_logger()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.analyze.html#module-uesgraphs.analyze.analysis_pp">uesgraphs.analyze.analysis_pp module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="uesgraphs.examples.html">uesgraphs.examples package</a><ul>
@@ -111,8 +124,10 @@
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e11_model_generation_example">uesgraphs.examples.e11_model_generation_example module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e12_template_generation_example">uesgraphs.examples.e12_template_generation_example module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs-examples-e13-analyze-uesgraphs-example-module">uesgraphs.examples.e13_analyze_uesgraphs_example module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e16_complete_geojson_to_modelica">uesgraphs.examples.e16_complete_geojson_to_modelica module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs-examples-e17-complete-geojson-to-pandapipes-module">uesgraphs.examples.e17_complete_geojson_to_pandapipes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e15_complete_geojson_to_modelica">uesgraphs.examples.e15_complete_geojson_to_modelica module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs-examples-e16-complete-geojson-to-pandapipes-module">uesgraphs.examples.e16_complete_geojson_to_pandapipes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#uesgraphs-examples-e17-teaser-and-opendhw-integration-pandapipes-sim-module">uesgraphs.examples.e17_teaser_and_OpenDHW_integration_pandapipes_sim module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e18_pandapipes_analysis">uesgraphs.examples.e18_pandapipes_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e1_readme_example">uesgraphs.examples.e1_readme_example module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e2_simple_dhc_example">uesgraphs.examples.e2_simple_dhc_example module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.examples.html#module-uesgraphs.examples.e3_add_network_example">uesgraphs.examples.e3_add_network_example module</a></li>
@@ -136,6 +151,12 @@
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels_pp.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels_pp.html#uesgraphs-systemmodels-pp-systemmodelheating-module">uesgraphs.systemmodels_pp.systemmodelheating module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uesgraphs.systemmodels_pp.html#uesgraphs-systemmodels-pp-utilities-module">uesgraphs.systemmodels_pp.utilities module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="uesgraphs.teaser_integration.html">uesgraphs.teaser_integration package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.teaser_integration.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.teaser_integration.html#uesgraphs-teaser-integration-simulate-module">uesgraphs.teaser_integration.simulate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uesgraphs.teaser_integration.html#uesgraphs-teaser-integration-utilities-module">uesgraphs.teaser_integration.utilities module</a></li>
 </ul>
 </li>
 </ul>

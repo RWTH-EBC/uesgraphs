@@ -19,7 +19,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Core Modules" href="../api_core_modules.html" />
+    <link rel="next" title="UESGraphs pandapipes simulation Pipeline" href="teaser_opendhw_integration.html" />
     <link rel="prev" title="Graph Transformation" href="graph_transformation.html" /> 
 </head>
 
@@ -48,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
 <ul class="current">
@@ -74,10 +75,13 @@
 <li class="toctree-l2"><a class="reference internal" href="#extension-guide">Extension Guide</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_TEASER_int.html">TEASER Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
@@ -111,7 +115,7 @@
 <h1>UESGraphs pandapipes simulation Pipeline<a class="headerlink" href="#uesgraphs-pandapipes-simulation-pipeline" title="Permalink to this heading"></a></h1>
 <section id="architecture-documentation">
 <h2>Architecture Documentation<a class="headerlink" href="#architecture-documentation" title="Permalink to this heading"></a></h2>
-<p><strong>Version:</strong> — <strong>Last Updated:</strong> —</p>
+<p><strong>Version:</strong> 2.2.0 <strong>Last Updated:</strong> 2.1.5</p>
 </section>
 <hr class="docutils" />
 <section id="table-of-contents">
@@ -310,6 +314,22 @@ sim_model_dir</p>
 <li><p>pandapipes.circ_pump_mass (if multiple supplies)</p></li>
 <li><p>pandapipes.junction</p></li>
 </ul>
+<p><strong>Solver Settings for static simulation</strong>:</p>
+<ul class="simple">
+<li><p>mode: ‘bidirectional’</p></li>
+<li><p>iter: 500</p></li>
+<li><p>using full pandapipes calculation for all variables</p></li>
+</ul>
+<p><strong>Solver Settings for dynamic simulation</strong>:</p>
+<ul class="simple">
+<li><p>mode: ‘hydraulics’</p></li>
+<li><p>iter: 500</p></li>
+<li><p>using only hydraulics pandapipes calculations</p></li>
+<li><p>Layer-Structuring for order of temperature calculations</p></li>
+<li><p>Implicit euler calculation for outlet pipe temperature</p></li>
+<li><p>Mixing temperature calculation with averaging over mass flows</p></li>
+</ul>
+<p>—</p>
 <p><strong>Solver Settings</strong>:</p>
 <ul class="simple">
 <li><p>mode: ‘bidirectional’</p></li>
@@ -326,6 +346,7 @@ sim_model_dir</p>
   └── models/
       └── Sim20250115_101530_MySimulation/
           ├── uesgraphs.json
+          ├── uesgraphs_return.json
           ├── [component models]
           └── setup_params.csv   (optional)
 </pre></div>
@@ -373,7 +394,7 @@ sim_model_dir</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="graph_transformation.html" class="btn btn-neutral float-left" title="Graph Transformation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../api_core_modules.html" class="btn btn-neutral float-right" title="Core Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="teaser_opendhw_integration.html" class="btn btn-neutral float-right" title="UESGraphs pandapipes simulation Pipeline" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

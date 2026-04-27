@@ -41,18 +41,34 @@ uesgraphs.examples.e13\_analyze\_uesgraphs\_example module
    :undoc-members:
    :show-inheritance:
 
-uesgraphs.examples.e16\_complete\_geojson\_to\_modelica module
+uesgraphs.examples.e15\_complete\_geojson\_to\_modelica module
 --------------------------------------------------------------
 
-.. automodule:: uesgraphs.examples.e16_complete_geojson_to_modelica
+.. automodule:: uesgraphs.examples.e15_complete_geojson_to_modelica
    :members:
    :undoc-members:
    :show-inheritance:
 
-uesgraphs.examples.e17\_complete\_geojson\_to\_pandapipes module
+uesgraphs.examples.e16\_complete\_geojson\_to\_pandapipes module
 ----------------------------------------------------------------
 
-.. automodule:: uesgraphs.examples.e17_complete_geojson_to_pandapipes
+.. automodule:: uesgraphs.examples.e16_complete_geojson_to_pandapipes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e17\_teaser\_and\_OpenDHW\_integration\_pandapipes\_sim module
+---------------------------------------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e17_teaser_and_OpenDHW_integration_pandapipes_sim
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.examples.e18\_pandapipes\_analysis module
+---------------------------------------------------
+
+.. automodule:: uesgraphs.examples.e18_pandapipes_analysis
    :members:
    :undoc-members:
    :show-inheritance:

@@ -213,7 +213,7 @@ For more detailed information, please check the ``pyproject.toml`` file.
 **UESgraphs** is built with `networkx` as its core library. The typical workflow for the tool involves:
 
 .. image:: _static/uesgraph_function_principle.png
-   :alt: Developed workflow using UESgraphs v 2.0.0
+   :alt: Developed workflow using UESgraphs v 3.0.0
    :align: center
    :width: 100%
 
@@ -227,9 +227,11 @@ The functional principle of **UESgraphs** can be summarized as under:
 
 * Multiple data input formats are supported, including OpenStreetMap, GIS files, and manual data, enabling integration of heterogeneous spatial and tabular data.
 
-* UESgraphs automates the generation of dynamic simulation models by transforming graph representations into Modelica code through templated model export.
+* UESgraphs integrates a DHW and heat estimation with OpenDHW and TEASER and allows a direct simulation with the generated input data.
 
-* UESgraphs allows the execution of pandapipes simulations based on the graph structure and the provided input data.
+* UESgraphs allows the execution of quasi-static pandapipes simulations and a dynamic python-based simulation based on the graph structure and the provided input data.
+
+* UESgraphs automates the generation of dynamic simulation models by transforming graph representations into Modelica code through templated model export.
 
 * The tool facilitates downstream analysis and visualization, including color-coded plots and KPI extraction, to support evaluation and decision-making.
 
@@ -245,6 +247,8 @@ API Documentation
      guides/hydronic_sizing
      guides/Template_Generation.rst
      guides/model_generation_pandapipes
+     guides/OpenDHW_and_TEASER_integration
+     guides/analysis_tools_pp
 
   .. toctree::
      :maxdepth: 2
@@ -253,12 +257,15 @@ API Documentation
      architecture/modelica_pipeline
      architecture/graph_transformation
      architecture/pandapipes_pipeline
+     architecture/teaser_opendhw_integration
 
   .. toctree::
      :maxdepth: 2
      :caption: API Reference:
 
      api_core_modules
+     api_OpenDHW_int
+     api_TEASER_int
      api_system_models
      api_system_models_pp
      api_examples

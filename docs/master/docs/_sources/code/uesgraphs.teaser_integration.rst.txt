@@ -1,0 +1,26 @@
+uesgraphs.teaser\_integration package
+=====================================
+
+.. automodule:: uesgraphs.teaser_integration
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+uesgraphs.teaser\_integration.simulate module
+---------------------------------------------
+
+.. automodule:: uesgraphs.teaser_integration.simulate
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.teaser\_integration.utilities module
+----------------------------------------------
+
+.. automodule:: uesgraphs.teaser_integration.utilities
+   :members:
+   :undoc-members:
+   :show-inheritance:

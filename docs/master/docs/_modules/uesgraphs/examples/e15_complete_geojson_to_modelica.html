@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>uesgraphs.examples.e16_complete_geojson_to_modelica &mdash; uesgraphs v2.1.1</title>
+  <title>uesgraphs.examples.e15_complete_geojson_to_modelica &mdash; uesgraphs v2.1.1</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
 
@@ -45,16 +45,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../guides/Template_Generation.html">Template Generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../architecture/graph_transformation.html">Graph Transformation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_TEASER_int.html">TEASER Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api_system_models.html">System Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api_system_models_pp.html">System Models pandapipes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api_examples.html">Examples</a></li>
@@ -76,7 +80,7 @@
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
           <li class="breadcrumb-item"><a href="../../uesgraphs.html">uesgraphs</a></li>
-      <li class="breadcrumb-item active">uesgraphs.examples.e16_complete_geojson_to_modelica</li>
+      <li class="breadcrumb-item active">uesgraphs.examples.e15_complete_geojson_to_modelica</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -85,7 +89,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for uesgraphs.examples.e16_complete_geojson_to_modelica</h1><div class="highlight"><pre>
+  <h1>Source code for uesgraphs.examples.e15_complete_geojson_to_modelica</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">GeoJSON Import to Modelica Code Generation</span>
 <span class="sd">==============================================================</span>
@@ -130,7 +134,7 @@
 
 <span class="sd">Example Directory Structure:</span>
 <span class="sd">----------------------------</span>
-<span class="sd">workspace/e16/</span>
+<span class="sd">workspace/e15/</span>
 <span class="sd">├── simple_district_graph.json          # Saved UESGraph after GeoJSON import</span>
 <span class="sd">├── models/                             # Generated Modelica files</span>
 <span class="sd">│   └── Sim20250102_123456_MySimulation/</span>
@@ -161,7 +165,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels.model_generation_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">uesgraph_to_modelica</span>
 
 
-<div class="viewcode-block" id="workspace_example"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e16_complete_geojson_to_modelica.workspace_example">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">workspace_example</span><span class="p">(</span><span class="n">name_workspace</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="workspace_example"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e15_complete_geojson_to_modelica.workspace_example">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">workspace_example</span><span class="p">(</span><span class="n">name_workspace</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates a local workspace with given name (copied from e1_readme_example)</span>
 
@@ -189,9 +193,9 @@
     <span class="k">return</span> <span class="n">workspace</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e16_complete_geojson_to_modelica.main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../code/uesgraphs.examples.html#uesgraphs.examples.e15_complete_geojson_to_modelica.main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;E16: GeoJSON to Modelica Code Generation&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;E15: GeoJSON to Modelica Code Generation&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
 
     <span class="c1"># =========================================================================</span>
@@ -200,7 +204,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> STEP 1: Setting up workspace and paths...&quot;</span><span class="p">)</span>
 
     <span class="c1"># Create workspace directory for this example</span>
-    <span class="n">workspace</span> <span class="o">=</span> <span class="n">workspace_example</span><span class="p">(</span><span class="s2">&quot;e16&quot;</span><span class="p">)</span>
+    <span class="n">workspace</span> <span class="o">=</span> <span class="n">workspace_example</span><span class="p">(</span><span class="s2">&quot;e15&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Workspace: </span><span class="si">{</span><span class="n">workspace</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Get paths to example data files</span>
@@ -297,7 +301,7 @@
     <span class="c1"># STEP 4: Summary and Next Steps</span>
     <span class="c1"># =========================================================================</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; E16 Example Completed Successfully!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; E15 Example Completed Successfully!&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Output Locations:&quot;</span><span class="p">)</span>
@@ -318,7 +322,7 @@
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;UESGraphs Example 16: Complete GeoJSON to Modelica Workflow&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;UESGraphs Example 15: Complete GeoJSON to Modelica Workflow&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using the new Excel-based parameter configuration system&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
 

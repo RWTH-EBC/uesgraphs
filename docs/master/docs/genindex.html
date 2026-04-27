@@ -45,16 +45,20 @@
 <li class="toctree-l1"><a class="reference internal" href="guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/Template_Generation.html">Template Generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/graph_transformation.html">Graph Transformation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_TEASER_int.html">TEASER Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_system_models.html">System Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_system_models_pp.html">System Models pandapipes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_examples.html">Examples</a></li>
@@ -111,9 +115,11 @@
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="_autosummary/uesgraphs.systemmodels.systemmodelheating.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.__init__">__init__() (uesgraphs.systemmodels.systemmodelheating.SystemModelHeating method)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.__init__">[1]</a>
+      <li><a href="code/uesgraphs.analyze.html#uesgraphs.analyze.analysis_pp.analysis_pp.__init__">__init__() (uesgraphs.analyze.analysis_pp.analysis_pp method)</a>
 
       <ul>
+        <li><a href="_autosummary/uesgraphs.systemmodels.systemmodelheating.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.__init__">(uesgraphs.systemmodels.systemmodelheating.SystemModelHeating method)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.__init__">[1]</a>
+</li>
         <li><a href="_autosummary/uesgraphs.systemmodels.templates.html#uesgraphs.systemmodels.templates.ModelInfoExtractor.__init__">(uesgraphs.systemmodels.templates.ModelInfoExtractor method)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.ModelInfoExtractor.__init__">[1]</a>
 </li>
         <li><a href="_autosummary/uesgraphs.systemmodels.templates.html#uesgraphs.systemmodels.templates.UESTemplates.__init__">(uesgraphs.systemmodels.templates.UESTemplates method)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.__init__">[1]</a>
@@ -157,10 +163,10 @@
         <li><a href="_autosummary/uesgraphs.uesgraph.html#uesgraphs.uesgraph.UESGraph.add_network_node">(uesgraphs.uesgraph.UESGraph method)</a>, <a href="code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.add_network_node">[1]</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_autosummary/uesgraphs.systemmodels.systemmodelheating.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.add_pipe_node">add_pipe_node() (uesgraphs.systemmodels.systemmodelheating.SystemModelHeating method)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.add_pipe_node">[1]</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph.add_street_node">add_street_node() (uesgraphs.UESGraph method)</a>
 
       <ul>
@@ -168,6 +174,8 @@
 </li>
       </ul></li>
       <li><a href="_autosummary/uesgraphs.examples.e6_additional_building_attributes_example.html#uesgraphs.examples.e6_additional_building_attributes_example.additional_attrib">additional_attrib() (in module uesgraphs.examples.e6_additional_building_attributes_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e6_additional_building_attributes_example.additional_attrib">[1]</a>
+</li>
+      <li><a href="code/uesgraphs.analyze.html#uesgraphs.analyze.analysis_pp.analysis_pp">analysis_pp (class in uesgraphs.analyze.analysis_pp)</a>
 </li>
       <li><a href="_autosummary/uesgraphs.examples.e9_generate_ues_from_osm_example.html#uesgraphs.examples.e9_generate_ues_from_osm_example.area_list">area_list() (in module uesgraphs.examples.e9_generate_ues_from_osm_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e9_generate_ues_from_osm_example.area_list">[1]</a>
 </li>
@@ -238,6 +246,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code/uesgraphs.DHW_estimation.utils.html#uesgraphs.DHW_estimation.utils.OpenDHW_Utilities.convert_dhw_load_to_storage_load">convert_dhw_load_to_storage_load() (in module uesgraphs.DHW_estimation.utils.OpenDHW_Utilities)</a>
+</li>
       <li><a href="_autosummary/uesgraphs.examples.e10_networks_example.html#uesgraphs.examples.e10_networks_example.convert_positions">convert_positions() (in module uesgraphs.examples.e10_networks_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e10_networks_example.convert_positions">[1]</a>
 </li>
       <li><a href="_autosummary/uesgraphs.examples.e11_model_generation_example.html#uesgraphs.examples.e11_model_generation_example.create_dirs">create_dirs() (in module uesgraphs.examples.e11_model_generation_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.create_dirs">[1]</a>
@@ -464,7 +474,9 @@
 </li>
         <li><a href="_autosummary/uesgraphs.examples.e12_template_generation_example.html#uesgraphs.examples.e12_template_generation_example.main">(in module uesgraphs.examples.e12_template_generation_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e12_template_generation_example.main">[1]</a>
 </li>
-        <li><a href="_autosummary/uesgraphs.examples.e16_complete_geojson_to_modelica.html#uesgraphs.examples.e16_complete_geojson_to_modelica.main">(in module uesgraphs.examples.e16_complete_geojson_to_modelica)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e16_complete_geojson_to_modelica.main">[1]</a>
+        <li><a href="code/uesgraphs.examples.html#uesgraphs.examples.e15_complete_geojson_to_modelica.main">(in module uesgraphs.examples.e15_complete_geojson_to_modelica)</a>
+</li>
+        <li><a href="code/uesgraphs.examples.html#uesgraphs.examples.e18_pandapipes_analysis.main">(in module uesgraphs.examples.e18_pandapipes_analysis)</a>
 </li>
         <li><a href="_autosummary/uesgraphs.examples.e1_readme_example.html#uesgraphs.examples.e1_readme_example.main">(in module uesgraphs.examples.e1_readme_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e1_readme_example.main">[1]</a>
 </li>
@@ -526,14 +538,14 @@
 </li>
       <li><a href="_autosummary/uesgraphs.examples.e11_model_generation_example.html#uesgraphs.examples.e11_model_generation_example.model_generation_pinola">model_generation_pinola() (in module uesgraphs.examples.e11_model_generation_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e11_model_generation_example.model_generation_pinola">[1]</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_autosummary/uesgraphs.systemmodels.templates.html#uesgraphs.systemmodels.templates.UESTemplates.model_name">model_name (uesgraphs.systemmodels.templates.UESTemplates attribute)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.model_name">[1]</a>
 </li>
       <li><a href="_autosummary/uesgraphs.systemmodels.templates.html#uesgraphs.systemmodels.templates.UESTemplates.model_type">model_type (uesgraphs.systemmodels.templates.UESTemplates attribute)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.model_type">[1]</a>
 </li>
       <li><a href="_autosummary/uesgraphs.systemmodels.templates.html#uesgraphs.systemmodels.templates.ModelInfoExtractor">ModelInfoExtractor (class in uesgraphs.systemmodels.templates)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.ModelInfoExtractor">[1]</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     module
 
@@ -541,6 +553,16 @@
         <li><a href="code/uesgraphs.html#module-uesgraphs">uesgraphs</a>
 </li>
         <li><a href="_autosummary/uesgraphs.analyze.html#module-uesgraphs.analyze">uesgraphs.analyze</a>, <a href="code/uesgraphs.analyze.html#module-uesgraphs.analyze">[1]</a>
+</li>
+        <li><a href="code/uesgraphs.analyze.html#module-uesgraphs.analyze.analysis_pp">uesgraphs.analyze.analysis_pp</a>
+</li>
+        <li><a href="_autosummary/uesgraphs.DHW_estimation.html#module-uesgraphs.DHW_estimation">uesgraphs.DHW_estimation</a>, <a href="code/uesgraphs.DHW_estimation.html#module-uesgraphs.DHW_estimation">[1]</a>
+</li>
+        <li><a href="code/uesgraphs.DHW_estimation.Data.html#module-uesgraphs.DHW_estimation.Data">uesgraphs.DHW_estimation.Data</a>
+</li>
+        <li><a href="code/uesgraphs.DHW_estimation.utils.html#module-uesgraphs.DHW_estimation.utils">uesgraphs.DHW_estimation.utils</a>
+</li>
+        <li><a href="code/uesgraphs.DHW_estimation.utils.html#module-uesgraphs.DHW_estimation.utils.OpenDHW_Utilities">uesgraphs.DHW_estimation.utils.OpenDHW_Utilities</a>
 </li>
         <li><a href="_autosummary/uesgraphs.examples.html#module-uesgraphs.examples">uesgraphs.examples</a>, <a href="code/uesgraphs.examples.html#module-uesgraphs.examples">[1]</a>
 </li>
@@ -550,7 +572,9 @@
 </li>
         <li><a href="_autosummary/uesgraphs.examples.e12_template_generation_example.html#module-uesgraphs.examples.e12_template_generation_example">uesgraphs.examples.e12_template_generation_example</a>, <a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e12_template_generation_example">[1]</a>
 </li>
-        <li><a href="_autosummary/uesgraphs.examples.e16_complete_geojson_to_modelica.html#module-uesgraphs.examples.e16_complete_geojson_to_modelica">uesgraphs.examples.e16_complete_geojson_to_modelica</a>, <a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e16_complete_geojson_to_modelica">[1]</a>
+        <li><a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e15_complete_geojson_to_modelica">uesgraphs.examples.e15_complete_geojson_to_modelica</a>
+</li>
+        <li><a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e18_pandapipes_analysis">uesgraphs.examples.e18_pandapipes_analysis</a>
 </li>
         <li><a href="_autosummary/uesgraphs.examples.e1_readme_example.html#module-uesgraphs.examples.e1_readme_example">uesgraphs.examples.e1_readme_example</a>, <a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e1_readme_example">[1]</a>
 </li>
@@ -581,6 +605,8 @@
         <li><a href="_autosummary/uesgraphs.systemmodels.utilities.html#module-uesgraphs.systemmodels.utilities">uesgraphs.systemmodels.utilities</a>, <a href="code/uesgraphs.systemmodels.html#module-uesgraphs.systemmodels.utilities">[1]</a>
 </li>
         <li><a href="_autosummary/uesgraphs.systemmodels_pp.html#module-uesgraphs.systemmodels_pp">uesgraphs.systemmodels_pp</a>, <a href="code/uesgraphs.systemmodels_pp.html#module-uesgraphs.systemmodels_pp">[1]</a>
+</li>
+        <li><a href="_autosummary/uesgraphs.teaser_integration.html#module-uesgraphs.teaser_integration">uesgraphs.teaser_integration</a>, <a href="code/uesgraphs.teaser_integration.html#module-uesgraphs.teaser_integration">[1]</a>
 </li>
         <li><a href="_autosummary/uesgraphs.uesgraph.html#module-uesgraphs.uesgraph">uesgraphs.uesgraph</a>, <a href="code/uesgraphs.html#module-uesgraphs.uesgraph">[1]</a>
 </li>
@@ -709,6 +735,8 @@
 </li>
       <li><a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.parse_template_parameters">parse_template_parameters() (in module uesgraphs.systemmodels.model_generation_pipeline)</a>
 </li>
+      <li><a href="code/uesgraphs.analyze.html#uesgraphs.analyze.analysis_pp.analysis_pp.pipe_plots">pipe_plots() (uesgraphs.analyze.analysis_pp.analysis_pp method)</a>
+</li>
       <li><a href="_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph.pipeIDs">pipeIDs (uesgraphs.UESGraph attribute)</a>
 
       <ul>
@@ -734,6 +762,8 @@
       <li><a href="_autosummary/uesgraphs.systemmodels.utilities.html#uesgraphs.systemmodels.utilities.prepare_graph">prepare_graph() (in module uesgraphs.systemmodels.utilities)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.utilities.prepare_graph">[1]</a>
 </li>
       <li><a href="_autosummary/uesgraphs.analyze.html#uesgraphs.analyze.process_simulation_result">process_simulation_result() (in module uesgraphs.analyze)</a>, <a href="code/uesgraphs.analyze.html#uesgraphs.analyze.process_simulation_result">[1]</a>
+</li>
+      <li><a href="code/uesgraphs.analyze.html#uesgraphs.analyze.analysis_pp.analysis_pp.pump_power_analysis">pump_power_analysis() (uesgraphs.analyze.analysis_pp.analysis_pp method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -792,6 +822,8 @@
       <li><a href="_autosummary/uesgraphs.systemmodels.templates.html#uesgraphs.systemmodels.templates.UESTemplates.render">render() (uesgraphs.systemmodels.templates.UESTemplates method)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.render">[1]</a>
 </li>
       <li><a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.model_generation_pipeline.resolve_parameter_value">resolve_parameter_value() (in module uesgraphs.systemmodels.model_generation_pipeline)</a>
+</li>
+      <li><a href="code/uesgraphs.analyze.html#uesgraphs.analyze.analysis_pp.analysis_pp.retransform_pipe_geojson_data">retransform_pipe_geojson_data() (uesgraphs.analyze.analysis_pp.analysis_pp method)</a>
 </li>
       <li><a href="_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph.rotate">rotate() (uesgraphs.UESGraph method)</a>
 
@@ -875,6 +907,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_autosummary/uesgraphs.systemmodels.templates.html#uesgraphs.systemmodels.templates.UESTemplates.template_path">template_path (uesgraphs.systemmodels.templates.UESTemplates attribute)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.UESTemplates.template_path">[1]</a>
 </li>
+      <li><a href="code/uesgraphs.analyze.html#uesgraphs.analyze.analysis_pp.analysis_pp.thermal_loss_analysis">thermal_loss_analysis() (uesgraphs.analyze.analysis_pp.analysis_pp method)</a>
+</li>
       <li><a href="_autosummary/uesgraphs.systemmodels.systemmodelheating.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.time">time (uesgraphs.systemmodels.systemmodelheating.SystemModelHeating attribute)</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.time">[1]</a>
 
       <ul>
@@ -928,6 +962,41 @@
 </li>
       </ul></li>
       <li>
+    uesgraphs.analyze.analysis_pp
+
+      <ul>
+        <li><a href="code/uesgraphs.analyze.html#module-uesgraphs.analyze.analysis_pp">module</a>
+</li>
+      </ul></li>
+      <li>
+    uesgraphs.DHW_estimation
+
+      <ul>
+        <li><a href="_autosummary/uesgraphs.DHW_estimation.html#module-uesgraphs.DHW_estimation">module</a>, <a href="code/uesgraphs.DHW_estimation.html#module-uesgraphs.DHW_estimation">[1]</a>
+</li>
+      </ul></li>
+      <li>
+    uesgraphs.DHW_estimation.Data
+
+      <ul>
+        <li><a href="code/uesgraphs.DHW_estimation.Data.html#module-uesgraphs.DHW_estimation.Data">module</a>
+</li>
+      </ul></li>
+      <li>
+    uesgraphs.DHW_estimation.utils
+
+      <ul>
+        <li><a href="code/uesgraphs.DHW_estimation.utils.html#module-uesgraphs.DHW_estimation.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    uesgraphs.DHW_estimation.utils.OpenDHW_Utilities
+
+      <ul>
+        <li><a href="code/uesgraphs.DHW_estimation.utils.html#module-uesgraphs.DHW_estimation.utils.OpenDHW_Utilities">module</a>
+</li>
+      </ul></li>
+      <li>
     uesgraphs.examples
 
       <ul>
@@ -956,10 +1025,17 @@
 </li>
       </ul></li>
       <li>
-    uesgraphs.examples.e16_complete_geojson_to_modelica
+    uesgraphs.examples.e15_complete_geojson_to_modelica
 
       <ul>
-        <li><a href="_autosummary/uesgraphs.examples.e16_complete_geojson_to_modelica.html#module-uesgraphs.examples.e16_complete_geojson_to_modelica">module</a>, <a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e16_complete_geojson_to_modelica">[1]</a>
+        <li><a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e15_complete_geojson_to_modelica">module</a>
+</li>
+      </ul></li>
+      <li>
+    uesgraphs.examples.e18_pandapipes_analysis
+
+      <ul>
+        <li><a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e18_pandapipes_analysis">module</a>
 </li>
       </ul></li>
       <li>
@@ -983,6 +1059,8 @@
         <li><a href="_autosummary/uesgraphs.examples.e3_add_network_example.html#module-uesgraphs.examples.e3_add_network_example">module</a>, <a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e3_add_network_example">[1]</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     uesgraphs.examples.e4_save_uesgraphs_example
 
@@ -1004,8 +1082,6 @@
         <li><a href="_autosummary/uesgraphs.examples.e6_additional_building_attributes_example.html#module-uesgraphs.examples.e6_additional_building_attributes_example">module</a>, <a href="code/uesgraphs.examples.html#module-uesgraphs.examples.e6_additional_building_attributes_example">[1]</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     uesgraphs.examples.e7_plot_uesgraphs_example
 
@@ -1070,6 +1146,13 @@
 </li>
       </ul></li>
       <li>
+    uesgraphs.teaser_integration
+
+      <ul>
+        <li><a href="_autosummary/uesgraphs.teaser_integration.html#module-uesgraphs.teaser_integration">module</a>, <a href="code/uesgraphs.teaser_integration.html#module-uesgraphs.teaser_integration">[1]</a>
+</li>
+      </ul></li>
+      <li>
     uesgraphs.uesgraph
 
       <ul>
@@ -1115,6 +1198,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_autosummary/uesgraphs.systemmodels.templates.html#id0">value (uesgraphs.systemmodels.templates.Parameter attribute)</a>, <a href="_autosummary/uesgraphs.systemmodels.templates.html#uesgraphs.systemmodels.templates.Parameter.value">[1]</a>, <a href="code/uesgraphs.systemmodels.html#id7">[2]</a>, <a href="code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.templates.Parameter.value">[3]</a>
 </li>
+      <li><a href="code/uesgraphs.analyze.html#uesgraphs.analyze.analysis_pp.analysis_pp.visualize_network">visualize_network() (uesgraphs.analyze.analysis_pp.analysis_pp method)</a>
+</li>
       <li><a href="_autosummary/uesgraphs.Visuals.html#uesgraphs.Visuals">Visuals (class in uesgraphs)</a>
 
       <ul>
@@ -1127,9 +1212,11 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="_autosummary/uesgraphs.examples.e16_complete_geojson_to_modelica.html#uesgraphs.examples.e16_complete_geojson_to_modelica.workspace_example">workspace_example() (in module uesgraphs.examples.e16_complete_geojson_to_modelica)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e16_complete_geojson_to_modelica.workspace_example">[1]</a>
+      <li><a href="code/uesgraphs.examples.html#uesgraphs.examples.e15_complete_geojson_to_modelica.workspace_example">workspace_example() (in module uesgraphs.examples.e15_complete_geojson_to_modelica)</a>
 
       <ul>
+        <li><a href="code/uesgraphs.examples.html#uesgraphs.examples.e18_pandapipes_analysis.workspace_example">(in module uesgraphs.examples.e18_pandapipes_analysis)</a>
+</li>
         <li><a href="_autosummary/uesgraphs.examples.e1_readme_example.html#uesgraphs.examples.e1_readme_example.workspace_example">(in module uesgraphs.examples.e1_readme_example)</a>, <a href="code/uesgraphs.examples.html#uesgraphs.examples.e1_readme_example.workspace_example">[1]</a>
 </li>
       </ul></li>

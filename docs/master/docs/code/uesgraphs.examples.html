@@ -46,16 +46,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_TEASER_int.html">TEASER Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
@@ -511,8 +515,8 @@ and CI/CD integration.</p>
 <section id="uesgraphs-examples-e13-analyze-uesgraphs-example-module">
 <h2>uesgraphs.examples.e13_analyze_uesgraphs_example module<a class="headerlink" href="#uesgraphs-examples-e13-analyze-uesgraphs-example-module" title="Permalink to this heading"></a></h2>
 </section>
-<section id="module-uesgraphs.examples.e16_complete_geojson_to_modelica">
-<span id="uesgraphs-examples-e16-complete-geojson-to-modelica-module"></span><h2>uesgraphs.examples.e16_complete_geojson_to_modelica module<a class="headerlink" href="#module-uesgraphs.examples.e16_complete_geojson_to_modelica" title="Permalink to this heading"></a></h2>
+<section id="module-uesgraphs.examples.e15_complete_geojson_to_modelica">
+<span id="uesgraphs-examples-e15-complete-geojson-to-modelica-module"></span><h2>uesgraphs.examples.e15_complete_geojson_to_modelica module<a class="headerlink" href="#module-uesgraphs.examples.e15_complete_geojson_to_modelica" title="Permalink to this heading"></a></h2>
 <section id="geojson-import-to-modelica-code-generation">
 <h3>GeoJSON Import to Modelica Code Generation<a class="headerlink" href="#geojson-import-to-modelica-code-generation" title="Permalink to this heading"></a></h3>
 <p>This example demonstrates the workflow for generating modelica simulation files.</p>
@@ -553,7 +557,7 @@ This example shows how to use it.</p>
 </section>
 <section id="example-directory-structure">
 <h4>Example Directory Structure:<a class="headerlink" href="#example-directory-structure" title="Permalink to this heading"></a></h4>
-<p>workspace/e16/
+<p>workspace/e15/
 ├── simple_district_graph.json          # Saved UESGraph after GeoJSON import
 ├── models/                             # Generated Modelica files
 │   └── Sim20250102_123456_MySimulation/
@@ -573,8 +577,8 @@ This example shows how to use it.</p>
 </section>
 </section>
 <dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e16_complete_geojson_to_modelica.workspace_example">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e16_complete_geojson_to_modelica.</span></span><span class="sig-name descname"><span class="pre">workspace_example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_workspace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e16_complete_geojson_to_modelica.html#workspace_example"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e16_complete_geojson_to_modelica.workspace_example" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="uesgraphs.examples.e15_complete_geojson_to_modelica.workspace_example">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e15_complete_geojson_to_modelica.</span></span><span class="sig-name descname"><span class="pre">workspace_example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_workspace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e15_complete_geojson_to_modelica.html#workspace_example"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e15_complete_geojson_to_modelica.workspace_example" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a local workspace with given name (copied from e1_readme_example)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -590,13 +594,70 @@ This example shows how to use it.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.examples.e16_complete_geojson_to_modelica.main">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e16_complete_geojson_to_modelica.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e16_complete_geojson_to_modelica.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e16_complete_geojson_to_modelica.main" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="uesgraphs.examples.e15_complete_geojson_to_modelica.main">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e15_complete_geojson_to_modelica.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e15_complete_geojson_to_modelica.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e15_complete_geojson_to_modelica.main" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="uesgraphs-examples-e17-complete-geojson-to-pandapipes-module">
-<h2>uesgraphs.examples.e17_complete_geojson_to_pandapipes module<a class="headerlink" href="#uesgraphs-examples-e17-complete-geojson-to-pandapipes-module" title="Permalink to this heading"></a></h2>
+<section id="uesgraphs-examples-e16-complete-geojson-to-pandapipes-module">
+<h2>uesgraphs.examples.e16_complete_geojson_to_pandapipes module<a class="headerlink" href="#uesgraphs-examples-e16-complete-geojson-to-pandapipes-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="uesgraphs-examples-e17-teaser-and-opendhw-integration-pandapipes-sim-module">
+<h2>uesgraphs.examples.e17_teaser_and_OpenDHW_integration_pandapipes_sim module<a class="headerlink" href="#uesgraphs-examples-e17-teaser-and-opendhw-integration-pandapipes-sim-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-uesgraphs.examples.e18_pandapipes_analysis">
+<span id="uesgraphs-examples-e18-pandapipes-analysis-module"></span><h2>uesgraphs.examples.e18_pandapipes_analysis module<a class="headerlink" href="#module-uesgraphs.examples.e18_pandapipes_analysis" title="Permalink to this heading"></a></h2>
+<section id="example-for-analyzing-pandapipes-simulation-results-using-the-analysis-pp-class">
+<h3>Example for analyzing pandapipes simulation results using the analysis_pp class.<a class="headerlink" href="#example-for-analyzing-pandapipes-simulation-results-using-the-analysis-pp-class" title="Permalink to this heading"></a></h3>
+<p>This example demonstrates the workflow if for analyzing pandapipes simulation results using the analysis_pp class.
+Ensure that this example is run after completing E17, which generates the necessary simulation results and UESGraph JSON files for analysis.</p>
+<p>Here are the steps covered in this example:
+1. <strong>Setup Workspace and Paths</strong>:</p>
+<blockquote>
+<div><p>Create a local workspace for this example and define paths to the simulation results generated in E17.</p>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><dl class="simple">
+<dt><strong>Generate analysis class and run analysis</strong>:</dt><dd><p>Create an instance of the analysis_pp class with the path to the simulation results and optionally set the timestep.
+Then, call the thermal_loss_analysis and pump_power_analysis methods to perform the analyses.
+Also pipe_plots allows a deeper analysis of the pipe results, so you get plots of all avaible simulation variables for the whole timeseries.
+You can use retransform_pipe_geojson_data to retransform the data to the geojson that is used.
+Also visualize_network allows you to visualize pressures, temperatures and mass flows of the whole district for a specific timestep,
+which is the index of the saved timeseries data.
+For the pump power analysis a parameter eta_total is set to 0.65,
+adjust this value as needed for your specific system by setting it in the method call.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Summary and Next Steps</strong>:</dt><dd><p>Summarize the results printed in the terminal and suggest next steps for further analysis or visualization.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e18_pandapipes_analysis.workspace_example">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e18_pandapipes_analysis.</span></span><span class="sig-name descname"><span class="pre">workspace_example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_workspace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e18_pandapipes_analysis.html#workspace_example"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e18_pandapipes_analysis.workspace_example" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a local workspace with given name (copied from e1_readme_example)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name_workspace</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the local workspace to be created</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>workspace</strong> – Full path to the new workspace</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e18_pandapipes_analysis.main">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e18_pandapipes_analysis.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e18_pandapipes_analysis.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e18_pandapipes_analysis.main" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="module-uesgraphs.examples.e1_readme_example">
 <span id="uesgraphs-examples-e1-readme-example-module"></span><h2>uesgraphs.examples.e1_readme_example module<a class="headerlink" href="#module-uesgraphs.examples.e1_readme_example" title="Permalink to this heading"></a></h2>
