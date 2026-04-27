@@ -17,7 +17,7 @@ systems or generate simulation models. **Version 2** has been updated with the f
 - **Enabled Logging Features**: Logging functionality has been activated for better tracking and debugging.
 - **Enhanced Compatibility**: Compatible with the latest versions of Modelica and the AixLib package.
 - **Demand Estimation**: Estimation of heating and cooling demands using the tool [TEASER](https://github.com/rwth-ebc/teaser) and integrated code from [OpenDHW](https://github.com/RWTH-EBC/OpenDHW) for estimating domestic hot water demands for the buildings.
-- **Hydrulic Network Sizing**: A physics-based approach for automated mass flow calculation and pipe sizing in district heating networks.
+- **Hydraulic Network Sizing**: A physics-based approach for automated mass flow calculation and pipe sizing in district heating networks.
 - **Quasi-static Simulation**: Quasi-static simulations for district heating networks using [pandapipes](https://github.com/e2nIEE/pandapipes ).
 - **Dynamic Python Based Simulation**: Quick dynamic network simulations using python for thermo-hydraulic analysis of the network. 
 - **Improved Visualization**: Enhanced visualization features for better representation of results.
