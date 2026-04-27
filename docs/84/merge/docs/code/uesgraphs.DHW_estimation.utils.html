@@ -1,0 +1,164 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.DHW_estimation.utils package &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_TEASER_int.html">TEASER Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">uesgraphs.DHW_estimation.utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/code/uesgraphs.DHW_estimation.utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-uesgraphs.DHW_estimation.utils">
+<span id="uesgraphs-dhw-estimation-utils-package"></span><h1>uesgraphs.DHW_estimation.utils package<a class="headerlink" href="#module-uesgraphs.DHW_estimation.utils" title="Permalink to this heading"></a></h1>
+<p>Small utils package that stores a few other functions that do not generate DHW</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-uesgraphs.DHW_estimation.utils.OpenDHW_Utilities">
+<span id="uesgraphs-dhw-estimation-utils-opendhw-utilities-module"></span><h2>uesgraphs.DHW_estimation.utils.OpenDHW_Utilities module<a class="headerlink" href="#module-uesgraphs.DHW_estimation.utils.OpenDHW_Utilities" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.utils.OpenDHW_Utilities.convert_dhw_load_to_storage_load">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.utils.OpenDHW_Utilities.</span></span><span class="sig-name descname"><span class="pre">convert_dhw_load_to_storage_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_plot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_plot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">V_stor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dT_stor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dT_threshhold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Qcon_flow_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_cum_demand</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_losses</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/utils/OpenDHW_Utilities.html#convert_dhw_load_to_storage_load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.utils.OpenDHW_Utilities.convert_dhw_load_to_storage_load" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the input DHW-Profile without a DHW-Storage to a DHW-Profile
+with a DHW-Storage. The output profile looks as if the HP would not
+supply the DHW-load directly but would rather re-heat the DHW-Storage,
+which has dropped below a certain dT Threshold. The advantage is, that no
+storage model has to be part of a dynamic simulation, although the
+heatpump still acts as if a storage is supplied. Based on DIN EN 12831-3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeseries_df</strong> – stores the DHW-demand profile in [W] per Timestep</p></li>
+<li><p><strong>dir_output</strong> – directory where figure is saved</p></li>
+<li><p><strong>V_stor</strong> – Storage Volume in Liters</p></li>
+<li><p><strong>dT_stor</strong> – max dT in Storage</p></li>
+<li><p><strong>dT_threshhold</strong> – max dT Drop before Storage needs to be re-heated</p></li>
+<li><p><strong>Qcon_flow_max</strong> – Heat Flow Rate at the Heatpump when refilling the
+Storage in [W]</p></li>
+<li><p><strong>plot_cum_demand</strong> – Plot the cumulative “Summenliniendiagram” as
+described in DIN DIN EN 12831-3</p></li>
+<li><p><strong>with_losses</strong> – Boolean if the storage should have losses</p></li>
+<li><p><strong>start_plot</strong> – e.g. ‘2019-08-02’</p></li>
+<li><p><strong>end_plot</strong> – e.g. ‘2019-08-03’</p></li>
+<li><p><strong>save_fig</strong> – decide to save the fig as a pdf and png</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>storage_load:  DHW-profile that re-heats a storage.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

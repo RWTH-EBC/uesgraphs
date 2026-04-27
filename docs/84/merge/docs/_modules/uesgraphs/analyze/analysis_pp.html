@@ -1,0 +1,648 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.analyze.analysis_pp &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_TEASER_int.html">TEASER Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.analyze.analysis_pp</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.analyze.analysis_pp</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Pandapipes analysis functions</span>
+<span class="sd">================================================</span>
+
+<span class="sd">Analyzes </span>
+
+<span class="sd">Author: Arkadi B.</span>
+<span class="sd">Date: 2025-03-05</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Imports</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ug</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_up_file_logger</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span> 
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># ANALYSIS functions</span>
+<span class="c1"># ============================================================================</span>
+
+<div class="viewcode-block" id="analysis_pp"><a class="viewcode-back" href="../../../code/uesgraphs.analyze.html#uesgraphs.analyze.analysis_pp.analysis_pp">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">analysis_pp</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to perform various analyses on pandapipes UESGraphs&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="analysis_pp.__init__"><a class="viewcode-back" href="../../../code/uesgraphs.analyze.html#uesgraphs.analyze.analysis_pp.analysis_pp.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">timestep_hours</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_path</span> <span class="o">=</span> <span class="n">root_path</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span> <span class="o">=</span> <span class="n">root_path</span> <span class="o">/</span> <span class="s2">&quot;uesgraphs.json&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph_return_json</span> <span class="o">=</span> <span class="n">root_path</span> <span class="o">/</span> <span class="s2">&quot;uesgraphs_return.json&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span> <span class="o">=</span> <span class="n">timestep_hours</span></div>
+
+
+<div class="viewcode-block" id="analysis_pp.thermal_loss_analysis"><a class="viewcode-back" href="../../../code/uesgraphs.analyze.html#uesgraphs.analyze.analysis_pp.analysis_pp.thermal_loss_analysis">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">thermal_loss_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Thermal loss analysis for the sum over all pipes in the system&quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_file_logger</span><span class="p">(</span><span class="s2">&quot;thermal_loss_analysis&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Thermal loss Analysis&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Analyzing: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">root_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Supply Side UESGraph: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Return Side UESGraph: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_return_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Load UESGraph</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;STEP 1: LOAD SUPPLY and RETURN NETWORK&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading from JSON: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="p">),</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges&quot;</span><span class="p">)</span>
+        
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading from JSON: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_return_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">graph_return</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+        <span class="n">graph_return</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_return_json</span><span class="p">),</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph_return</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph_return</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Add Q_loss from simulation data (should already be in edges if assigned correctly)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;STEP 2: ADD Q_LOSS FOR SYSTEM LOSSES&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">system_loss_series</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
+            <span class="n">edge_data</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">]</span>
+            <span class="n">edge_data_R</span> <span class="o">=</span> <span class="n">graph_return</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">]</span>
+
+            <span class="n">Q_loss_two_pipes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">edge_data</span><span class="p">[</span><span class="s2">&quot;Q_loss&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">edge_data_R</span><span class="p">[</span><span class="s2">&quot;Q_loss&quot;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">system_loss_series</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">system_loss_series</span> <span class="o">=</span> <span class="n">Q_loss_two_pipes</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">system_loss_series</span> <span class="o">+=</span> <span class="n">Q_loss_two_pipes</span>
+
+        <span class="c1"># ------------------------------------------------------------------</span>
+        <span class="c1"># SYSTEM TOTAL</span>
+        <span class="c1"># ------------------------------------------------------------------</span>
+        <span class="k">if</span> <span class="n">system_loss_series</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="n">system_peak_loss</span> <span class="o">=</span> <span class="n">system_loss_series</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1e3</span>  <span class="c1"># kW</span>
+            <span class="n">system_annual_loss</span> <span class="o">=</span> <span class="n">system_loss_series</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span> <span class="o">/</span> <span class="mf">1e3</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TOTAL PIPE HEAT LOSSES&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; Maximum Heat Loss over all pipes: </span><span class="si">{</span><span class="n">system_peak_loss</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> kW at timestep </span><span class="si">{</span><span class="n">system_loss_series</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Annual Heat Loss: </span><span class="si">{</span><span class="n">system_annual_loss</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> kWh&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="analysis_pp.pump_power_analysis"><a class="viewcode-back" href="../../../code/uesgraphs.analyze.html#uesgraphs.analyze.analysis_pp.analysis_pp.pump_power_analysis">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">pump_power_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eta_total</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.65</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pump power analysis for the supply pumps in the system, based on mass flow and pressure drop data from the simulation</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">        </span>
+<span class="sd">        eta_total : float Default 0.65, can be set as required to reflect pump efficiency</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_file_logger</span><span class="p">(</span><span class="s2">&quot;pump_power_analysis&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Pump power analysis&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Analyzing: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">root_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Supply Side UESGraph: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Load UESGraph</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;STEP 1: LOAD SUPPLY NETWORK&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading from JSON: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="p">),</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges&quot;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;STEP 2: CALCULATE CENTRAL PUMP POWER&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">attrs</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_supply_heating&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">connected_edges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">node_id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">connected_edges</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No connected edges for supply </span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="n">supply_mflow</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e_attrs</span> <span class="ow">in</span> <span class="n">connected_edges</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="s2">&quot;m_flow&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">e_attrs</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found m_flow for edge (</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">) connected to supply </span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">m_flow_series</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">e_attrs</span><span class="p">[</span><span class="s2">&quot;m_flow&quot;</span><span class="p">])</span>
+
+                <span class="n">supply_mflow</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">m_flow_series</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">supply_mflow</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No usable m_flow found for </span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="n">dp_flow_bar</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dpFlow&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">dp_flow</span> <span class="o">=</span> <span class="n">dp_flow_bar</span> <span class="o">*</span> <span class="mi">100000</span>  <span class="c1"># bar → Pa</span>
+
+            <span class="n">rho</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;rho&quot;</span><span class="p">]</span>
+
+            <span class="n">Pel</span> <span class="o">=</span> <span class="p">(</span><span class="n">supply_mflow</span> <span class="o">*</span> <span class="n">dp_flow</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">rho</span> <span class="o">*</span> <span class="n">eta_total</span><span class="p">)</span>  <span class="c1"># Watt</span>
+
+            <span class="n">max_power</span> <span class="o">=</span> <span class="n">Pel</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+            <span class="n">annual_energy_kWh</span> <span class="o">=</span> <span class="n">Pel</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span> <span class="o">/</span> <span class="mf">1e3</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Supply Pump: </span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Max Power: </span><span class="si">{</span><span class="n">max_power</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> W at timestep </span><span class="si">{</span><span class="n">Pel</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Annual Energy: </span><span class="si">{</span><span class="n">annual_energy_kWh</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> kWh&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="analysis_pp.pipe_plots"><a class="viewcode-back" href="../../../code/uesgraphs.analyze.html#uesgraphs.analyze.analysis_pp.analysis_pp.pipe_plots">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">pipe_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_file_logger</span><span class="p">(</span><span class="s2">&quot;graph_analysis&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Graph ANALYSIS (Config-Based)&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Analyzing: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">root_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Supply Side UESGraph: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Load UESGraph</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;STEP 1: LOAD SUPPLY NETWORK&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading from JSON: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="p">),</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges&quot;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading from JSON: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_return_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">graph_return</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+        <span class="n">graph_return</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_return_json</span><span class="p">),</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph_return</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph_return</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges&quot;</span><span class="p">)</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Note: This is only used if you want to check the physical consistency of the results by comparing pipe temperatures to ground temperatures.&quot;&quot;&quot;</span>
+        <span class="c1">#ground_temp_df = pd.read_csv(self.root_path / &quot;ground_temps_hassel.csv&quot;, index_col=0, parse_dates=True)</span>
+        <span class="c1">#T_ground = ground_temp_df[&quot;1.0 m&quot;].tolist()</span>
+        <span class="n">T_ground</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;STEP 2: PLOT PIPE PLOTS&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_path</span> <span class="o">/</span> <span class="s2">&quot;analysis_outputs&quot;</span> <span class="o">/</span> <span class="s2">&quot;pipe_plots&quot;</span>
+        <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+            <span class="n">edge_data</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">]</span>
+            <span class="n">temp_in_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_in&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="n">temp_out_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_out&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> 
+            <span class="n">edge_data_R</span> <span class="o">=</span> <span class="n">graph_return</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">]</span>
+            <span class="n">temp_in_R_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_in&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="n">temp_out_R_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_out&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+
+            <span class="n">T_in</span> <span class="o">=</span> <span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_in&quot;</span><span class="p">)</span>
+            <span class="n">T_out</span> <span class="o">=</span> <span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_out&quot;</span><span class="p">)</span>
+
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Note: This is only used if you want to check the physical consistency of the results </span>
+<span class="sd">                by comparing pipe temperatures to ground temperatures.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">T_ground</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">T_in_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">T_in</span><span class="p">)</span>
+                <span class="n">T_out_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">T_out</span><span class="p">)</span>
+                <span class="n">Tamb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">T_ground</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">T_in_arr</span><span class="p">)])</span>
+
+                <span class="n">mask_problem</span> <span class="o">=</span> <span class="p">(</span><span class="n">T_out_arr</span> <span class="o">-</span> <span class="n">T_in_arr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.1</span>
+
+                <span class="k">if</span> <span class="n">mask_problem</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask_problem</span><span class="p">)[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">5</span><span class="p">]</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Edge </span><span class="si">{</span><span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeID&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> hat T_out &gt; T_in!&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Indices: </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;T_in: </span><span class="si">{</span><span class="n">T_in_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;T_out: </span><span class="si">{</span><span class="n">T_out_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;T_amb: </span><span class="si">{</span><span class="n">Tamb</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">Tamb</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">T_in_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Physikalisch OK (Umgebung wärmer)&quot;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;UNPHYSIKALISCH! Check deine Simulation!&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_in&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_out&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temp_in_list</span> <span class="o">-</span> <span class="n">temp_out_list</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;dT&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Index&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Temperature in °C&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PipeID </span><span class="si">{</span><span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeID&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2"> Temperatures&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_dir</span><span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;pipe_temp_df_</span><span class="si">{</span><span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeID&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="n">m_flow_from_list</span> <span class="o">=</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;m_flow&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">m_flow_from_list</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">m_flow_from_list</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;m_flow&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Mass flow in kg/s&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PipeID </span><span class="si">{</span><span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeID&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2"> Mass flow&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_dir</span><span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;pipe_m_flow_</span><span class="si">{</span><span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeID&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="n">Q_loss_list</span> <span class="o">=</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Q_loss&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">Q_loss_list</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Q_loss_list</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Q_loss&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Thermal losses in W&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PipeID </span><span class="si">{</span><span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeID&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2"> Themal loss&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_dir</span><span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;pipe_Q_loss_</span><span class="si">{</span><span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeID&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_in&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_out&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temp_in_R_list</span> <span class="o">-</span> <span class="n">temp_out_R_list</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;dT&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Index&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Temperature in °C&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PipeID </span><span class="si">{</span><span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeID&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2"> Temperatures&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_dir</span><span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;R_pipe_temp_df_</span><span class="si">{</span><span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeID&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="n">m_flow_from_list</span> <span class="o">=</span> <span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;m_flow&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">m_flow_from_list</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">m_flow_from_list</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;m_flow&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Mass flow in kg/s&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PipeID </span><span class="si">{</span><span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeID&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2"> Mass flow&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_dir</span><span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;R_pipe_m_flow_</span><span class="si">{</span><span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeID&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="n">Q_loss_list</span> <span class="o">=</span> <span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Q_loss&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">Q_loss_list</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Q_loss_list</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Q_loss&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Thermal losses in W&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PipeID </span><span class="si">{</span><span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeID&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2"> Themal loss&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_dir</span><span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;R_pipe_Q_loss_</span><span class="si">{</span><span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeID&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="analysis_pp.retransform_pipe_geojson_data"><a class="viewcode-back" href="../../../code/uesgraphs.analyze.html#uesgraphs.analyze.analysis_pp.analysis_pp.retransform_pipe_geojson_data">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">retransform_pipe_geojson_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geojson_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transforms the data of the pipe onto the geojson that are given back&quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_file_logger</span><span class="p">(</span><span class="s2">&quot;retransform_pipe_geojson_data&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;RETRANSFORM PIPE DATA TO GEOJSON&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Analyzing: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">root_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Supply Side UESGraph: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Return Side UESGraph: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_return_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Load UESGraph</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;STEP 1: LOAD SUPPLY and RETURN NETWORK&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading from JSON: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="p">),</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges&quot;</span><span class="p">)</span>
+        
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading from JSON: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_return_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">graph_return</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+        <span class="n">graph_return</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_return_json</span><span class="p">),</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph_return</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph_return</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">geojson_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">geo_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="c1"># Add Q_loss from simulation data (should already be in edges if assigned correctly)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;STEP 2: RETRANSFORM DATA TO GEOJSON&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_path</span> <span class="o">/</span> <span class="s2">&quot;analysis_outputs&quot;</span> <span class="o">/</span> <span class="s2">&quot;geojsons&quot;</span>
+        <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">edge_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
+            <span class="n">edge_data</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">]</span>
+            <span class="n">edge_data_R</span> <span class="o">=</span> <span class="n">graph_return</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">]</span>
+
+            <span class="n">edge_id</span> <span class="o">=</span> <span class="n">edge_data</span><span class="p">[</span><span class="s2">&quot;attr_dict&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> 
+
+            <span class="k">if</span> <span class="n">edge_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">edge_dict</span><span class="p">[</span><span class="n">edge_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;supply&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;m_flow&quot;</span><span class="p">:</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;m_flow&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;T_in&quot;</span><span class="p">:</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_in&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;T_out&quot;</span><span class="p">:</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_out&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;Q_loss&quot;</span><span class="p">:</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Q_loss&quot;</span><span class="p">),</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;return&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;m_flow&quot;</span><span class="p">:</span> <span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;m_flow&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;T_in&quot;</span><span class="p">:</span> <span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_in&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;T_out&quot;</span><span class="p">:</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_out&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;Q_loss&quot;</span><span class="p">:</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Q_loss&quot;</span><span class="p">),</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+        <span class="n">geo_data_supply</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">geo_data</span><span class="p">)</span>
+        <span class="n">geo_data_return</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">geo_data</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">feature_s</span><span class="p">,</span> <span class="n">feature_r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">geo_data_supply</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">],</span> <span class="n">geo_data_return</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]):</span>
+            <span class="n">geo_id</span> <span class="o">=</span> <span class="n">feature_s</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">geo_id</span> <span class="ow">in</span> <span class="n">edge_dict</span><span class="p">:</span>
+                <span class="c1"># Supply</span>
+                <span class="n">feature_s</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">edge_dict</span><span class="p">[</span><span class="n">geo_id</span><span class="p">][</span><span class="s2">&quot;supply&quot;</span><span class="p">])</span>
+
+                <span class="c1"># Return</span>
+                <span class="n">feature_r</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">edge_dict</span><span class="p">[</span><span class="n">geo_id</span><span class="p">][</span><span class="s2">&quot;return&quot;</span><span class="p">])</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;network_S_data.geojson&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">geo_data_supply</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;network_R_data.geojson&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">geo_data_return</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="analysis_pp.visualize_network"><a class="viewcode-back" href="../../../code/uesgraphs.analyze.html#uesgraphs.analyze.analysis_pp.analysis_pp.visualize_network">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">visualize_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Visualizes for a specified time index the network with mass flow, pressure difference, </span>
+<span class="sd">            pressure and temperature as attributes for supply and return side</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            time_index : int, the index of the timestep to visualize (0-based)    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_file_logger</span><span class="p">(</span><span class="s2">&quot;visualize_network&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Visualize Network at Timestep&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Analyzing: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">root_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Supply Side UESGraph: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Return Side UESGraph: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_return_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Load UESGraph</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;STEP 1: LOAD SUPPLY and RETURN NETWORK&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading from JSON: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_supply_json</span><span class="p">),</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges&quot;</span><span class="p">)</span>
+        
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading from JSON: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_return_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">graph_return</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">UESGraph</span><span class="p">()</span>
+        <span class="n">graph_return</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_return_json</span><span class="p">),</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph_return</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph_return</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges&quot;</span><span class="p">)</span>
+        
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_path</span> <span class="o">/</span> <span class="s2">&quot;analysis_outputs&quot;</span> <span class="o">/</span> <span class="s2">&quot;network_visualization&quot;</span>
+        <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;STEP 2: VISUALIZE NETWORK AT TIMESTEP&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+
+        <span class="n">vis</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;m_flow&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;m_flow&quot;</span><span class="p">][</span><span class="n">time_index</span><span class="p">])</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;dp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;dp&quot;</span><span class="p">][</span><span class="n">time_index</span><span class="p">])</span>
+        <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span><span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">scaling_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">scaling_factor_diameter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                            <span class="n">label_size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                            <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Mass flow in kg/s&quot;</span><span class="p">,</span>
+                            <span class="n">generic_extensive_size</span><span class="o">=</span><span class="s2">&quot;m_flow&quot;</span><span class="p">,</span>
+                            <span class="n">save_as</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span><span class="s2">&quot;m_flow.png&quot;</span><span class="p">),</span>
+                            <span class="n">timestamp</span><span class="o">=</span><span class="s2">&quot;Mass flow&quot;</span>
+                            <span class="p">)</span>
+        <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span><span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">scaling_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">scaling_factor_diameter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                            <span class="n">label_size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                            <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Pressure difference in Pa&quot;</span><span class="p">,</span>
+                            <span class="n">generic_extensive_size</span><span class="o">=</span><span class="s2">&quot;dp&quot;</span><span class="p">,</span>
+                            <span class="n">save_as</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span><span class="s2">&quot;dp.png&quot;</span><span class="p">),</span>
+                            <span class="n">timestamp</span><span class="o">=</span><span class="s2">&quot;Pressure difference&quot;</span>
+                            <span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;p&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;pressure&quot;</span><span class="p">][</span><span class="n">time_index</span><span class="p">]</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;T&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;temperature&quot;</span><span class="p">][</span><span class="n">time_index</span><span class="p">]</span>
+        <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span><span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">scaling_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">scaling_factor_diameter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                            <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Pressure in Pa&quot;</span><span class="p">,</span>
+                            <span class="n">label_size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                            <span class="n">generic_intensive_size</span><span class="o">=</span><span class="s2">&quot;p&quot;</span><span class="p">,</span>
+                            <span class="n">save_as</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span><span class="s2">&quot;pressure.png&quot;</span><span class="p">),</span>
+                            <span class="n">timestamp</span><span class="o">=</span><span class="s2">&quot;Pressure&quot;</span>
+                            <span class="p">)</span>
+        <span class="n">vis</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span><span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">scaling_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">scaling_factor_diameter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                            <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Temperature in K&quot;</span><span class="p">,</span>
+                            <span class="n">label_size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                            <span class="n">generic_intensive_size</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">,</span>
+                            <span class="n">save_as</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span><span class="s2">&quot;temperature.png&quot;</span><span class="p">),</span>
+                            <span class="n">timestamp</span><span class="o">=</span><span class="s2">&quot;Temperature&quot;</span>
+                            <span class="p">)</span>
+
+        <span class="n">vis_return</span> <span class="o">=</span> <span class="n">ug</span><span class="o">.</span><span class="n">Visuals</span><span class="p">(</span><span class="n">graph_return</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+            <span class="n">graph_return</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;m_flow&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">graph_return</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;m_flow&quot;</span><span class="p">][</span><span class="n">time_index</span><span class="p">])</span>
+            <span class="n">graph_return</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;dp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">graph_return</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;dp&quot;</span><span class="p">][</span><span class="n">time_index</span><span class="p">])</span>
+        <span class="n">vis_return</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span><span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">scaling_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">scaling_factor_diameter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                            <span class="n">label_size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                            <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Mass flow in kg/s&quot;</span><span class="p">,</span>
+                            <span class="n">generic_extensive_size</span><span class="o">=</span><span class="s2">&quot;m_flow&quot;</span><span class="p">,</span>
+                            <span class="n">save_as</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span><span class="s2">&quot;m_flow_R.png&quot;</span><span class="p">),</span>
+                            <span class="n">timestamp</span><span class="o">=</span><span class="s2">&quot;Mass flow&quot;</span>
+                            <span class="p">)</span>
+        <span class="n">vis_return</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span><span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">scaling_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">scaling_factor_diameter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                            <span class="n">label_size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                            <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Pressure difference in Pa&quot;</span><span class="p">,</span>
+                            <span class="n">generic_extensive_size</span><span class="o">=</span><span class="s2">&quot;dp&quot;</span><span class="p">,</span>
+                            <span class="n">save_as</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span><span class="s2">&quot;dp_R.png&quot;</span><span class="p">),</span>
+                            <span class="n">timestamp</span><span class="o">=</span><span class="s2">&quot;Pressure difference&quot;</span>
+                            <span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="n">graph_return</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;p&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">graph_return</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;pressure&quot;</span><span class="p">][</span><span class="n">time_index</span><span class="p">]</span>
+            <span class="n">graph_return</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;T&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">graph_return</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;temperature&quot;</span><span class="p">][</span><span class="n">time_index</span><span class="p">]</span>
+        <span class="n">vis_return</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span><span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">scaling_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">scaling_factor_diameter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                            <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Pressure in Pa&quot;</span><span class="p">,</span>
+                            <span class="n">label_size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                            <span class="n">generic_intensive_size</span><span class="o">=</span><span class="s2">&quot;p&quot;</span><span class="p">,</span>
+                            <span class="n">save_as</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span><span class="s2">&quot;pressure_R.png&quot;</span><span class="p">),</span>
+                            <span class="n">timestamp</span><span class="o">=</span><span class="s2">&quot;Pressure&quot;</span>
+                            <span class="p">)</span>
+        <span class="n">vis_return</span><span class="o">.</span><span class="n">show_network</span><span class="p">(</span><span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">scaling_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">scaling_factor_diameter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                            <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Temperature in K&quot;</span><span class="p">,</span>
+                            <span class="n">label_size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                            <span class="n">generic_intensive_size</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">,</span>
+                            <span class="n">save_as</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span><span class="s2">&quot;temperature_R.png&quot;</span><span class="p">),</span>
+                            <span class="n">timestamp</span><span class="o">=</span><span class="s2">&quot;Temperature&quot;</span>
+                            <span class="p">)</span>   </div></div>
+
+            
+
+        
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

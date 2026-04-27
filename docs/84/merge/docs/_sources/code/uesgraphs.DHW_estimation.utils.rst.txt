@@ -1,0 +1,18 @@
+uesgraphs.DHW\_estimation.utils package
+=======================================
+
+.. automodule:: uesgraphs.DHW_estimation.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+uesgraphs.DHW\_estimation.utils.OpenDHW\_Utilities module
+---------------------------------------------------------
+
+.. automodule:: uesgraphs.DHW_estimation.utils.OpenDHW_Utilities
+   :members:
+   :undoc-members:
+   :show-inheritance:

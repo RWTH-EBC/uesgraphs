@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heat and DHW Demand Estimation &mdash; uesgraphs v2.1.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_TEASER_int.html">TEASER Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Heat and DHW Demand Estimation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guides/demand_estimation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="heat-and-dhw-demand-estimation">
+<h1>Heat and DHW Demand Estimation<a class="headerlink" href="#heat-and-dhw-demand-estimation" title="Permalink to this heading"></a></h1>
+<p>Generate Heat and DHW estimation profiles, which can be used in the simulations with uesgraphs.</p>
+<section id="before-start">
+<h2>Before Start<a class="headerlink" href="#before-start" title="Permalink to this heading"></a></h2>
+<p>Check that TEASER was installed with pip, also since TEASER does simulations with the Dymola interface in Python.
+Search in the installation Dymola folder C:Program FilesYOUR_DYMOLA_FOLDERModelicaLibrarypython_interface for a .whl for installation with pip
+Do this manually in the environment you are working in, if the installation worked, the functions will recognize Dymola</p>
+<p>OpenDHW is included into the Code directly, so no installation needed but if future changes are made to OpenDHW, the code has to be checked for compatibility with the new version of OpenDHW.</p>
+</section>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h2>
+<p><strong>Workflow from GeoJSON information to demands:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">uesgraphs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ug</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.teaser_integration.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_sim_teaser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.DHW_estimation.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_DHW_profiles_from_geojson</span>
+
+<span class="c1"># Estimate heat demand with TEASER</span>
+<span class="n">input_heating</span><span class="p">,</span> <span class="n">input_cooling</span> <span class="o">=</span> <span class="n">run_sim_teaser</span><span class="p">(</span>
+         <span class="n">buildings_info_path</span><span class="o">=</span><span class="n">buildings_geojson</span><span class="p">,</span> <span class="c1"># geojson with necessary building attributes</span>
+         <span class="n">save_path</span><span class="o">=</span><span class="n">workspace</span><span class="p">,</span> <span class="c1"># output directory for generated files</span>
+         <span class="n">sim_setup_path</span><span class="o">=</span><span class="n">excel_config_path</span><span class="p">,</span> <span class="c1"># optional Excel file for TEASER settings</span>
+         <span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span> <span class="c1"># log_level</span>
+         <span class="p">)</span>
+
+<span class="c1"># Estimate demand with OpenDHW</span>
+<span class="n">input_dhw</span> <span class="o">=</span> <span class="n">generate_DHW_profiles_from_geojson</span><span class="p">(</span>
+         <span class="n">buildings_info_path</span><span class="o">=</span><span class="n">buildings_geojson</span><span class="p">,</span> <span class="c1"># geojson with necessary building attributes</span>
+         <span class="n">save_path</span><span class="o">=</span><span class="n">workspace</span><span class="p">,</span> <span class="c1"># output directory for generated files</span>
+         <span class="n">sim_setup_path</span><span class="o">=</span><span class="n">excel_config_path</span><span class="p">,</span> <span class="c1"># optional Excel file for OpenDHW settings</span>
+         <span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span> <span class="c1"># log_level</span>
+   <span class="p">)</span>
+</pre></div>
+</div>
+<p>This generates the demand profiles in CSV format, which can be directly used in the pandapipes simulation workflow.</p>
+<p><strong>If you are not using the excel config:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.teaser_integration.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_sim_teaser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.DHW_estimation.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_DHW_profiles_from_geojson</span>
+
+<span class="c1"># Estimate heat demand with TEASER</span>
+<span class="n">input_heating</span><span class="p">,</span> <span class="n">input_cooling</span> <span class="o">=</span> <span class="n">run_sim_teaser</span><span class="p">(</span>
+         <span class="n">buildings_info_path</span><span class="o">=</span><span class="n">buildings_geojson</span><span class="p">,</span>
+         <span class="n">save_path</span><span class="o">=</span><span class="n">workspace</span><span class="p">,</span> <span class="c1"># output directory for generated files</span>
+         <span class="n">weather_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="c1"># Optional, weather data for TEASER (if None, uses default weather data)</span>
+         <span class="n">timestep</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span> <span class="c1"># timestep for the generated profiles (in seconds)</span>
+         <span class="n">stop_time</span><span class="o">=</span><span class="mi">8760</span><span class="o">*</span><span class="mi">3600</span><span class="p">,</span> <span class="c1"># total simulation time (1 year in seconds)</span>
+         <span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span>
+         <span class="p">)</span>
+
+<span class="c1"># Estimate demand with OpenDHW</span>
+<span class="n">input_dhw</span> <span class="o">=</span> <span class="n">generate_DHW_profiles_from_geojson</span><span class="p">(</span>
+         <span class="n">buildings_info_path</span><span class="o">=</span><span class="n">buildings_geojson</span><span class="p">,</span>
+         <span class="n">save_path</span><span class="o">=</span><span class="n">workspace</span><span class="p">,</span>
+         <span class="n">timestep</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span> <span class="c1"># timestep for the generated profiles (in seconds)</span>
+         <span class="n">mean_drawoff_vol_per_day</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="c1"># Mean drawoff volume per day (liters) for DHW estimation (default 40 L/day)</span>
+         <span class="n">temp_dT_dhw</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="c1"># Temperature difference for DHW estimation (default 35 K)</span>
+         <span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span>
+         <span class="p">)</span>
+</pre></div>
+</div>
+<p>Important to notice that OpenDHW always produces data for a year,
+while TEASER can be configured for different time periods.</p>
+</section>
+<section id="what-you-need">
+<h2>What You Need<a class="headerlink" href="#what-you-need" title="Permalink to this heading"></a></h2>
+<p><strong>Required Files:</strong></p>
+<p><strong>GEOJSON</strong> for the buildings which should have these attributes:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>TEASER:</dt><dd><ul class="simple">
+<li><p>“archetype” (e.g. MultiFamilyHouse, SingleFamilyHouse, OfficeExisting etc.)</p></li>
+<li><p>“year_of_construction” (e.g. 1990, 2005, 2010 etc.)</p></li>
+<li><p>“height_of_floors” (e.g. 3.0, 3.5 etc.)</p></li>
+<li><p>“number_of_floors” (e.g. 2, 3, 4 etc.)</p></li>
+<li><p>“net_leased_area” (e.g. 7051, 9890 etc.)</p></li>
+<li><p>“with_ahu” (True/False) - For Air Handling unit, default False</p></li>
+<li><p>“internal_gains_mode” (e.g. 2) - internal gains mode for TEASER, default 2</p></li>
+</ul>
+</dd>
+<dt>OpenDHW:</dt><dd><ul class="simple">
+<li><p>“archetype” (e.g. MultiFamilyHouse, SingleFamilyHouse, OfficeExisting etc.) same as in TEASER</p></li>
+<li><p>“occupants” (e.g. 4 for a family of 4, 1 for single occupant etc.)</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><strong>TEASER</strong>: See TEASER documentation <a class="reference external" href="http://rwth-ebc.github.io/TEASER/">http://rwth-ebc.github.io/TEASER/</a> for further information about the attributes.</p></li>
+<li><p><strong>OpenDHW</strong>: See OpenDHW documentation <a class="reference external" href="https://github.com/RWTH-EBC/OpenDHW/blob/main/Doc/doc.md">https://github.com/RWTH-EBC/OpenDHW/blob/main/Doc/doc.md</a> for further information about the attributes.</p></li>
+</ul>
+</div>
+</div></blockquote>
+<p><strong>Output:</strong></p>
+<p>Generated pandapipes results in timestamped directory:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>workspace/demand_csv/
+├── demands-cool.csv    # Cooling demands (for now default 0)
+├── demands-dhw.csv     # DHW demands with timestamps and building name in columns
+└── demands-heat.csv    # Heating demands with timestamps and building name in columns
+</pre></div>
+</div>
+</section>
+<section id="if-excel-configuration-used-then-these-important-parameters-must-be-set-in-the-corresponding-sheets">
+<h2>If Excel Configuration used then these important parameters must be set in the corresponding sheets:<a class="headerlink" href="#if-excel-configuration-used-then-these-important-parameters-must-be-set-in-the-corresponding-sheets" title="Permalink to this heading"></a></h2>
+<p>The Excel file has <strong>4 sheets</strong>:</p>
+<section id="simulation-sheet">
+<h3>Simulation Sheet<a class="headerlink" href="#simulation-sheet" title="Permalink to this heading"></a></h3>
+<p>Global simulation settings.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Example Value</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>simulation_name</p></td>
+<td><p>MyProject</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><p>Name for the generated model</p></td>
+</tr>
+<tr class="row-odd"><td><p>stop_time</p></td>
+<td><p>31536000</p></td>
+<td><p>s</p></td>
+<td><p>Simulation end time (1 year)</p></td>
+</tr>
+<tr class="row-even"><td><p>timestep</p></td>
+<td><p>3600</p></td>
+<td><p>s</p></td>
+<td><p>Time resolution (1 hour)</p></td>
+</tr>
+<tr class="row-odd"><td><p>temp_dT_dhw</p></td>
+<td><p>35</p></td>
+<td><p>K</p></td>
+<td><p>Temperature difference for DHW estimation (default 35 K)</p></td>
+</tr>
+<tr class="row-even"><td><p>mean_drawoff_vol_per_day</p></td>
+<td><p>40</p></td>
+<td><p>L/day</p></td>
+<td><p>Mean drawoff volume per person per day for DHW estimation (default 40 L/day)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><span class="xref std std-doc">../architecture/OpenDHW_TEASER_int</span> - Technical architecture details</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

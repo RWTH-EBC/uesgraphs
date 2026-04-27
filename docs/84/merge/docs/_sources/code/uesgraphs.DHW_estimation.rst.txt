@@ -1,0 +1,35 @@
+uesgraphs.DHW\_estimation package
+=================================
+
+.. automodule:: uesgraphs.DHW_estimation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   uesgraphs.DHW_estimation.Data
+   uesgraphs.DHW_estimation.utils
+
+Submodules
+----------
+
+uesgraphs.DHW\_estimation.OpenDHW module
+----------------------------------------
+
+.. automodule:: uesgraphs.DHW_estimation.OpenDHW
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+uesgraphs.DHW\_estimation.utilities module
+------------------------------------------
+
+.. automodule:: uesgraphs.DHW_estimation.utilities
+   :members:
+   :undoc-members:
+   :show-inheritance:

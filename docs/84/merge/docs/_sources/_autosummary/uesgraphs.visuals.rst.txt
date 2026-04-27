@@ -1,0 +1,35 @@
+﻿uesgraphs.visuals
+=================
+
+.. automodule:: uesgraphs.visuals
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      set_up_logger
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Visuals
+   
+   
+
+   
+   
+   
+
+
+
