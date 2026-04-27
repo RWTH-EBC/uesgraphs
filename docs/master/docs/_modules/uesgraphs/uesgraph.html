@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>uesgraphs.uesgraph &mdash; uesgraphs v2.1.1</title>
+  <title>uesgraphs.uesgraph &mdash; uesgraphs v2.2.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
 
@@ -126,7 +126,7 @@
     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="UESGraph"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">UESGraph</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">UESGraph</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A networkx Graph enhanced for use to describe urban energy systems.</span>
 
 <span class="sd">    Attributes</span>
@@ -185,7 +185,7 @@
 <span class="sd">        List of pipeIDs used in the graph</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="UESGraph.__init__"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.__init__"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor for UESGraph class.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">UESGraph</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">name_uesgraph</span>
@@ -240,7 +240,7 @@
         <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&lt;uesgraphs.UESGraph object&gt;&quot;</span>
         <span class="k">return</span> <span class="n">description</span>
 
-<div class="viewcode-block" id="UESGraph.new_node_number"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.new_node_number">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">new_node_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.new_node_number"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.new_node_number">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">new_node_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a new 4 digits node number that is not yet used in graph.</span>
 
 <span class="sd">        Returns</span>
@@ -253,7 +253,7 @@
 
         <span class="k">return</span> <span class="n">new_number</span></div>
 
-<div class="viewcode-block" id="UESGraph.add_network"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.add_network">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_type</span><span class="p">,</span> <span class="n">network_id</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.add_network"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.add_network">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_type</span><span class="p">,</span> <span class="n">network_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a new network of specified type.</span>
 
 <span class="sd">        Parameters</span>
@@ -305,7 +305,7 @@
                 <span class="k">if</span> <span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_position</span><span class="o">.</span><span class="n">y</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">max_position</span> <span class="o">=</span> <span class="n">sg</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
 
-<div class="viewcode-block" id="UESGraph.add_building"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.add_building">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_building</span><span class="p">(</span>
+<div class="viewcode-block" id="UESGraph.add_building"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.add_building">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_building</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -409,7 +409,7 @@
 
         <span class="k">return</span> <span class="n">node_number</span></div>
 
-<div class="viewcode-block" id="UESGraph.remove_building"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.remove_building">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_building</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_number</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.remove_building"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.remove_building">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_building</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_number</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the specified building node from the graph.</span>
 
 <span class="sd">        Parameters</span>
@@ -426,7 +426,7 @@
                 <span class="o">+</span> <span class="s2">&quot;nodelist. Therefore, node has not been removed.&quot;</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="UESGraph.add_street_node"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.add_street_node">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_street_node</span><span class="p">(</span>
+<div class="viewcode-block" id="UESGraph.add_street_node"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.add_street_node">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_street_node</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">check_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">attr_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">attr</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a street node to the UESGraph.</span>
@@ -482,7 +482,7 @@
 
             <span class="k">return</span> <span class="n">node_number</span></div>
 
-<div class="viewcode-block" id="UESGraph.remove_street_node"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.remove_street_node">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_street_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_number</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.remove_street_node"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.remove_street_node">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_street_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_number</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the specified street node from the graph.</span>
 
 <span class="sd">        Parameters</span>
@@ -499,7 +499,7 @@
                 <span class="o">+</span> <span class="s2">&quot;nodelist. Therefore, node has not been removed.&quot;</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="UESGraph.add_network_node"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.add_network_node">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_network_node</span><span class="p">(</span>
+<div class="viewcode-block" id="UESGraph.add_network_node"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.add_network_node">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_network_node</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">network_type</span><span class="p">,</span>
         <span class="n">network_id</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
@@ -630,7 +630,7 @@
 
         <span class="k">return</span> <span class="n">node_number</span></div>
 
-<div class="viewcode-block" id="UESGraph.remove_network_node"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.remove_network_node">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_network_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_number</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.remove_network_node"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.remove_network_node">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_network_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_number</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the specified network node from the graph.</span>
 
 <span class="sd">        Parameters</span>
@@ -667,7 +667,7 @@
                 <span class="o">+</span> <span class="s2">&quot;dict. Cannot be removed.&quot;</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="UESGraph.get_building_node"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.get_building_node">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_building_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.get_building_node"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.get_building_node">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_building_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the node number for a given building name.</span>
 
 <span class="sd">        Parameters</span>
@@ -685,7 +685,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;not known&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UESGraph.get_node_by_position"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.get_node_by_position">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_node_by_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.get_node_by_position"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.get_node_by_position">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_node_by_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return node name and node_nb for node(s) on input position.</span>
 
@@ -716,7 +716,7 @@
 
         <span class="k">return</span> <span class="n">result_dict</span></div>
 
-<div class="viewcode-block" id="UESGraph.create_subgraphs"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.create_subgraphs">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">create_subgraphs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_type</span><span class="p">,</span> <span class="n">all_buildings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">streets</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.create_subgraphs"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.create_subgraphs">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">create_subgraphs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_type</span><span class="p">,</span> <span class="n">all_buildings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">streets</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a list of subgraphs for each network.</span>
 
 <span class="sd">        Parameters</span>
@@ -873,7 +873,7 @@
 
         <span class="k">return</span> <span class="n">subgraphs</span></div>
 
-<div class="viewcode-block" id="UESGraph.from_json"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.from_json">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">network_type</span><span class="p">,</span> <span class="n">check_overlap</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.from_json"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.from_json">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">network_type</span><span class="p">,</span> <span class="n">check_overlap</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Import network from json input.</span>
 
 <span class="sd">        Parameters</span>
@@ -1003,7 +1003,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; input_ids were&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_ids</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;...finished&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UESGraph.to_json"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.to_json">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span>
+<div class="viewcode-block" id="UESGraph.to_json"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.to_json">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -1165,7 +1165,7 @@
         <span class="c1"># print(output_data)</span>
         <span class="k">return</span> <span class="n">file_path</span></div>
 
-<div class="viewcode-block" id="UESGraph.from_osm"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.from_osm">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_osm</span><span class="p">(</span>
+<div class="viewcode-block" id="UESGraph.from_osm"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.from_osm">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_osm</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">osm_file</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_boundary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">transform_positions</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Import buildings and streets from OpenStreetMap data in osm_file.</span>
@@ -1481,7 +1481,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="UESGraph.from_geojson"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.from_geojson">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_geojson</span><span class="p">(</span>
+<div class="viewcode-block" id="UESGraph.from_geojson"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.from_geojson">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_geojson</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">network_path</span><span class="p">,</span>
             <span class="n">buildings_path</span><span class="p">,</span>
@@ -1931,7 +1931,7 @@
         
         <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="UESGraph.number_of_nodes"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.number_of_nodes">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">number_of_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_type</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.number_of_nodes"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.number_of_nodes">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">number_of_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return number of nodes for given `node_type`.</span>
 
@@ -1967,7 +1967,7 @@
 
         <span class="k">return</span> <span class="n">number_of_nodes</span></div>
 
-<div class="viewcode-block" id="UESGraph.calc_network_length"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.calc_network_length">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">calc_network_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_type</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.calc_network_length"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.calc_network_length">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">calc_network_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the length of all edges for given `network_type`.</span>
 
@@ -1995,7 +1995,7 @@
 
         <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">total_length</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UESGraph.calc_total_building_ground_area"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.calc_total_building_ground_area">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">calc_total_building_ground_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.calc_total_building_ground_area"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.calc_total_building_ground_area">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">calc_total_building_ground_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the sum of all available building ground areas in m**2.</span>
 
@@ -2020,7 +2020,7 @@
 
         <span class="k">return</span> <span class="n">total_ground_area</span></div>
 
-<div class="viewcode-block" id="UESGraph.rotate"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.rotate">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">degrees</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.rotate"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.rotate">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">degrees</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rotate all nodes of the graph by `degrees`.</span>
 
@@ -2044,7 +2044,7 @@
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_min_max_positions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;position&quot;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="UESGraph.network_simplification"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.network_simplification">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">network_simplification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_type</span><span class="p">,</span> <span class="n">network_id</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.network_simplification"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.network_simplification">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">network_simplification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_type</span><span class="p">,</span> <span class="n">network_id</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Simplify a pipe network by replacing serial pipes.</span>
 
 <span class="sd">        Parameters</span>
@@ -2238,7 +2238,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">simplification_level</span> <span class="o">=</span> <span class="mi">1</span></div>
 
-<div class="viewcode-block" id="UESGraph.remove_unconnected_nodes"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.remove_unconnected_nodes">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_unconnected_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_type</span><span class="p">,</span> <span class="n">network_id</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.remove_unconnected_nodes"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.remove_unconnected_nodes">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_unconnected_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_type</span><span class="p">,</span> <span class="n">network_id</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove any edges and network nodes not connected to a supply node.</span>
 
 <span class="sd">        Parameters</span>
@@ -2298,7 +2298,7 @@
 
         <span class="k">return</span> <span class="n">removed</span></div>
 
-<div class="viewcode-block" id="UESGraph.remove_self_edges"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.remove_self_edges">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_self_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_type</span><span class="p">,</span> <span class="n">network_id</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.remove_self_edges"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.remove_self_edges">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_self_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_type</span><span class="p">,</span> <span class="n">network_id</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove edges with length 0 m.</span>
 
 <span class="sd">         Parameters</span>
@@ -2327,7 +2327,7 @@
 
         <span class="k">return</span> <span class="n">number_removed_edges</span></div>
 
-<div class="viewcode-block" id="UESGraph.remove_dead_ends"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.remove_dead_ends">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_dead_ends</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_type</span><span class="p">,</span> <span class="n">network_id</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.remove_dead_ends"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.remove_dead_ends">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_dead_ends</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_type</span><span class="p">,</span> <span class="n">network_id</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove any nodes and edges that lead to dead ends in the network.</span>
 
 <span class="sd">        Parameters</span>
@@ -2410,7 +2410,7 @@
 
         <span class="k">return</span> <span class="n">removed</span></div>
 
-<div class="viewcode-block" id="UESGraph.remove_streets"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.remove_streets">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_streets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.remove_streets"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.remove_streets">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove_streets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove all street elements from the graph</span>
 
 <span class="sd">        Parameters</span>
@@ -2441,7 +2441,7 @@
 
 
 
-<div class="viewcode-block" id="UESGraph.calc_angle"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.calc_angle">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">calc_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;rad&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.calc_angle"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.calc_angle">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">calc_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;rad&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the angle of a line from point a to b in rad or degrees.</span>
 
 <span class="sd">        Parameters</span>
@@ -2467,7 +2467,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">angle</span></div>
 
-<div class="viewcode-block" id="UESGraph.get_min_max"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.UESGraph.get_min_max">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_min_max</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+<div class="viewcode-block" id="UESGraph.get_min_max"><a class="viewcode-back" href="../../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph.get_min_max">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_min_max</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get minimum and maximum values for a specific attribute from nodes or edges.</span>
 <span class="sd">        </span>
 <span class="sd">        Takes a UESGraph object and returns the minimum and maximum values for a given </span>

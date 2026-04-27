@@ -20,10 +20,10 @@ Python Script Examples
    uesgraphs.examples.e11_model_generation_example
    uesgraphs.examples.e12_template_generation_example
    uesgraphs.examples.e13_analyze_uesgraphs_example
-   uesgraphs.examples.e16_complete_geojson_to_modelica
-   uesgraphs.examples.e17_complete_geojson_to_pandapipes
-   uesgraphs.examples.e18_teaser_and_OpenDHW_integration_pandapipes_sim
-   uesgraphs.examples.e19_pandapipes_analysis
+   uesgraphs.examples.e15_complete_geojson_to_modelica
+   uesgraphs.examples.e16_complete_geojson_to_pandapipes
+   uesgraphs.examples.e17_teaser_and_OpenDHW_integration_pandapipes_sim
+   uesgraphs.examples.e18_pandapipes_analysis
 
 Jupyter Notebook Examples
 --------------------------
@@ -33,9 +33,6 @@ Jupyter Notebook Examples
 
 **e14_hydronic_sizing_example.ipynb**
    Demand-based mass flow estimation and automated pipe sizing using manufacturer catalogs.
-
-**e15_from_geojson_example.ipynb**
-   Import district heating networks from GeoJSON files with building data and supply points.
 
 **interactive_plotting_example.ipynb**
    Advanced interactive plotting demonstrations.

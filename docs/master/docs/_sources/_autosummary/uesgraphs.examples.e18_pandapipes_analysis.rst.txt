@@ -1,0 +1,30 @@
+﻿uesgraphs.examples.e18\_pandapipes\_analysis
+============================================
+
+.. automodule:: uesgraphs.examples.e18_pandapipes_analysis
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      main
+      workspace_example
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

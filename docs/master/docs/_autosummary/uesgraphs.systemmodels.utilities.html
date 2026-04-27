@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>uesgraphs.systemmodels.utilities &mdash; uesgraphs v2.1.1</title>
+  <title>uesgraphs.systemmodels.utilities &mdash; uesgraphs v2.2.0</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -58,11 +58,32 @@
 <li class="toctree-l1"><a class="reference internal" href="../architecture/teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_OpenDHW_int.html">OpenDHW integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_TEASER_int.html">TEASER Integration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api_system_models.html">System Models</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.systemmodels.systemmodelheating.html">uesgraphs.systemmodels.systemmodelheating</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.systemmodels.templates.html">uesgraphs.systemmodels.templates</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">uesgraphs.systemmodels.utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.prepare_graph"><code class="docutils literal notranslate"><span class="pre">prepare_graph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.create_model"><code class="docutils literal notranslate"><span class="pre">create_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.save_system_model_to_json"><code class="docutils literal notranslate"><span class="pre">save_system_model_to_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.load_system_model_from_json"><code class="docutils literal notranslate"><span class="pre">load_system_model_from_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.estimate_fac"><code class="docutils literal notranslate"><span class="pre">estimate_fac()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.estimate_m_flow_nominal"><code class="docutils literal notranslate"><span class="pre">estimate_m_flow_nominal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.estimate_m_flow_nominal_tablebased"><code class="docutils literal notranslate"><span class="pre">estimate_m_flow_nominal_tablebased()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.size_hydronic_network"><code class="docutils literal notranslate"><span class="pre">size_hydronic_network()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.estimate_m_flow_demand_based"><code class="docutils literal notranslate"><span class="pre">estimate_m_flow_demand_based()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.build_flow_paths"><code class="docutils literal notranslate"><span class="pre">build_flow_paths()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.get_pipe_catalog_DN_m_flow"><code class="docutils literal notranslate"><span class="pre">get_pipe_catalog_DN_m_flow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.load_pipe_catalog"><code class="docutils literal notranslate"><span class="pre">load_pipe_catalog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels.utilities.get_inner_diameter_from_DN"><code class="docutils literal notranslate"><span class="pre">get_inner_diameter_from_DN()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
 </ul>
@@ -348,7 +369,7 @@ aggregated backwards through the network following mass conservation principles.
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>graph</strong> (<a class="reference internal" href="uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>UESGraph</em></a><em> or </em><em>nx.Graph</em>) – The graph representing the network with nodelist_building attribute.</p></li>
+<li><p><strong>graph</strong> (<a class="reference internal" href="../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><em>UESGraph</em></a><em> or </em><em>nx.Graph</em>) – The graph representing the network with nodelist_building attribute.</p></li>
 <li><p><strong>network_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Type of network, default is “heating”. Must be “heating” or “cooling”.</p></li>
 <li><p><strong>demand_attribute</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute name containing load values in demand nodes, default is “input_heat”.</p></li>
 <li><p><strong>load_scenario</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Load scenario for calculation, default is “peak_load”.
@@ -367,7 +388,7 @@ Used for individual mass flow calculations at each demand node.</p></li>
 - supply_attribution_{load_scenario}: Dictionary showing which supply serves which demands</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph">UESGraph</a> or nx.Graph</p>
+<dd class="field-odd"><p><a class="reference internal" href="../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph">UESGraph</a> or nx.Graph</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -389,7 +410,7 @@ determines the shortest path between them, converting paths to edge lists.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>graph</strong> (<a class="reference internal" href="uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>UESGraph</em></a><em> or </em><em>nx.Graph</em>) – Network graph</p></li>
+<li><p><strong>graph</strong> (<a class="reference internal" href="../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><em>UESGraph</em></a><em> or </em><em>nx.Graph</em>) – Network graph</p></li>
 <li><p><strong>supply_nodes</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – List of supply node identifiers</p></li>
 <li><p><strong>demand_nodes</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – List of demand node identifiers</p></li>
 <li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a>) – Logger for status messages</p></li>

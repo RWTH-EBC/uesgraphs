@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>uesgraphs.systemmodels package &mdash; uesgraphs v2.1.1</title>
+  <title>uesgraphs.systemmodels package &mdash; uesgraphs v2.2.0</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -161,7 +161,7 @@ Exception: For various processing errors with detailed messages</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>uesgraph</strong> (<a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>UESGraph</em></a>) – The urban energy system graph object (modified in-place)</p></li>
+<li><p><strong>uesgraph</strong> (<a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><em>UESGraph</em></a>) – The urban energy system graph object (modified in-place)</p></li>
 <li><p><strong>excel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to Excel file containing component parameters and template configuration
 Excel should have either ‘template’ (for standard) or ‘template_path’ (for custom)</p></li>
 <li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger for status messages and warnings
@@ -172,7 +172,7 @@ If None, creates a default logger</p></li>
 <dd class="field-even"><p><strong>uesgraph</strong> – The updated graph object (same as input, modified in-place)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph">UESGraph</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph">UESGraph</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If neither ‘template’ nor ‘template_path’ found in Excel
@@ -206,7 +206,7 @@ If None, creates a default logger</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>uesgraph</strong> (<a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>UESGraph</em></a>) – The urban energy system graph object (modified in-place)</p></li>
+<li><p><strong>uesgraph</strong> (<a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><em>UESGraph</em></a>) – The urban energy system graph object (modified in-place)</p></li>
 <li><p><strong>template_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to the supply template file (.mako)</p></li>
 <li><p><strong>excel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Path to Excel file containing component parameters
 If None, only graph attributes are used</p></li>
@@ -218,7 +218,7 @@ If None, creates a default logger</p></li>
 <dd class="field-even"><p><strong>uesgraph</strong> – The updated graph object (same as input, modified in-place)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph">UESGraph</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph">UESGraph</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -254,7 +254,7 @@ If None, creates a default logger</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>uesgraph</strong> (<a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>UESGraph</em></a>) – The urban energy system graph object (modified in-place)</p></li>
+<li><p><strong>uesgraph</strong> (<a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><em>UESGraph</em></a>) – The urban energy system graph object (modified in-place)</p></li>
 <li><p><strong>template_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to the demand template file (.mako)</p></li>
 <li><p><strong>excel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Path to Excel file containing component parameters
 If None, only graph attributes are used</p></li>
@@ -266,7 +266,7 @@ If None, creates a default logger</p></li>
 <dd class="field-even"><p><strong>uesgraph</strong> – The updated graph object (same as input, modified in-place)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph">UESGraph</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph">UESGraph</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -442,7 +442,7 @@ via the assign_*_parameters functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>uesgraph</strong> (<a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>UESGraph</em></a>) – Graph with pre-assigned parameters from Excel</p></li>
+<li><p><strong>uesgraph</strong> (<a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><em>UESGraph</em></a>) – Graph with pre-assigned parameters from Excel</p></li>
 <li><p><strong>sim_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the simulation</p></li>
 <li><p><strong>sim_params</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Simulation parameters from Excel ‘Simulation’ sheet</p></li>
 <li><p><strong>ground_temp_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Ground temperature data</p></li>
@@ -1650,7 +1650,7 @@ aggregated backwards through the network following mass conservation principles.
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>graph</strong> (<a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>UESGraph</em></a><em> or </em><em>nx.Graph</em>) – The graph representing the network with nodelist_building attribute.</p></li>
+<li><p><strong>graph</strong> (<a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><em>UESGraph</em></a><em> or </em><em>nx.Graph</em>) – The graph representing the network with nodelist_building attribute.</p></li>
 <li><p><strong>network_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Type of network, default is “heating”. Must be “heating” or “cooling”.</p></li>
 <li><p><strong>demand_attribute</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Attribute name containing load values in demand nodes, default is “input_heat”.</p></li>
 <li><p><strong>load_scenario</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Load scenario for calculation, default is “peak_load”.
@@ -1669,7 +1669,7 @@ Used for individual mass flow calculations at each demand node.</p></li>
 - supply_attribution_{load_scenario}: Dictionary showing which supply serves which demands</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph">UESGraph</a> or nx.Graph</p>
+<dd class="field-odd"><p><a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph">UESGraph</a> or nx.Graph</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -1691,7 +1691,7 @@ determines the shortest path between them, converting paths to edge lists.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>graph</strong> (<a class="reference internal" href="../_autosummary/uesgraphs.UESGraph.html#uesgraphs.UESGraph" title="uesgraphs.UESGraph"><em>UESGraph</em></a><em> or </em><em>nx.Graph</em>) – Network graph</p></li>
+<li><p><strong>graph</strong> (<a class="reference internal" href="uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><em>UESGraph</em></a><em> or </em><em>nx.Graph</em>) – Network graph</p></li>
 <li><p><strong>supply_nodes</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – List of supply node identifiers</p></li>
 <li><p><strong>demand_nodes</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – List of demand node identifiers</p></li>
 <li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a>) – Logger for status messages</p></li>
