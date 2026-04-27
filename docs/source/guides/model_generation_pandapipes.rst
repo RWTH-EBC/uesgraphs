@@ -12,6 +12,7 @@ Quick Start
 
    import uesgraphs as ug
    from uesgraphs.systemmodels_pp.utilities import uesgraph_to_pandapipes
+   import uesgraphs.systemmodels.utilities as sysm_ut
 
    # 1. Import network from GeoJSON
    graph = ug.UESGraph()
@@ -36,7 +37,7 @@ Quick Start
        ground_temp_path="ground_temperature.csv"   # Ground temperature data
    )
 
-This generates a complete static or dynamic pandapipes simulation and its results.
+This generates a complete static pandapipes simulation and its results.
 
 **If you already have a JSON file:**
 
@@ -100,6 +101,8 @@ Generated pandapipes results in timestamped directory:
    workspace/models/Sim20250121_143022/
    ├── res_circ_pump_pressure    # Main pump results
    ├── (res_circ_pump_mass)      # Secondary pump results
+   workspace/models/Sim20250121_143022_MyProject/
+   ├── res_circ_pump_pressure    # Main pump results
    ├── res_heat_consumer         # Buildings results
    ├── res_junctions             # Junction results 
    ├── res_pipe                  # Pipe results   
@@ -111,6 +114,7 @@ Generated pandapipes results in timestamped directory:
   Therefore the nodes should have pressure, temperature. The edges should have m_flow, dp, T_in, T_out and Q_loss, which 
   are mass flow, pressure drop, intet and outlet temperature and heat loss of the pipe, respectively. The uesgraphs.json
   for the supply side and the uesgraphs_return.json for the return side.
+   └── uesgraphs.json            # UESGraph with results
 
 Excel Configuration
 -------------------
@@ -131,6 +135,7 @@ stop_time             31536000       s      Simulation end time (1 year)
 timestep              3600           s      Time resolution (1 hour)
 mode                  static         -      Mode for dynamic or static simulation
 ground_depth          1.0 m          string Ground depth for embedded pipes
+timestep              3600           s      Time resolution (15 min)
 ===================== ============== ====== =====================================
 
 Pipes Sheet
@@ -195,6 +200,14 @@ Common Issues
 
    - Add it to your graph: ``graph.nodes[node]['attr_name'] = value``
    - Change Excel to use a direct value instead of ``@attr_name``
+
+**"Connector not linked"**
+
+   Wrong attribute name convention. For demand connectors:
+
+   - ``Q_flow_input`` expects ``input_heat`` in graph
+   - ``Q_flow_cool`` expects ``input_cool`` in graph
+   - ``Q_flow_dhw`` expects ``input_dhw`` in graph
 
 **CSV files have wrong length**
 

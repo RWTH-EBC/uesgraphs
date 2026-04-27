@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "uesgraphs"
-version = "2.1.4"
+version = "2.1.5"
 description = "Automated graph-based simulation model generation and analysis tool"
 authors = [{name = "Rahul Mohandasan Karuvingal", email = "rahul.karuvingal@eonerc.rwth-aachen.de"}]
 license = {text = "MIT"}
@@ -51,6 +51,7 @@ full = [
     "holidays==0.94",
     "pandapipes==0.13.0",
     "teaser==1.3.1",
+    "pandapipes==0.13.0"
 ]
 
 pandapipes = [

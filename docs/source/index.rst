@@ -227,11 +227,11 @@ The functional principle of **UESgraphs** can be summarized as under:
 
 * Multiple data input formats are supported, including OpenStreetMap, GIS files, and manual data, enabling integration of heterogeneous spatial and tabular data.
 
-* UESgraphs automates the generation of dynamic simulation models by transforming graph representations into Modelica code through templated model export.
-
-* UESgraphs allows the execution of static and dynamic pandapipes simulations based on the graph structure and the provided input data.
-
 * UESgraphs integrates a DHW and heat estimation with OpenDHW and TEASER and allows a direct simulation with the generated input data.
+
+* UESgraphs allows the execution of quasi-static pandapipes simulations and a dynamic python-based simulation based on the graph structure and the provided input data.
+
+* UESgraphs automates the generation of dynamic simulation models by transforming graph representations into Modelica code through templated model export.
 
 * The tool facilitates downstream analysis and visualization, including color-coded plots and KPI extraction, to support evaluation and decision-making.
 

@@ -4,7 +4,7 @@ UESGraphs pandapipes simulation Pipeline
 Architecture Documentation
 --------------------------
 
-**Version:** 3.0 **Last Updated:** April 2026
+**Version:** 2.2.0 **Last Updated:** 2.1.5
 
 --------------
 
@@ -257,6 +257,13 @@ generate_simulation_model(
 ---
 
 
+
+**Solver Settings**:
+
+- mode: 'bidirectional'
+- iter: 100
+
+---
 
 File & Folder Structure
 -----------------------
