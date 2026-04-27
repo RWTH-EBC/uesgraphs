@@ -18,11 +18,11 @@ systems or generate simulation models. **Version 2** has been updated with the f
 - **Enhanced Compatibility**: Compatible with the latest versions of Modelica and the AixLib package.
 - **Demand Estimation**: Estimation of heating and cooling demands using the tool [TEASER](https://github.com/rwth-ebc/teaser) and integrated code from [OpenDHW](https://github.com/RWTH-EBC/OpenDHW) for estimating domestic hot water demands for the buildings.
 - **Hydronic Sizing**: Integrated calculation algorithm for estimation of pipe diameters for the district heating and cooling networks.
-- **Quasi-static Simulation**: Quasi-static simulations for district heating networks using [Pandapipes](https://github.com/e2nIEE/pandapipes ).
+- **Quasi-static Simulation**: Quasi-static simulations for district heating networks using [pandapipes](https://github.com/e2nIEE/pandapipes ).
 - **Dynamic Python Based Simulation**: Quick dynamic network simulations using python for thermo-hydraulic analysis of the network. 
 - **Improved Visualization**: Enhanced visualization features for better representation of results.
 - **Updated Model Template Generation**: The template generation feature for Modelica models has been updated, enabling automation of multiple models.
-- **Updated Examples**: The examples for **UESgraphs** have been updated, and two new examples have been added to clarify the use of template generation and the `analyze.py` script.
+- **Updated Examples**: The examples for **UESgraphs** have been updated, and new examples are added for the new features.
 
 **UESgraphs** is being developed at [RWTH Aachen University, E.ON Energy
 Research Center, Institute for Energy Efficient Buildings and Indoor
