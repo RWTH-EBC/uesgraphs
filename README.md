@@ -16,8 +16,11 @@ systems or generate simulation models. **Version 2** has been updated with the f
 - **Simplified Installation**: Easier installation with the removal of unnecessary Python library dependencies.
 - **Enabled Logging Features**: Logging functionality has been activated for better tracking and debugging.
 - **Enhanced Compatibility**: Compatible with the latest versions of Modelica and the AixLib package.
+- **Demand Estimation**: Estimation of heating and cooling demands using the tool [TEASER](https://github.com/rwth-ebc/teaser) and integrated code from [OpenDHW](https://github.com/RWTH-EBC/OpenDHW) for estimating domestic hot water demands for the buildings.
+- **Hydronic Sizing**: Integrated calculation algorithm for estimation of pipe diameters for the district heating and cooling networks.
+- **Quasi-static Simulation**: Quasi-static simulations for district heating networks using [Pandapipes](https://github.com/e2nIEE/pandapipes ).
+- **Dynamic Python Based Simulation**: Quick dynamic network simulations using python for thermo-hydraulic analysis of the network. 
 - **Improved Visualization**: Enhanced visualization features for better representation of results.
-- **Addition of `analyze.py`**: Introduced `analyze.py` to enable simulation post-processing and visualization for dynamic district simulations.
 - **Updated Model Template Generation**: The template generation feature for Modelica models has been updated, enabling automation of multiple models.
 - **Updated Examples**: The examples for **UESgraphs** have been updated, and two new examples have been added to clarify the use of template generation and the `analyze.py` script.
 
@@ -70,6 +73,21 @@ Follow these steps to install **UESgraphs** using Conda:
      pip install uesgraphs[dev]
      ```
 
+   - **For pandapipes simulations**:
+     ```bash
+     pip install uesgraphs[pandapipes]
+     ```
+
+   - **For TEASER integration**:
+     ```bash
+     pip install uesgraphs[TEASER]
+     ```
+
+   - **For OpenDHW integration usage**:
+     ```bash
+     pip install uesgraphs[DHW]
+     ```
+
    - **Complete installation with all dependencies**:
      ```bash
      pip install uesgraphs[full]
@@ -119,6 +137,7 @@ Follow these steps to install **UESgraphs** using Conda:
      ```bash
      pip install -e <path/to/your/uesgraphs>[TEASER]
      ```
+     
    - **For OpenDHW integration usage**:
      ```bash
      pip install -e <path/to/your/uesgraphs>[DHW]

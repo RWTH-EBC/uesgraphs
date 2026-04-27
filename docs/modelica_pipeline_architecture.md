@@ -426,7 +426,7 @@ Generated Modelica models follow this structure:
 
 ```
 workspace/
-  └── e16/
+  └── e15/
       └── models/
           └── Sim20250115_143022_MySimulation/
               ├── Sim20250115_143022_MySimulation.mo    # Main model

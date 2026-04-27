@@ -4,7 +4,7 @@ UESGraphs pandapipes simulation Pipeline
 Architecture Documentation
 --------------------------
 
-**Version:** 2.2.0 **Last Updated:** 2.1.5
+**Version:** 2.2.0 **Last Updated:** April 2026
 
 --------------
 

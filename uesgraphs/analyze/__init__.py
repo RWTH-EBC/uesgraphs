@@ -47,9 +47,6 @@ from .data_handling.graph_transformation import (
     map_system_model_to_uesgraph,
 )
 
-# Version info
-__version__ = "0.2.0"
-__author__ = "Leon Kopka (leon.kopka@rwth-aachen.de)"
 
 # Public API - main functions users need
 __all__ = [
