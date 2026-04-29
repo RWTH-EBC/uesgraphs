@@ -518,7 +518,8 @@ def run_sim_teaser(buildings_info_path, save_path,
                    stop_time=8760*3600,
                    sim_setup_path=None, 
                    logger=None,
-                   log_level=logging.DEBUG
+                   log_level=logging.DEBUG,
+                   number_of_workers=None
                    ):
     """
     Run TEASER simulations for demand estimation based on building information from a .geojson file.
@@ -541,6 +542,8 @@ def run_sim_teaser(buildings_info_path, save_path,
         Logger instance. If None, creates a new file logger in temp directory
     log_level : int, optional
         Logging level (default is logging.DEBUG). Only used if logger is None
+    number_of_workers : int, optional
+        Number of parallel workers for simulation. If None, it will be set to (number of CPU cores - 4) to avoid overloading the system.
 
     Returns:
     --------
@@ -617,15 +620,32 @@ def run_sim_teaser(buildings_info_path, save_path,
 
     # Step 3: Run simulations
     logger.info("Starting simulations...")
-    sim.queue_simulation(
-        sim_function=sim.simulate,
-        prj=prj,
-        results_path=tmp_results,
-        stop_time=stop_time,
-        output_interval=timestep,
-        number_of_workers=max(1, multiprocessing.cpu_count() - 4),
-        aixlib_path=str(path_aixlib.parent),
-    )
+    if number_of_workers is None:
+        number_of_workers = max(1, multiprocessing.cpu_count() - 4)
+    if number_of_workers == 1:
+        sim.simulate(
+            sim_part=prj.buildings,
+            prj=prj,
+            model_path=os.path.join(os.path.expanduser("~"), "TEASEROutput"),
+            results_path=tmp_results,
+            start_time=0.0,
+            stop_time=stop_time,
+            output_interval=timestep,
+            method="Dassl",
+            tolerance=0.0001,
+            process_number=0,
+            aixlib_path=str(path_aixlib.parent),
+        )
+    else:
+        sim.queue_simulation(
+            sim_function=sim.simulate,
+            prj=prj,
+            results_path=tmp_results,
+            stop_time=stop_time,
+            output_interval=timestep,
+            number_of_workers=number_of_workers,
+            aixlib_path=str(path_aixlib.parent),
+        )
     
     # Step 4: Read results and save each building's heating and cooling demand to csv
     for bldg in prj.buildings:
