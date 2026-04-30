@@ -95,5 +95,4 @@ class TestE17IntegrationTEASER_OpenDHW:
                 # Close all loggers to release file handles
                 logging.shutdown()
 
-if __name__ == '__main__':
-    pytest.main([__file__, '-v'])
+

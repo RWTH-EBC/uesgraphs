@@ -84,7 +84,6 @@ def set_up_logger(name,log_dir = None,level=int(logging.ERROR)):
 
     return logger
 
-# Helper functions
 ## Helper functions
 def load_simulation_settings_from_excel(excel_path, logger=None):
     """

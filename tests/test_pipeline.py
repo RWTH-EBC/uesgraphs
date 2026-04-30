@@ -9,6 +9,7 @@ and Excel type conversion functionality introduced in the new pipeline.
 import os
 import pytest
 import tempfile
+from pathlib import Path
 from uesgraphs.systemmodels.model_generation_pipeline import (
     resolve_parameter_value,
     parse_template_parameters,
@@ -108,7 +109,9 @@ class TestExcelTypeConversion:
     def test_scientific_notation_conversion(self):
         """Test that scientific notation strings are converted to float."""
         # Use the real Excel file
-        excel_path = 'uesgraphs/data/uesgraphs_parameters_template.xlsx'
+        BASE = Path(__file__).resolve().parents[1]
+        data_dir = BASE / "uesgraphs" / "data"
+        excel_path = data_dir / 'uesgraphs_parameters_template.xlsx'
 
         if not os.path.exists(excel_path):
             pytest.skip("Excel template file not found")
@@ -121,7 +124,9 @@ class TestExcelTypeConversion:
     
     def test_boolean_string_conversion(self):
         """Test that TRUE/FALSE strings are converted to bool."""
-        excel_path = 'uesgraphs/data/uesgraphs_parameters_template.xlsx'
+        BASE = Path(__file__).resolve().parents[1]
+        data_dir = BASE / "uesgraphs" / "data"
+        excel_path = data_dir / 'uesgraphs_parameters_template.xlsx'
 
         if not os.path.exists(excel_path):
             pytest.skip("Excel template file not found")
@@ -133,27 +138,29 @@ class TestExcelTypeConversion:
         assert isinstance(params['allowFlowReversal'], bool)
         assert isinstance(params['allowFlowReversal'], bool)
 
-class TestE16IntegrationPipeline:
-    """Integration test using e16 example data."""
+class TestE15IntegrationPipeline:
+    """Integration test using e15 example data."""
 
-    def test_e16_geojson_to_modelica_pipeline(self):
+    def test_e15_geojson_to_modelica_pipeline(self):
         """
         Test the complete pipeline from GeoJSON import to Modelica generation.
         """
         # Define all paths once
-        data_dir = os.path.join('uesgraphs', 'data')
-        data_examples_dir = os.path.join(data_dir, 'examples')
-        geojson_dir = os.path.join(data_examples_dir, 'e15_geojson')
-        
-        # File paths
-        network_geojson = os.path.join(geojson_dir, 'network.geojson')
-        buildings_geojson = os.path.join(geojson_dir, 'buildings.geojson')
-        supply_geojson = os.path.join(geojson_dir, 'supply.geojson')
-        demands_heat = os.path.join(data_examples_dir, 'demands-heat.csv')
-        demands_dhw = os.path.join(data_examples_dir, 'demands-dhw.csv')
-        demands_cool = os.path.join(data_examples_dir, 'demands-cool.csv')
-        ground_temps = os.path.join(data_examples_dir, 'ground_temps_hassel.csv')
-        params_template = os.path.join(data_dir, 'uesgraphs_parameters_template.xlsx')
+        BASE = Path(__file__).resolve().parents[1]
+        data_dir = BASE / "uesgraphs" / "data"
+        data_examples_dir = data_dir / "examples"
+        geojson_dir = data_examples_dir / "e15_geojson"
+
+        network_geojson = geojson_dir / "network.geojson"
+        buildings_geojson = geojson_dir / "buildings.geojson"
+        supply_geojson = geojson_dir / "supply.geojson"
+
+        demands_heat = data_examples_dir / "demands-heat.csv"
+        demands_dhw = data_examples_dir / "demands-dhw.csv"
+        demands_cool = data_examples_dir / "demands-cool.csv"
+
+        ground_temps = data_examples_dir / "ground_temps_hassel.csv"
+        params_template = data_dir / "uesgraphs_parameters_template.xlsx"
         
         # Check if all required files exist
         required_files = [
@@ -219,5 +226,3 @@ class TestE16IntegrationPipeline:
                 import logging
                 logging.shutdown()
 
-if __name__ == '__main__':
-    pytest.main([__file__, '-v'])
