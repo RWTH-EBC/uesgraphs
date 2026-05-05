@@ -560,6 +560,7 @@ class SystemModelHeating(UESGraph):
         logger.debug(f"Pipe nodes: {len(getattr(self, 'nodelist_pipe', []))}")
         logger.info("=== UESGraph import completed ===")
        
+    '''
     def set_connection(self, remove_network_nodes=True):
         """Sets connections between supplies, pipes and buildings
 
@@ -768,6 +769,7 @@ class SystemModelHeating(UESGraph):
                             name_pipe
                         )
                         self.edges[edge[0], edge[1]]["con2R"] = con2R_new
+    '''
 
     def set_connection(self, remove_network_nodes=True, logger=None):
         """Sets connections between supplies, pipes and buildings

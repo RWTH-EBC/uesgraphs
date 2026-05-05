@@ -352,8 +352,6 @@ def create_model(
     logger.info("Importing UESGraph")
     _, pipe_list, heat_source_ids, heat_source_r_ids = new_model.import_from_uesgraph(graph, logger=logger)
     
-    mode = "dynamic"
-    #new_model.run_test_simulation(logger=logger)
 
     if mode != "dynamic":
         new_model.run_timeseries_spp(save_at, mode, logger=logger)

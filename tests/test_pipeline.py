@@ -14,8 +14,13 @@ from uesgraphs.systemmodels.model_generation_pipeline import (
     resolve_parameter_value,
     parse_template_parameters,
     load_component_parameters,
-    uesgraph_to_modelica
+    uesgraph_to_modelica,
+    assign_demand_data,
+    assign_demand_parameters,
+    assign_pipe_parameters,
+    assign_supply_parameters
 )
+from uesgraphs.systemmodels.utilities import estimate_m_flow_demand_based
 from uesgraphs import UESGraph
 
 
@@ -201,6 +206,18 @@ class TestE15IntegrationPipeline:
                     input_cooling=demands_cool,
                     ground_temp_path=ground_temps
                 )
+                # Step 2.1: Run demand estimation to ensure it works with the generated graph
+                test_graph = graph
+                input_paths_dict = {
+                    "heating": demands_heat,
+                    "cooling": demands_cool,
+                    "dhw": demands_dhw
+                }
+                test_graph, _ = assign_demand_data(test_graph, input_paths_dict)
+                
+                assign_demand_parameters(test_graph, params_template)
+
+                assert estimate_m_flow_demand_based(test_graph, dT_attribute="dTDesign")
                 
                 # Step 3: Verify output
                 models_dir = os.path.join(workspace, 'models')

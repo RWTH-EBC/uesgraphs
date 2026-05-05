@@ -45,12 +45,11 @@ class TestExcelTypeConversion:
         if not os.path.exists(excel_path):
             pytest.skip("Excel template file not found")
 
-        #params = load_component_parameters(excel_path, 'Supply')
+        params = load_component_parameters(excel_path, 'Simulation')
 
-        # Check that allowFlowReversal (which is 'TRUE' in Excel) is converted to bool
-        #assert 'allowFlowReversal' in params
-        #assert isinstance(params['allowFlowReversal'], bool)
-        #assert isinstance(params['allowFlowReversal'], bool)
+        # Check that save_params_to_csv (which is 'TRUE' in Excel) is converted to bool
+        assert 'save_params_to_csv' in params
+        assert isinstance(params['save_params_to_csv'], bool)
 
 class TestPipeline:
     """Integration test using e16 example data."""
@@ -75,6 +74,7 @@ class TestPipeline:
 
         ground_temps = data_examples_dir / "ground_temps_hassel.csv"
         params_template = data_dir / "uesgraphs_parameters_template_pp.xlsx"
+        params_template_year = data_dir / "uesgraphs_parameters_template_pp_full_year.xlsx"
         
         # Check if all required files exist
         required_files = [
