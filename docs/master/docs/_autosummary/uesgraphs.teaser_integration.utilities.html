@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>uesgraphs.teaser_integration package &mdash; uesgraphs v2.2.0</title>
+  <title>uesgraphs.teaser_integration.utilities &mdash; uesgraphs v2.2.0</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -18,7 +18,9 @@
       <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="System Models" href="../api_system_models.html" />
+    <link rel="prev" title="uesgraphs.teaser_integration.simulate" href="uesgraphs.teaser_integration.simulate.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -58,10 +60,24 @@
 <li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_dynamic.html">Dynamic Simulation with pandapipes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_OpenDHW_int.html">OpenDHW integration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api_TEASER_int.html">TEASER Integration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api_TEASER_int.html">TEASER Integration</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.teaser_integration.simulate.html">uesgraphs.teaser_integration.simulate</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">uesgraphs.teaser_integration.utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.teaser_integration.utilities.set_up_file_logger"><code class="docutils literal notranslate"><span class="pre">set_up_file_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.teaser_integration.utilities.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.teaser_integration.utilities.load_simulation_settings_from_excel"><code class="docutils literal notranslate"><span class="pre">load_simulation_settings_from_excel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.teaser_integration.utilities.load_component_parameters"><code class="docutils literal notranslate"><span class="pre">load_component_parameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.teaser_integration.utilities.create_project"><code class="docutils literal notranslate"><span class="pre">create_project()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.teaser_integration.utilities.create_district"><code class="docutils literal notranslate"><span class="pre">create_district()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.teaser_integration.utilities.read_results"><code class="docutils literal notranslate"><span class="pre">read_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.teaser_integration.utilities.run_sim_teaser"><code class="docutils literal notranslate"><span class="pre">run_sim_teaser()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
@@ -81,9 +97,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">uesgraphs.teaser_integration package</li>
+          <li class="breadcrumb-item"><a href="../api_TEASER_int.html">TEASER Integration</a></li>
+      <li class="breadcrumb-item active">uesgraphs.teaser_integration.utilities</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/code/uesgraphs.teaser_integration.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/_autosummary/uesgraphs.teaser_integration.utilities.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -91,153 +108,38 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-uesgraphs.teaser_integration">
-<span id="uesgraphs-teaser-integration-package"></span><h1>uesgraphs.teaser_integration package<a class="headerlink" href="#module-uesgraphs.teaser_integration" title="Permalink to this heading"></a></h1>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
-</section>
-<section id="module-uesgraphs.teaser_integration.simulate">
-<span id="uesgraphs-teaser-integration-simulate-module"></span><h2>uesgraphs.teaser_integration.simulate module<a class="headerlink" href="#module-uesgraphs.teaser_integration.simulate" title="Permalink to this heading"></a></h2>
-<p>Module to control multiprocessing of simulation of TEASER buildings.</p>
-<p>You need to set a couple of environment variables for you conda environment to
-use this module:</p>
-<p>PYTHONPATH</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.teaser_integration.simulate.set_up_terminal_logger">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.teaser_integration.simulate.</span></span><span class="sig-name descname"><span class="pre">set_up_terminal_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><span class="pre">Logger</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/teaser_integration/simulate.html#set_up_terminal_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.teaser_integration.simulate.set_up_terminal_logger" title="Permalink to this definition"></a></dt>
-<dd><p>Set up a simple console-only logger for small functions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – Logger name</p></li>
-<li><p><strong>level</strong> – Logging level (default: INFO)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Configured console logger</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="uesgraphs.teaser_integration.simulate.WorkerSimulation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">uesgraphs.teaser_integration.simulate.</span></span><span class="sig-name descname"><span class="pre">WorkerSimulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_part</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_interval</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aixlib_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/teaser_integration/simulate.html#WorkerSimulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.teaser_integration.simulate.WorkerSimulation" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Process</span></code></p>
-<p>Helper class to enable simulation in a JoinableQueue.</p>
-<p>This class inherits from multiprocessing.Proccess. Pass over your
-simulation function and  all parameters that are necessary for this
-function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sim_function</strong> (<em>simulate</em><em>(</em><em>) </em><em>function</em>) – </p></li>
-<li><p><strong>sim_part</strong> (<em>Django QuerySet</em><em>, </em><em>NumPy Array</em><em> or </em><em>any other iterable</em>) – Iterable collection of BuildingEnergy objects</p></li>
-<li><p><strong>prj</strong> (<em>Scenario instance</em>) – Scenario instance of the buildings that are simulated. Please ensure
-if you are using multiprocessing that all buildings are within the same
-prj.</p></li>
-<li><p><strong>model_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path where Modelica model from TEASER is located. This is TEASER output
-path.</p></li>
-<li><p><strong>results_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path where Dymola results should be stored.</p></li>
-<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Start time of the simulation</p></li>
-<li><p><strong>stop_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Stop time of the simulation</p></li>
-<li><p><strong>output_interval</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Output interval of the simulation</p></li>
-<li><p><strong>solver</strong> (<em>string</em>) – Used solver in Dymola. All Dymola solvers are supported(default:
-‘Dassl’</p></li>
-<li><p><strong>tolerance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Tolerance of used solver</p></li>
-<li><p><strong>process_number</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Counter of parallel processes, if multiprocessing is used. Default is
-None which indicates that no multuprocessing is used. Otherwise please
-set an individual number for every process that is used.</p></li>
-<li><p><strong>result_queue</strong> (<a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.JoinableQueue" title="(in Python v3.14)"><em>multiprocessing.JoinableQueue</em></a><em>(</em><em>)</em>) – JoinableQueue instance for each worker.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="uesgraphs.teaser_integration.simulate.WorkerSimulation.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_part</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_interval</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aixlib_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/teaser_integration/simulate.html#WorkerSimulation.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.teaser_integration.simulate.WorkerSimulation.__init__" title="Permalink to this definition"></a></dt>
-<dd><p>Init function of WorkerSimulation.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="uesgraphs.teaser_integration.simulate.WorkerSimulation.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/teaser_integration/simulate.html#WorkerSimulation.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.teaser_integration.simulate.WorkerSimulation.run" title="Permalink to this definition"></a></dt>
-<dd><p>Run the specified simulation function with all parameters.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.teaser_integration.simulate.simulate">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.teaser_integration.simulate.</span></span><span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_part</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_interval</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aixlib_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/teaser_integration/simulate.html#simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.teaser_integration.simulate.simulate" title="Permalink to this definition"></a></dt>
-<dd><p>Simulate building models in serial using Dymola.</p>
-<p>This function simulates all buidlings given in the building_query_set in
-serial(one after another). This function can be used for parallel
-processing of simulation. There are no default values because it caused
-trouble with multiprocessing.</p>
-<p>Note: Please ensure that for all buildings corresponding models have been
-generated. Also ensure that all models are within the same
-prj, otherwise this will neither work for single nor for
-multiprocessing.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sim_part</strong> (<em>any iterable</em>) – Iterable collection of Building objects</p></li>
-<li><p><strong>prj</strong> (<em>Scenario instance</em>) – Scenario instance of the buildings that are simulated. Please ensure
-if you are using multiprocessing that all buildings are within the same
-prj.</p></li>
-<li><p><strong>model_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path where Modelica model from TEASER is located. This is TEASER output
-path.</p></li>
-<li><p><strong>results_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path where Dymola results should be stored.</p></li>
-<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Start time of the simulation</p></li>
-<li><p><strong>stop_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Stop time of the simulation</p></li>
-<li><p><strong>output_interval</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Output interval of the simulation</p></li>
-<li><p><strong>solver</strong> (<em>string</em>) – Used solver in Dymola. All Dymola solvers are supported(default:
-‘Dassl’</p></li>
-<li><p><strong>tolerance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Tolerance of used solver</p></li>
-<li><p><strong>process_number</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Counter of parallel processes, if multiprocessing is used. Default is
-None which indicates that no multuprocessing is used. Otherwise please
-set an individual number for every process that is used.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="uesgraphs.teaser_integration.simulate.queue_simulation">
-<span class="sig-prename descclassname"><span class="pre">uesgraphs.teaser_integration.simulate.</span></span><span class="sig-name descname"><span class="pre">queue_simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/runner/TEASEROutput'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/runner/djangoteaserout'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">31532400.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3600.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Dassl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aixlib_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/teaser_integration/simulate.html#queue_simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.teaser_integration.simulate.queue_simulation" title="Permalink to this definition"></a></dt>
-<dd><p>Simulate multiple buildings in a JoinableQueue.</p>
-<p>This function simulates all buidlings given in the building_query_set. It
-uses JoinableQueue for multiprocessing.</p>
-<p>Note: Please ensure that for all buildings corresponding models have been
-generated. Also ensure that all models are within the same
-prj, otherwise this will neither work for single nor for
-multiprocessing.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sim_function</strong> (<em>simulate</em><em>(</em><em>) </em><em>function</em>) – </p></li>
-<li><p><strong>prj</strong> (<em>Scenario instance</em>) – Scenario instance of the buildings that are simulated. Please ensure
-if you are using multiprocessing that all buildings are within the same
-prj.</p></li>
-<li><p><strong>number_of_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of workers used for the simulation. (default: number of
-physical processors - 1)</p></li>
-<li><p><strong>model_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path where Modelica model from TEASER is located. This is TEASER output
-path.</p></li>
-<li><p><strong>results_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path where Dymola results should be stored.</p></li>
-<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Start time of the simulation</p></li>
-<li><p><strong>stop_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Stop time of the simulation</p></li>
-<li><p><strong>output_interval</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Output interval of the simulation</p></li>
-<li><p><strong>solver</strong> (<em>string</em>) – Used solver in Dymola. All Dymola solvers are supported(default:
-‘Dassl’</p></li>
-<li><p><strong>tolerance</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Tolerance of used solver</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="module-uesgraphs.teaser_integration.utilities">
-<span id="uesgraphs-teaser-integration-utilities-module"></span><h2>uesgraphs.teaser_integration.utilities module<a class="headerlink" href="#module-uesgraphs.teaser_integration.utilities" title="Permalink to this heading"></a></h2>
+  <section id="module-uesgraphs.teaser_integration.utilities">
+<span id="uesgraphs-teaser-integration-utilities"></span><h1>uesgraphs.teaser_integration.utilities<a class="headerlink" href="#module-uesgraphs.teaser_integration.utilities" title="Permalink to this heading"></a></h1>
 <p>This module includes TEASER for the demand estimation based on the .geojson</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.create_district" title="uesgraphs.teaser_integration.utilities.create_district"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_district</span></code></a>(info_path, prj[, logger])</p></td>
+<td><p>Create TEASER buildings using modern API, according to infos in geojson.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.create_project" title="uesgraphs.teaser_integration.utilities.create_project"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_project</span></code></a>()</p></td>
+<td><p>Create a TEASER project for current version.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.load_component_parameters" title="uesgraphs.teaser_integration.utilities.load_component_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_component_parameters</span></code></a>(excel_path, ...)</p></td>
+<td><p>Load component parameters from an Excel file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.load_simulation_settings_from_excel" title="uesgraphs.teaser_integration.utilities.load_simulation_settings_from_excel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_simulation_settings_from_excel</span></code></a>(excel_path)</p></td>
+<td><p>Load simulation settings from Excel 'Simulation' sheet.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.read_results" title="uesgraphs.teaser_integration.utilities.read_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_results</span></code></a>(prj, buildings, signals, index, ...)</p></td>
+<td><p>Read simulation data from .mat file and save them into csv.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.run_sim_teaser" title="uesgraphs.teaser_integration.utilities.run_sim_teaser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_sim_teaser</span></code></a>(buildings_info_path, save_path)</p></td>
+<td><p>Run TEASER simulations for demand estimation based on building information from a .geojson file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.set_up_file_logger" title="uesgraphs.teaser_integration.utilities.set_up_file_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_file_logger</span></code></a>(name[, log_dir, level])</p></td>
+<td><p>Set up a full file+console logger for major functions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.set_up_logger" title="uesgraphs.teaser_integration.utilities.set_up_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_logger</span></code></a>(name[, log_dir, level])</p></td>
+<td><p>Sets up a configured logger with file handler.</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="py function">
 <dt class="sig sig-object py" id="uesgraphs.teaser_integration.utilities.set_up_file_logger">
 <span class="sig-prename descclassname"><span class="pre">uesgraphs.teaser_integration.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_file_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><span class="pre">Logger</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/teaser_integration/utilities.html#set_up_file_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.teaser_integration.utilities.set_up_file_logger" title="Permalink to this definition"></a></dt>
@@ -407,7 +309,7 @@ csv-files are created for both signals.</p></li>
 <span class="sig-prename descclassname"><span class="pre">uesgraphs.teaser_integration.utilities.</span></span><span class="sig-name descname"><span class="pre">run_sim_teaser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buildings_info_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weather_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">31536000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_setup_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/teaser_integration/utilities.html#run_sim_teaser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.teaser_integration.utilities.run_sim_teaser" title="Permalink to this definition"></a></dt>
 <dd><p>Run TEASER simulations for demand estimation based on building information from a .geojson file.</p>
 <section id="parameters">
-<h3>Parameters:<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h3>
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
 <dl class="simple">
 <dt>buildings_info_path<span class="classifier">str</span></dt><dd><p>The path to the .geojson file containing building information for TEASER model creation.</p>
 </dd>
@@ -430,7 +332,7 @@ csv-files are created for both signals.</p></li>
 </dl>
 </section>
 <section id="returns">
-<h3>Returns:<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h3>
+<h2>Returns:<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h2>
 <dl class="simple">
 <dt>tuple</dt><dd><p>Paths to the generated demand CSV files: (heating_demand_csv, cooling_demand_csv)</p>
 </dd>
@@ -439,12 +341,14 @@ csv-files are created for both signals.</p></li>
 </dd></dl>
 
 </section>
-</section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="uesgraphs.teaser_integration.simulate.html" class="btn btn-neutral float-left" title="uesgraphs.teaser_integration.simulate" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api_system_models.html" class="btn btn-neutral float-right" title="System Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
