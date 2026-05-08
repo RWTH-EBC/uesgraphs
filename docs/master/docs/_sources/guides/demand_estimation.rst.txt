@@ -1,5 +1,5 @@
 Heat and DHW Demand Estimation
-=========================
+==============================
 
 Generate Heat and DHW estimation profiles, which can be used in the simulations with uesgraphs.
 
@@ -131,4 +131,4 @@ mean_drawoff_vol_per_day  40             L/day  Mean drawoff volume per person p
 See Also
 --------
 
-- :doc:`../architecture/OpenDHW_TEASER_int` - Technical architecture details
+- :doc:`../architecture/teaser_opendhw_integration` - Technical architecture details

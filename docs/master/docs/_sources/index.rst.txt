@@ -29,7 +29,7 @@ Beyond model creation, **UESgraphs** offers comprehensive post-simulation analyt
 Getting Started
 =================
 
-The best way to start is by installing the package and checking out the :doc:`examples`.
+The best way to start is by installing the package and checking out the :doc:`api_examples`.
 
 Follow these steps to install **UESgraphs** using Conda:
 
@@ -276,10 +276,10 @@ API Documentation
 
      guides/model_generation_pipeline
      guides/hydronic_sizing
-     guides/Template_Generation.rst
+     guides/Template_Generation
      guides/model_generation_pandapipes
-     guides/OpenDHW_and_TEASER_integration
      guides/analysis_tools_pp
+     guides/demand_estimation
 
   .. toctree::
      :maxdepth: 2
@@ -289,6 +289,7 @@ API Documentation
      architecture/graph_transformation
      architecture/pandapipes_pipeline
      architecture/teaser_opendhw_integration
+     architecture/pandapipes_dynamic
 
   .. toctree::
      :maxdepth: 2

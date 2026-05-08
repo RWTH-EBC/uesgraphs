@@ -15,10 +15,10 @@ Table of Contents
 2. `Pipeline Architecture <#pipeline-architecture>`__
 3. `Core Entry Point <#core-entry-point>`__
 4. `Parameter Assignment Flow <#parameter-assignment-flow>`__
-5. `Demand & Time-Series Handling <#demand--time-series-handling>`__
+5. `Demand and Time-Series Handling <#demand-and-time-series-handling>`__
 6. `pandapipes Model Generation <#pandapipes-model-generation>`__
-7. `File & Folder Structure <#file--folder-structure>`__
-8. `Validation & Error Handling <#validation--error-handling>`__
+7. `File and Folder Structure <#file-and-folder-structure>`__
+8. `Validation and Error Handling <#validation-and-error-handling>`__
 9. `Extension Guide <#extension-guide>`__
 
 --------------
@@ -86,8 +86,7 @@ Core Entry Point
 
 **Location**: ``systemmodels_pp/utilities.py``
 **Responsibility**: End-to-end orchestration of pandapipes simulations
-**Inputs**: UESGraph or JSON path, Excel config, demand CSVs, ground
-  temperature data
+**Inputs**: UESGraph or JSON path, Excel config, demand CSVs, ground temperature data
 **Outputs**: Timestamped directory with pandapipes files
 
 ----------------
@@ -164,19 +163,15 @@ uesgraph.graph["cp_default"]
 
 ---
 
-Demand & Time-Series Handling
------------------------------
+Demand and Time-Series Handling
+-------------------------------
 
 ### Demand Assignment
 
 Demand CSVs are mapped via:
 
 ```python
-assign_demand_data(uesgraph, {
-    "heating": input_heating,
-    "cooling": input_cooling,
-    "dhw": input_dhw
-})
+assign_demand_data(uesgraph, {"heating": input_heating, "cooling": input_cooling, "dhw": input_dhw})
 ```
 
 Result:
@@ -186,8 +181,7 @@ Result:
 
 ### Ground Temperature
 
-Ground temperature CSV is loaded once and later sliced by **ground
-depth**, defined in the simulation Excel:
+Ground temperature CSV is loaded once and later sliced by **ground depth**, defined in the simulation Excel:
 
 ```python
 ground_temp_list = ground_temp_df[ground_depth].tolist()
@@ -196,7 +190,7 @@ ground_temp_list = ground_temp_df[ground_depth].tolist()
 ---
 
 
-pandapipes Model Generation
+Pandapipes Model Generation
 ---------------------------
 
 ### Model Directory Creation
@@ -214,14 +208,11 @@ Each simulation run creates a timestamped folder:
 The final pandapipes model is created via:
 
 ```python
-generate_simulation_model(
-    uesgraph,
-    sim_name,
-    sim_params,
-    ground_temp_list,
-    sim_model_dir
-)
+generate_simulation_model(uesgraph, sim_name, sim_params, ground_temp_list, sim_model_dir)
 ```
+
+.. seealso::
+   - Depending on the simulation mode (static, dynamic, transient), the simulation will be executed differently. For more details on the different simulation modes, see :doc:`pandapipes_dynamic` 
 
 **Responsibilities of `generate_simulation_model`:**
 
@@ -242,31 +233,27 @@ generate_simulation_model(
 **Solver Settings for static simulation**:
 
 - mode: 'bidirectional'
-- iter: 500
-- using full pandapipes calculation for all variables
+- iter: 100
+- For more details on static simulation with pandapipes, visit the pandapipes documentation: https://pandapipes.readthedocs.io/en/latest/
 
 **Solver Settings for dynamic simulation**:
 
 - mode: 'hydraulics'
-- iter: 500
-- using only hydraulics pandapipes calculations
-- Layer-Structuring for order of temperature calculations
-- Implicit euler calculation for outlet pipe temperature
-- Mixing temperature calculation with averaging over mass flows
+- iter: 100
+- For more detail on dynamic simulation using pandapipes, see  :doc:`pandapipes_dynamic` - Technical details on dynamic simulations with pandapipes.
 
----
-
-
-
-**Solver Settings**:
+**Solver Settings for transient simulation**:
 
 - mode: 'bidirectional'
+- transient: True
 - iter: 100
+- For more details on transient simulation with pandapipes, visit the pandapipes documentation: https://pandapipes.readthedocs.io/en/latest/
 
 ---
 
-File & Folder Structure
------------------------
+
+File and Folder Structure
+-------------------------
 
 ::
 
@@ -283,8 +270,8 @@ File & Folder Structure
 
 ---
 
-Validation & Error Handling
----------------------------
+Validation and Error Handling
+-----------------------------
 
 ### Validation Levels
 

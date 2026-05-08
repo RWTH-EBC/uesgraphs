@@ -19,7 +19,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="UESGraphs pandapipes simulation Pipeline" href="teaser_opendhw_integration.html" />
+    <link rel="next" title="Workflow integration of TEASER and OpenDHW" href="teaser_opendhw_integration.html" />
     <link rel="prev" title="Graph Transformation" href="graph_transformation.html" /> 
 </head>
 
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/demand_estimation.html">Heat and DHW Demand Estimation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
 <ul class="current">
@@ -68,14 +69,15 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#core-entry-point">Core Entry Point</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parameter-assignment-flow">Parameter Assignment Flow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#demand-time-series-handling">Demand &amp; Time-Series Handling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pandapipes-model-generation">pandapipes Model Generation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#file-folder-structure">File &amp; Folder Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#validation-error-handling">Validation &amp; Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#demand-and-time-series-handling">Demand and Time-Series Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pandapipes-model-generation">Pandapipes Model Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#file-and-folder-structure">File and Folder Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#validation-and-error-handling">Validation and Error Handling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#extension-guide">Extension Guide</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teaser_opendhw_integration.html">Workflow integration of TEASER and OpenDHW</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pandapipes_dynamic.html">Dynamic Simulation with pandapipes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
@@ -125,10 +127,10 @@
 <li><p><a class="reference external" href="#pipeline-architecture">Pipeline Architecture</a></p></li>
 <li><p><a class="reference external" href="#core-entry-point">Core Entry Point</a></p></li>
 <li><p><a class="reference external" href="#parameter-assignment-flow">Parameter Assignment Flow</a></p></li>
-<li><p><a class="reference external" href="#demand--time-series-handling">Demand &amp; Time-Series Handling</a></p></li>
+<li><p><a class="reference external" href="#demand-and-time-series-handling">Demand and Time-Series Handling</a></p></li>
 <li><p><a class="reference external" href="#pandapipes-model-generation">pandapipes Model Generation</a></p></li>
-<li><p><a class="reference external" href="#file--folder-structure">File &amp; Folder Structure</a></p></li>
-<li><p><a class="reference external" href="#validation--error-handling">Validation &amp; Error Handling</a></p></li>
+<li><p><a class="reference external" href="#file-and-folder-structure">File and Folder Structure</a></p></li>
+<li><p><a class="reference external" href="#validation-and-error-handling">Validation and Error Handling</a></p></li>
 <li><p><a class="reference external" href="#extension-guide">Extension Guide</a></p></li>
 </ol>
 </section>
@@ -192,11 +194,8 @@ pandapipes Results
 <p>### <cite>uesgraph_to_pandapipes(…)</cite></p>
 <p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">systemmodels_pp/utilities.py</span></code>
 <strong>Responsibility</strong>: End-to-end orchestration of pandapipes simulations
-<strong>Inputs</strong>: UESGraph or JSON path, Excel config, demand CSVs, ground</p>
-<blockquote>
-<div><p>temperature data</p>
-</div></blockquote>
-<p><strong>Outputs</strong>: Timestamped directory with pandapipes files</p>
+<strong>Inputs</strong>: UESGraph or JSON path, Excel config, demand CSVs, ground temperature data
+<strong>Outputs</strong>: Timestamped directory with pandapipes files</p>
 </section>
 <hr class="docutils" />
 <section id="parameter-assignment-flow">
@@ -254,32 +253,27 @@ Missing values fall back to hardcoded defaults.</p>
 <span class="pre">`</span></code></p>
 <p>—</p>
 </section>
-<section id="demand-time-series-handling">
-<h2>Demand &amp; Time-Series Handling<a class="headerlink" href="#demand-time-series-handling" title="Permalink to this heading"></a></h2>
+<section id="demand-and-time-series-handling">
+<h2>Demand and Time-Series Handling<a class="headerlink" href="#demand-and-time-series-handling" title="Permalink to this heading"></a></h2>
 <p>### Demand Assignment</p>
 <p>Demand CSVs are mapped via:</p>
-<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
-assign_demand_data(uesgraph, {</p>
-<blockquote>
-<div><p>“heating”: input_heating,
-“cooling”: input_cooling,
-“dhw”: input_dhw</p>
-</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">assign_demand_data(uesgraph,</span> <span class="pre">{&quot;heating&quot;:</span> <span class="pre">input_heating,</span> <span class="pre">&quot;cooling&quot;:</span> <span class="pre">input_cooling,</span> <span class="pre">&quot;dhw&quot;:</span> <span class="pre">input_dhw})</span>
+<span class="pre">`</span></code></p>
 <p>Result:</p>
 <ul class="simple">
 <li><p>Time-series are attached as <strong>graph node attributes</strong></p></li>
 <li><p>Naming conventions are preserved for downstream processing</p></li>
 </ul>
 <p>### Ground Temperature</p>
-<p>Ground temperature CSV is loaded once and later sliced by <strong>ground
-depth</strong>, defined in the simulation Excel:</p>
+<p>Ground temperature CSV is loaded once and later sliced by <strong>ground depth</strong>, defined in the simulation Excel:</p>
 <p><code class="docutils literal notranslate"><span class="pre">`python</span>
 <span class="pre">ground_temp_list</span> <span class="pre">=</span> <span class="pre">ground_temp_df[ground_depth].tolist()</span>
 <span class="pre">`</span></code></p>
 <p>—</p>
 </section>
 <section id="pandapipes-model-generation">
-<h2>pandapipes Model Generation<a class="headerlink" href="#pandapipes-model-generation" title="Permalink to this heading"></a></h2>
+<h2>Pandapipes Model Generation<a class="headerlink" href="#pandapipes-model-generation" title="Permalink to this heading"></a></h2>
 <p>### Model Directory Creation</p>
 <p>Each simulation run creates a timestamped folder:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>workspace/
@@ -289,15 +283,15 @@ depth</strong>, defined in the simulation Excel:</p>
 </div>
 <p>### Model Generation</p>
 <p>The final pandapipes model is created via:</p>
-<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a>python
-generate_simulation_model(</p>
-<blockquote>
-<div><p>uesgraph,
-sim_name,
-sim_params,
-ground_temp_list,
-sim_model_dir</p>
-</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">generate_simulation_model(uesgraph,</span> <span class="pre">sim_name,</span> <span class="pre">sim_params,</span> <span class="pre">ground_temp_list,</span> <span class="pre">sim_model_dir)</span>
+<span class="pre">`</span></code></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p>Depending on the simulation mode (static, dynamic, transient), the simulation will be executed differently. For more details on the different simulation modes, see <a class="reference internal" href="pandapipes_dynamic.html"><span class="doc">Dynamic Simulation with pandapipes</span></a></p></li>
+</ul>
+</div>
 <p><strong>Responsibilities of `generate_simulation_model`:</strong></p>
 <ul class="simple">
 <li><p>Convert UESGraph → pandapipes net</p></li>
@@ -317,28 +311,26 @@ sim_model_dir</p>
 <p><strong>Solver Settings for static simulation</strong>:</p>
 <ul class="simple">
 <li><p>mode: ‘bidirectional’</p></li>
-<li><p>iter: 500</p></li>
-<li><p>using full pandapipes calculation for all variables</p></li>
+<li><p>iter: 100</p></li>
+<li><p>For more details on static simulation with pandapipes, visit the pandapipes documentation: <a class="reference external" href="https://pandapipes.readthedocs.io/en/latest/">https://pandapipes.readthedocs.io/en/latest/</a></p></li>
 </ul>
 <p><strong>Solver Settings for dynamic simulation</strong>:</p>
 <ul class="simple">
 <li><p>mode: ‘hydraulics’</p></li>
-<li><p>iter: 500</p></li>
-<li><p>using only hydraulics pandapipes calculations</p></li>
-<li><p>Layer-Structuring for order of temperature calculations</p></li>
-<li><p>Implicit euler calculation for outlet pipe temperature</p></li>
-<li><p>Mixing temperature calculation with averaging over mass flows</p></li>
+<li><p>iter: 100</p></li>
+<li><p>For more detail on dynamic simulation using pandapipes, see  <a class="reference internal" href="pandapipes_dynamic.html"><span class="doc">Dynamic Simulation with pandapipes</span></a> - Technical details on dynamic simulations with pandapipes.</p></li>
 </ul>
-<p>—</p>
-<p><strong>Solver Settings</strong>:</p>
+<p><strong>Solver Settings for transient simulation</strong>:</p>
 <ul class="simple">
 <li><p>mode: ‘bidirectional’</p></li>
+<li><p>transient: True</p></li>
 <li><p>iter: 100</p></li>
+<li><p>For more details on transient simulation with pandapipes, visit the pandapipes documentation: <a class="reference external" href="https://pandapipes.readthedocs.io/en/latest/">https://pandapipes.readthedocs.io/en/latest/</a></p></li>
 </ul>
 <p>—</p>
 </section>
-<section id="file-folder-structure">
-<h2>File &amp; Folder Structure<a class="headerlink" href="#file-folder-structure" title="Permalink to this heading"></a></h2>
+<section id="file-and-folder-structure">
+<h2>File and Folder Structure<a class="headerlink" href="#file-and-folder-structure" title="Permalink to this heading"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>workspace/
   ├── uesgraphs_origin.json
   ├── uesgraphs_with_demand.json
@@ -353,8 +345,8 @@ sim_model_dir</p>
 </div>
 <p>—</p>
 </section>
-<section id="validation-error-handling">
-<h2>Validation &amp; Error Handling<a class="headerlink" href="#validation-error-handling" title="Permalink to this heading"></a></h2>
+<section id="validation-and-error-handling">
+<h2>Validation and Error Handling<a class="headerlink" href="#validation-and-error-handling" title="Permalink to this heading"></a></h2>
 <p>### Validation Levels</p>
 <ol class="arabic simple">
 <li><p><strong>File System</strong>
@@ -394,7 +386,7 @@ sim_model_dir</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="graph_transformation.html" class="btn btn-neutral float-left" title="Graph Transformation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="teaser_opendhw_integration.html" class="btn btn-neutral float-right" title="UESGraphs pandapipes simulation Pipeline" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="teaser_opendhw_integration.html" class="btn btn-neutral float-right" title="Workflow integration of TEASER and OpenDHW" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

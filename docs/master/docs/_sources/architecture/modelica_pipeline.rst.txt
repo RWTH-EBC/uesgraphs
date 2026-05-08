@@ -536,7 +536,7 @@ Adding a New Component Template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-1. **See** :doc:`../guides/Template_generation`
+1. **See** :doc:`../guides/Template_Generation`
 
 2. **Add Graph Attribute** (if component-specific)
    - Add individual attributes required by the new template directly to the uesgraphs

@@ -1,4 +1,4 @@
-UESGraphs pandapipes simulation Pipeline
+Workflow integration of TEASER and OpenDHW
 ===========================================
 
 Architecture Documentation
@@ -13,13 +13,11 @@ Table of Contents
 
 1. `Overview <#overview>`__
 2. `Pipeline Architecture <#pipeline-architecture>`__
-3. `Core Entry Point <#core-entry-point>`__
-4. `Parameter Assignment Flow <#parameter-assignment-flow>`__
-5. `Demand & Time-Series Handling <#demand--time-series-handling>`__
-6. `pandapipes Model Generation <#pandapipes-model-generation>`__
-7. `File & Folder Structure <#file--folder-structure>`__
-8. `Validation & Error Handling <#validation--error-handling>`__
-9. `Extension Guide <#extension-guide>`__
+3. `Core Entry Points <#core-entry-points>`__
+4. `TEASER Usage <#teaser-usage>`__
+5. `OpenDHW Profiles Generation <#opendhw-profiles-generation>`__
+6. `File and Folder Structure <#file-and-folder-structure>`__
+7. `Extension Guide <#extension-guide>`__
 
 --------------
 
@@ -36,7 +34,7 @@ Key Design Principles
    stored on in buildings_geojson before estimation.
 2. **Excel-based Configuration**: Uniform parameters (simulation setup) 
    are read from Excel sheets.
-4. **Traceability**: Every major processing step persists 
+3. **Traceability**: Every major processing step persists 
    intermediate states of data.
 
 Technology Stack
@@ -91,25 +89,24 @@ OpenDHW:
    └──────────────────────────────────┘
         ↓
    demands-dhw.csv
+
 -------------
 
 Core Entry Points
-----------------
+-----------------
 
 ### `run_sim_teaser(...)`
 
 **Location**: ``teaser_integration/utilities.py``
 **Responsibility**: End-to-end orchestration of TEASER integration
-**Inputs**: GeoJSON, either Excel config or timestep and stoptime,
-   weather data
+**Inputs**: GeoJSON, either Excel config or timestep and stoptime, weather data
 **Outputs**: Heat and cool demand files as CSV
 
 ### `generate_DHW_profiles_from_geojson(...)`
 
 **Location**: ``DHW_estimation/utilities.py``
 **Responsibility**: End-to-end orchestration of OpenDHW integration
-**Inputs**: GeoJSON, either Excel config or timestep, mean draw-off and 
-   temperature difference for DHW
+**Inputs**: GeoJSON, either Excel config or timestep, mean draw-off and temperature difference for DHW
 **Outputs**: DHW demand file as CSV
 
 TEASER usage
@@ -139,11 +136,10 @@ OpenDHW profiles generation
 2. The resulting DataFrame of the profiles is saved in a csv file.
 
 Important notes:
-   - Since only timestep, it is not possible to change the start_time nor stop_time, so always start at 0 and stoptime is 
-   always set to one year because of OpenDHW's internal architecture.
+   - Since only timestep, it is not possible to change the start_time nor stop_time, so always start at 0 and stoptime is always set to one year because of OpenDHW's internal architecture.
 
-File & Folder Structure
------------------------
+File and Folder Structure
+-------------------------
 
 ::
 

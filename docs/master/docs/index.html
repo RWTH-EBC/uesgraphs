@@ -48,13 +48,15 @@
 <li class="toctree-l1"><a class="reference internal" href="guides/Template_Generation.html">Template Generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/demand_estimation.html">Heat and DHW Demand Estimation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/graph_transformation.html">Graph Transformation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
-<li class="toctree-l1"><a class="reference internal" href="architecture/teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/teaser_opendhw_integration.html">Workflow integration of TEASER and OpenDHW</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/pandapipes_dynamic.html">Dynamic Simulation with pandapipes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
@@ -101,7 +103,7 @@ The tool seamlessly integrates diverse data sources, including spatial (OpenStre
 </section>
 <section id="getting-started">
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h1>
-<p>The best way to start is by installing the package and checking out the <span class="xref std std-doc">examples</span>.</p>
+<p>The best way to start is by installing the package and checking out the <a class="reference internal" href="api_examples.html"><span class="doc">Examples</span></a>.</p>
 <p>Follow these steps to install <strong>UESgraphs</strong> using Conda:</p>
 <ol class="arabic">
 <li><p><strong>Create a new virtual environment</strong>:</p>
@@ -352,6 +354,14 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li class="toctree-l2"><a class="reference internal" href="guides/analysis_tools_pp.html#see-also">See Also</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="guides/demand_estimation.html">Heat and DHW Demand Estimation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/demand_estimation.html#before-start">Before Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/demand_estimation.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/demand_estimation.html#what-you-need">What You Need</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/demand_estimation.html#if-excel-configuration-used-then-these-important-parameters-must-be-set-in-the-corresponding-sheets">If Excel Configuration used then these important parameters must be set in the corresponding sheets:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/demand_estimation.html#see-also">See Also</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -392,14 +402,14 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#pipeline-architecture">Pipeline Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#core-entry-point">Core Entry Point</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#parameter-assignment-flow">Parameter Assignment Flow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#demand-time-series-handling">Demand &amp; Time-Series Handling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#pandapipes-model-generation">pandapipes Model Generation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#file-folder-structure">File &amp; Folder Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#validation-error-handling">Validation &amp; Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#demand-and-time-series-handling">Demand and Time-Series Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#pandapipes-model-generation">Pandapipes Model Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#file-and-folder-structure">File and Folder Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#validation-and-error-handling">Validation and Error Handling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_pipeline.html#extension-guide">Extension Guide</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="architecture/teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture/teaser_opendhw_integration.html">Workflow integration of TEASER and OpenDHW</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="architecture/teaser_opendhw_integration.html#architecture-documentation">Architecture Documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/teaser_opendhw_integration.html#table-of-contents">Table of Contents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/teaser_opendhw_integration.html#overview">Overview</a></li>
@@ -407,8 +417,19 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li class="toctree-l2"><a class="reference internal" href="architecture/teaser_opendhw_integration.html#core-entry-points">Core Entry Points</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/teaser_opendhw_integration.html#teaser-usage">TEASER usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/teaser_opendhw_integration.html#opendhw-profiles-generation">OpenDHW profiles generation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture/teaser_opendhw_integration.html#file-folder-structure">File &amp; Folder Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/teaser_opendhw_integration.html#file-and-folder-structure">File and Folder Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/teaser_opendhw_integration.html#extension-guide">Extension Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/pandapipes_dynamic.html">Dynamic Simulation with pandapipes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_dynamic.html#architecture-documentation">Architecture Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_dynamic.html#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_dynamic.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_dynamic.html#main-idea">Main Idea</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_dynamic.html#equations">Equations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_dynamic.html#pipe-order-scheme">Pipe Order Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_dynamic.html#numerical-solver">Numerical Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/pandapipes_dynamic.html#transient-pandapipes-approach">Transient pandapipes approach</a></li>
 </ul>
 </li>
 </ul>

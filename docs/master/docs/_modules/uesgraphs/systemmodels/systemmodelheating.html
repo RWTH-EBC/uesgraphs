@@ -46,13 +46,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../guides/Template_Generation.html">Template Generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/demand_estimation.html">Heat and DHW Demand Estimation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../architecture/graph_transformation.html">Graph Transformation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../architecture/teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/teaser_opendhw_integration.html">Workflow integration of TEASER and OpenDHW</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/pandapipes_dynamic.html">Dynamic Simulation with pandapipes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
@@ -651,9 +653,10 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Building nodes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;nodelist_building&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[]))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pipe nodes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;nodelist_pipe&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[]))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=== UESGraph import completed ===&quot;</span><span class="p">)</span></div>
-       
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remove_network_nodes</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets connections between supplies, pipes and buildings</span>
+<span class="w">       </span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    def set_connection(self, remove_network_nodes=True):</span>
+<span class="sd">        &quot;&quot;&quot;Sets connections between supplies, pipes and buildings</span>
 
 <span class="sd">        To connect supplies, pipes, and buildings, each edge of the model graph</span>
 <span class="sd">        is assigned four attributes (&#39;con1&#39;, &#39;con2&#39;, &#39;con1R&#39;, &#39;con2R&#39;) that</span>
@@ -680,186 +683,187 @@
 <span class="sd">            connecting ports. If False, network nodes will get their own</span>
 <span class="sd">            representation in the conncetion network.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_type</span> <span class="o">==</span> <span class="s2">&quot;heating&quot;</span><span class="p">:</span>
-            <span class="n">flag_supply</span> <span class="o">=</span> <span class="s2">&quot;is_supply_heating&quot;</span>
-            <span class="n">nodelist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodelists_heating</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_type</span> <span class="o">==</span> <span class="s2">&quot;cooling&quot;</span><span class="p">:</span>
-            <span class="n">flag_supply</span> <span class="o">=</span> <span class="s2">&quot;is_supply_cooling&quot;</span>
-            <span class="n">nodelist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodelists_cooling</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unknown network type&quot;</span><span class="p">)</span>
-        <span class="n">clusters</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodelist</span><span class="p">:</span>
-            <span class="n">clusters</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">curr_edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">edge_node</span> <span class="ow">in</span> <span class="n">curr_edge</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">edge_node</span> <span class="o">==</span> <span class="n">curr_edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-                    <span class="n">other_node</span> <span class="o">=</span> <span class="n">curr_edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">other_node</span> <span class="o">=</span> <span class="n">curr_edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="sd">        if self.network_type == &quot;heating&quot;:</span>
+<span class="sd">            flag_supply = &quot;is_supply_heating&quot;</span>
+<span class="sd">            nodelist = self.nodelists_heating[&quot;default&quot;]</span>
+<span class="sd">        elif self.network_type == &quot;cooling&quot;:</span>
+<span class="sd">            flag_supply = &quot;is_supply_cooling&quot;</span>
+<span class="sd">            nodelist = self.nodelists_cooling[&quot;default&quot;]</span>
+<span class="sd">        else:</span>
+<span class="sd">            raise RuntimeError(&quot;Unknown network type&quot;)</span>
+<span class="sd">        clusters = {}</span>
+<span class="sd">        for node in nodelist:</span>
+<span class="sd">            clusters[node] = []</span>
+<span class="sd">        for curr_edge in self.edges(data=True):</span>
+<span class="sd">            for edge_node in curr_edge:</span>
+<span class="sd">                if edge_node == curr_edge[0]:</span>
+<span class="sd">                    other_node = curr_edge[1]</span>
+<span class="sd">                else:</span>
+<span class="sd">                    other_node = curr_edge[0]</span>
 
-                <span class="k">if</span> <span class="n">edge_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodelist_building</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge_node</span><span class="p">][</span><span class="n">flag_supply</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-                        <span class="n">con</span> <span class="o">=</span> <span class="s2">&quot;demand&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge_node</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.port_a&quot;</span>
-                        <span class="n">con_R</span> <span class="o">=</span> <span class="p">(</span>
-                            <span class="s2">&quot;demand&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge_node</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.port_b&quot;</span>
-                        <span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">con</span> <span class="o">=</span> <span class="s2">&quot;supply&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge_node</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.port_b&quot;</span>
-                        <span class="n">con_R</span> <span class="o">=</span> <span class="p">(</span>
-                            <span class="s2">&quot;supply&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge_node</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.port_a&quot;</span>
-                        <span class="p">)</span>
-                <span class="k">elif</span> <span class="n">edge_node</span> <span class="ow">in</span> <span class="n">nodelist</span><span class="p">:</span>
-                    <span class="n">con</span> <span class="o">=</span> <span class="n">edge_node</span>
-                    <span class="n">con_R</span> <span class="o">=</span> <span class="n">edge_node</span>
-                    <span class="k">if</span> <span class="n">edge_node</span> <span class="o">==</span> <span class="n">curr_edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-                        <span class="n">clusters</span><span class="p">[</span><span class="n">edge_node</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_edge</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-                    <span class="k">elif</span> <span class="n">edge_node</span> <span class="o">==</span> <span class="n">curr_edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-                        <span class="n">clusters</span><span class="p">[</span><span class="n">edge_node</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_edge</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-                <span class="k">elif</span> <span class="n">edge_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodelist_pipe</span><span class="p">:</span>
-                    <span class="n">angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_angle</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge_node</span><span class="p">][</span><span class="s2">&quot;position&quot;</span><span class="p">],</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">other_node</span><span class="p">][</span><span class="s2">&quot;position&quot;</span><span class="p">],</span>
-                        <span class="n">output</span><span class="o">=</span><span class="s2">&quot;degrees&quot;</span><span class="p">,</span>
-                    <span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;edge node </span><span class="si">{</span><span class="n">edge_node</span><span class="si">}</span><span class="s2"> other node </span><span class="si">{</span><span class="n">other_node</span><span class="si">}</span><span class="s2"> with Rotation </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge_node</span><span class="p">][</span><span class="s1">&#39;rotation&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> Angle: </span><span class="si">{</span><span class="n">angle</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge_node</span><span class="p">][</span><span class="s2">&quot;rotation&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">angle</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">90</span><span class="p">:</span>
-                        <span class="n">con</span> <span class="o">=</span> <span class="s2">&quot;pipe&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge_node</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.port_b&quot;</span>
-                        <span class="n">con_R</span> <span class="o">=</span> <span class="p">(</span>
-                            <span class="s2">&quot;pipe&quot;</span>
-                            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge_node</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
-                            <span class="o">+</span> <span class="s2">&quot;R.&quot;</span>
-                            <span class="o">+</span> <span class="s2">&quot;port_b&quot;</span>
-                        <span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">con</span> <span class="o">=</span> <span class="s2">&quot;pipe&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge_node</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.port_a&quot;</span>
-                        <span class="n">con_R</span> <span class="o">=</span> <span class="p">(</span>
-                            <span class="s2">&quot;pipe&quot;</span>
-                            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge_node</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
-                            <span class="o">+</span> <span class="s2">&quot;R.&quot;</span>
-                            <span class="o">+</span> <span class="s2">&quot;port_a&quot;</span>
-                        <span class="p">)</span>
-                <span class="k">if</span> <span class="n">edge_node</span> <span class="o">==</span> <span class="n">curr_edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">curr_edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">curr_edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;con1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">con</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">curr_edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">curr_edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;con1R&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">con_R</span>
-                <span class="k">elif</span> <span class="n">edge_node</span> <span class="o">==</span> <span class="n">curr_edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">curr_edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">curr_edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;con2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">con</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">curr_edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">curr_edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;con2R&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">con_R</span>
-   
-        <span class="k">if</span> <span class="n">remove_network_nodes</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">network_node</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span>
-                <span class="c1"># Find port information of all nodes connected to network_node</span>
-                <span class="c1"># and assign to &#39;fwd&#39; and &#39;rtn&#39; in ports dict</span>
-                <span class="n">ports</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="k">for</span> <span class="n">curr_node</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">[</span><span class="n">network_node</span><span class="p">]:</span>
-                    <span class="n">ports</span><span class="p">[</span><span class="n">curr_node</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">network_node</span><span class="p">,</span> <span class="n">curr_node</span><span class="p">][</span><span class="s2">&quot;con1&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">network_node</span><span class="p">:</span>
-                        <span class="n">ports</span><span class="p">[</span><span class="n">curr_node</span><span class="p">][</span><span class="s2">&quot;fwd&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">network_node</span><span class="p">,</span> <span class="n">curr_node</span><span class="p">][</span>
-                            <span class="s2">&quot;con1&quot;</span>
-                        <span class="p">]</span>
-                        <span class="n">ports</span><span class="p">[</span><span class="n">curr_node</span><span class="p">][</span><span class="s2">&quot;rtn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">network_node</span><span class="p">,</span> <span class="n">curr_node</span><span class="p">][</span>
-                            <span class="s2">&quot;con1R&quot;</span>
-                        <span class="p">]</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">ports</span><span class="p">[</span><span class="n">curr_node</span><span class="p">][</span><span class="s2">&quot;fwd&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">network_node</span><span class="p">,</span> <span class="n">curr_node</span><span class="p">][</span>
-                            <span class="s2">&quot;con2&quot;</span>
-                        <span class="p">]</span>
-                        <span class="n">ports</span><span class="p">[</span><span class="n">curr_node</span><span class="p">][</span><span class="s2">&quot;rtn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">network_node</span><span class="p">,</span> <span class="n">curr_node</span><span class="p">][</span>
-                            <span class="s2">&quot;con2R&quot;</span>
-                        <span class="p">]</span>
+<span class="sd">                if edge_node in self.nodelist_building:</span>
+<span class="sd">                    if self.nodes[edge_node][flag_supply] is False:</span>
+<span class="sd">                        con = &quot;demand&quot; + str(self.nodes[edge_node][&quot;name&quot;]) + &quot;.port_a&quot;</span>
+<span class="sd">                        con_R = (</span>
+<span class="sd">                            &quot;demand&quot; + str(self.nodes[edge_node][&quot;name&quot;]) + &quot;.port_b&quot;</span>
+<span class="sd">                        )</span>
+<span class="sd">                    else:</span>
+<span class="sd">                        con = &quot;supply&quot; + str(self.nodes[edge_node][&quot;name&quot;]) + &quot;.port_b&quot;</span>
+<span class="sd">                        con_R = (</span>
+<span class="sd">                            &quot;supply&quot; + str(self.nodes[edge_node][&quot;name&quot;]) + &quot;.port_a&quot;</span>
+<span class="sd">                        )</span>
+<span class="sd">                elif edge_node in nodelist:</span>
+<span class="sd">                    con = edge_node</span>
+<span class="sd">                    con_R = edge_node</span>
+<span class="sd">                    if edge_node == curr_edge[0]:</span>
+<span class="sd">                        clusters[edge_node].append(curr_edge[1])</span>
+<span class="sd">                    elif edge_node == curr_edge[1]:</span>
+<span class="sd">                        clusters[edge_node].append(curr_edge[0])</span>
+<span class="sd">                elif edge_node in self.nodelist_pipe:</span>
+<span class="sd">                    angle = self.calc_angle(</span>
+<span class="sd">                        self.nodes[edge_node][&quot;position&quot;],</span>
+<span class="sd">                        self.nodes[other_node][&quot;position&quot;],</span>
+<span class="sd">                        output=&quot;degrees&quot;,</span>
+<span class="sd">                    )</span>
+<span class="sd">                    self.logger.debug(f&quot;edge node {edge_node} other node {other_node} with Rotation {self.nodes[edge_node][&#39;rotation&#39;]} Angle: {angle}&quot;)</span>
+<span class="sd">                    if abs(self.nodes[edge_node][&quot;rotation&quot;] - angle) &lt; 90:</span>
+<span class="sd">                        con = &quot;pipe&quot; + str(self.nodes[edge_node][&quot;name&quot;]) + &quot;.port_b&quot;</span>
+<span class="sd">                        con_R = (</span>
+<span class="sd">                            &quot;pipe&quot;</span>
+<span class="sd">                            + str(self.nodes[edge_node][&quot;name&quot;])</span>
+<span class="sd">                            + &quot;R.&quot;</span>
+<span class="sd">                            + &quot;port_b&quot;</span>
+<span class="sd">                        )</span>
+<span class="sd">                    else:</span>
+<span class="sd">                        con = &quot;pipe&quot; + str(self.nodes[edge_node][&quot;name&quot;]) + &quot;.port_a&quot;</span>
+<span class="sd">                        con_R = (</span>
+<span class="sd">                            &quot;pipe&quot;</span>
+<span class="sd">                            + str(self.nodes[edge_node][&quot;name&quot;])</span>
+<span class="sd">                            + &quot;R.&quot;</span>
+<span class="sd">                            + &quot;port_a&quot;</span>
+<span class="sd">                        )</span>
+<span class="sd">                if edge_node == curr_edge[0]:</span>
+<span class="sd">                    self.edges[curr_edge[0], curr_edge[1]][&quot;con1&quot;] = con</span>
+<span class="sd">                    self.edges[curr_edge[0], curr_edge[1]][&quot;con1R&quot;] = con_R</span>
+<span class="sd">                elif edge_node == curr_edge[1]:</span>
+<span class="sd">                    self.edges[curr_edge[0], curr_edge[1]][&quot;con2&quot;] = con</span>
+<span class="sd">                    self.edges[curr_edge[0], curr_edge[1]][&quot;con2R&quot;] = con_R</span>
+<span class="sd">   </span>
+<span class="sd">        if remove_network_nodes is True:</span>
+<span class="sd">            for network_node in clusters:</span>
+<span class="sd">                # Find port information of all nodes connected to network_node</span>
+<span class="sd">                # and assign to &#39;fwd&#39; and &#39;rtn&#39; in ports dict</span>
+<span class="sd">                ports = {}</span>
+<span class="sd">                for curr_node in clusters[network_node]:</span>
+<span class="sd">                    ports[curr_node] = {}</span>
+<span class="sd">                    if self.edges[network_node, curr_node][&quot;con1&quot;] != network_node:</span>
+<span class="sd">                        ports[curr_node][&quot;fwd&quot;] = self.edges[network_node, curr_node][</span>
+<span class="sd">                            &quot;con1&quot;</span>
+<span class="sd">                        ]</span>
+<span class="sd">                        ports[curr_node][&quot;rtn&quot;] = self.edges[network_node, curr_node][</span>
+<span class="sd">                            &quot;con1R&quot;</span>
+<span class="sd">                        ]</span>
+<span class="sd">                    else:</span>
+<span class="sd">                        ports[curr_node][&quot;fwd&quot;] = self.edges[network_node, curr_node][</span>
+<span class="sd">                            &quot;con2&quot;</span>
+<span class="sd">                        ]</span>
+<span class="sd">                        ports[curr_node][&quot;rtn&quot;] = self.edges[network_node, curr_node][</span>
+<span class="sd">                            &quot;con2R&quot;</span>
+<span class="sd">                        ]</span>
 
-                <span class="c1"># Replace connections via network nodes with direct connections</span>
-                <span class="c1"># between model nodes</span>
-                <span class="n">first_node</span> <span class="o">=</span> <span class="n">clusters</span><span class="p">[</span><span class="n">network_node</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="n">first_node</span><span class="p">,</span> <span class="n">network_node</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">curr_node</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">[</span><span class="n">network_node</span><span class="p">][</span><span class="mi">1</span><span class="p">:]:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span>
-                        <span class="n">first_node</span><span class="p">,</span>
-                        <span class="n">curr_node</span><span class="p">,</span>
-                        <span class="n">con1</span><span class="o">=</span><span class="n">ports</span><span class="p">[</span><span class="n">first_node</span><span class="p">][</span><span class="s2">&quot;fwd&quot;</span><span class="p">],</span>
-                        <span class="n">con2</span><span class="o">=</span><span class="n">ports</span><span class="p">[</span><span class="n">curr_node</span><span class="p">][</span><span class="s2">&quot;fwd&quot;</span><span class="p">],</span>
-                        <span class="n">con1R</span><span class="o">=</span><span class="n">ports</span><span class="p">[</span><span class="n">first_node</span><span class="p">][</span><span class="s2">&quot;rtn&quot;</span><span class="p">],</span>
-                        <span class="n">con2R</span><span class="o">=</span><span class="n">ports</span><span class="p">[</span><span class="n">curr_node</span><span class="p">][</span><span class="s2">&quot;rtn&quot;</span><span class="p">],</span>
-                    <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">remove_network_node</span><span class="p">(</span><span class="n">network_node</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">network_node</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span>
-                <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">network_node</span><span class="p">]:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">network_node</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">network_node</span><span class="p">)</span>
+<span class="sd">                # Replace connections via network nodes with direct connections</span>
+<span class="sd">                # between model nodes</span>
+<span class="sd">                first_node = clusters[network_node][0]</span>
+<span class="sd">                self.remove_edge(first_node, network_node)</span>
+<span class="sd">                for curr_node in clusters[network_node][1:]:</span>
+<span class="sd">                    self.add_edge(</span>
+<span class="sd">                        first_node,</span>
+<span class="sd">                        curr_node,</span>
+<span class="sd">                        con1=ports[first_node][&quot;fwd&quot;],</span>
+<span class="sd">                        con2=ports[curr_node][&quot;fwd&quot;],</span>
+<span class="sd">                        con1R=ports[first_node][&quot;rtn&quot;],</span>
+<span class="sd">                        con2R=ports[curr_node][&quot;rtn&quot;],</span>
+<span class="sd">                    )</span>
+<span class="sd">                self.remove_network_node(network_node)</span>
+<span class="sd">        else:</span>
+<span class="sd">            for network_node in clusters:</span>
+<span class="sd">                if &quot;name&quot; not in self.nodes[network_node]:</span>
+<span class="sd">                    self.nodes[network_node][&quot;name&quot;] = str(network_node)</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">network_node</span><span class="p">][</span><span class="s2">&quot;degree&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">network_node</span><span class="p">)</span>
+<span class="sd">                self.nodes[network_node][&quot;degree&quot;] = self.degree(network_node)</span>
 
-                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">network_node</span><span class="p">)):</span>
-                    <span class="n">curr_port</span> <span class="o">=</span> <span class="s2">&quot;junction</span><span class="si">{}</span><span class="s2">.ports[</span><span class="si">{}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">network_node</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">i</span>
-                    <span class="p">)</span>
-                    <span class="n">curr_port_R</span> <span class="o">=</span> <span class="s2">&quot;junction</span><span class="si">{}</span><span class="s2">R.ports[</span><span class="si">{}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">network_node</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">i</span>
-                    <span class="p">)</span>
-                    <span class="k">for</span> <span class="n">con</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">neighbor</span><span class="p">,</span> <span class="n">network_node</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                        <span class="n">con_element</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">neighbor</span><span class="p">,</span> <span class="n">network_node</span><span class="p">][</span><span class="n">con</span><span class="p">]</span>
-                        <span class="k">if</span> <span class="n">con_element</span> <span class="o">==</span> <span class="n">network_node</span><span class="p">:</span>
-                            <span class="k">if</span> <span class="s2">&quot;R&quot;</span> <span class="ow">in</span> <span class="n">con</span><span class="p">:</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">neighbor</span><span class="p">,</span> <span class="n">network_node</span><span class="p">][</span><span class="n">con</span><span class="p">]</span> <span class="o">=</span> <span class="n">curr_port_R</span>
-                            <span class="k">else</span><span class="p">:</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">neighbor</span><span class="p">,</span> <span class="n">network_node</span><span class="p">][</span><span class="n">con</span><span class="p">]</span> <span class="o">=</span> <span class="n">curr_port</span>
+<span class="sd">                for i, neighbor in enumerate(self.neighbors(network_node)):</span>
+<span class="sd">                    curr_port = &quot;junction{}.ports[{}]&quot;.format(</span>
+<span class="sd">                        self.nodes[network_node][&quot;name&quot;], i</span>
+<span class="sd">                    )</span>
+<span class="sd">                    curr_port_R = &quot;junction{}R.ports[{}]&quot;.format(</span>
+<span class="sd">                        self.nodes[network_node][&quot;name&quot;], i</span>
+<span class="sd">                    )</span>
+<span class="sd">                    for con in self.edges[neighbor, network_node].keys():</span>
+<span class="sd">                        con_element = self.edges[neighbor, network_node][con]</span>
+<span class="sd">                        if con_element == network_node:</span>
+<span class="sd">                            if &quot;R&quot; in con:</span>
+<span class="sd">                                self.edges[neighbor, network_node][con] = curr_port_R</span>
+<span class="sd">                            else:</span>
+<span class="sd">                                self.edges[neighbor, network_node][con] = curr_port</span>
 
-        <span class="c1"># If the IBPSA pipe approach is used (always, currently), overwrite the connect statements</span>
-        <span class="c1"># to use the asymmetrical pipe setup</span>
-        <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">occurrences_port</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">pipe</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodelist_pipe</span><span class="p">:</span>
-                <span class="n">occurrences_port</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">pipe</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="c1"># Supply network</span>
-            <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
-                <span class="n">con1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;con1&quot;</span><span class="p">]</span>
-                <span class="n">con2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;con2&quot;</span><span class="p">]</span>
-                <span class="k">if</span> <span class="s2">&quot;pipe&quot;</span> <span class="ow">in</span> <span class="n">con1</span><span class="p">:</span>
-                    <span class="n">name_pipe</span> <span class="o">=</span> <span class="n">con1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">:]</span>
-                    <span class="k">if</span> <span class="s2">&quot;port_b&quot;</span> <span class="ow">in</span> <span class="n">con1</span><span class="p">:</span>
-                        <span class="n">occurrences_port</span><span class="p">[</span><span class="n">name_pipe</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-                        <span class="n">con1_new</span> <span class="o">=</span> <span class="s2">&quot;pipe</span><span class="si">{}</span><span class="s2">.port_b&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="n">name_pipe</span>
-                        <span class="p">)</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;con1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">con1_new</span>
-                <span class="k">if</span> <span class="s2">&quot;pipe&quot;</span> <span class="ow">in</span> <span class="n">con2</span><span class="p">:</span>
-                    <span class="n">name_pipe</span> <span class="o">=</span> <span class="n">con2</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">:]</span>
-                    <span class="k">if</span> <span class="s2">&quot;port_b&quot;</span> <span class="ow">in</span> <span class="n">con2</span><span class="p">:</span>
-                        <span class="n">occurrences_port</span><span class="p">[</span><span class="n">name_pipe</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-                        <span class="n">con2_new</span> <span class="o">=</span> <span class="s2">&quot;pipe</span><span class="si">{}</span><span class="s2">.port_b&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="n">name_pipe</span>
-                        <span class="p">)</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;con2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">con2_new</span>
+<span class="sd">        # If the IBPSA pipe approach is used (always, currently), overwrite the connect statements</span>
+<span class="sd">        # to use the asymmetrical pipe setup</span>
+<span class="sd">        if True:</span>
+<span class="sd">            occurrences_port = {}</span>
+<span class="sd">            for pipe in self.nodelist_pipe:</span>
+<span class="sd">                occurrences_port[self.nodes[pipe][&quot;name&quot;]] = 0</span>
+<span class="sd">            # Supply network</span>
+<span class="sd">            for edge in self.edges():</span>
+<span class="sd">                con1 = self.edges[edge[0], edge[1]][&quot;con1&quot;]</span>
+<span class="sd">                con2 = self.edges[edge[0], edge[1]][&quot;con2&quot;]</span>
+<span class="sd">                if &quot;pipe&quot; in con1:</span>
+<span class="sd">                    name_pipe = con1.split(&quot;.&quot;)[0][4:]</span>
+<span class="sd">                    if &quot;port_b&quot; in con1:</span>
+<span class="sd">                        occurrences_port[name_pipe] += 1</span>
+<span class="sd">                        con1_new = &quot;pipe{}.port_b&quot;.format(</span>
+<span class="sd">                            name_pipe</span>
+<span class="sd">                        )</span>
+<span class="sd">                        self.edges[edge[0], edge[1]][&quot;con1&quot;] = con1_new</span>
+<span class="sd">                if &quot;pipe&quot; in con2:</span>
+<span class="sd">                    name_pipe = con2.split(&quot;.&quot;)[0][4:]</span>
+<span class="sd">                    if &quot;port_b&quot; in con2:</span>
+<span class="sd">                        occurrences_port[name_pipe] += 1</span>
+<span class="sd">                        con2_new = &quot;pipe{}.port_b&quot;.format(</span>
+<span class="sd">                            name_pipe</span>
+<span class="sd">                        )</span>
+<span class="sd">                        self.edges[edge[0], edge[1]][&quot;con2&quot;] = con2_new</span>
 
-            <span class="c1"># Pipes</span>
-            <span class="c1">#for pipe in self.nodelist_pipe:</span>
-            <span class="c1">#    self.nodes[pipe][&quot;nPorts&quot;] = max(</span>
-            <span class="c1">#        1, occurrences_port[self.nodes[pipe][&quot;name&quot;]]</span>
-            <span class="c1">#    )</span>
+<span class="sd">            # Pipes</span>
+<span class="sd">            #for pipe in self.nodelist_pipe:</span>
+<span class="sd">            #    self.nodes[pipe][&quot;nPorts&quot;] = max(</span>
+<span class="sd">            #        1, occurrences_port[self.nodes[pipe][&quot;name&quot;]]</span>
+<span class="sd">            #    )</span>
 
-            <span class="c1"># Return network</span>
-            <span class="n">occurrences_port</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">pipe</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodelist_pipe</span><span class="p">:</span>
-                <span class="n">occurrences_port</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">pipe</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
-                <span class="n">con1R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;con1R&quot;</span><span class="p">]</span>
-                <span class="n">con2R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;con2R&quot;</span><span class="p">]</span>
-                <span class="k">if</span> <span class="s2">&quot;pipe&quot;</span> <span class="ow">in</span> <span class="n">con1R</span><span class="p">:</span>
-                    <span class="n">name_pipe</span> <span class="o">=</span> <span class="n">con1R</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mi">4</span><span class="p">:]</span>
-                    <span class="k">if</span> <span class="s2">&quot;port_b&quot;</span> <span class="ow">in</span> <span class="n">con1R</span><span class="p">:</span>
-                        <span class="n">occurrences_port</span><span class="p">[</span><span class="n">name_pipe</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-                        <span class="n">con1R_new</span> <span class="o">=</span> <span class="s2">&quot;pipe</span><span class="si">{}</span><span class="s2">R.port_b&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="n">name_pipe</span>
-                        <span class="p">)</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;con1R&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">con1R_new</span>
-                <span class="k">if</span> <span class="s2">&quot;pipe&quot;</span> <span class="ow">in</span> <span class="n">con2R</span><span class="p">:</span>
-                    <span class="n">name_pipe</span> <span class="o">=</span> <span class="n">con2R</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mi">4</span><span class="p">:]</span>
-                    <span class="k">if</span> <span class="s2">&quot;port_b&quot;</span> <span class="ow">in</span> <span class="n">con2R</span><span class="p">:</span>
-                        <span class="n">occurrences_port</span><span class="p">[</span><span class="n">name_pipe</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-                        <span class="n">con2R_new</span> <span class="o">=</span> <span class="s2">&quot;pipe</span><span class="si">{}</span><span class="s2">R.port_b&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="n">name_pipe</span>
-                        <span class="p">)</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s2">&quot;con2R&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">con2R_new</span>
+<span class="sd">            # Return network</span>
+<span class="sd">            occurrences_port = {}</span>
+<span class="sd">            for pipe in self.nodelist_pipe:</span>
+<span class="sd">                occurrences_port[self.nodes[pipe][&quot;name&quot;]] = 0</span>
+<span class="sd">            for edge in self.edges():</span>
+<span class="sd">                con1R = self.edges[edge[0], edge[1]][&quot;con1R&quot;]</span>
+<span class="sd">                con2R = self.edges[edge[0], edge[1]][&quot;con2R&quot;]</span>
+<span class="sd">                if &quot;pipe&quot; in con1R:</span>
+<span class="sd">                    name_pipe = con1R.split(&quot;.&quot;)[0].replace(&quot;R&quot;, &quot;&quot;)[4:]</span>
+<span class="sd">                    if &quot;port_b&quot; in con1R:</span>
+<span class="sd">                        occurrences_port[name_pipe] += 1</span>
+<span class="sd">                        con1R_new = &quot;pipe{}R.port_b&quot;.format(</span>
+<span class="sd">                            name_pipe</span>
+<span class="sd">                        )</span>
+<span class="sd">                        self.edges[edge[0], edge[1]][&quot;con1R&quot;] = con1R_new</span>
+<span class="sd">                if &quot;pipe&quot; in con2R:</span>
+<span class="sd">                    name_pipe = con2R.split(&quot;.&quot;)[0].replace(&quot;R&quot;, &quot;&quot;)[4:]</span>
+<span class="sd">                    if &quot;port_b&quot; in con2R:</span>
+<span class="sd">                        occurrences_port[name_pipe] += 1</span>
+<span class="sd">                        con2R_new = &quot;pipe{}R.port_b&quot;.format(</span>
+<span class="sd">                            name_pipe</span>
+<span class="sd">                        )</span>
+<span class="sd">                        self.edges[edge[0], edge[1]][&quot;con2R&quot;] = con2R_new</span>
+<span class="sd">    &#39;&#39;&#39;</span>
 
 <div class="viewcode-block" id="SystemModelHeating.set_connection"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels.html#uesgraphs.systemmodels.systemmodelheating.SystemModelHeating.set_connection">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remove_network_nodes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets connections between supplies, pipes and buildings</span>

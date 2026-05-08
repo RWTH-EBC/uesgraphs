@@ -66,13 +66,15 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demand_estimation.html">Heat and DHW Demand Estimation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../architecture/teaser_opendhw_integration.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/teaser_opendhw_integration.html">Workflow integration of TEASER and OpenDHW</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_dynamic.html">Dynamic Simulation with pandapipes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
@@ -178,7 +180,7 @@
 </li>
 <li><p><strong>Excel Configuration</strong> (<code class="docutils literal notranslate"><span class="pre">uesgraphs_parameters_template_pp.xlsx</span></code>)</p>
 <ul class="simple">
-<li><p>Simulation settings (solver, duration, timestep)</p></li>
+<li><p>Simulation settings (mode, duration, timestep)</p></li>
 <li><p>Component parameters (pipes, supply, demand)</p></li>
 </ul>
 </li>
@@ -218,15 +220,11 @@ workspace/models/Sim20250121_143022_MyProject/
 └── uesgraphs.json            # UESGraph with suppy_side results
 </pre></div>
 </div>
-<ul>
+<ul class="simple">
 <li><p>uesgraphs_return.json and uesgraphs.json contain the district as a graph with all nodes and edges with their attributes.
 Therefore the nodes should have pressure, temperature. The edges should have m_flow, dp, T_in, T_out and Q_loss, which
 are mass flow, pressure drop, intet and outlet temperature and heat loss of the pipe, respectively. The uesgraphs.json
-for the supply side and the uesgraphs_return.json for the return side.</p>
-<blockquote>
-<div><p>└── uesgraphs.json            # UESGraph with results</p>
-</div></blockquote>
-</li>
+for the supply side and the uesgraphs_return.json for the return side.</p></li>
 </ul>
 </section>
 <section id="excel-configuration">

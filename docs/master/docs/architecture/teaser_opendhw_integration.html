@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UESGraphs pandapipes simulation Pipeline &mdash; uesgraphs v2.2.0</title>
+  <title>Workflow integration of TEASER and OpenDHW &mdash; uesgraphs v2.2.0</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -19,7 +19,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Core Modules" href="../api_core_modules.html" />
+    <link rel="next" title="Dynamic Simulation with pandapipes" href="pandapipes_dynamic.html" />
     <link rel="prev" title="UESGraphs pandapipes simulation Pipeline" href="pandapipes_pipeline.html" /> 
 </head>
 
@@ -49,13 +49,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/demand_estimation.html">Heat and DHW Demand Estimation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="graph_transformation.html">Graph Transformation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">UESGraphs pandapipes simulation Pipeline</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Workflow integration of TEASER and OpenDHW</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#architecture-documentation">Architecture Documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a><ul>
@@ -70,10 +71,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#core-entry-points">Core Entry Points</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#teaser-usage">TEASER usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#opendhw-profiles-generation">OpenDHW profiles generation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#file-folder-structure">File &amp; Folder Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#file-and-folder-structure">File and Folder Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#extension-guide">Extension Guide</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="pandapipes_dynamic.html">Dynamic Simulation with pandapipes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
@@ -99,7 +101,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">UESGraphs pandapipes simulation Pipeline</li>
+      <li class="breadcrumb-item active">Workflow integration of TEASER and OpenDHW</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/architecture/teaser_opendhw_integration.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -109,8 +111,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="uesgraphs-pandapipes-simulation-pipeline">
-<h1>UESGraphs pandapipes simulation Pipeline<a class="headerlink" href="#uesgraphs-pandapipes-simulation-pipeline" title="Permalink to this heading"></a></h1>
+  <section id="workflow-integration-of-teaser-and-opendhw">
+<h1>Workflow integration of TEASER and OpenDHW<a class="headerlink" href="#workflow-integration-of-teaser-and-opendhw" title="Permalink to this heading"></a></h1>
 <section id="architecture-documentation">
 <h2>Architecture Documentation<a class="headerlink" href="#architecture-documentation" title="Permalink to this heading"></a></h2>
 <p><strong>Version:</strong> 2.2.0 <strong>Last Updated:</strong> April 2026</p>
@@ -121,12 +123,10 @@
 <ol class="arabic simple">
 <li><p><a class="reference external" href="#overview">Overview</a></p></li>
 <li><p><a class="reference external" href="#pipeline-architecture">Pipeline Architecture</a></p></li>
-<li><p><a class="reference external" href="#core-entry-point">Core Entry Point</a></p></li>
-<li><p><a class="reference external" href="#parameter-assignment-flow">Parameter Assignment Flow</a></p></li>
-<li><p><a class="reference external" href="#demand--time-series-handling">Demand &amp; Time-Series Handling</a></p></li>
-<li><p><a class="reference external" href="#pandapipes-model-generation">pandapipes Model Generation</a></p></li>
-<li><p><a class="reference external" href="#file--folder-structure">File &amp; Folder Structure</a></p></li>
-<li><p><a class="reference external" href="#validation--error-handling">Validation &amp; Error Handling</a></p></li>
+<li><p><a class="reference external" href="#core-entry-points">Core Entry Points</a></p></li>
+<li><p><a class="reference external" href="#teaser-usage">TEASER Usage</a></p></li>
+<li><p><a class="reference external" href="#opendhw-profiles-generation">OpenDHW Profiles Generation</a></p></li>
+<li><p><a class="reference external" href="#file-and-folder-structure">File and Folder Structure</a></p></li>
 <li><p><a class="reference external" href="#extension-guide">Extension Guide</a></p></li>
 </ol>
 </section>
@@ -142,8 +142,6 @@ demands necessary for the simulation.</p>
 stored on in buildings_geojson before estimation.</p></li>
 <li><p><strong>Excel-based Configuration</strong>: Uniform parameters (simulation setup)
 are read from Excel sheets.</p></li>
-</ol>
-<ol class="arabic simple" start="4">
 <li><p><strong>Traceability</strong>: Every major processing step persists
 intermediate states of data.</p></li>
 </ol>
@@ -206,19 +204,13 @@ demands-dhw.csv
 <p>### <cite>run_sim_teaser(…)</cite></p>
 <p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">teaser_integration/utilities.py</span></code>
 <strong>Responsibility</strong>: End-to-end orchestration of TEASER integration
-<strong>Inputs</strong>: GeoJSON, either Excel config or timestep and stoptime,</p>
-<blockquote>
-<div><p>weather data</p>
-</div></blockquote>
-<p><strong>Outputs</strong>: Heat and cool demand files as CSV</p>
+<strong>Inputs</strong>: GeoJSON, either Excel config or timestep and stoptime, weather data
+<strong>Outputs</strong>: Heat and cool demand files as CSV</p>
 <p>### <cite>generate_DHW_profiles_from_geojson(…)</cite></p>
 <p><strong>Location</strong>: <code class="docutils literal notranslate"><span class="pre">DHW_estimation/utilities.py</span></code>
 <strong>Responsibility</strong>: End-to-end orchestration of OpenDHW integration
-<strong>Inputs</strong>: GeoJSON, either Excel config or timestep, mean draw-off and</p>
-<blockquote>
-<div><p>temperature difference for DHW</p>
-</div></blockquote>
-<p><strong>Outputs</strong>: DHW demand file as CSV</p>
+<strong>Inputs</strong>: GeoJSON, either Excel config or timestep, mean draw-off and temperature difference for DHW
+<strong>Outputs</strong>: DHW demand file as CSV</p>
 </section>
 <section id="teaser-usage">
 <h2>TEASER usage<a class="headerlink" href="#teaser-usage" title="Permalink to this heading"></a></h2>
@@ -250,16 +242,15 @@ with building_type=”OB”, the archetype “MultiFamilyHouse” is set with bu
 with building_type=”SFH”. The other properties are set directly. Other archetypes are not allowed in this implementation.</p></li>
 <li><p>The resulting DataFrame of the profiles is saved in a csv file.</p></li>
 </ol>
-<dl>
+<dl class="simple">
 <dt>Important notes:</dt><dd><ul class="simple">
-<li><p>Since only timestep, it is not possible to change the start_time nor stop_time, so always start at 0 and stoptime is</p></li>
+<li><p>Since only timestep, it is not possible to change the start_time nor stop_time, so always start at 0 and stoptime is always set to one year because of OpenDHW’s internal architecture.</p></li>
 </ul>
-<p>always set to one year because of OpenDHW’s internal architecture.</p>
 </dd>
 </dl>
 </section>
-<section id="file-folder-structure">
-<h2>File &amp; Folder Structure<a class="headerlink" href="#file-folder-structure" title="Permalink to this heading"></a></h2>
+<section id="file-and-folder-structure">
+<h2>File and Folder Structure<a class="headerlink" href="#file-and-folder-structure" title="Permalink to this heading"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>workspace/
   └── demand_csv/
       ├── demands-cool.csv (from TEASER)
@@ -285,7 +276,7 @@ with building_type=”SFH”. The other properties are set directly. Other arche
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="pandapipes_pipeline.html" class="btn btn-neutral float-left" title="UESGraphs pandapipes simulation Pipeline" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../api_core_modules.html" class="btn btn-neutral float-right" title="Core Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pandapipes_dynamic.html" class="btn btn-neutral float-right" title="Dynamic Simulation with pandapipes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

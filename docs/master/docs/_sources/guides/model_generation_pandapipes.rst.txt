@@ -1,5 +1,5 @@
 Model Generation Pandapipes
-=========================
+============================
 
 Generate pandapipes simulation models from UESGraph district heating networks using Excel-based configuration.
 
@@ -73,7 +73,7 @@ What You Need
 
 2. **Excel Configuration** (``uesgraphs_parameters_template_pp.xlsx``)
 
-   - Simulation settings (solver, duration, timestep)
+   - Simulation settings (mode, duration, timestep)
    - Component parameters (pipes, supply, demand)
 
 3. **Demand Data** (CSV files)
@@ -114,7 +114,6 @@ Generated pandapipes results in timestamped directory:
   Therefore the nodes should have pressure, temperature. The edges should have m_flow, dp, T_in, T_out and Q_loss, which 
   are mass flow, pressure drop, intet and outlet temperature and heat loss of the pipe, respectively. The uesgraphs.json
   for the supply side and the uesgraphs_return.json for the return side.
-   └── uesgraphs.json            # UESGraph with results
 
 Excel Configuration
 -------------------
