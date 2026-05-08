@@ -34,5 +34,3 @@ Jupyter Notebook Examples
 **e14_hydronic_sizing_example.ipynb**
    Demand-based mass flow estimation and automated pipe sizing using manufacturer catalogs.
 
-**interactive_plotting_example.ipynb**
-   Advanced interactive plotting demonstrations.

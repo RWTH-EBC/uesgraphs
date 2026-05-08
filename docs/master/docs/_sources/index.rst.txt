@@ -66,11 +66,6 @@ Follow these steps to install **UESgraphs** using Conda:
 
         pip install uesgraphs[templates]
 
-   * **For pandapipes simulations**:
-
-       .. code-block:: bash
-   
-         pip install uesgraphs[pandapipes]
 
    * **For development (includes testing and coverage tools)**:
 
@@ -78,23 +73,6 @@ Follow these steps to install **UESgraphs** using Conda:
 
         pip install uesgraphs[dev]
    
-   * **For pandapipes simulations**:
-
-     .. code-block:: bash
-
-        pip install uesgraphs[pandapipes]
-
-   * **For TEASER integration**:
-
-     .. code-block:: bash
-
-        pip install uesgraphs[TEASER]
-
-   * **For OpenDHW integration usage**:
-
-     .. code-block:: bash
-
-        pip install uesgraphs[DHW]
 
    * **Complete installation with all dependencies**:
 
@@ -135,24 +113,6 @@ Follow these steps to install **UESgraphs** using Conda:
 
         pip install -e <path/to/your/uesgraphs>[templates]
 
-
-   * **For pandapipes simulations**:
-
-     .. code-block:: bash
-
-        pip install -e <path/to/your/uesgraphs>[pandapipes]
-
-   * **For TEASER integration**:
-
-     .. code-block:: bash
-
-        pip install -e <path/to/your/uesgraphs>[TEASER]
-
-   * **For OpenDHW integration usage**:
-
-     .. code-block:: bash
-
-        pip install -e <path/to/your/uesgraphs>[DHW]
 
    * **For development (includes testing and coverage tools)**:
 
