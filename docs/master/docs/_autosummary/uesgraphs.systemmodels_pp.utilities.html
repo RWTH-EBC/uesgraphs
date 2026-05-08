@@ -1,0 +1,512 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.systemmodels_pp.utilities &mdash; uesgraphs v2.2.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Examples" href="../api_examples.html" />
+    <link rel="prev" title="uesgraphs.systemmodels_pp.systemmodelheating" href="uesgraphs.systemmodels_pp.systemmodelheating.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/demand_estimation.html">Heat and DHW Demand Estimation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/teaser_opendhw_integration.html">Workflow integration of TEASER and OpenDHW</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_dynamic.html">Dynamic Simulation with pandapipes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_TEASER_int.html">TEASER Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.systemmodels_pp.systemmodelheating.html">uesgraphs.systemmodels_pp.systemmodelheating</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">uesgraphs.systemmodels_pp.utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels_pp.utilities.set_up_file_logger"><code class="docutils literal notranslate"><span class="pre">set_up_file_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels_pp.utilities.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels_pp.utilities.assign_csv_data_to_uesgraph"><code class="docutils literal notranslate"><span class="pre">assign_csv_data_to_uesgraph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels_pp.utilities.create_model"><code class="docutils literal notranslate"><span class="pre">create_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels_pp.utilities.uesgraph_to_pandapipes"><code class="docutils literal notranslate"><span class="pre">uesgraph_to_pandapipes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels_pp.utilities.load_simulation_settings_from_excel"><code class="docutils literal notranslate"><span class="pre">load_simulation_settings_from_excel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels_pp.utilities.load_component_parameters"><code class="docutils literal notranslate"><span class="pre">load_component_parameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels_pp.utilities.generate_simulation_model"><code class="docutils literal notranslate"><span class="pre">generate_simulation_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels_pp.utilities.assign_demand_data"><code class="docutils literal notranslate"><span class="pre">assign_demand_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels_pp.utilities.validate_paths"><code class="docutils literal notranslate"><span class="pre">validate_paths()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels_pp.utilities.load_ground_temp_data"><code class="docutils literal notranslate"><span class="pre">load_ground_temp_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.systemmodels_pp.utilities.save_setup_params_to_csv"><code class="docutils literal notranslate"><span class="pre">save_setup_params_to_csv()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api_system_models_pp.html">System Models pandapipes</a></li>
+      <li class="breadcrumb-item active">uesgraphs.systemmodels_pp.utilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/uesgraphs.systemmodels_pp.utilities.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-uesgraphs.systemmodels_pp.utilities">
+<span id="uesgraphs-systemmodels-pp-utilities"></span><h1>uesgraphs.systemmodels_pp.utilities<a class="headerlink" href="#module-uesgraphs.systemmodels_pp.utilities" title="Permalink to this heading"></a></h1>
+<p>This module collects the functions for creating a pandapipes model from a UESGraph and simulating it.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.assign_csv_data_to_uesgraph" title="uesgraphs.systemmodels_pp.utilities.assign_csv_data_to_uesgraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assign_csv_data_to_uesgraph</span></code></a>(uesgraph_input, ...)</p></td>
+<td><p>Reads CSV-pandapipes results (Junctions &amp; Pipes) and saves them as Pandas Series in UESGraph.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.assign_demand_data" title="uesgraphs.systemmodels_pp.utilities.assign_demand_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assign_demand_data</span></code></a>(uesgraph, input_paths_dict)</p></td>
+<td><p>Assigns energy demand data to buildings in a UES (Urban Energy Systems) graph.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.create_model" title="uesgraphs.systemmodels_pp.utilities.create_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_model</span></code></a>(name, save_at, graph, ...[, ...])</p></td>
+<td><p>Generic model generation for setup defined through the parameters</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.generate_simulation_model" title="uesgraphs.systemmodels_pp.utilities.generate_simulation_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_simulation_model</span></code></a>(uesgraph, ...[, ...])</p></td>
+<td><p>Generate pandapipes simulation model using Excel-based parameter system.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.load_component_parameters" title="uesgraphs.systemmodels_pp.utilities.load_component_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_component_parameters</span></code></a>(excel_path, ...)</p></td>
+<td><p>Load component parameters from an Excel file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.load_ground_temp_data" title="uesgraphs.systemmodels_pp.utilities.load_ground_temp_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_ground_temp_data</span></code></a>(ground_temp_path)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.load_simulation_settings_from_excel" title="uesgraphs.systemmodels_pp.utilities.load_simulation_settings_from_excel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_simulation_settings_from_excel</span></code></a>(excel_path)</p></td>
+<td><p>Load simulation settings from Excel 'Simulation' sheet.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.save_setup_params_to_csv" title="uesgraphs.systemmodels_pp.utilities.save_setup_params_to_csv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_setup_params_to_csv</span></code></a>(setup_params, ...)</p></td>
+<td><p>Save simulation setup parameters to a CSV file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.set_up_file_logger" title="uesgraphs.systemmodels_pp.utilities.set_up_file_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_file_logger</span></code></a>(name[, log_dir, level])</p></td>
+<td><p>Set up a full file+console logger for major functions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.set_up_logger" title="uesgraphs.systemmodels_pp.utilities.set_up_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_logger</span></code></a>(name[, log_dir, level])</p></td>
+<td><p>Set up a file-based logger with timestamp and detailed formatting.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.uesgraph_to_pandapipes" title="uesgraphs.systemmodels_pp.utilities.uesgraph_to_pandapipes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uesgraph_to_pandapipes</span></code></a>(uesgraph, ...[, ...])</p></td>
+<td><p>Convert an Urban Energy System Graph (UESGraph) to pandapipes model and simulate it.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.validate_paths" title="uesgraphs.systemmodels_pp.utilities.validate_paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_paths</span></code></a>(paths)</p></td>
+<td><p>Validate if the provided file and directory paths exist.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels_pp.utilities.set_up_file_logger">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels_pp.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_file_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><span class="pre">Logger</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/systemmodels_pp/utilities.html#set_up_file_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels_pp.utilities.set_up_file_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Set up a full file+console logger for major functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Logger name</p></li>
+<li><p><strong>log_dir</strong> – Directory for log files (default: temp directory)</p></li>
+<li><p><strong>level</strong> – Logging level (default: ERROR)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured file+console logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels_pp.utilities.set_up_logger">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels_pp.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels_pp/utilities.html#set_up_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels_pp.utilities.set_up_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Set up a file-based logger with timestamp and detailed formatting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Logger name, used for log file naming</p></li>
+<li><p><strong>log_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Directory for log files. If None, uses system temp directory</p></li>
+<li><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Logging level (default: INFO for detailed mass flow logging)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured logger instance writing to timestamped file</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)">logging.Logger</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels_pp.utilities.assign_csv_data_to_uesgraph">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels_pp.utilities.</span></span><span class="sig-name descname"><span class="pre">assign_csv_data_to_uesgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mappings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supply_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels_pp/utilities.html#assign_csv_data_to_uesgraph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels_pp.utilities.assign_csv_data_to_uesgraph" title="Permalink to this definition"></a></dt>
+<dd><p>Reads CSV-pandapipes results (Junctions &amp; Pipes)
+and saves them as Pandas Series in UESGraph.</p>
+<p>base_folder must have these folders:
+- res_junction/
+- res_pipe/</p>
+<p>Files and the names in the graph:
+res_junction/p_bar.csv       → pressure
+res_junction/t_k.csv         → temperature
+res_pipe/mdot_from_kg_per_s.csv → mflow
+res_pipe/v_mean_m_per_s.csv      → velocity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uesgraph_input</strong> (<em>uesgraphs.uesgraph.UESGraph object</em>) – UESGraph to assign the data to</p></li>
+<li><p><strong>base_folder</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Folder where the CSV results are stored</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger instance for debugging</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>UESGraph with assigned data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>uesgraphs.uesgraph.UESGraph object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels_pp.utilities.create_model">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels_pp.utilities.</span></span><span class="sig-name descname"><span class="pre">create_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_at</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_ground_prescribed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels_pp/utilities.html#create_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels_pp.utilities.create_model" title="Permalink to this definition"></a></dt>
+<dd><p>Generic model generation for setup defined through the parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the model (First character will be capitalized, cannot start with digit)</p></li>
+<li><p><strong>save_at</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Directory where to store the generated model results</p></li>
+<li><p><strong>graph</strong> (<a class="reference internal" href="../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><em>uesgraphs.uesgraph.UESGraph</em></a>) – Network graph with all necessary data for model generation</p></li>
+<li><p><strong>start_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Start time of the simulation in seconds</p></li>
+<li><p><strong>stop_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Stop time of the simulation in seconds</p></li>
+<li><p><strong>timestep</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Timestep of the simulation in seconds</p></li>
+<li><p><strong>t_ground_prescribed</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – List of ground temperatures for every time step</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger instance for debugging</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>new_model</strong> (<em>spp.SystemModelHeating</em>) – Generated system model</p></li>
+<li><p><strong>graph</strong> (<em>uesgraphs.uesgraph.UESGraph</em>) – Graph of the network with assigned simulation results</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels_pp.utilities.uesgraph_to_pandapipes">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels_pp.utilities.</span></span><span class="sig-name descname"><span class="pre">uesgraph_to_pandapipes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simplification_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_setup_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_heating</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_dhw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_cooling</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ground_temp_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels_pp/utilities.html#uesgraph_to_pandapipes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels_pp.utilities.uesgraph_to_pandapipes" title="Permalink to this definition"></a></dt>
+<dd><p>Convert an Urban Energy System Graph (UESGraph) to pandapipes model and simulate it.</p>
+<p>This function processes a UESGraph, applies simplification, adds demand data,
+and generates the pandapipes results based on simulation parameters.</p>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>uesgraph<span class="classifier">UESGraph object or str</span></dt><dd><p>The UESGraph object or path to a JSON file containing the UESGraph data</p>
+</dd>
+<dt>simplification_level<span class="classifier">int</span></dt><dd><p>Level of simplification to apply to the UESGraph (higher = more simplified)</p>
+</dd>
+<dt>workspace<span class="classifier">str or Path</span></dt><dd><p>Directory path where output files will be saved</p>
+</dd>
+<dt>sim_setup_path<span class="classifier">str or Path</span></dt><dd><p>Path to the simulation setup configuration file</p>
+</dd>
+<dt>input_heating<span class="classifier">str or Path</span></dt><dd><p>Path to heating demand data</p>
+</dd>
+<dt>input_dhw<span class="classifier">str or Path</span></dt><dd><p>Path to domestic hot water demand data</p>
+</dd>
+<dt>input_cooling<span class="classifier">str or Path</span></dt><dd><p>Path to cooling demand data</p>
+</dd>
+<dt>ground_temp_path<span class="classifier">str or Path</span></dt><dd><p>Path to ground temperature data file</p>
+</dd>
+<dt>logger<span class="classifier">logging.Logger, optional</span></dt><dd><p>Logger instance. If None, creates a new file logger in temp directory</p>
+</dd>
+<dt>log_level<span class="classifier">int, optional</span></dt><dd><p>Logging level (default is logging.DEBUG). Only used if logger is None</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns:<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p>—</p>
+</div></blockquote>
+</section>
+<section id="raises">
+<h2>Raises:<a class="headerlink" href="#raises" title="Permalink to this heading"></a></h2>
+<p>FileNotFoundError: If required files are missing
+ValueError: If uesgraph parameter is invalid
+Exception: For various processing errors with detailed messages</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels_pp.utilities.load_simulation_settings_from_excel">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels_pp.utilities.</span></span><span class="sig-name descname"><span class="pre">load_simulation_settings_from_excel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">excel_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels_pp/utilities.html#load_simulation_settings_from_excel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels_pp.utilities.load_simulation_settings_from_excel" title="Permalink to this definition"></a></dt>
+<dd><p>Load simulation settings from Excel ‘Simulation’ sheet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>excel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to Excel file containing simulation settings</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger instance</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>sim_params</strong> – Dictionary of simulation parameters</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If required simulation parameters are missing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels_pp.utilities.load_component_parameters">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels_pp.utilities.</span></span><span class="sig-name descname"><span class="pre">load_component_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">excel_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels_pp/utilities.html#load_component_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels_pp.utilities.load_component_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Load component parameters from an Excel file.</p>
+<p>Reads a specific sheet from an Excel file and returns parameters as a dictionary.
+Expected Excel structure:
+- Column A: Parameter (parameter names)
+- Column B: Value (parameter values)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>excel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to the Excel file containing component parameters</p></li>
+<li><p><strong>component_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Type of component, must be one of: ‘pipes’, ‘supply’, ‘demands’, ‘simulation’
+This determines which sheet to read from the Excel file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with parameter names as keys and their values
+Returns empty dict if sheet not found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If the Excel file does not exist</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the component_type is not valid or Excel structure is incorrect</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">load_component_parameters</span><span class="p">(</span><span class="s1">&#39;parameters.xlsx&#39;</span><span class="p">,</span> <span class="s1">&#39;pipes&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;dp_nominal&#39;</span><span class="p">])</span>
+<span class="go">0.10</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels_pp.utilities.generate_simulation_model">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels_pp.utilities.</span></span><span class="sig-name descname"><span class="pre">generate_simulation_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ground_temp_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_model_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels_pp/utilities.html#generate_simulation_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels_pp.utilities.generate_simulation_model" title="Permalink to this definition"></a></dt>
+<dd><p>Generate pandapipes simulation model using Excel-based parameter system.</p>
+<p>This function assumes parameters are already assigned to uesgraph nodes/edges
+via the assign_*_parameters functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uesgraph</strong> (<a class="reference internal" href="../code/uesgraphs.html#uesgraphs.uesgraph.UESGraph" title="uesgraphs.uesgraph.UESGraph"><em>UESGraph</em></a>) – Graph with pre-assigned parameters from Excel</p></li>
+<li><p><strong>sim_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the simulation</p></li>
+<li><p><strong>sim_params</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Simulation parameters from Excel ‘Simulation’ sheet</p></li>
+<li><p><strong>ground_temp_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Ground temperature data</p></li>
+<li><p><strong>sim_model_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Directory to save pandapipes files</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger instance</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels_pp.utilities.assign_demand_data">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels_pp.utilities.</span></span><span class="sig-name descname"><span class="pre">assign_demand_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uesgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_paths_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['heating',</span> <span class="pre">'cooling',</span> <span class="pre">'dhw']</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels_pp/utilities.html#assign_demand_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels_pp.utilities.assign_demand_data" title="Permalink to this definition"></a></dt>
+<dd><p>Assigns energy demand data to buildings in a UES (Urban Energy Systems) graph.</p>
+<p>This function reads demand profiles from CSV files and assigns them to building nodes
+in the graph. For buildings without specific demand data, it uses a fallback profile
+(dummy demand) based on the first building in the respective CSV file. The function
+can handle heating, cooling, and domestic hot water (DHW) demands.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uesgraph</strong> (<em>ueesgraphs Graph</em>) – The urban energy system graph containing building nodes.</p></li>
+<li><p><strong>input_paths_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Dictionary containing file paths for each demand type.
+Expected keys: ‘heating’, ‘cooling’, ‘dhw’.</p></li>
+<li><p><strong>input_types</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>, </em><em>optional</em>) – List of demand types to process. Default is [“heating”, “cooling”, “dhw”].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>Updated UES graph with demand data assigned to building nodes</p></li>
+<li><p>Message string containing information about the data assignment process</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<dl class="simple">
+<dt>Building nodes are updated with the following attributes:</dt><dd><ul class="simple">
+<li><p>input_heat: List of heating demand values</p></li>
+<li><p>input_cool: List of cooling demand values</p></li>
+<li><p>input_dhw: List of DHW demand values</p></li>
+<li><p>max_demand_heating: Maximum combined heating/DHW demand</p></li>
+</ul>
+</dd>
+<dt>The function handles missing data by:</dt><dd><ol class="arabic simple">
+<li><p>Using a dummy profile if a building is not found in demand data</p></li>
+<li><p>Tracking which buildings exist in CSVs but not in the graph</p></li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels_pp.utilities.validate_paths">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels_pp.utilities.</span></span><span class="sig-name descname"><span class="pre">validate_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paths</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels_pp/utilities.html#validate_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels_pp.utilities.validate_paths" title="Permalink to this definition"></a></dt>
+<dd><p>Validate if the provided file and directory paths exist.</p>
+<section id="id1">
+<h2>Parameters:<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>paths<span class="classifier">list</span></dt><dd><p>List of paths (strings or Path objects) to validate</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h2>Returns:<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>tuple</dt><dd><p>(existing_paths, missing_paths): Two lists containing the paths that exist
+and the paths that are missing, respectively</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels_pp.utilities.load_ground_temp_data">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels_pp.utilities.</span></span><span class="sig-name descname"><span class="pre">load_ground_temp_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ground_temp_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels_pp/utilities.html#load_ground_temp_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels_pp.utilities.load_ground_temp_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.systemmodels_pp.utilities.save_setup_params_to_csv">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.systemmodels_pp.utilities.</span></span><span class="sig-name descname"><span class="pre">save_setup_params_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">setup_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_model_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/systemmodels_pp/utilities.html#save_setup_params_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.systemmodels_pp.utilities.save_setup_params_to_csv" title="Permalink to this definition"></a></dt>
+<dd><p>Save simulation setup parameters to a CSV file.</p>
+<p>This function takes a single row from the simulation setup Excel file (as a dictionary)
+and saves it as a CSV file in a specified directory, with parameters as rows and their
+values as a single column.</p>
+<section id="id3">
+<h2>Parameters:<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>setup_params<span class="classifier">dict</span></dt><dd><p>Dictionary containing simulation setup parameters (a single row from the Excel setup)</p>
+</dd>
+<dt>sim_name<span class="classifier">str</span></dt><dd><p>Name of the current simulation, used for filename generation</p>
+</dd>
+<dt>sim_model_dir<span class="classifier">str</span></dt><dd><p>Directory where to save the CSV file</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h2>Returns:<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>str</dt><dd><p>Path to the saved CSV file</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="uesgraphs.systemmodels_pp.systemmodelheating.html" class="btn btn-neutral float-left" title="uesgraphs.systemmodels_pp.systemmodelheating" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api_examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

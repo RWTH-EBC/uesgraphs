@@ -1,0 +1,55 @@
+﻿uesgraphs.DHW\_estimation.OpenDHW
+=================================
+
+.. automodule:: uesgraphs.DHW_estimation.OpenDHW
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      add_additional_runs
+      compare_generators
+      compute_heat
+      draw_detailed_histplot
+      draw_histplot
+      draw_lineplot
+      generate_and_distribute_drawoffs
+      generate_daily_probability_step_function
+      generate_dhw_profile
+      generate_single_drawoff_inside_boundaries
+      generate_yearly_probabilities
+      generate_yearly_probability_profile
+      get_data_drawoff_categories
+      get_drawoffs
+      get_holidays
+      get_s_step
+      import_from_dhwcalc
+      jensen_shannon_distance
+      load_steps_and_ps
+      make_title_str
+      normalize_and_sum_list
+      plot_multiple_runs
+      plot_multiple_timeseries
+      plot_three_histplots
+      reduce_no_drawoffs
+      resample_water_series
+      shift_weekend_weekday
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

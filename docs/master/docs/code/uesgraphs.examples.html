@@ -601,8 +601,80 @@ This example shows how to use it.</p>
 <dd></dd></dl>
 
 </section>
-<section id="uesgraphs-examples-e16-complete-geojson-to-pandapipes-module">
-<h2>uesgraphs.examples.e16_complete_geojson_to_pandapipes module<a class="headerlink" href="#uesgraphs-examples-e16-complete-geojson-to-pandapipes-module" title="Permalink to this heading"></a></h2>
+<section id="module-uesgraphs.examples.e16_complete_geojson_to_pandapipes">
+<span id="uesgraphs-examples-e16-complete-geojson-to-pandapipes-module"></span><h2>uesgraphs.examples.e16_complete_geojson_to_pandapipes module<a class="headerlink" href="#module-uesgraphs.examples.e16_complete_geojson_to_pandapipes" title="Permalink to this heading"></a></h2>
+<section id="geojson-import-to-pandapipes-simulation-results">
+<h3>GeoJSON Import to pandapipes Simulation results<a class="headerlink" href="#geojson-import-to-pandapipes-simulation-results" title="Permalink to this heading"></a></h3>
+<p>This example demonstrates the workflow for generating and simulating with pandapipes. This example performs
+a dynamic pandapipes simulation for a day beginning with the first hour, not 0.</p>
+<section id="id4">
+<h4>Workflow Overview:<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h4>
+<ol class="arabic simple">
+<li><p><strong>GeoJSON Import</strong>: Load network topology, buildings, and supply stations from GeoJSON files</p></li>
+<li><p><strong>Demand Data Assignment</strong>: Attach heating, DHW, and cooling demand time series to buildings</p></li>
+<li><p><strong>Excel-Based Configuration</strong>: Use Excel template to configure all simulation and component parameters</p></li>
+<li><p><strong>Pandapipes Simulation</strong>: Automatically generates pandapipes model and simulates it</p></li>
+</ol>
+</section>
+<section id="id5">
+<h4>Excel Configuration Structure:<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h4>
+<p>The Excel template has four sheets:
+1. <strong>Simulation</strong>: Simulation parameters (time settings, medium, etc.)
+2. <strong>Pipes</strong>: Pipe network parameters (insulation, roughness, etc.)
+3. <strong>Supply</strong>: Supply station parameters (pressures, temperatures etc.)
+4. <strong>Demands</strong>: Demand substation parameters (temperatures and temperature differences etc.)</p>
+</section>
+<section id="id6">
+<h4>Input Data Requirements:<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Network GeoJSON</strong>: LineString features representing the pipe network</p></li>
+<li><p><strong>Buildings GeoJSON</strong>: Point or Polygon features for demand buildings</p></li>
+<li><p><strong>Supply GeoJSON</strong>: Point features for supply stations (with is_supply_heating=True)</p></li>
+<li><p><strong>Demand CSVs</strong>: Time series for heating, DHW, and cooling demands (8760 hourly values)</p></li>
+<li><p><strong>Ground Temperature CSV</strong>: Ground temperature profiles at various depths</p></li>
+</ul>
+</section>
+<section id="id7">
+<h4>Example Directory Structure:<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h4>
+<p>workspace/e16/
+├── simple_district_graph.json          # Saved UESGraph after GeoJSON import
+├── models/                             # Generated pandapipes files
+│   └── Sim20250102_123456_MySimulation/
+│       ├── [component models]          # Individual component files
+│       └── Sim20250102_123456.csv      # Parameters summary CSV
+└── [demand and ground temp CSVs]       # Input time series data</p>
+</section>
+<section id="id8">
+<h4>Notes:<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>The pipeline automatically handles parameter assignment and validation</p></li>
+<li><p>Missing buildings in demand files will use dummy demand profiles</p></li>
+<li><p>The Excel template can be customized for different simulation scenarios</p></li>
+</ul>
+</section>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e16_complete_geojson_to_pandapipes.workspace_example">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e16_complete_geojson_to_pandapipes.</span></span><span class="sig-name descname"><span class="pre">workspace_example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_workspace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e16_complete_geojson_to_pandapipes.html#workspace_example"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e16_complete_geojson_to_pandapipes.workspace_example" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a local workspace with given name (copied from e1_readme_example)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name_workspace</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the local workspace to be created</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>workspace</strong> – Full path to the new workspace</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.examples.e16_complete_geojson_to_pandapipes.main">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e16_complete_geojson_to_pandapipes.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e16_complete_geojson_to_pandapipes.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e16_complete_geojson_to_pandapipes.main" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="uesgraphs-examples-e17-teaser-and-opendhw-integration-pandapipes-sim-module">
 <h2>uesgraphs.examples.e17_teaser_and_OpenDHW_integration_pandapipes_sim module<a class="headerlink" href="#uesgraphs-examples-e17-teaser-and-opendhw-integration-pandapipes-sim-module" title="Permalink to this heading"></a></h2>
@@ -895,7 +967,7 @@ Note: Only building 1121 is removed in this example</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="uesgraphs.examples.e9_generate_ues_from_osm_example.remove_small_buildings">
 <span class="sig-prename descclassname"><span class="pre">uesgraphs.examples.e9_generate_ues_from_osm_example.</span></span><span class="sig-name descname"><span class="pre">remove_small_buildings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_area</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/examples/e9_generate_ues_from_osm_example.html#remove_small_buildings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.examples.e9_generate_ues_from_osm_example.remove_small_buildings" title="Permalink to this definition"></a></dt>
-<dd><p>Remove all buildings from the graph that have area less than <a href="#id4"><span class="problematic" id="id5">`</span></a>min_area´.</p>
+<dd><p>Remove all buildings from the graph that have area less than <a href="#id9"><span class="problematic" id="id10">`</span></a>min_area´.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
