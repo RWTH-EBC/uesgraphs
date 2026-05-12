@@ -40,6 +40,9 @@ class TestUESModelsUtilities:
                     check_boundary=False,
                     transform_positions=True,
                 )
+                example_district.network_simplification("heating")
+
+                assert example_district.simplification_level == 1, "Network simplification failed to change the graph structure"
 
                 # Generate a urban energy system using the 'UESGenerator' and the data just
                 # created from OSM file.
@@ -78,6 +81,8 @@ class TestUESModelsUtilities:
                     success_rate=1.0,
                     workspace=workspace,
                     ), "add_network_new failed"
+                
+                assert utils.add_loop(uesgenerator)
 
             except Exception as e:
                 pytest.fail(f"UESModels example failed: {e}")

@@ -1167,7 +1167,7 @@ def compare_generators(timeseries_df_1, timeseries_df_2,
 
     cats_1 = timeseries_df_1['categories'][0]
     cats_2 = timeseries_df_2['categories'][0]
-    if cats_1 or cats_2 == 1:
+    if cats_1 == 1 or cats_2 == 1:
         print("detailed distribution is designed to compare timeseries with "
               "one drawoff category")
         plot_detailed_distribution = False
