@@ -1,0 +1,36 @@
+﻿uesgraphs.systemmodels\_pp.systemmodelheating
+=============================================
+
+.. automodule:: uesgraphs.systemmodels_pp.systemmodelheating
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      set_up_logger
+      set_up_terminal_logger
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      SystemModelHeating
+   
+   
+
+   
+   
+   
+
+
+

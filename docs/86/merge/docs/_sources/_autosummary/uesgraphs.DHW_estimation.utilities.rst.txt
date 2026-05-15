@@ -1,0 +1,34 @@
+﻿uesgraphs.DHW\_estimation.utilities
+===================================
+
+.. automodule:: uesgraphs.DHW_estimation.utilities
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      create_profiles
+      generate_DHW_profiles_from_geojson
+      load_component_parameters
+      load_simulation_settings_from_excel
+      set_up_file_logger
+      set_up_logger
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

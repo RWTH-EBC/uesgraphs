@@ -1,0 +1,818 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.teaser_integration.utilities &mdash; uesgraphs v2.2.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/demand_estimation.html">Heat and DHW Demand Estimation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/teaser_opendhw_integration.html">Workflow integration of TEASER and OpenDHW</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/pandapipes_dynamic.html">Dynamic Simulation with pandapipes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_TEASER_int.html">TEASER Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.teaser_integration.utilities</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.teaser_integration.utilities</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module includes TEASER for the demand estimation based on the .geojson</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.teaser_integration</span><span class="w"> </span><span class="kn">import</span> <span class="n">simulate</span> <span class="k">as</span> <span class="n">sim</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">multiprocessing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">teaser.project</span><span class="w"> </span><span class="kn">import</span> <span class="n">Project</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">dymola.dymola_interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">DymolaInterface</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">DymolaInterface</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="set_up_file_logger"><a class="viewcode-back" href="../../../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.set_up_file_logger">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_up_file_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a full file+console logger for major functions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: Logger name</span>
+<span class="sd">        log_dir: Directory for log files (default: temp directory)</span>
+<span class="sd">        level: Logging level (default: ERROR)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Configured file+console logger</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+   <span class="c1"># if logger.handlers:</span>
+    <span class="c1">#    return logger</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">log_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">log_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
+
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+    <span class="n">log_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">log_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.log&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Logfile findable here: </span><span class="si">{</span><span class="n">log_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># File handler</span>
+    <span class="n">file_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+    <span class="n">file_formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - [</span><span class="si">%(filename)s</span><span class="s1">:</span><span class="si">%(lineno)d</span><span class="s1">] - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">file_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">file_formatter</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="n">logger</span></div>
+
+<div class="viewcode-block" id="set_up_logger"><a class="viewcode-back" href="../../../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.set_up_logger">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_up_logger</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">log_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">level</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sets up a configured logger with file handler.</span>
+<span class="sd">    </span>
+<span class="sd">    Creates a logger with specified name and logging level.</span>
+<span class="sd">    Log files are stored in a directory with timestamp in filename.</span>
+<span class="sd">    If no directory is specified, the system&#39;s temporary directory is used.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): Name of the logger, also used for filename</span>
+<span class="sd">        log_dir (str, optional): Directory for log files.</span>
+<span class="sd">            Defaults to None (uses temp directory)</span>
+<span class="sd">        level (int, optional): Logging level (e.g. logging.ERROR, logging.INFO).</span>
+<span class="sd">            Defaults to logging.ERROR</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        logging.Logger: Configured logger object</span>
+<span class="sd">        </span>
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; logger = set_up_logger(&quot;my_app&quot;, &quot;/var/log&quot;, logging.INFO)</span>
+<span class="sd">        &gt;&gt;&gt; logger.info(&quot;Application started&quot;)</span>
+<span class="sd">        </span>
+<span class="sd">    Notes:</span>
+<span class="sd">        - Log filename format: {name}_{YYYYMMDD_HHMMSS}.log</span>
+<span class="sd">        - Log entry format: time - logger_name - [file:line] - level - message</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">log_dir</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">log_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+    <span class="n">log_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">log_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.log&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Logfile findable here: </span><span class="si">{</span><span class="n">log_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - [</span><span class="si">%(filename)s</span><span class="s1">:</span><span class="si">%(lineno)d</span><span class="s1">] - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">logger</span></div>
+
+<span class="c1">## Helper functions</span>
+<div class="viewcode-block" id="load_simulation_settings_from_excel"><a class="viewcode-back" href="../../../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.load_simulation_settings_from_excel">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_simulation_settings_from_excel</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load simulation settings from Excel &#39;Simulation&#39; sheet.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    excel_path : str or Path</span>
+<span class="sd">        Path to Excel file containing simulation settings</span>
+<span class="sd">    logger : logging.Logger, optional</span>
+<span class="sd">        Logger instance</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sim_params : dict</span>
+<span class="sd">        Dictionary of simulation parameters</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If required simulation parameters are missing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.load_simulation_settings_from_excel&quot;</span><span class="p">)</span>
+
+    <span class="n">sim_params</span> <span class="o">=</span> <span class="n">_load_excel</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="s1">&#39;Simulation&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+    <span class="c1"># Validate required simulation parameters</span>
+    <span class="n">required</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timestep&#39;</span><span class="p">,</span><span class="s1">&#39;stop_time&#39;</span><span class="p">]</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">param</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">required</span> <span class="k">if</span> <span class="n">param</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sim_params</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required simulation parameters in &#39;Simulation&#39; sheet: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulation settings loaded from Excel: </span><span class="si">{</span><span class="n">sim_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;simulation_name&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sim_params</span></div>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_excel</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">excel_sheet_name</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load parameters from Excel file.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    excel_path : str or Path or None</span>
+<span class="sd">        Path to Excel file (optional)</span>
+<span class="sd">    excel_sheet_name : str</span>
+<span class="sd">        Name of the Excel sheet to load</span>
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        Logger instance</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    excel_params : dict</span>
+<span class="sd">        Dictionary of parameters from Excel (empty dict if excel_path is None)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">excel_params</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">if</span> <span class="n">excel_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading parameters from Excel: </span><span class="si">{</span><span class="n">excel_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">excel_params</span> <span class="o">=</span> <span class="n">load_component_parameters</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">excel_sheet_name</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Excel parameters loaded: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">excel_params</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">warning_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Could not load Excel parameters: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">warning_msg</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No Excel file provided, using only graph attributes&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">excel_params</span>
+
+<div class="viewcode-block" id="load_component_parameters"><a class="viewcode-back" href="../../../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.load_component_parameters">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_component_parameters</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">component_type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load component parameters from an Excel file.</span>
+<span class="sd">    </span>
+<span class="sd">    Reads a specific sheet from an Excel file and returns parameters as a dictionary.</span>
+<span class="sd">    Expected Excel structure:</span>
+<span class="sd">    - Column A: Parameter (parameter names)</span>
+<span class="sd">    - Column B: Value (parameter values)</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    excel_path : str or Path</span>
+<span class="sd">        Path to the Excel file containing component parameters</span>
+<span class="sd">    component_type : str</span>
+<span class="sd">        Type of component, must be one of: &#39;pipes&#39;, &#39;supply&#39;, &#39;demands&#39;, &#39;simulation&#39;</span>
+<span class="sd">        This determines which sheet to read from the Excel file</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Dictionary with parameter names as keys and their values</span>
+<span class="sd">        Returns empty dict if sheet not found</span>
+<span class="sd">        </span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If the Excel file does not exist</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the component_type is not valid or Excel structure is incorrect</span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; params = load_component_parameters(&#39;parameters.xlsx&#39;, &#39;pipes&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(params[&#39;dp_nominal&#39;])</span>
+<span class="sd">    0.10</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate component type</span>
+    <span class="n">valid_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Pipes&#39;</span><span class="p">,</span> <span class="s1">&#39;Supply&#39;</span><span class="p">,</span> <span class="s1">&#39;Demands&#39;</span><span class="p">,</span> <span class="s1">&#39;Simulation&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">component_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_types</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid component_type &#39;</span><span class="si">{</span><span class="n">component_type</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Must be one of: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">valid_types</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="c1"># Check if file exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">excel_path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Excel file not found: </span><span class="si">{</span><span class="n">excel_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Read the specific sheet</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">component_type</span><span class="p">)</span>
+        
+        <span class="c1"># Validate Excel structure</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Excel sheet &#39;</span><span class="si">{</span><span class="n">component_type</span><span class="si">}</span><span class="s2">&#39; must have at least 2 columns &quot;</span>
+                <span class="s2">&quot;(Parameter and Value)&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="c1"># Check if first row contains expected column names</span>
+        <span class="k">if</span> <span class="s1">&#39;Parameter&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;parameter&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+            <span class="c1"># Assume first two columns are Parameter and Value</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+        
+        <span class="c1"># Create dictionary from Parameter and Value columns</span>
+        <span class="c1"># Drop rows where Parameter is NaN</span>
+        <span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Convert to dictionary</span>
+        <span class="n">param_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">],</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]))</span>
+
+        <span class="c1"># Convert and clean values</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">param_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Convert NaN to None</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="c1"># Try to convert string values to appropriate types</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">value_stripped</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                <span class="c1"># Skip if it looks like a reference (@something) or template path/name</span>
+                <span class="k">if</span> <span class="n">value_stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">value_stripped</span> <span class="ow">or</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">value_stripped</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">value_stripped</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Try boolean conversion</span>
+                <span class="k">if</span> <span class="n">value_stripped</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;TRUE&#39;</span><span class="p">,</span> <span class="s1">&#39;FALSE&#39;</span><span class="p">):</span>
+                    <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value_stripped</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;TRUE&#39;</span>
+                <span class="c1"># Try numeric conversion (handles scientific notation like &#39;1e5&#39;)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="c1"># Try float first (handles both &#39;123&#39; and &#39;1.23&#39; and &#39;1e5&#39;)</span>
+                        <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value_stripped</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="c1"># Keep as string if conversion fails (e.g., template names)</span>
+                        <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">param_dict</span>
+        
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;Worksheet named&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+            <span class="c1"># Sheet doesn&#39;t exist</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Sheet &#39;</span><span class="si">{</span><span class="n">component_type</span><span class="si">}</span><span class="s2">&#39; not found in </span><span class="si">{</span><span class="n">excel_path</span><span class="si">}</span><span class="s2">. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Returning empty dictionary.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span>
+    
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Error reading Excel file </span><span class="si">{</span><span class="n">excel_path</span><span class="si">}</span><span class="s2">, sheet &#39;</span><span class="si">{</span><span class="n">component_type</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span></div>
+
+<span class="c1">## Main TEASER simulation functions</span>
+
+<div class="viewcode-block" id="create_project"><a class="viewcode-back" href="../../../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.create_project">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">create_project</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a TEASER project for current version.&quot;&quot;&quot;</span>
+    <span class="n">prj</span> <span class="o">=</span> <span class="n">Project</span><span class="p">()</span>
+    <span class="c1"># Set default calculation parameters</span>
+    <span class="n">prj</span><span class="o">.</span><span class="n">_number_of_elements_calc</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># AixLib requires 2 elements</span>
+    <span class="n">prj</span><span class="o">.</span><span class="n">_merge_windows_calc</span> <span class="o">=</span> <span class="kc">False</span>   <span class="c1"># Default for AixLib ebc calculation</span>
+    <span class="n">prj</span><span class="o">.</span><span class="n">_used_library_calc</span> <span class="o">=</span> <span class="s2">&quot;AixLib&quot;</span>
+    <span class="n">prj</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Demand_Estimation&quot;</span>
+    <span class="k">return</span> <span class="n">prj</span></div>
+
+<div class="viewcode-block" id="create_district"><a class="viewcode-back" href="../../../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.create_district">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">create_district</span><span class="p">(</span><span class="n">info_path</span><span class="p">,</span> <span class="n">prj</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create TEASER buildings using modern API, according to infos in geojson.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    info_path : path</span>
+<span class="sd">        Full path to json with building infos.</span>
+<span class="sd">    district_name : string</span>
+<span class="sd">        Name of district</span>
+<span class="sd">    prj : TEASER project</span>
+<span class="sd">        Project class where buildings should be added to.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">district_file</span> <span class="o">=</span> <span class="n">info_path</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">district_file</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;District file not found: </span><span class="si">{</span><span class="n">district_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">district_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+        <span class="n">geojson</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+
+    <span class="n">building_info</span> <span class="o">=</span> <span class="n">geojson</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">building_info</span><span class="p">)</span><span class="si">}</span><span class="s2"> buildings...&quot;</span><span class="p">)</span>
+    
+    <span class="n">successful_buildings</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">building_info</span><span class="p">)):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">bldg_info</span> <span class="o">=</span> <span class="n">building_info</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>  <span class="c1"># More frequent feedback</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Processing building </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">building_info</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">bldg_info</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+            <span class="c1"># Map archetype to TEASER geometry_data</span>
+            <span class="n">archetype</span> <span class="o">=</span> <span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;archetype&quot;</span><span class="p">]</span>
+            <span class="n">building</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Initialize building variable</span>
+            
+            <span class="k">if</span> <span class="n">archetype</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;OfficeExisting&quot;</span><span class="p">,</span> <span class="s2">&quot;OfficeWithDataCenter&quot;</span><span class="p">,</span> <span class="s2">&quot;OfficeHighRise&quot;</span><span class="p">,</span> <span class="s2">&quot;OfficeHighRiseKita&quot;</span><span class="p">]:</span>
+                <span class="c1"># Use modern TEASER API for non-residential buildings</span>
+                <span class="n">building</span> <span class="o">=</span> <span class="n">prj</span><span class="o">.</span><span class="n">add_non_residential</span><span class="p">(</span>
+                    <span class="n">construction_data</span><span class="o">=</span><span class="s1">&#39;iwu_heavy&#39;</span><span class="p">,</span>
+                    <span class="n">geometry_data</span><span class="o">=</span><span class="s1">&#39;bmvbs_office&#39;</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                    <span class="n">year_of_construction</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;year_of_construction&quot;</span><span class="p">],</span>
+                    <span class="n">number_of_floors</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;number_of_floors&quot;</span><span class="p">],</span>
+                    <span class="n">height_of_floors</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;height_of_floors&quot;</span><span class="p">],</span>
+                    <span class="n">net_leased_area</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;net_leased_area&quot;</span><span class="p">],</span>
+                    <span class="n">with_ahu</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;with_ahu&quot;</span><span class="p">],</span>
+                    <span class="n">internal_gains_mode</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;internal_gains_mode&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">archetype</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;MultiFamilyHouse&quot;</span><span class="p">]:</span>
+                <span class="c1"># Use modern TEASER API for multi-family residential buildings</span>
+                <span class="n">building</span> <span class="o">=</span> <span class="n">prj</span><span class="o">.</span><span class="n">add_residential</span><span class="p">(</span>
+                    <span class="n">construction_data</span><span class="o">=</span><span class="s1">&#39;tabula_de_standard&#39;</span><span class="p">,</span>
+                    <span class="n">geometry_data</span><span class="o">=</span><span class="s1">&#39;tabula_de_multi_family_house&#39;</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                    <span class="n">year_of_construction</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;year_of_construction&quot;</span><span class="p">],</span>
+                    <span class="n">number_of_floors</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;number_of_floors&quot;</span><span class="p">],</span>
+                    <span class="n">height_of_floors</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;height_of_floors&quot;</span><span class="p">],</span>
+                    <span class="n">net_leased_area</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;net_leased_area&quot;</span><span class="p">],</span>
+                    <span class="n">with_ahu</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;with_ahu&quot;</span><span class="p">],</span>
+                    <span class="n">internal_gains_mode</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;internal_gains_mode&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">archetype</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;SingleFamilyHouse&quot;</span><span class="p">]:</span>
+                <span class="c1"># Use modern TEASER API for single-family residential buildings</span>
+                <span class="n">building</span> <span class="o">=</span> <span class="n">prj</span><span class="o">.</span><span class="n">add_residential</span><span class="p">(</span>
+                    <span class="n">construction_data</span><span class="o">=</span><span class="s1">&#39;tabula_de_standard&#39;</span><span class="p">,</span>
+                    <span class="n">geometry_data</span><span class="o">=</span><span class="s1">&#39;tabula_de_single_family_house&#39;</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                    <span class="n">year_of_construction</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;year_of_construction&quot;</span><span class="p">],</span>
+                    <span class="n">number_of_floors</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;number_of_floors&quot;</span><span class="p">],</span>
+                    <span class="n">height_of_floors</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;height_of_floors&quot;</span><span class="p">],</span>
+                    <span class="n">net_leased_area</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;net_leased_area&quot;</span><span class="p">],</span>
+                    <span class="n">with_ahu</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;with_ahu&quot;</span><span class="p">],</span>
+                    <span class="n">internal_gains_mode</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;internal_gains_mode&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; Warning: Unknown archetype &#39;</span><span class="si">{</span><span class="n">archetype</span><span class="si">}</span><span class="s2">&#39; for building &#39;</span><span class="si">{</span><span class="n">bldg_info</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; - skipping&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+                
+            <span class="n">successful_buildings</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+            <span class="c1"># Apply any additional customizations to the created building if needed</span>
+            <span class="c1"># (The modern TEASER API already handles most parameter calculations)</span>
+            <span class="c1"># if building is not None:</span>
+            <span class="c1">#     # Apply load corrections if needed</span>
+            <span class="c1">#     for zone in building.thermal_zones:</span>
+            <span class="c1">#         if hasattr(zone, &#39;model_attr&#39;) and hasattr(zone.model_attr, &#39;heat_load&#39;):</span>
+            <span class="c1">#             zone.model_attr.heat_load = zone.model_attr.heat_load * 1.012</span>
+            <span class="c1">#             if zone.model_attr.heat_load / zone.area &gt; 26.0:</span>
+            <span class="c1">#                 zone.model_attr.heat_load = zone.area * 26.0</span>
+            <span class="c1">#             if zone.model_attr.heat_load / zone.area &lt; 24.5:</span>
+            <span class="c1">#                 zone.model_attr.heat_load = zone.area * 24.5</span>
+            <span class="c1">#             if &quot;ICT&quot; in zone.name:</span>
+            <span class="c1">#                 if hasattr(zone.model_attr, &#39;cool_load&#39;):</span>
+            <span class="c1">#                     zone.model_attr.cool_load = zone.model_attr.cool_load * 4</span>
+                    
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Warning: Could not process building &#39;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully created </span><span class="si">{</span><span class="n">successful_buildings</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">building_info</span><span class="p">)</span><span class="si">}</span><span class="s2"> buildings&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Ensure all buildings have their parameters calculated for export</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calculating building parameters for export...&quot;</span><span class="p">)</span>
+    <span class="n">prj</span><span class="o">.</span><span class="n">calc_all_buildings</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">prj</span></div>
+
+<div class="viewcode-block" id="read_results"><a class="viewcode-back" href="../../../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.read_results">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_results</span><span class="p">(</span>
+    <span class="n">prj</span><span class="p">,</span>
+    <span class="n">buildings</span><span class="p">,</span>
+    <span class="n">signals</span><span class="p">,</span>
+    <span class="n">index</span><span class="p">,</span>
+    <span class="n">stop_time</span><span class="p">,</span>
+    <span class="n">timestep</span><span class="p">,</span>
+    <span class="n">results_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">csv_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">indoor_air</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">logger</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read simulation data from .mat file and save them into csv.</span>
+
+<span class="sd">    Reads Dymola result files and saves them as time series in csv. Naming</span>
+<span class="sd">    convention of time series follows proposed naming schema of Team GA. It</span>
+<span class="sd">    assumes that all thermal_zones in PostgreSQL database are modeled as a</span>
+<span class="sd">    thermal zone in Modelica. Thus this approach is not yet ready to be used</span>
+<span class="sd">    with archetypes.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    prj : TEASER Project() instance</span>
+<span class="sd">        TEASER Project with all buildings that have been simulated. Names need</span>
+<span class="sd">        to be identical.</span>
+<span class="sd">    buidlings : list</span>
+<span class="sd">        List of buildings whose results should be read.</span>
+<span class="sd">    signals : list</span>
+<span class="sd">            List of signals to be read from the results file.</span>
+<span class="sd">    index : Pandas date_range</span>
+<span class="sd">        Pandas date range of the simulation data. Must fit the length of</span>
+<span class="sd">        simulation data. (default: hourly for year 2015)</span>
+<span class="sd">    results_path : str</span>
+<span class="sd">        Path where Dymola results are  stored.</span>
+<span class="sd">    csv_path : str</span>
+<span class="sd">        Path where csv results should be stored.</span>
+<span class="sd">    indoor_air : boolean</span>
+<span class="sd">        If true, output csv-file contains dataframe with one column for each given</span>
+<span class="sd">        signal. If false, Heater and Cooler signals are expected and seperate output</span>
+<span class="sd">        csv-files are created for both signals.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">csv_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">csv_path</span><span class="p">)</span>
+    <span class="n">dymola</span> <span class="o">=</span> <span class="n">DymolaInterface</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">bldg</span> <span class="ow">in</span> <span class="n">buildings</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;reading building </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bldg</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">bldg</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_heat.csv&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">csv_path</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_path</span><span class="p">,</span> <span class="n">bldg</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.mat&quot;</span><span class="p">))</span>
+
+                <span class="n">dym_res</span> <span class="o">=</span> <span class="n">dymola</span><span class="o">.</span><span class="n">readTrajectory</span><span class="p">(</span>
+                    <span class="n">fileName</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_path</span><span class="p">,</span> <span class="n">bldg</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.mat&quot;</span><span class="p">),</span>
+                    <span class="n">signals</span><span class="o">=</span><span class="n">signals</span><span class="p">,</span>
+                    <span class="n">rows</span><span class="o">=</span><span class="n">dymola</span><span class="o">.</span><span class="n">readTrajectorySize</span><span class="p">(</span>
+                        <span class="n">fileName</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_path</span><span class="p">,</span> <span class="n">bldg</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.mat&quot;</span><span class="p">)</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">dym_res</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+                    <span class="n">columns</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">signals</span><span class="p">))</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+                <span class="c1"># Dymola has strange exceptions</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s2">&quot;Reading results of building </span><span class="si">{}</span><span class="s2"> failed, &quot;</span>
+                    <span class="s2">&quot;please check result file&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bldg</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Results Error!&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s2">&quot;Simulation results of building </span><span class="si">{}</span><span class="s2"> are most likely &quot;</span>
+                    <span class="s2">&quot;faulty (series is shorter then one year), please check &quot;</span>
+                    <span class="s2">&quot;result file&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bldg</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Completion Error!&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">indoor_air</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">heat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">like</span><span class="o">=</span><span class="s2">&quot;PHeat&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                    <span class="n">index</span><span class="o">=</span><span class="n">results</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">bldg</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
+                <span class="p">)</span>
+
+                <span class="n">cool</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">results</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">like</span><span class="o">=</span><span class="s2">&quot;PCool&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                    <span class="n">index</span><span class="o">=</span><span class="n">results</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">bldg</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
+                <span class="p">)</span>
+
+                <span class="n">heat</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">bldg</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_heat.csv&quot;</span><span class="p">))</span>
+                <span class="n">cool</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">bldg</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_cool.csv&quot;</span><span class="p">))</span>
+
+                <span class="n">heat</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="n">timestep</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">stop_time</span><span class="o">/</span><span class="n">timestep</span><span class="p">))]</span>
+                <span class="n">heat</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">bldg</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_heat.txt&quot;</span><span class="p">),</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+                <span class="n">cool</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="n">timestep</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">stop_time</span><span class="o">/</span><span class="n">timestep</span><span class="p">))]</span>
+                <span class="n">cool</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">csv_path</span><span class="p">,</span> <span class="n">bldg</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_cool.txt&quot;</span><span class="p">),</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">bldg</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_indoor_air.csv&quot;</span><span class="p">))</span>
+
+    <span class="n">dymola</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="run_sim_teaser"><a class="viewcode-back" href="../../../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.utilities.run_sim_teaser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">run_sim_teaser</span><span class="p">(</span><span class="n">buildings_info_path</span><span class="p">,</span> <span class="n">save_path</span><span class="p">,</span> 
+                   <span class="n">weather_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">timestep</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span> 
+                   <span class="n">stop_time</span><span class="o">=</span><span class="mi">8760</span><span class="o">*</span><span class="mi">3600</span><span class="p">,</span>
+                   <span class="n">sim_setup_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                   <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
+                   <span class="n">number_of_workers</span><span class="o">=</span><span class="kc">None</span>
+                   <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run TEASER simulations for demand estimation based on building information from a .geojson file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    buildings_info_path : str</span>
+<span class="sd">        The path to the .geojson file containing building information for TEASER model creation.</span>
+<span class="sd">    save_path : str or Path</span>
+<span class="sd">        Directory path where the resulting demand CSV files will be saved.</span>
+<span class="sd">    weather_path : str, optional</span>
+<span class="sd">        The path to the weather file (.mos) to be used in the simulation. If not provided, a default weather file will be used.</span>
+<span class="sd">    timestep : int, optinal</span>
+<span class="sd">        Simulation timestep in seconds (default is 3600 for hourly data)</span>
+<span class="sd">    stop_time : int, optional</span>
+<span class="sd">        Total simulation time in seconds (default is 8760*3600 for one year of hourly data)</span>
+<span class="sd">    sim_setup_path : str or Path, optional</span>
+<span class="sd">        Path to the simulation setup for timestep and stop time. If not provided, default values will be used.</span>
+<span class="sd">    logger : logging.Logger, optional</span>
+<span class="sd">        Logger instance. If None, creates a new file logger in temp directory</span>
+<span class="sd">    log_level : int, optional</span>
+<span class="sd">        Logging level (default is logging.DEBUG). Only used if logger is None</span>
+<span class="sd">    number_of_workers : int, optional</span>
+<span class="sd">        Number of parallel workers for simulation. If None, it will be set to (number of CPU cores - 4) to avoid overloading the system.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        Paths to the generated demand CSV files: (heating_demand_csv, cooling_demand_csv)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_file_logger</span><span class="p">(</span><span class="s2">&quot;TEASERSim&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">log_level</span><span class="p">))</span>
+
+    <span class="c1"># Step 0: Set up directories and load simulation settings</span>
+    <span class="n">DIR_SCRIPT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="n">DIR_TOP</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">DIR_SCRIPT</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sim_setup_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sim_params</span> <span class="o">=</span> <span class="n">load_simulation_settings_from_excel</span><span class="p">(</span><span class="n">sim_setup_path</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+            <span class="n">timestep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sim_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timestep&#39;</span><span class="p">,</span> <span class="n">timestep</span><span class="p">))</span>
+            <span class="n">stop_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sim_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;stop_time&#39;</span><span class="p">,</span> <span class="n">stop_time</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded simulation settings from Excel: timestep=</span><span class="si">{</span><span class="n">timestep</span><span class="si">}</span><span class="s2">, stop_time=</span><span class="si">{</span><span class="n">stop_time</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not load simulation settings from Excel: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. Using default values.&quot;</span><span class="p">)</span>
+
+    <span class="n">timesteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">stop_time</span> <span class="o">/</span> <span class="n">timestep</span><span class="p">)</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
+        <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">periods</span><span class="o">=</span><span class="n">timesteps</span><span class="p">,</span>
+        <span class="n">freq</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">timestep</span><span class="o">/</span><span class="mi">3600</span><span class="p">)</span><span class="si">}</span><span class="s2">h&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Check if weather files exist</span>
+    <span class="k">if</span> <span class="n">weather_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">weather_path</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Weather file not found or given at </span><span class="si">{</span><span class="n">weather_path</span><span class="si">}</span><span class="s2">, using default weather file.&quot;</span><span class="p">)</span>
+        <span class="n">weather_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">DIR_SCRIPT</span><span class="p">),</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;examples&quot;</span><span class="p">,</span> <span class="s2">&quot;weather-seestadt-ref-2015.mos&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 1: Create TEASER project and district</span>
+    <span class="n">prj</span> <span class="o">=</span> <span class="n">create_project</span><span class="p">()</span>
+    <span class="n">prj</span><span class="o">.</span><span class="n">weather_file_path</span> <span class="o">=</span> <span class="n">weather_path</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating district buildings...&quot;</span><span class="p">)</span>
+    <span class="n">prj</span> <span class="o">=</span> <span class="n">create_district</span><span class="p">(</span>
+        <span class="n">info_path</span><span class="o">=</span><span class="n">buildings_info_path</span><span class="p">,</span> <span class="n">prj</span><span class="o">=</span><span class="n">prj</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">prj</span><span class="o">.</span><span class="n">buildings</span><span class="p">)</span><span class="si">}</span><span class="s2"> buildings&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 2: Make temporary directory for results and export AixLib</span>
+    <span class="n">tmp_results</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIR_TOP</span><span class="p">,</span> <span class="s2">&quot;tmp_TEASER_results&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">tmp_results</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">tmp_results</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Exporting AixLib models...&quot;</span><span class="p">)</span>
+    <span class="n">export_path</span> <span class="o">=</span> <span class="n">prj</span><span class="o">.</span><span class="n">export_aixlib</span><span class="p">()</span>  <span class="c1"># This returns the export path</span>
+    <span class="n">prj</span><span class="o">.</span><span class="n">save_project</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Models exported to: </span><span class="si">{</span><span class="n">export_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">Aix_Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">DIR_SCRIPT</span><span class="p">)</span>
+
+    <span class="n">Aix_Path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">aixlib_dir</span> <span class="o">=</span> <span class="n">Aix_Path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;AixLib&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">aixlib_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cloning AixLib repository to </span><span class="si">{</span><span class="n">aixlib_dir</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;clone&quot;</span><span class="p">,</span> <span class="s2">&quot;https://github.com/RWTH-EBC/AixLib&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">aixlib_dir</span><span class="p">)],</span>
+            <span class="n">check</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+    <span class="n">path_aixlib</span> <span class="o">=</span> <span class="n">aixlib_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;AixLib/package.mo&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using AixLib from: </span><span class="si">{</span><span class="n">path_aixlib</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+    <span class="n">demand_csv_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="s2">&quot;demand_csv&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">demand_csv_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">demand_csv_path</span><span class="p">)</span>
+
+    <span class="c1"># Step 3: Run simulations</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting simulations...&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">number_of_workers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">number_of_workers</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">number_of_workers</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span>
+            <span class="n">sim_part</span><span class="o">=</span><span class="n">prj</span><span class="o">.</span><span class="n">buildings</span><span class="p">,</span>
+            <span class="n">prj</span><span class="o">=</span><span class="n">prj</span><span class="p">,</span>
+            <span class="n">model_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;TEASEROutput&quot;</span><span class="p">),</span>
+            <span class="n">results_path</span><span class="o">=</span><span class="n">tmp_results</span><span class="p">,</span>
+            <span class="n">start_time</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">stop_time</span><span class="o">=</span><span class="n">stop_time</span><span class="p">,</span>
+            <span class="n">output_interval</span><span class="o">=</span><span class="n">timestep</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;Dassl&quot;</span><span class="p">,</span>
+            <span class="n">tolerance</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span>
+            <span class="n">process_number</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">aixlib_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">path_aixlib</span><span class="o">.</span><span class="n">parent</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">queue_simulation</span><span class="p">(</span>
+            <span class="n">sim_function</span><span class="o">=</span><span class="n">sim</span><span class="o">.</span><span class="n">simulate</span><span class="p">,</span>
+            <span class="n">prj</span><span class="o">=</span><span class="n">prj</span><span class="p">,</span>
+            <span class="n">results_path</span><span class="o">=</span><span class="n">tmp_results</span><span class="p">,</span>
+            <span class="n">stop_time</span><span class="o">=</span><span class="n">stop_time</span><span class="p">,</span>
+            <span class="n">output_interval</span><span class="o">=</span><span class="n">timestep</span><span class="p">,</span>
+            <span class="n">number_of_workers</span><span class="o">=</span><span class="n">number_of_workers</span><span class="p">,</span>
+            <span class="n">aixlib_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">path_aixlib</span><span class="o">.</span><span class="n">parent</span><span class="p">),</span>
+        <span class="p">)</span>
+    
+    <span class="c1"># Step 4: Read results and save each building&#39;s heating and cooling demand to csv</span>
+    <span class="k">for</span> <span class="n">bldg</span> <span class="ow">in</span> <span class="n">prj</span><span class="o">.</span><span class="n">buildings</span><span class="p">:</span>
+        <span class="n">signals</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;multizone.PHeater[</span><span class="si">{}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bldg</span><span class="o">.</span><span class="n">thermal_zones</span><span class="p">))</span>
+        <span class="p">]</span>
+        <span class="n">signals</span> <span class="o">+=</span> <span class="p">[</span>
+            <span class="s2">&quot;multizone.PCooler[</span><span class="si">{}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bldg</span><span class="o">.</span><span class="n">thermal_zones</span><span class="p">))</span>
+        <span class="p">]</span>
+        <span class="n">read_results</span><span class="p">(</span>
+            <span class="n">prj</span><span class="o">=</span><span class="n">prj</span><span class="p">,</span>
+            <span class="n">signals</span><span class="o">=</span><span class="n">signals</span><span class="p">,</span>
+            <span class="n">buildings</span><span class="o">=</span><span class="p">[</span><span class="n">bldg</span><span class="p">],</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+            <span class="n">results_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_results</span><span class="p">,</span> <span class="n">prj</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+            <span class="n">csv_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_results</span><span class="p">,</span> <span class="n">prj</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;demand_csv&quot;</span><span class="p">),</span>
+            <span class="n">stop_time</span><span class="o">=</span><span class="n">stop_time</span><span class="p">,</span>
+            <span class="n">timestep</span><span class="o">=</span><span class="n">timestep</span><span class="p">,</span>
+            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span>
+        <span class="p">)</span>
+    
+    <span class="c1"># Step 5: Combine individual building csv files into one csv for heating and one for cooling</span>
+    <span class="n">heat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">cool</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">heat_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cool_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">bldg</span> <span class="ow">in</span> <span class="n">prj</span><span class="o">.</span><span class="n">buildings</span><span class="p">:</span>
+        <span class="n">bldg_heat_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_results</span><span class="p">,</span> <span class="n">prj</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;demand_csv&quot;</span><span class="p">,</span> <span class="n">bldg</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_heat.csv&quot;</span><span class="p">),</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">bldg_cool_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_results</span><span class="p">,</span> <span class="n">prj</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;demand_csv&quot;</span><span class="p">,</span> <span class="n">bldg</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_cool.csv&quot;</span><span class="p">),</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">heat_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bldg_heat_df</span><span class="p">)</span>
+        <span class="n">cool_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bldg_cool_df</span><span class="p">)</span>
+
+    <span class="n">heat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">heat_list</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">cool</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">cool_list</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">heat</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">demand_csv_path</span><span class="p">,</span> <span class="s2">&quot;demands-heat.csv&quot;</span><span class="p">))</span>
+    <span class="n">cool</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">demand_csv_path</span><span class="p">,</span> <span class="s2">&quot;demands-cool.csv&quot;</span><span class="p">))</span>
+    
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">tmp_results</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">demand_csv_path</span><span class="p">,</span> <span class="s2">&quot;demands-heat.csv&quot;</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">demand_csv_path</span><span class="p">,</span> <span class="s2">&quot;demands-cool.csv&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

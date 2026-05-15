@@ -1,0 +1,30 @@
+﻿uesgraphs.examples.e6\_additional\_building\_attributes\_example
+================================================================
+
+.. automodule:: uesgraphs.examples.e6_additional_building_attributes_example
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      additional_attrib
+      main
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

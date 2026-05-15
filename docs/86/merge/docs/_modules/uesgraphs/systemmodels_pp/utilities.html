@@ -1,0 +1,1233 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.systemmodels_pp.utilities &mdash; uesgraphs v2.2.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/demand_estimation.html">Heat and DHW Demand Estimation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/teaser_opendhw_integration.html">Workflow integration of TEASER and OpenDHW</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/pandapipes_dynamic.html">Dynamic Simulation with pandapipes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_TEASER_int.html">TEASER Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.systemmodels_pp.utilities</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.systemmodels_pp.utilities</h1><div class="highlight"><pre>
+<span></span><span class="s2">&quot;This module collects the functions for creating a pandapipes model from a UESGraph and simulating it.&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.uesgraph</span><span class="w"> </span><span class="kn">import</span> <span class="n">UESGraph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.systemmodels_pp</span><span class="w"> </span><span class="kn">import</span> <span class="n">systemmodelheating</span> <span class="k">as</span> <span class="n">spp</span> 
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_up_file_logger</span><span class="p">,</span> <span class="n">set_up_terminal_logger</span> 
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+
+
+<div class="viewcode-block" id="set_up_file_logger"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.set_up_file_logger">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_up_file_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a full file+console logger for major functions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: Logger name</span>
+<span class="sd">        log_dir: Directory for log files (default: temp directory)</span>
+<span class="sd">        level: Logging level (default: ERROR)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Configured file+console logger</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+   <span class="c1"># if logger.handlers:</span>
+    <span class="c1">#    return logger</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">log_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">log_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
+
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+    <span class="n">log_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">log_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.log&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Logfile findable here: </span><span class="si">{</span><span class="n">log_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># File handler</span>
+    <span class="n">file_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+    <span class="n">file_formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - [</span><span class="si">%(filename)s</span><span class="s1">:</span><span class="si">%(lineno)d</span><span class="s1">] - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">file_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">file_formatter</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="n">logger</span></div>
+
+
+<div class="viewcode-block" id="set_up_logger"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.set_up_logger">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_up_logger</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">log_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)):</span>  <span class="c1"># Changed to INFO for more details</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a file-based logger with timestamp and detailed formatting.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Logger name, used for log file naming</span>
+<span class="sd">    log_dir : str, optional</span>
+<span class="sd">        Directory for log files. If None, uses system temp directory</span>
+<span class="sd">    level : int, optional</span>
+<span class="sd">        Logging level (default: INFO for detailed mass flow logging)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    logging.Logger</span>
+<span class="sd">        Configured logger instance writing to timestamped file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+    
+    <span class="c1"># Determine log directory</span>
+    <span class="k">if</span> <span class="n">log_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">log_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
+    
+    <span class="c1"># Create timestamped log file</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+    <span class="n">log_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">log_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.log&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Logfile findable here: </span><span class="si">{</span><span class="n">log_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Configure file handler with detailed formatting</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span>
+        <span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - [</span><span class="si">%(filename)s</span><span class="s1">:</span><span class="si">%(lineno)d</span><span class="s1">] - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span>
+    <span class="p">)</span>
+    <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">logger</span></div>
+
+
+<div class="viewcode-block" id="assign_csv_data_to_uesgraph"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.assign_csv_data_to_uesgraph">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">assign_csv_data_to_uesgraph</span><span class="p">(</span><span class="n">uesgraph_input</span><span class="p">,</span> <span class="n">base_folder</span><span class="p">,</span> <span class="n">mappings</span><span class="p">,</span> <span class="n">supply_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads CSV-pandapipes results (Junctions &amp; Pipes)</span>
+<span class="sd">    and saves them as Pandas Series in UESGraph.</span>
+
+<span class="sd">    base_folder must have these folders:</span>
+<span class="sd">    - res_junction/</span>
+<span class="sd">    - res_pipe/</span>
+
+<span class="sd">    Files and the names in the graph:</span>
+<span class="sd">    res_junction/p_bar.csv       → pressure</span>
+<span class="sd">    res_junction/t_k.csv         → temperature</span>
+<span class="sd">    res_pipe/mdot_from_kg_per_s.csv → mflow</span>
+<span class="sd">    res_pipe/v_mean_m_per_s.csv      → velocity</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    uesgraph_input : uesgraphs.uesgraph.UESGraph object</span>
+<span class="sd">        UESGraph to assign the data to</span>
+<span class="sd">    base_folder : str</span>
+<span class="sd">        Folder where the CSV results are stored</span>
+<span class="sd">    logger : logging.Logger, optional</span>
+<span class="sd">        Logger instance for debugging</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    uesgraphs.uesgraph.UESGraph object</span>
+<span class="sd">        UESGraph with assigned data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_terminal_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.SystemModelHeating.assign_csv_data_to_uesgraph&quot;</span><span class="p">)</span>
+
+    <span class="n">base_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">base_folder</span><span class="p">)</span>
+
+    <span class="c1"># Mappings depend on supply_type</span>
+    <span class="k">if</span> <span class="n">supply_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">supply_type</span> <span class="o">=</span> <span class="n">uesgraph_input</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;supply_type&quot;</span><span class="p">,</span> <span class="s2">&quot;supply&quot;</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">supply_type</span><span class="p">)</span>
+
+    <span class="n">junction_map</span> <span class="o">=</span> <span class="n">mappings</span><span class="p">[</span><span class="n">supply_type</span><span class="p">][</span><span class="s2">&quot;junction&quot;</span><span class="p">]</span>
+    <span class="n">pipe_map</span> <span class="o">=</span> <span class="n">mappings</span><span class="p">[</span><span class="n">supply_type</span><span class="p">][</span><span class="s2">&quot;pipe&quot;</span><span class="p">]</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">junction_map</span><span class="p">)</span>
+    <span class="c1"># CSV --&gt; Variable Name Mapping</span>
+    <span class="n">csv_to_var</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;p_bar&quot;</span><span class="p">:</span> <span class="s2">&quot;pressure&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;t_k&quot;</span><span class="p">:</span> <span class="s2">&quot;temperature&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mdot_from_kg_per_s&quot;</span><span class="p">:</span> <span class="s2">&quot;mflow&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;v_mean_m_per_s&quot;</span><span class="p">:</span> <span class="s2">&quot;velocity&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;p_from_bar&quot;</span><span class="p">:</span> <span class="s2">&quot;pressure_from&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;p_to_bar&quot;</span><span class="p">:</span> <span class="s2">&quot;pressure_to&quot;</span>
+    <span class="p">}</span>
+
+    <span class="c1"># --- Junction-Data -----------------------------------------------------</span>
+    <span class="n">junction_folder</span> <span class="o">=</span> <span class="n">base_folder</span> <span class="o">/</span> <span class="s2">&quot;res_junction&quot;</span>
+    <span class="k">for</span> <span class="n">fname</span><span class="p">,</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">&quot;p_bar.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;pressure&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;t_k.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">)]:</span>
+        <span class="n">fpath</span> <span class="o">=</span> <span class="n">junction_folder</span> <span class="o">/</span> <span class="n">fname</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fpath</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">continue</span>
+        
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">var_name</span> <span class="o">==</span> <span class="s2">&quot;pressure&quot;</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">*</span><span class="mi">100000</span>
+
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">col_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">col_idx</span> <span class="ow">in</span> <span class="n">junction_map</span><span class="p">:</span>
+                <span class="n">node_id</span> <span class="o">=</span> <span class="n">junction_map</span><span class="p">[</span><span class="n">col_idx</span><span class="p">]</span>
+                <span class="n">uesgraph_input</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_id</span><span class="p">][</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>  <span class="c1"># Pandas Series</span>
+                <span class="k">if</span> <span class="n">uesgraph_input</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_id</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_supply_heating&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                    <span class="n">uesgraph_input</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_id</span><span class="p">][</span><span class="s2">&quot;rho&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">uesgraph_input</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;density&quot;</span><span class="p">])</span>
+
+    <span class="n">p_in</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">T_from</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># --- Pipe-Data ---------------------------------------------------------</span>
+    <span class="n">pipe_folder</span> <span class="o">=</span> <span class="n">base_folder</span> <span class="o">/</span> <span class="s2">&quot;res_pipe&quot;</span>
+    <span class="k">for</span> <span class="n">fname</span><span class="p">,</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">&quot;mdot_from_kg_per_s.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;m_flow&quot;</span><span class="p">),</span>
+                                <span class="p">(</span><span class="s2">&quot;p_from_bar.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;pressure_from&quot;</span><span class="p">),</span>
+                                <span class="p">(</span><span class="s2">&quot;p_to_bar.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;pressure_to&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;t_from_k.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;t_from&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;t_to_k.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;t_to&quot;</span><span class="p">)]:</span>
+        <span class="n">fpath</span> <span class="o">=</span> <span class="n">pipe_folder</span> <span class="o">/</span> <span class="n">fname</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fpath</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">continue</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">var_name</span> <span class="o">==</span> <span class="s2">&quot;m_flow&quot;</span><span class="p">:</span>
+            <span class="n">m_flow_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">var_name</span> <span class="o">==</span> <span class="s2">&quot;pressure_from&quot;</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">*</span><span class="mi">100000</span>
+            <span class="n">p_in</span> <span class="o">=</span> <span class="n">df</span>
+            <span class="k">continue</span>
+        <span class="k">elif</span> <span class="n">var_name</span> <span class="o">==</span> <span class="s2">&quot;pressure_to&quot;</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">*</span><span class="mi">100000</span>
+            <span class="k">if</span> <span class="n">p_in</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">p_in</span> <span class="o">-</span> <span class="n">df</span>
+                <span class="n">var_name</span> <span class="o">=</span> <span class="s2">&quot;dp&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span>
+        <span class="k">if</span> <span class="n">var_name</span> <span class="o">==</span> <span class="s2">&quot;t_from&quot;</span><span class="p">:</span>
+            <span class="n">T_from</span> <span class="o">=</span> <span class="n">df</span>
+            <span class="k">continue</span>
+        <span class="k">elif</span> <span class="n">var_name</span> <span class="o">==</span> <span class="s2">&quot;t_to&quot;</span><span class="p">:</span>
+            <span class="n">T_to</span> <span class="o">=</span> <span class="n">df</span>
+            
+            <span class="n">cp_default</span> <span class="o">=</span> <span class="n">uesgraph_input</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;cp_default&quot;</span><span class="p">]</span>
+            
+            <span class="n">T_ground</span> <span class="o">=</span> <span class="n">uesgraph_input</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_ground&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">T_ground</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;T_ground not found in graph.graph&quot;</span><span class="p">)</span>
+            
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">T_to</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="n">col_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">col_idx</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pipe_map</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">edge</span> <span class="o">=</span> <span class="n">pipe_map</span><span class="p">[</span><span class="n">col_idx</span><span class="p">]</span>
+                <span class="n">edge_data</span> <span class="o">=</span> <span class="n">uesgraph_input</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">]</span>
+
+                <span class="n">kIns</span> <span class="o">=</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kIns&quot;</span><span class="p">)</span>
+                <span class="n">dIns</span> <span class="o">=</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dIns&quot;</span><span class="p">)</span>
+                <span class="n">length</span> <span class="o">=</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;length&quot;</span><span class="p">)</span>
+                <span class="n">diameter</span> <span class="o">=</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;diameter&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="kc">None</span> <span class="ow">in</span> <span class="p">(</span><span class="n">kIns</span><span class="p">,</span> <span class="n">dIns</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">diameter</span><span class="p">):</span>
+                    <span class="k">continue</span>
+
+                <span class="n">m_flow</span> <span class="o">=</span> <span class="n">m_flow_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+                <span class="n">m_flow_abs</span> <span class="o">=</span> <span class="n">m_flow</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+
+                <span class="n">Tamb</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">T_ground</span><span class="p">)</span>
+                <span class="n">Tamb</span> <span class="o">=</span> <span class="n">Tamb</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">m_flow</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+                <span class="n">Tamb</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">m_flow</span><span class="o">.</span><span class="n">index</span>
+
+                <span class="n">T_in_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">m_flow</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+                <span class="n">mask_pos</span> <span class="o">=</span> <span class="n">m_flow</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="n">mask_neg</span> <span class="o">=</span> <span class="n">m_flow</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+
+                <span class="n">T_in_series</span><span class="p">[</span><span class="n">mask_pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">T_from</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">mask_pos</span><span class="p">]</span>
+                <span class="n">T_in_series</span><span class="p">[</span><span class="n">mask_neg</span><span class="p">]</span> <span class="o">=</span> <span class="n">T_to</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">mask_neg</span><span class="p">]</span>
+
+                <span class="n">uesgraph_input</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;T_in&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">T_in_series</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+                <span class="c1"># --- T_out ----</span>
+                <span class="n">T_out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">m_flow</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+                <span class="n">mask_flow</span> <span class="o">=</span> <span class="n">m_flow_abs</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="n">mask_zero</span> <span class="o">=</span> <span class="n">m_flow_abs</span> <span class="o">==</span> <span class="mi">0</span>
+
+                <span class="n">T_out</span><span class="p">[</span><span class="n">mask_flow</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tamb</span><span class="p">[</span><span class="n">mask_flow</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span>
+                    <span class="p">(</span><span class="n">T_in_series</span><span class="p">[</span><span class="n">mask_flow</span><span class="p">]</span> <span class="o">-</span> <span class="n">Tamb</span><span class="p">[</span><span class="n">mask_flow</span><span class="p">])</span> <span class="o">*</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">kIns</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">diameter</span> <span class="o">*</span> <span class="n">length</span> <span class="o">/</span>
+                        <span class="p">(</span><span class="n">m_flow_abs</span><span class="p">[</span><span class="n">mask_flow</span><span class="p">]</span> <span class="o">*</span> <span class="n">cp_default</span> <span class="o">*</span> <span class="n">dIns</span><span class="p">))</span>
+                <span class="p">)</span>
+
+                <span class="n">T_out</span><span class="p">[</span><span class="n">mask_zero</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tamb</span><span class="p">[</span><span class="n">mask_zero</span><span class="p">]</span>
+
+                <span class="n">uesgraph_input</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;T_out&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">T_out</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+                <span class="c1"># --- Q_loss --------------------------------------------------</span>
+                <span class="n">Q_loss</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">m_flow</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+                <span class="n">Q_loss</span><span class="p">[</span><span class="n">mask_flow</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">m_flow_abs</span><span class="p">[</span><span class="n">mask_flow</span><span class="p">]</span> <span class="o">*</span> <span class="n">cp_default</span> <span class="o">*</span>
+                    <span class="p">(</span><span class="n">T_in_series</span><span class="p">[</span><span class="n">mask_flow</span><span class="p">]</span> <span class="o">-</span> <span class="n">T_out</span><span class="p">[</span><span class="n">mask_flow</span><span class="p">])</span>
+                <span class="p">)</span>
+
+                <span class="n">Q_loss</span><span class="p">[</span><span class="n">mask_zero</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="n">uesgraph_input</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;Q_loss&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Q_loss</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">col_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">col_idx</span> <span class="ow">in</span> <span class="n">pipe_map</span><span class="p">:</span>
+                <span class="n">edge</span> <span class="o">=</span> <span class="n">pipe_map</span><span class="p">[</span><span class="n">col_idx</span><span class="p">]</span>
+                <span class="n">uesgraph_input</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">uesgraph_input</span></div>
+
+<span class="c1">### Main Function for creating the model ###</span>
+
+<div class="viewcode-block" id="create_model"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.create_model">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">create_model</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">,</span>
+    <span class="n">save_at</span><span class="p">,</span>
+    <span class="n">graph</span><span class="p">,</span>
+    <span class="n">start_time</span><span class="p">,</span>
+    <span class="n">stop_time</span><span class="p">,</span>
+    <span class="n">timestep</span><span class="p">,</span>
+    <span class="n">mode</span><span class="p">,</span>
+    <span class="n">t_ground_prescribed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">logger</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generic model generation for setup defined through the parameters</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the model (First character will be capitalized, cannot start with digit)</span>
+<span class="sd">    save_at : str</span>
+<span class="sd">        Directory where to store the generated model results</span>
+<span class="sd">    graph : uesgraphs.uesgraph.UESGraph</span>
+<span class="sd">        Network graph with all necessary data for model generation</span>
+<span class="sd">    start_time : int</span>
+<span class="sd">        Start time of the simulation in seconds</span>
+<span class="sd">    stop_time : int</span>
+<span class="sd">        Stop time of the simulation in seconds</span>
+<span class="sd">    timestep : int</span>
+<span class="sd">        Timestep of the simulation in seconds</span>
+<span class="sd">    t_ground_prescribed : list</span>
+<span class="sd">        List of ground temperatures for every time step</span>
+<span class="sd">    logger : logging.Logger, optional</span>
+<span class="sd">        Logger instance for debugging</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    new_model : spp.SystemModelHeating</span>
+<span class="sd">        Generated system model</span>
+<span class="sd">    graph : uesgraphs.uesgraph.UESGraph</span>
+<span class="sd">        Graph of the network with assigned simulation results</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Set up logging</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_file_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.create_model&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+    
+    <span class="c1"># Entry logging with critical parameters</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;=== Starting create_model for &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; ===&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Target directory: </span><span class="si">{</span><span class="n">save_at</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Network type: </span><span class="si">{</span><span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;network_type&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;unknown&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulation setup - start_time: </span><span class="si">{</span><span class="n">start_time</span><span class="si">}</span><span class="s2">, stop_time: </span><span class="si">{</span><span class="n">stop_time</span><span class="si">}</span><span class="s2">, timestep: </span><span class="si">{</span><span class="n">timestep</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">(),</span> <span class="s2">&quot;Model name cannot start with a digit&quot;</span>
+
+    <span class="k">assert</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;static&quot;</span><span class="p">,</span><span class="s2">&quot;dynamic&quot;</span><span class="p">,</span> <span class="s2">&quot;transient&quot;</span><span class="p">),</span> <span class="s2">&quot;Mode must be either &#39;static&#39; or &#39;dynamic&#39; or &#39;transient&#39;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating SystemModelHeating instance&quot;</span><span class="p">)</span>
+    <span class="n">new_model</span> <span class="o">=</span> <span class="n">spp</span><span class="o">.</span><span class="n">SystemModelHeating</span><span class="p">(</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">stop_time</span> <span class="o">=</span> <span class="n">stop_time</span><span class="p">,</span> <span class="n">timestep</span> <span class="o">=</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">network_type</span><span class="o">=</span><span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;network_type&quot;</span><span class="p">],</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;density&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_model</span><span class="o">.</span><span class="n">density</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;density&quot;</span><span class="p">])</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;density&quot;</span><span class="p">]))</span>
+    
+    <span class="k">if</span> <span class="n">t_ground_prescribed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting prescribed ground temperatures (length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">t_ground_prescribed</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="n">new_model</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;T_ground&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">t_ground_prescribed</span>
+        <span class="n">new_model</span><span class="o">.</span><span class="n">ground_temp_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;1.0 m&quot;</span><span class="p">:</span> <span class="n">new_model</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;T_ground&quot;</span><span class="p">]}</span>
+        <span class="p">)</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;T_ground&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">t_ground_prescribed</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Importing UESGraph&quot;</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">pipe_list</span><span class="p">,</span> <span class="n">heat_source_ids</span><span class="p">,</span> <span class="n">heat_source_r_ids</span> <span class="o">=</span> <span class="n">new_model</span><span class="o">.</span><span class="n">import_from_uesgraph</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">!=</span> <span class="s2">&quot;dynamic&quot;</span><span class="p">:</span>
+        <span class="n">new_model</span><span class="o">.</span><span class="n">run_timeseries_spp</span><span class="p">(</span><span class="n">save_at</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">new_model</span><span class="o">.</span><span class="n">run_timeseries_dpp</span><span class="p">(</span><span class="n">pipe_list</span><span class="p">,</span> <span class="n">heat_source_ids</span><span class="p">,</span> <span class="n">heat_source_r_ids</span><span class="p">,</span> <span class="n">save_at</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="n">mappings</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;supply&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;junction&quot;</span><span class="p">:</span> <span class="n">new_model</span><span class="o">.</span><span class="n">junction_map_supply</span><span class="p">,</span>
+            <span class="s2">&quot;pipe&quot;</span><span class="p">:</span> <span class="n">new_model</span><span class="o">.</span><span class="n">pipe_map_supply</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;return&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;junction&quot;</span><span class="p">:</span> <span class="n">new_model</span><span class="o">.</span><span class="n">junction_map_return</span><span class="p">,</span>
+            <span class="s2">&quot;pipe&quot;</span><span class="p">:</span> <span class="n">new_model</span><span class="o">.</span><span class="n">pipe_map_return</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">save_at</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;mappings.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">mappings</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+    <span class="n">graph_supply</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    <span class="n">graph_return</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+
+    <span class="n">graph_in</span> <span class="o">=</span> <span class="n">assign_csv_data_to_uesgraph</span><span class="p">(</span><span class="n">graph_supply</span><span class="p">,</span> <span class="n">save_at</span><span class="p">,</span> <span class="n">mappings</span><span class="p">,</span> <span class="n">supply_type</span><span class="o">=</span><span class="s2">&quot;supply&quot;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">graph_out</span> <span class="o">=</span> <span class="n">assign_csv_data_to_uesgraph</span><span class="p">(</span><span class="n">graph_return</span><span class="p">,</span> <span class="n">save_at</span><span class="p">,</span> <span class="n">mappings</span><span class="p">,</span> <span class="n">supply_type</span><span class="o">=</span><span class="s2">&quot;return&quot;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;=== create_model completed successfully for &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; ===&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_model</span><span class="p">,</span> <span class="n">graph_in</span><span class="p">,</span> <span class="n">graph_out</span></div>
+
+<div class="viewcode-block" id="uesgraph_to_pandapipes"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.uesgraph_to_pandapipes">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">uesgraph_to_pandapipes</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">,</span> <span class="n">simplification_level</span><span class="p">,</span>
+                         <span class="n">workspace</span><span class="p">,</span>
+                         <span class="n">sim_setup_path</span><span class="p">,</span>
+                         <span class="n">input_heating</span><span class="p">,</span> <span class="n">input_dhw</span><span class="p">,</span> <span class="n">input_cooling</span><span class="p">,</span>
+                         <span class="n">ground_temp_path</span><span class="p">,</span>
+                         <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span>
+                         <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert an Urban Energy System Graph (UESGraph) to pandapipes model and simulate it.</span>
+
+<span class="sd">    This function processes a UESGraph, applies simplification, adds demand data,</span>
+<span class="sd">    and generates the pandapipes results based on simulation parameters.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    uesgraph : UESGraph object or str</span>
+<span class="sd">        The UESGraph object or path to a JSON file containing the UESGraph data</span>
+<span class="sd">    simplification_level : int</span>
+<span class="sd">        Level of simplification to apply to the UESGraph (higher = more simplified)</span>
+<span class="sd">    workspace : str or Path</span>
+<span class="sd">        Directory path where output files will be saved</span>
+<span class="sd">    sim_setup_path : str or Path</span>
+<span class="sd">        Path to the simulation setup configuration file</span>
+<span class="sd">    input_heating : str or Path</span>
+<span class="sd">        Path to heating demand data</span>
+<span class="sd">    input_dhw : str or Path</span>
+<span class="sd">        Path to domestic hot water demand data</span>
+<span class="sd">    input_cooling : str or Path</span>
+<span class="sd">        Path to cooling demand data</span>
+<span class="sd">    ground_temp_path : str or Path</span>
+<span class="sd">        Path to ground temperature data file</span>
+<span class="sd">    logger : logging.Logger, optional</span>
+<span class="sd">        Logger instance. If None, creates a new file logger in temp directory</span>
+<span class="sd">    log_level : int, optional</span>
+<span class="sd">        Logging level (default is logging.DEBUG). Only used if logger is None</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">        ---</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">    -------</span>
+<span class="sd">    FileNotFoundError: If required files are missing</span>
+<span class="sd">    ValueError: If uesgraph parameter is invalid</span>
+<span class="sd">    Exception: For various processing errors with detailed messages</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Set up logging configuration</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_file_logger</span><span class="p">(</span><span class="s2">&quot;pandapipesSim&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">log_level</span><span class="p">))</span>
+
+    <span class="c1"># Step 0: Resolve all paths to absolute paths (prevents issues with os.chdir in to_json)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Resolving all input paths to absolute paths&quot;</span><span class="p">)</span>
+    <span class="n">workspace</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">workspace</span><span class="p">))</span>
+    <span class="n">sim_setup_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">sim_setup_path</span><span class="p">))</span>
+    <span class="n">input_heating</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">input_heating</span><span class="p">))</span>
+    <span class="n">input_dhw</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">input_dhw</span><span class="p">))</span>
+    <span class="n">input_cooling</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">input_cooling</span><span class="p">))</span>
+    <span class="n">ground_temp_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ground_temp_path</span><span class="p">))</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resolved workspace: </span><span class="si">{</span><span class="n">workspace</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resolved sim_setup_path: </span><span class="si">{</span><span class="n">sim_setup_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resolved ground_temp_path: </span><span class="si">{</span><span class="n">ground_temp_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 1: Validate input files and folders</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Validating files&quot;</span><span class="p">)</span>
+    <span class="n">paths_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="n">sim_setup_path</span><span class="p">,</span> <span class="n">input_heating</span><span class="p">,</span> <span class="n">input_dhw</span><span class="p">,</span> <span class="n">input_cooling</span><span class="p">,</span> <span class="n">ground_temp_path</span><span class="p">]</span>
+    <span class="n">existing_files</span><span class="p">,</span> <span class="n">missing_files</span> <span class="o">=</span> <span class="n">validate_paths</span><span class="p">(</span><span class="n">paths_to_check</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">missing_files</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing files: </span><span class="si">{</span><span class="n">missing_files</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Some files are missing. Please check the logs for details.&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Existing files: </span><span class="si">{</span><span class="n">existing_files</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 2: Load simulation configuration from Excel</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading simulation settings from Excel&quot;</span><span class="p">)</span>
+    <span class="n">sim_params</span> <span class="o">=</span> <span class="n">load_simulation_settings_from_excel</span><span class="p">(</span><span class="n">sim_setup_path</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulation settings loaded: </span><span class="si">{</span><span class="n">sim_params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Step 3: Initialize or load the UESGraph from file or object</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initialize UESGraph&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.json&quot;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">uesgraph_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">)</span>
+                <span class="n">uesgraph</span> <span class="o">=</span> <span class="n">UESGraph</span><span class="p">()</span>
+                <span class="n">uesgraph</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">path</span> <span class="o">=</span> <span class="n">uesgraph_path</span><span class="p">,</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;UESGraph loaded from JSON: </span><span class="si">{</span><span class="n">uesgraph_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;While loading UESGraph from JSON: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Value for uesgraph: </span><span class="si">{</span><span class="n">uesgraph</span><span class="si">}</span><span class="s2"> is nor uesgraph object nor valid JSON path&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">,</span> <span class="n">UESGraph</span><span class="p">):</span>
+        <span class="c1"># Normalize UESGraph via JSON</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Normalize UESGraph via JSON&quot;</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;uesgraphs_origin&quot;</span>
+        <span class="n">origin_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">workspace</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.json&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Save to JSON</span>
+            <span class="n">uesgraph</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span>
+                <span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">workspace</span><span class="p">),</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">all_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">prettyprint</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original UESGraph saved to </span><span class="si">{</span><span class="n">origin_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Reload from JSON to normalize internal structures</span>
+            <span class="n">normalized_graph</span> <span class="o">=</span> <span class="n">UESGraph</span><span class="p">()</span>
+            <span class="n">normalized_graph</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span>
+                <span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">origin_path</span><span class="p">),</span>
+                <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;heating&quot;</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Replace with normalized version</span>
+            <span class="n">uesgraph</span> <span class="o">=</span> <span class="n">normalized_graph</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;UESGraph normalized successfully&quot;</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to normalize UESGraph: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;uesgraph must be either a JSON path or UESGraph object, got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing network_type to UESGraph&quot;</span><span class="p">)</span>
+    <span class="n">uesgraph</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;network_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;heating&quot;</span>
+
+    <span class="c1"># Step 3.1: Ensure all edges have names (required for pandapipes simulation model)</span>
+    <span class="c1"># This is needed because from_geojson() doesn&#39;t set edge names automatically,</span>
+    <span class="c1"># while from_json() does (via pipeID). We need consistent behavior.</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Validating and generating edge names if needed&quot;</span><span class="p">)</span>
+    <span class="n">edges_without_names</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">edges_total</span> <span class="o">=</span> <span class="n">uesgraph</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">uesgraph</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s1">&#39;name&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">uesgraph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">]:</span>
+            <span class="c1"># Generate name from connected node names</span>
+            <span class="n">node_0_name</span> <span class="o">=</span> <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">node_1_name</span> <span class="o">=</span> <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">edge_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node_0_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">node_1_name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">uesgraph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">edge_name</span>
+            <span class="n">edges_without_names</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated name for edge </span><span class="si">{</span><span class="n">edge</span><span class="si">}</span><span class="s2">: &#39;</span><span class="si">{</span><span class="n">edge_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">edges_without_names</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated names for </span><span class="si">{</span><span class="n">edges_without_names</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">edges_total</span><span class="si">}</span><span class="s2"> edges that were missing names&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All </span><span class="si">{</span><span class="n">edges_total</span><span class="si">}</span><span class="s2"> edges already have names&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Step 4: Assign demand data to the graph nodes</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Assigning demand data&quot;</span><span class="p">)</span>
+        <span class="n">input_paths_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;heating&quot;</span><span class="p">:</span> <span class="n">input_heating</span><span class="p">,</span>
+            <span class="s2">&quot;cooling&quot;</span><span class="p">:</span> <span class="n">input_cooling</span><span class="p">,</span>
+            <span class="s2">&quot;dhw&quot;</span><span class="p">:</span> <span class="n">input_dhw</span>
+        <span class="p">}</span>
+        <span class="n">uesgraph</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">assign_demand_data</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">,</span> <span class="n">input_paths_dict</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># Step 4.1: Save the UESGraph with added demand data</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Try to save uesgraph with demand data&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">uesgraph</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">workspace</span><span class="p">),</span>
+                        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;transurban_seestadt_uesgraphs_with_demand&quot;</span><span class="p">,</span>
+                        <span class="n">all_data</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="n">prettyprint</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;UESGraph with demand data saved&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save uesgraph with demand data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Step 5: Assign pipe parameters from Excel</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;*** Assigning pipe parameters from Excel ***&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">excel_params</span> <span class="o">=</span> <span class="n">_load_excel</span><span class="p">(</span><span class="n">sim_setup_path</span><span class="p">,</span> <span class="s1">&#39;Pipes&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">uesgraph</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
+                <span class="n">uesgraph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;dIns&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dIns&quot;</span><span class="p">,</span> <span class="mf">0.038</span><span class="p">)</span>
+                <span class="n">uesgraph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;kIns&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kIns&quot;</span><span class="p">,</span> <span class="mf">0.035</span><span class="p">)</span>
+                <span class="n">uesgraph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;roughness&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;roughness&quot;</span><span class="p">,</span> <span class="mf">0.000025</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span>
+                <span class="n">uesgraph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;ground_depth&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ground_depth&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">uesgraph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">edge</span><span class="p">][</span><span class="s2">&quot;sections&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sections&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Pipe parameters successfully assigned&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to assign pipe parameters: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+
+        <span class="c1"># Step 6: Assign supply parameters from Excel</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;*** Assigning supply parameters from Excel ***&quot;</span><span class="p">)</span>
+        <span class="n">supplies</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">excel_params</span> <span class="o">=</span> <span class="n">_load_excel</span><span class="p">(</span><span class="n">sim_setup_path</span><span class="p">,</span> <span class="s1">&#39;Supply&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodelist_building</span><span class="p">:</span>
+                <span class="n">is_supply</span> <span class="o">=</span> <span class="s2">&quot;is_supply_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">uesgraph</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;network_type&quot;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">is_supply</span><span class="p">]:</span>
+                    <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;TIn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;TIn&quot;</span><span class="p">,</span> <span class="mi">324</span><span class="p">)</span>
+                    <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;TReturn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;TReturn&quot;</span><span class="p">,</span> <span class="mi">290</span><span class="p">)</span>
+                    <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;dpIn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pIn&quot;</span><span class="p">,</span> <span class="mi">500000</span><span class="p">)</span><span class="o">/</span><span class="mi">100000</span>  <span class="c1"># Convert from Pa to bar</span>
+                    <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;pReturn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pReturn&quot;</span><span class="p">,</span> <span class="mi">200000</span><span class="p">)</span><span class="o">/</span><span class="mi">100000</span>
+                    <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;dpFlow&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dpFlow&quot;</span><span class="p">,</span> <span class="mi">300000</span><span class="p">)</span><span class="o">/</span><span class="mi">100000</span>
+                    <span class="n">supplies</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Supply parameters successfully assigned&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to assign supply parameters: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+        <span class="n">uesgraph</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;number_of_supplies&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">supplies</span>
+        <span class="c1"># Step 7: Assign demand parameters from Excel</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;*** Assigning demand parameters from Excel ***&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">excel_params</span> <span class="o">=</span> <span class="n">_load_excel</span><span class="p">(</span><span class="n">sim_setup_path</span><span class="p">,</span> <span class="s1">&#39;Demands&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+            <span class="n">uesgraph</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;dT_Net&quot;</span><span class="p">]</span><span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dT_Network&quot;</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+            <span class="n">uesgraph</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;cp_default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cp_default&quot;</span><span class="p">,</span> <span class="mi">4180</span><span class="p">)</span>  
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodelist_building</span><span class="p">:</span>
+                <span class="n">is_supply</span> <span class="o">=</span> <span class="s2">&quot;is_supply_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">uesgraph</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;network_type&quot;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">is_supply</span><span class="p">]:</span>
+                    <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;dTDesign&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dT_Network&quot;</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+                    <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;TReturn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;TReturn&quot;</span><span class="p">,</span> <span class="mi">290</span><span class="p">)</span>
+                    <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;cp_default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">excel_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cp_default&quot;</span><span class="p">,</span> <span class="mi">4180</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Demand parameters successfully assigned&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to assign demand parameters: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> 
+        <span class="c1"># Step 8: Load ground temperature data for simulations</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading ground temperature data&quot;</span><span class="p">)</span>
+        <span class="n">ground_temp_df</span> <span class="o">=</span> <span class="n">load_ground_temp_data</span><span class="p">(</span><span class="n">ground_temp_path</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ground temperature data loaded of shape: </span><span class="si">{</span><span class="n">ground_temp_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Step 9: Simplify the UESGraph according to the specified level</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*** Start simplyfing Uesgraph with simplification level: </span><span class="si">{</span><span class="n">simplification_level</span><span class="si">}</span><span class="s2"> ***&quot;</span><span class="p">)</span>
+        <span class="c1">#logger.info(f&quot;Before simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type=&#39;heating&#39;)}&quot;)</span>
+        <span class="c1">#uesgraph = simplify_uesgraph(uesgraph, simplification_level)</span>
+        <span class="c1">#logger.info(f&quot;After simplification: {len(uesgraph.edges())} edges with total length {uesgraph.calc_network_length(network_type=&#39;heating&#39;)}&quot;)</span>
+
+        <span class="c1"># Step 9.1: Save the simplified UESGraph</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Try to save uesgraph after simplification&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">uesgraph</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">workspace</span><span class="p">),</span>
+                        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;uesgraphs_simplified&quot;</span><span class="p">,</span>
+                        <span class="n">all_data</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="n">prettyprint</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;UESGraph after simplification saved&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save uesgraph after simplification: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Step 10: Create directory structure for Pandapipes output files</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating subfolder for pandapipes files&quot;</span><span class="p">)</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+        <span class="n">sim_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Sim</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">sim_model_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="s2">&quot;models&quot;</span><span class="p">,</span> <span class="n">sim_name</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">sim_model_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pandapipes files will be saved to: </span><span class="si">{</span><span class="n">sim_model_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Step 11: Generate pandapipes simulation using Excel-based simulation parameters</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Start process for pandapipes simulation using Excel parameters&quot;</span><span class="p">)</span>
+        <span class="n">sim_name_ix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sim_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">sim_params</span><span class="p">[</span><span class="s1">&#39;simulation_name&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing simulation: </span><span class="si">{</span><span class="n">sim_params</span><span class="p">[</span><span class="s1">&#39;simulation_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Extract ground temperature data (assuming ground_depth is in sim_params or use default)</span>
+        <span class="n">ground_depth</span> <span class="o">=</span> <span class="n">sim_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ground_depth&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0 m&#39;</span><span class="p">)</span>  <span class="c1"># Default fallback</span>
+        <span class="n">ground_temp_list</span> <span class="o">=</span> <span class="n">ground_temp_df</span><span class="p">[</span><span class="n">ground_depth</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using ground temperature data for depth </span><span class="si">{</span><span class="n">ground_depth</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Save simulation parameters to CSV if requested</span>
+        <span class="k">if</span> <span class="n">sim_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;save_params_to_csv&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Saving simulation parameters to CSV&quot;</span><span class="p">)</span>
+            <span class="n">save_setup_params_to_csv</span><span class="p">(</span><span class="n">sim_params</span><span class="p">,</span> <span class="n">sim_name_ix</span><span class="p">,</span> <span class="n">sim_model_dir</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start creating model for simulation: </span><span class="si">{</span><span class="n">sim_name_ix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">graph_s</span><span class="p">,</span> <span class="n">graph_r</span> <span class="o">=</span> <span class="n">generate_simulation_model</span><span class="p">(</span>
+                <span class="n">uesgraph</span><span class="o">=</span><span class="n">uesgraph</span><span class="p">,</span>
+                <span class="n">sim_name</span><span class="o">=</span><span class="n">sim_name_ix</span><span class="p">,</span>
+                <span class="n">sim_params</span><span class="o">=</span><span class="n">sim_params</span><span class="p">,</span>
+                <span class="n">ground_temp_list</span><span class="o">=</span><span class="n">ground_temp_list</span><span class="p">,</span>
+                <span class="n">sim_model_dir</span><span class="o">=</span><span class="n">sim_model_dir</span><span class="p">,</span>
+                <span class="n">logger</span><span class="o">=</span><span class="n">logger</span>
+            <span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">graph_s</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">workspace</span><span class="p">),</span>
+                            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;uesgraphs&quot;</span><span class="p">,</span>
+                            <span class="n">all_data</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                            <span class="n">prettyprint</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="n">graph_s</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">sim_model_dir</span><span class="p">),</span>
+                            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;uesgraphs&quot;</span><span class="p">,</span>
+                            <span class="n">all_data</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                            <span class="n">prettyprint</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="n">graph_r</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">sim_model_dir</span><span class="p">),</span>
+                            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;uesgraphs_return&quot;</span><span class="p">,</span>
+                            <span class="n">all_data</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                            <span class="n">prettyprint</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;UESGraph after simulation saved&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save uesgraph after simulation: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error while generating pandapipes simulation: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">e</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error while processing uesgraph: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">e</span></div>
+    
+<span class="c1">### Helper functions ###</span>
+
+<div class="viewcode-block" id="load_simulation_settings_from_excel"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.load_simulation_settings_from_excel">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_simulation_settings_from_excel</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load simulation settings from Excel &#39;Simulation&#39; sheet.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    excel_path : str or Path</span>
+<span class="sd">        Path to Excel file containing simulation settings</span>
+<span class="sd">    logger : logging.Logger, optional</span>
+<span class="sd">        Logger instance</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sim_params : dict</span>
+<span class="sd">        Dictionary of simulation parameters</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If required simulation parameters are missing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_terminal_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.load_simulation_settings_from_excel&quot;</span><span class="p">)</span>
+
+    <span class="n">sim_params</span> <span class="o">=</span> <span class="n">_load_excel</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="s1">&#39;Simulation&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+    <span class="c1"># Validate required simulation parameters</span>
+    <span class="n">required</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;simulation_name&#39;</span><span class="p">,</span> <span class="s1">&#39;start_time&#39;</span><span class="p">,</span> <span class="s1">&#39;stop_time&#39;</span><span class="p">,</span> <span class="s1">&#39;mode&#39;</span><span class="p">]</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">param</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">required</span> <span class="k">if</span> <span class="n">param</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sim_params</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required simulation parameters in &#39;Simulation&#39; sheet: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulation settings loaded from Excel: </span><span class="si">{</span><span class="n">sim_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;simulation_name&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sim_params</span></div>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_excel</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">excel_sheet_name</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load parameters from Excel file.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    excel_path : str or Path or None</span>
+<span class="sd">        Path to Excel file (optional)</span>
+<span class="sd">    excel_sheet_name : str</span>
+<span class="sd">        Name of the Excel sheet to load</span>
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        Logger instance</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    excel_params : dict</span>
+<span class="sd">        Dictionary of parameters from Excel (empty dict if excel_path is None)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">excel_params</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">if</span> <span class="n">excel_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading parameters from Excel: </span><span class="si">{</span><span class="n">excel_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">excel_params</span> <span class="o">=</span> <span class="n">load_component_parameters</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">excel_sheet_name</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Excel parameters loaded: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">excel_params</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">warning_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Could not load Excel parameters: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">warning_msg</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">warning_msg</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No Excel file provided, using only graph attributes&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">excel_params</span>
+
+<div class="viewcode-block" id="load_component_parameters"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.load_component_parameters">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_component_parameters</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">component_type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load component parameters from an Excel file.</span>
+<span class="sd">    </span>
+<span class="sd">    Reads a specific sheet from an Excel file and returns parameters as a dictionary.</span>
+<span class="sd">    Expected Excel structure:</span>
+<span class="sd">    - Column A: Parameter (parameter names)</span>
+<span class="sd">    - Column B: Value (parameter values)</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    excel_path : str or Path</span>
+<span class="sd">        Path to the Excel file containing component parameters</span>
+<span class="sd">    component_type : str</span>
+<span class="sd">        Type of component, must be one of: &#39;pipes&#39;, &#39;supply&#39;, &#39;demands&#39;, &#39;simulation&#39;</span>
+<span class="sd">        This determines which sheet to read from the Excel file</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Dictionary with parameter names as keys and their values</span>
+<span class="sd">        Returns empty dict if sheet not found</span>
+<span class="sd">        </span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If the Excel file does not exist</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the component_type is not valid or Excel structure is incorrect</span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; params = load_component_parameters(&#39;parameters.xlsx&#39;, &#39;pipes&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(params[&#39;dp_nominal&#39;])</span>
+<span class="sd">    0.10</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate component type</span>
+    <span class="n">valid_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Pipes&#39;</span><span class="p">,</span> <span class="s1">&#39;Supply&#39;</span><span class="p">,</span> <span class="s1">&#39;Demands&#39;</span><span class="p">,</span> <span class="s1">&#39;Simulation&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">component_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_types</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid component_type &#39;</span><span class="si">{</span><span class="n">component_type</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Must be one of: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">valid_types</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="c1"># Check if file exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">excel_path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Excel file not found: </span><span class="si">{</span><span class="n">excel_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Read the specific sheet</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">component_type</span><span class="p">)</span>
+        
+        <span class="c1"># Validate Excel structure</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Excel sheet &#39;</span><span class="si">{</span><span class="n">component_type</span><span class="si">}</span><span class="s2">&#39; must have at least 2 columns &quot;</span>
+                <span class="s2">&quot;(Parameter and Value)&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="c1"># Check if first row contains expected column names</span>
+        <span class="k">if</span> <span class="s1">&#39;Parameter&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;parameter&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+            <span class="c1"># Assume first two columns are Parameter and Value</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+        
+        <span class="c1"># Create dictionary from Parameter and Value columns</span>
+        <span class="c1"># Drop rows where Parameter is NaN</span>
+        <span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Convert to dictionary</span>
+        <span class="n">param_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">],</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]))</span>
+
+        <span class="c1"># Convert and clean values</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">param_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Convert NaN to None</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="c1"># Try to convert string values to appropriate types</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">value_stripped</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                <span class="c1"># Skip if it looks like a reference (@something) or template path/name</span>
+                <span class="k">if</span> <span class="n">value_stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">value_stripped</span> <span class="ow">or</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">value_stripped</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">value_stripped</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Try boolean conversion</span>
+                <span class="k">if</span> <span class="n">value_stripped</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;TRUE&#39;</span><span class="p">,</span> <span class="s1">&#39;FALSE&#39;</span><span class="p">):</span>
+                    <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value_stripped</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;TRUE&#39;</span>
+                <span class="c1"># Try numeric conversion (handles scientific notation like &#39;1e5&#39;)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="c1"># Try float first (handles both &#39;123&#39; and &#39;1.23&#39; and &#39;1e5&#39;)</span>
+                        <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value_stripped</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="c1"># Keep as string if conversion fails (e.g., template names)</span>
+                        <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">param_dict</span>
+        
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;Worksheet named&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+            <span class="c1"># Sheet doesn&#39;t exist</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Sheet &#39;</span><span class="si">{</span><span class="n">component_type</span><span class="si">}</span><span class="s2">&#39; not found in </span><span class="si">{</span><span class="n">excel_path</span><span class="si">}</span><span class="s2">. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Returning empty dictionary.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span>
+    
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Error reading Excel file </span><span class="si">{</span><span class="n">excel_path</span><span class="si">}</span><span class="s2">, sheet &#39;</span><span class="si">{</span><span class="n">component_type</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="generate_simulation_model"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.generate_simulation_model">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">generate_simulation_model</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">,</span> <span class="n">sim_name</span><span class="p">,</span> <span class="n">sim_params</span><span class="p">,</span> <span class="n">ground_temp_list</span><span class="p">,</span> <span class="n">sim_model_dir</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate pandapipes simulation model using Excel-based parameter system.</span>
+
+<span class="sd">    This function assumes parameters are already assigned to uesgraph nodes/edges</span>
+<span class="sd">    via the assign_*_parameters functions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    uesgraph : UESGraph</span>
+<span class="sd">        Graph with pre-assigned parameters from Excel</span>
+<span class="sd">    sim_name : str</span>
+<span class="sd">        Name of the simulation</span>
+<span class="sd">    sim_params : dict</span>
+<span class="sd">        Simulation parameters from Excel &#39;Simulation&#39; sheet</span>
+<span class="sd">    ground_temp_list : list</span>
+<span class="sd">        Ground temperature data</span>
+<span class="sd">    sim_model_dir : str</span>
+<span class="sd">        Directory to save pandapipes files</span>
+<span class="sd">    logger : logging.Logger, optional</span>
+<span class="sd">        Logger instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_terminal_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.generate_simulation_model&quot;</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Setting up UESGraph for pandapipes simulation&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Ensure node names are strings</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()):</span>
+        <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+
+    <span class="c1"># Set network type</span>
+    <span class="n">uesgraph</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s2">&quot;network_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;heating&quot;</span>
+  
+
+    <span class="c1"># Create system model</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating system model with pre-assigned parameters&quot;</span><span class="p">)</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">graph_s</span><span class="p">,</span> <span class="n">graph_r</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">sim_name</span><span class="p">,</span>
+        <span class="n">save_at</span><span class="o">=</span><span class="n">sim_model_dir</span><span class="p">,</span>
+        <span class="n">graph</span><span class="o">=</span><span class="n">uesgraph</span><span class="p">,</span>
+        <span class="n">start_time</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">sim_params</span><span class="p">[</span><span class="s2">&quot;start_time&quot;</span><span class="p">]),</span>
+        <span class="n">stop_time</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">sim_params</span><span class="p">[</span><span class="s2">&quot;stop_time&quot;</span><span class="p">]),</span>
+        <span class="n">timestep</span><span class="o">=</span><span class="n">sim_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestep&quot;</span><span class="p">,</span><span class="mi">3600</span><span class="p">),</span>  <span class="c1"># Could be made configurable</span>
+        <span class="n">mode</span><span class="o">=</span><span class="n">sim_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mode&quot;</span><span class="p">,</span> <span class="s2">&quot;static&quot;</span><span class="p">),</span>
+        <span class="n">t_ground_prescribed</span><span class="o">=</span><span class="n">ground_temp_list</span>
+    <span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pandapipes Model generated: </span><span class="si">{</span><span class="n">sim_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">graph_s</span><span class="p">,</span> <span class="n">graph_r</span> </div>
+
+<span class="c1">### Process demand data and assign to uesgraph</span>
+
+<div class="viewcode-block" id="assign_demand_data"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.assign_demand_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">assign_demand_data</span><span class="p">(</span><span class="n">uesgraph</span><span class="p">,</span> <span class="n">input_paths_dict</span><span class="p">,</span> <span class="n">input_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;heating&quot;</span><span class="p">,</span> <span class="s2">&quot;cooling&quot;</span><span class="p">,</span> <span class="s2">&quot;dhw&quot;</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Assigns energy demand data to buildings in a UES (Urban Energy Systems) graph.</span>
+<span class="sd">    </span>
+<span class="sd">    This function reads demand profiles from CSV files and assigns them to building nodes</span>
+<span class="sd">    in the graph. For buildings without specific demand data, it uses a fallback profile</span>
+<span class="sd">    (dummy demand) based on the first building in the respective CSV file. The function</span>
+<span class="sd">    can handle heating, cooling, and domestic hot water (DHW) demands.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    uesgraph : ueesgraphs Graph</span>
+<span class="sd">        The urban energy system graph containing building nodes.</span>
+<span class="sd">    input_paths_dict : dict</span>
+<span class="sd">        Dictionary containing file paths for each demand type.</span>
+<span class="sd">        Expected keys: &#39;heating&#39;, &#39;cooling&#39;, &#39;dhw&#39;.</span>
+<span class="sd">    input_types : list, optional</span>
+<span class="sd">        List of demand types to process. Default is [&quot;heating&quot;, &quot;cooling&quot;, &quot;dhw&quot;].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        - Updated UES graph with demand data assigned to building nodes</span>
+<span class="sd">        - Message string containing information about the data assignment process</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Building nodes are updated with the following attributes:</span>
+<span class="sd">        - input_heat: List of heating demand values</span>
+<span class="sd">        - input_cool: List of cooling demand values</span>
+<span class="sd">        - input_dhw: List of DHW demand values</span>
+<span class="sd">        - max_demand_heating: Maximum combined heating/DHW demand</span>
+<span class="sd">    </span>
+<span class="sd">    The function handles missing data by:</span>
+<span class="sd">        1. Using a dummy profile if a building is not found in demand data</span>
+<span class="sd">        2. Tracking which buildings exist in CSVs but not in the graph</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Following Messages occured while loading demand data: </span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="c1">#Define empty dictionaries for demand data</span>
+    <span class="n">dict_inputs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">dummy_demand</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">input_type</span> <span class="ow">in</span> <span class="n">input_types</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">input_paths_dict</span><span class="p">[</span><span class="n">input_type</span><span class="p">],</span>
+                            <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">dict_inputs</span><span class="p">[</span><span class="n">input_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+            
+            <span class="c1">#Store dummy demand (first data column) for missing buildings</span>
+            <span class="n">dummy_demand</span><span class="p">[</span><span class="n">input_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load demand data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">missing_bldgs</span> <span class="o">=</span> <span class="n">dict_inputs</span><span class="p">[</span><span class="s2">&quot;heating&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+    <span class="c1">#Process each building</span>
+    <span class="k">for</span> <span class="n">bldg_node</span> <span class="ow">in</span> <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodelist_building</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">bldg_node</span><span class="p">][</span><span class="s2">&quot;is_supply_heating&quot;</span><span class="p">]:</span>
+            <span class="k">continue</span>
+
+        <span class="n">bldg_name</span> <span class="o">=</span> <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">bldg_node</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="n">demands</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1">#Get damand profiles for each type, ues dummy if missing</span>
+        <span class="k">for</span> <span class="n">input_type</span> <span class="ow">in</span> <span class="n">input_types</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">demands</span><span class="p">[</span><span class="n">input_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">dict_inputs</span><span class="p">[</span><span class="n">input_type</span><span class="p">][</span><span class="n">bldg_name</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">input_type</span> <span class="o">==</span> <span class="s2">&quot;heating&quot;</span><span class="p">:</span>
+                    <span class="n">missing_bldgs</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">bldg_name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">demands</span><span class="p">[</span><span class="n">input_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">dummy_demand</span><span class="p">[</span><span class="n">input_type</span><span class="p">]</span>
+                <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Building </span><span class="si">{</span><span class="n">bldg_name</span><span class="si">}</span><span class="s2"> not found in </span><span class="si">{</span><span class="n">input_type</span><span class="si">}</span><span class="s2"> data. Using dummy demand.&quot;</span>
+
+        <span class="c1">#Save demands to node</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">uesgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">bldg_node</span><span class="p">]</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;input_dhw&quot;</span><span class="p">:</span> <span class="n">demands</span><span class="p">[</span><span class="s2">&quot;dhw&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;input_heat&quot;</span><span class="p">:</span> <span class="n">demands</span><span class="p">[</span><span class="s2">&quot;heating&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;input_cool&quot;</span><span class="p">:</span> <span class="n">demands</span><span class="p">[</span><span class="s2">&quot;cooling&quot;</span><span class="p">]</span>
+        <span class="p">})</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_bldgs</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Missing buildings: </span><span class="si">{</span><span class="n">missing_bldgs</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;No missing buildings found.&quot;</span>
+
+    <span class="k">return</span> <span class="n">uesgraph</span><span class="p">,</span> <span class="n">msg</span></div>
+    
+<span class="c1">### Administrative Helper functions ###</span>
+
+<div class="viewcode-block" id="validate_paths"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.validate_paths">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">validate_paths</span><span class="p">(</span><span class="n">paths</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate if the provided file and directory paths exist.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    paths : list</span>
+<span class="sd">        List of paths (strings or Path objects) to validate</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        (existing_paths, missing_paths): Two lists containing the paths that exist</span>
+<span class="sd">        and the paths that are missing, respectively</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">existing_paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">missing_paths</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c1"># Check each path and categorize as existing or missing</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+        <span class="n">path_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path_str</span><span class="p">):</span>
+            <span class="n">existing_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_str</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">missing_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_str</span><span class="p">)</span>
+            
+    <span class="k">return</span> <span class="n">existing_paths</span><span class="p">,</span> <span class="n">missing_paths</span></div>
+
+<div class="viewcode-block" id="load_ground_temp_data"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.load_ground_temp_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_ground_temp_data</span><span class="p">(</span><span class="n">ground_temp_path</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ground_temp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ground_temp_path</span><span class="p">,</span>
+                                  <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                  <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CSV file not found: </span><span class="si">{</span><span class="n">ground_temp_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ground_temp</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;CSV file is empty&quot;</span><span class="p">)</span>
+    
+    
+    <span class="k">return</span> <span class="n">ground_temp</span></div>
+
+<div class="viewcode-block" id="save_setup_params_to_csv"><a class="viewcode-back" href="../../../code/uesgraphs.systemmodels_pp.html#uesgraphs.systemmodels_pp.utilities.save_setup_params_to_csv">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">save_setup_params_to_csv</span><span class="p">(</span><span class="n">setup_params</span><span class="p">,</span> <span class="n">sim_name</span><span class="p">,</span> <span class="n">sim_model_dir</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save simulation setup parameters to a CSV file.</span>
+<span class="sd">    </span>
+<span class="sd">    This function takes a single row from the simulation setup Excel file (as a dictionary)</span>
+<span class="sd">    and saves it as a CSV file in a specified directory, with parameters as rows and their </span>
+<span class="sd">    values as a single column.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    setup_params : dict</span>
+<span class="sd">        Dictionary containing simulation setup parameters (a single row from the Excel setup)</span>
+<span class="sd">    sim_name : str</span>
+<span class="sd">        Name of the current simulation, used for filename generation</span>
+<span class="sd">    sim_model_dir : str</span>
+<span class="sd">        Directory where to save the CSV file</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    str</span>
+<span class="sd">        Path to the saved CSV file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Ensure the target directory exists</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">sim_model_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># Define the path to the CSV file with correct naming</span>
+    <span class="n">csv_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sim_name</span><span class="si">}</span><span class="s2">.csv&quot;</span>
+    <span class="n">csv_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sim_model_dir</span><span class="p">,</span> <span class="n">csv_filename</span><span class="p">)</span>
+    
+    <span class="c1"># Convert the dictionary to a DataFrame and transpose it</span>
+    <span class="c1"># This makes parameters appear as rows instead of columns</span>
+    <span class="n">params_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">setup_params</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    
+    <span class="c1"># Reset index to convert the parameter names to a column</span>
+    <span class="n">params_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># Set column names</span>
+    <span class="n">params_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Parameter&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Check if any parameter value is excessively long</span>
+    <span class="c1"># This is optional but helps prevent unwieldy CSV files</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">params_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">500</span><span class="p">:</span>
+            <span class="c1"># Truncate extremely long values with a note</span>
+            <span class="n">params_df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">][:</span><span class="mi">500</span><span class="p">]</span><span class="si">}</span><span class="s2">... [truncated]&quot;</span>
+    
+    <span class="c1"># Save to CSV with semicolon separator</span>
+    <span class="n">params_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">csv_path</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

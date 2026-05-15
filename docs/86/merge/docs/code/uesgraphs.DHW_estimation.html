@@ -1,0 +1,793 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.DHW_estimation package &mdash; uesgraphs v2.2.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/demand_estimation.html">Heat and DHW Demand Estimation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/teaser_opendhw_integration.html">Workflow integration of TEASER and OpenDHW</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_dynamic.html">Dynamic Simulation with pandapipes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_TEASER_int.html">TEASER Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">uesgraphs.DHW_estimation package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/code/uesgraphs.DHW_estimation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-uesgraphs.DHW_estimation">
+<span id="uesgraphs-dhw-estimation-package"></span><h1>uesgraphs.DHW_estimation package<a class="headerlink" href="#module-uesgraphs.DHW_estimation" title="Permalink to this heading"></a></h1>
+<p>This package contains the script that stores all function of the DHWcalc package
+as well as a utils package.</p>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="uesgraphs.DHW_estimation.Data.html">uesgraphs.DHW_estimation.Data package</a></li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-uesgraphs.DHW_estimation.OpenDHW">
+<span id="uesgraphs-dhw-estimation-opendhw-module"></span><h2>uesgraphs.DHW_estimation.OpenDHW module<a class="headerlink" href="#module-uesgraphs.DHW_estimation.OpenDHW" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.load_steps_and_ps">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">load_steps_and_ps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">building</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">building_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#load_steps_and_ps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.load_steps_and_ps" title="Permalink to this definition"></a></dt>
+<dd><p>Load the step durations and probabilities from a JSON file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Mode of operation (“work-day” or “off-day”).</p></li>
+<li><p><strong>building</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Type of building (“residential” or “non-residential”).</p></li>
+<li><p><strong>building_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Specific type of building (e.g., “OB”, “SC”, “GS”, “RE”).</p></li>
+<li><p><strong>s_step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Step size in seconds, required only for residential buildings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of tuples containing step durations and probabilities.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.import_from_dhwcalc">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">import_from_dhwcalc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">daylight_saving</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">occupancy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_drawoff_vol_per_day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_flowrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1200</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#import_from_dhwcalc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.import_from_dhwcalc" title="Permalink to this definition"></a></dt>
+<dd><p>DHWcalc yields Volume Flow TimeSeries (in Liters per hour).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s_step</strong> – int:    resolution of file in seconds</p></li>
+<li><p><strong>categories</strong> – int:    either ‘1’ or ‘4’</p></li>
+<li><p><strong>mean_drawoff_vol_per_day</strong> – int:    daily water demand in Liters</p></li>
+<li><p><strong>daylight_saving</strong> – Bool:   apply daylight saving or not</p></li>
+<li><p><strong>max_flowrate</strong> – int:    maximum water flowrate in L/h</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return timeseries_df<span class="colon">:</span></dt>
+<dd class="field-even"><p>df:     dataframe that holds the data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.generate_dhw_profile">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">generate_dhw_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_drawoff_vol_per_day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">occupancy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">holidays</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">building_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weekend_weekday_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_day</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#generate_dhw_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.generate_dhw_profile" title="Permalink to this definition"></a></dt>
+<dd><p>Generates a DHW profile. The generation is split up in different
+functions and generally follows the methodology described in the DHWcalc
+paper from Uni Kassel.</p>
+<ol class="arabic simple">
+<li><p>Load some data for the drawoff categories (cats_df).</p></li>
+<li><p>Generate a yearly probability profile</p></li>
+<li><p>Generate Drawoffs and distribute them randomly into the probability
+profile p_norm_integral.</p></li>
+<li><p>Add some additionally stats to the dataframe.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s_step</strong> – int:    timestep width in seconds.</p></li>
+<li><p><strong>categories</strong> – int:    1 or 4 (see DHWcalc)</p></li>
+<li><p><strong>weekend_weekday_factor</strong> – int:    taken from DHWcalc</p></li>
+<li><p><strong>mean_drawoff_vol_per_day</strong> – int:    daily water demand in Liters</p></li>
+<li><p><strong>initial_day</strong> – int:    0:Mon - 1:Tues … 6:Sun</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>timeseries_df              df:     dataframe with all timeseries</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.get_data_drawoff_categories">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">get_data_drawoff_categories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_drawoff_vol_per_day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">building_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#get_data_drawoff_categories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.get_data_drawoff_categories" title="Permalink to this definition"></a></dt>
+<dd><p>Get some data for each drawoff category. If only one category is chosen,
+a simplified datafarme is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s_step</strong> – int:    seconds in a timestep. f.e 900</p></li>
+<li><p><strong>categories</strong> – int:    1 or 4, 1: short laod (washing hands, etc.), 2: medium load (dish-washer, etc.), 3: bath, 4:shower (see DHWcalc)</p></li>
+<li><p><strong>mean_drawoff_vol_per_day</strong> – int:    volume per day used in house</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>cats_df:                   df:     Categores Data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.generate_daily_probability_step_function">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">generate_daily_probability_step_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">building_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_concentrated_ps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#generate_daily_probability_step_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.generate_daily_probability_step_function" title="Permalink to this definition"></a></dt>
+<dd><p>Generates probabilities for a day with 6 periods. Corresponds to the mode
+“step function for working days and off days” in DHWcalc and uses the same
+standard values. Each Day starts at 0:00. Steps in hours. Sum of steps
+has to be 24. Sum of probabilities has to be 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>test_concentrated_ps</strong> – bool:   different probabilities,
+very concentrated in the morning</p></li>
+<li><p><strong>mode</strong> – string: working day or off day</p></li>
+<li><p><strong>s_step</strong> – int:    seconds within a timestep</p></li>
+<li><p><strong>save_fig</strong> – Bool:   plot the probability distribution</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>p_day                  list:   distribution for one day.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.generate_yearly_probability_profile">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">generate_yearly_probability_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weekend_weekday_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">building_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">holidays</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_day</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#generate_yearly_probability_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.generate_yearly_probability_profile" title="Permalink to this definition"></a></dt>
+<dd><p>generate a summed yearly probability profile. The whole function is
+deterministic. The same inputs always produce the same outputs.</p>
+<ol class="arabic simple">
+<li><p>Probabilities for working days and off days are loaded (p_we, p_wd).</p></li>
+<li><p>Probability of off days is increased relative to working days (shift).</p></li>
+<li><p>Based on an initial day, the yearly probability distribution (p_final)
+is generated. The seasonal influence is modelled by a sine-function.</p></li>
+<li><p>p_final is normalized and integrated. The sum over the year is thus
+equal to 1 (p_norm_integral).</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s_step</strong> – int:    seconds in a timestep</p></li>
+<li><p><strong>weekend_weekday_factor</strong> – float:  shift probabilities towards weekend</p></li>
+<li><p><strong>initial_day</strong> – int:    Mon: 0 … Sun: 6</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>timeseries_df:         df:     df that holds the yearly profile</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.shift_weekend_weekday">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">shift_weekend_weekday</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_work_day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_off_day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#shift_weekend_weekday"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.shift_weekend_weekday" title="Permalink to this definition"></a></dt>
+<dd><p>Shifts the probabilities between the weekday list and the weekend list by a
+defined factor. If the factor is bigger than 1, the probability on the
+weekend is increased. If its smaller than 1, the probability on the
+weekend is decreased.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_work_day</strong> – list:   probabilities for 1 work day of the week [0…1]</p></li>
+<li><p><strong>p_off_day</strong> – list:   probabilities for 1 off day of the week [0…1]</p></li>
+<li><p><strong>factor</strong> – float:  factor to shift the probabilities between
+weekdays and weekend-days</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.generate_yearly_probabilities">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">generate_yearly_probabilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_off_day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_work_day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">holidays</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">building_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_p_yearly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#generate_yearly_probabilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.generate_yearly_probabilities" title="Permalink to this definition"></a></dt>
+<dd><p>Takes the probabilities of a working days and a off days and generates a
+list of yearly probabilities by adding a seasonal probability factor.
+The seasonal factor is a sine-function, like in DHWcalc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_day</strong> – int:    0: Mon, 1: Tue, 2: Wed, 3: Thur, 4: Fri,
+5 : Sat, 6 : Sun</p></li>
+<li><p><strong>p_off_day</strong> – list:   probabilities of an off day</p></li>
+<li><p><strong>p_work_day</strong> – list:   probabilities of a working day</p></li>
+<li><p><strong>s_step</strong> – int:    seconds within a timestep</p></li>
+<li><p><strong>plot_p_yearly</strong> – bool:   plot the yearly probabilities</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>p_final:       list:   probabilities of a full year</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.normalize_and_sum_list">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">normalize_and_sum_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#normalize_and_sum_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.normalize_and_sum_list" title="Permalink to this definition"></a></dt>
+<dd><p>takes a list and normalizes it based on the sum of all list elements.
+then generates a new list based on the current sum of each list entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lst</strong> – list:   input list</p></li>
+<li><p><strong>save_fig</strong> – bool:   plot the output list</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>lst_norm_integral: list    output list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.generate_and_distribute_drawoffs">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">generate_and_distribute_drawoffs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cats_series</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#generate_and_distribute_drawoffs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.generate_and_distribute_drawoffs" title="Permalink to this definition"></a></dt>
+<dd><p>generate and distribute drawoffs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeseries_df</strong> – df:     holds the timeseries</p></li>
+<li><p><strong>cats_series</strong> – series: constants for a category</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.generate_single_drawoff_inside_boundaries">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">generate_single_drawoff_inside_boundaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cats_series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_step</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#generate_single_drawoff_inside_boundaries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.generate_single_drawoff_inside_boundaries" title="Permalink to this definition"></a></dt>
+<dd><p>From the data of one category, generate a drawoff inside the defined
+boundaries, similar to DHWcalc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cats_series</strong> – df:     pandas series that holds the drawoff data</p></li>
+<li><p><strong>s_step</strong> – int:    seconds in a timestep</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>drawoff:   int:    drawoff eevnt in L/h</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.compute_heat">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">compute_heat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_dT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">35</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#compute_heat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.compute_heat" title="Permalink to this definition"></a></dt>
+<dd><p>Add heat columns to the timeseries</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeseries_df</strong> – df:     Pandas Dataframe with all the timeseries</p></li>
+<li><p><strong>temp_dT</strong> – int:    temperature difference between freshwater
+and average DHW outlet temperature.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>timeseries_df: df:     Dataframe with added ‘Heat’ Column</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.draw_lineplot">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">draw_lineplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_var</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'water'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2019-02-01'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2019-02-05'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#draw_lineplot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.draw_lineplot" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the timeseries for a given timedelta in a year.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeseries_df</strong> – df:     Dataframe that holds the timeseries.</p></li>
+<li><p><strong>plot_var</strong> – str:    choose to plot Water or Heat series.</p></li>
+<li><p><strong>start_plot</strong> – str:    start date of the plot. F.e. 2019-01-01</p></li>
+<li><p><strong>end_plot</strong> – str:    end date of the plot. F.e. 2019-01-07</p></li>
+<li><p><strong>save_fig</strong> – bool:   decide to save plots as pdf</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.draw_histplot">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">draw_histplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_kde</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#draw_histplot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.draw_histplot" title="Permalink to this definition"></a></dt>
+<dd><p>Takes a DHW profile and plots a histogram with some stats in the title</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_fig</strong> – bool:   save the figure</p></li>
+<li><p><strong>timeseries_df</strong> – df:     Dataframe that holds the water timeseries</p></li>
+<li><p><strong>extra_kde</strong> – bool:   plot a detailed kde plot behind the main
+histogram.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.draw_detailed_histplot">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">draw_detailed_histplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#draw_detailed_histplot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.draw_detailed_histplot" title="Permalink to this definition"></a></dt>
+<dd><p><a class="reference external" href="https://towardsdatascience.com/advanced-histogram-using-python-bceae288e715">https://towardsdatascience.com/advanced-histogram-using-python-bceae288e715</a>
+plot to further analyse timeseries with 1 drawoff category.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.add_additional_runs">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">add_additional_runs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">holidays</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">occupancy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">building_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_runs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#add_additional_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.add_additional_runs" title="Permalink to this definition"></a></dt>
+<dd><p>method to add more runs to a timeseries dataframe with the same input
+parameters as the original timeseries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeseries_df</strong> – </p></li>
+<li><p><strong>total_runs</strong> – </p></li>
+<li><p><strong>dir_output</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.get_drawoffs">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">get_drawoffs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_cats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#get_drawoffs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.get_drawoffs" title="Permalink to this definition"></a></dt>
+<dd><p>get sorted drawoff events from a timeseries Dataframe.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.plot_multiple_runs">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">plot_multiple_runs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_demands_overlay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2019-02-01'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2019-02-02'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_hist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_kde</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#plot_multiple_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.plot_multiple_runs" title="Permalink to this definition"></a></dt>
+<dd><p>This function should only be used when the ‘add_additional_runs’ function
+has been used before.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeseries_df</strong> – df:     dataframe with timesieries</p></li>
+<li><p><strong>plot_demands_overlay</strong> – bool:   plot lineplot</p></li>
+<li><p><strong>start_plot</strong> – str:    start date</p></li>
+<li><p><strong>end_plot</strong> – str:    end date</p></li>
+<li><p><strong>plot_hist</strong> – bool:   plot histogram</p></li>
+<li><p><strong>plot_kde</strong> – bool:   plot kde plot</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.plot_multiple_timeseries">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">plot_multiple_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Water_LperH'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_demands_overlay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2019-02-01'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2019-02-02'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_hist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_kde</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#plot_multiple_timeseries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.plot_multiple_timeseries" title="Permalink to this definition"></a></dt>
+<dd><p>plots multiple timeseries given in a list. better than “plot multiple runs?”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeseries_lst</strong> – list:   list with timeseries dataframes</p></li>
+<li><p><strong>col_part</strong> – str:    string that matches colum names
+which should be plotted</p></li>
+<li><p><strong>plot_demands_overlay</strong> – bool:   plot lineplot of all dfs</p></li>
+<li><p><strong>start_plot</strong> – str:    start of lineplot</p></li>
+<li><p><strong>end_plot</strong> – str:    end of lineplot</p></li>
+<li><p><strong>plot_hist</strong> – bool:   plot histogram</p></li>
+<li><p><strong>plot_kde</strong> – bool:   plot kde plot</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.compare_generators">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">compare_generators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeseries_df_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2019-03-01'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2019-03-08'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_date_slice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_distribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_detailed_distribution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#compare_generators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.compare_generators" title="Permalink to this definition"></a></dt>
+<dd><p>Compares two timeseries by plotting them next to each other with the same
+x and y axis limits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeseries_df_1</strong> – df:     first timeseries dataframe</p></li>
+<li><p><strong>timeseries_df_2</strong> – df:     second timeseries dataframe</p></li>
+<li><p><strong>start_plot</strong> – str:    date, f.e. 2019-03-01</p></li>
+<li><p><strong>end_plot</strong> – str:    date, f.e. 2019-03-08</p></li>
+<li><p><strong>plot_date_slice</strong> – bool:   plot lineplots</p></li>
+<li><p><strong>plot_distribution</strong> – bool:   plot histplots</p></li>
+<li><p><strong>plot_detailed_distribution</strong> – bool:    plot detailed histplots</p></li>
+<li><p><strong>save_fig</strong> – bool:   save the plot</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.plot_three_histplots">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">plot_three_histplots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeseries_df_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeseries_df_3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#plot_three_histplots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.plot_three_histplots" title="Permalink to this definition"></a></dt>
+<dd><p>Compares three timeseries by means of a triple subplot.
+:param timeseries_df_1:     df:   first time series
+:param timeseries_df_2:     df:   second time series
+:param timeseries_df_3:     df:   third time series</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.jensen_shannon_distance">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">jensen_shannon_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#jensen_shannon_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.jensen_shannon_distance" title="Permalink to this definition"></a></dt>
+<dd><p>method to compute the Jenson-Shannon Distance between two probability
+distributions. 0 indicates that the two distributions are the same,
+and 1 would indicate that they are nowhere similar.</p>
+<p>From <a class="reference external" href="https://medium.com/&#64;sourcedexter/how-to-find-the-similarity-between-two-probability-distributions-using-python-a7546e90a08d">https://medium.com/&#64;sourcedexter/how-to-find-the-similarity-between-two-probability-distributions-using-python-a7546e90a08d</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.get_s_step">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">get_s_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#get_s_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.get_s_step" title="Permalink to this definition"></a></dt>
+<dd><p>get the seconds within a timestep from a pandas dataframe. When loading
+Dataframes from a csv, the index loses its ‘freq’ attribute. This is thus
+just a workaround when loading Timeseries from csv.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.make_title_str">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">make_title_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#make_title_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.make_title_str" title="Permalink to this definition"></a></dt>
+<dd><p>creates a title string based on the timeseries dataframe. The title
+string can then be used for a variety of plots.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.resample_water_series">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">resample_water_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_step_output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#resample_water_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.resample_water_series" title="Permalink to this definition"></a></dt>
+<dd><p>Before resampling a dataframe, we have to choose which data has to be
+resampled in what way. some columns list constants, some list intensive
+properties (like L/h, kW) and some list extensive properties (Like
+Liters/kWh).
+Constants should stay the same, intensive properties should be averaged
+and extensive properties should be summed up.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeseries_df</strong> – df:     dataframe that holds the timeseries</p></li>
+<li><p><strong>s_step_output</strong> – int:    desired output seconds in a timestep</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>timeseries_df_re:  df:     resampled dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.reduce_no_drawoffs">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">reduce_no_drawoffs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeseries_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#reduce_no_drawoffs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.reduce_no_drawoffs" title="Permalink to this definition"></a></dt>
+<dd><p>for some reason, DHWcalc still yields less yearly drawoffs than OpenDHW.
+In case the yearly water demand is higher in an OpenDHW timeseries than
+the expected one, this function removes some randomly selected drawoffs
+events with a small flowrate to reduce the yearly water demand until its
+just under the expected one and simultaneously decreasing the number of
+drawoffs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>timeseries_df</strong> – df: input dataframe</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>timeseries_df_cleaned: df  output dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.OpenDHW.get_holidays">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.OpenDHW.</span></span><span class="sig-name descname"><span class="pre">get_holidays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/OpenDHW.html#get_holidays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.OpenDHW.get_holidays" title="Permalink to this definition"></a></dt>
+<dd><p>Get the Julian day (day of the year) for holidays in a specific country, year, and state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>country_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The country’s ISO 3166-1 alpha-2 code (e.g., ‘DE’ for Germany).</p></li>
+<li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The year for which to retrieve holidays.</p></li>
+<li><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The state or region subdivision code (e.g., ‘NW’ for North Rhine-Westphalia in Germany).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of tuples containing the Julian day of the holiday.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-uesgraphs.DHW_estimation.utilities">
+<span id="uesgraphs-dhw-estimation-utilities-module"></span><h2>uesgraphs.DHW_estimation.utilities module<a class="headerlink" href="#module-uesgraphs.DHW_estimation.utilities" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.utilities.set_up_file_logger">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_file_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><span class="pre">Logger</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/utilities.html#set_up_file_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.utilities.set_up_file_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Set up a full file+console logger for major functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Logger name</p></li>
+<li><p><strong>log_dir</strong> – Directory for log files (default: temp directory)</p></li>
+<li><p><strong>level</strong> – Logging level (default: ERROR)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured file+console logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.utilities.set_up_logger">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/utilities.html#set_up_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.utilities.set_up_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Sets up a configured logger with file handler.</p>
+<p>Creates a logger with specified name and logging level.
+Log files are stored in a directory with timestamp in filename.
+If no directory is specified, the system’s temporary directory is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the logger, also used for filename</p></li>
+<li><p><strong>log_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Directory for log files.
+Defaults to None (uses temp directory)</p></li>
+<li><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Logging level (e.g. logging.ERROR, logging.INFO).
+Defaults to logging.ERROR</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured logger object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)">logging.Logger</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_logger</span><span class="p">(</span><span class="s2">&quot;my_app&quot;</span><span class="p">,</span> <span class="s2">&quot;/var/log&quot;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Application started&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Log filename format: {name}_{YYYYMMDD_HHMMSS}.log</p></li>
+<li><p>Log entry format: time - logger_name - [<a class="reference external" href="file:line">file:line</a>] - level - message</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.utilities.load_simulation_settings_from_excel">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.utilities.</span></span><span class="sig-name descname"><span class="pre">load_simulation_settings_from_excel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">excel_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/utilities.html#load_simulation_settings_from_excel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.utilities.load_simulation_settings_from_excel" title="Permalink to this definition"></a></dt>
+<dd><p>Load simulation settings from Excel ‘Simulation’ sheet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>excel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to Excel file containing simulation settings</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger instance</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>sim_params</strong> – Dictionary of simulation parameters</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If required simulation parameters are missing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.utilities.load_component_parameters">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.utilities.</span></span><span class="sig-name descname"><span class="pre">load_component_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">excel_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/utilities.html#load_component_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.utilities.load_component_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Load component parameters from an Excel file.</p>
+<p>Reads a specific sheet from an Excel file and returns parameters as a dictionary.
+Expected Excel structure:
+- Column A: Parameter (parameter names)
+- Column B: Value (parameter values)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>excel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to the Excel file containing component parameters</p></li>
+<li><p><strong>component_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Type of component, must be one of: ‘pipes’, ‘supply’, ‘demands’, ‘simulation’
+This determines which sheet to read from the Excel file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with parameter names as keys and their values
+Returns empty dict if sheet not found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If the Excel file does not exist</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the component_type is not valid or Excel structure is incorrect</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">load_component_parameters</span><span class="p">(</span><span class="s1">&#39;parameters.xlsx&#39;</span><span class="p">,</span> <span class="s1">&#39;pipes&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;dp_nominal&#39;</span><span class="p">])</span>
+<span class="go">0.10</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.utilities.create_profiles">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.utilities.</span></span><span class="sig-name descname"><span class="pre">create_profiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_drawoff_vol_per_day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_dT_dhw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">holidays</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">108,</span> <span class="pre">111,</span> <span class="pre">121,</span> <span class="pre">149,</span> <span class="pre">160,</span> <span class="pre">276,</span> <span class="pre">359,</span> <span class="pre">360]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/utilities.html#create_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.utilities.create_profiles" title="Permalink to this definition"></a></dt>
+<dd><p>Create DHW profiles according to infos in geojson.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>info_path</strong> (<em>path</em>) – Full path to json with building infos.</p></li>
+<li><p><strong>timestep</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Timestep in seconds for the generated time-series.</p></li>
+<li><p><strong>holidays</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.14)"><em>datetime.date</em></a><em>, </em><em>optional</em>) – List of holiday dates to consider in the profile generation (default: German holidays for 2025).</p></li>
+<li><p><strong>mean_drawoff_vol_per_day</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Average drawoff volume per day in liters per occupant</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger instance for logging progress and warnings (default: None, creates a new logger if not provided).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame containing the generated DHW profiles for each building</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.utilities.generate_DHW_profiles_from_geojson">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.utilities.</span></span><span class="sig-name descname"><span class="pre">generate_DHW_profiles_from_geojson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buildings_info_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_drawoff_vol_per_day</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_dT_dhw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">35</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_setup_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/utilities.html#generate_DHW_profiles_from_geojson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.utilities.generate_DHW_profiles_from_geojson" title="Permalink to this definition"></a></dt>
+<dd><p>Run OpenDHW for demand estimation based on building information from a .geojson file.</p>
+<section id="parameters">
+<h3>Parameters:<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>buildings_info_path<span class="classifier">str</span></dt><dd><p>The path to the .geojson file containing building information for TEASER model creation.</p>
+</dd>
+<dt>save_path<span class="classifier">str or Path</span></dt><dd><p>Directory path where the resulting demand CSV files will be saved.</p>
+</dd>
+<dt>timestep<span class="classifier">int, optinal</span></dt><dd><p>Simulation timestep in seconds (default is 3600 for hourly data)</p>
+</dd>
+<dt>mean_drawoff_vol_per_day<span class="classifier">float, optional</span></dt><dd><p>Average drawoff volume per day in liters per occupant (default is 40 L/day/occupant)</p>
+</dd>
+<dt>temp_dT_dhw<span class="classifier">float, optional</span></dt><dd><p>Temperature difference for Heat calculation from mass flows in K (default is 35 K)</p>
+</dd>
+<dt>sim_setup_path<span class="classifier">str or Path, optional</span></dt><dd><p>Path to the simulation setup for timestep and stop time. If not provided, default values will be used.</p>
+</dd>
+<dt>logger<span class="classifier">logging.Logger, optional</span></dt><dd><p>Logger instance. If None, creates a new file logger in temp directory</p>
+</dd>
+<dt>log_level<span class="classifier">int, optional</span></dt><dd><p>Logging level (default is logging.DEBUG). Only used if logger is None</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns:<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>tuple</dt><dd><p>Paths to the generated demand CSV files: (heating_demand_csv, cooling_demand_csv)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

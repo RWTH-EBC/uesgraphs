@@ -1,0 +1,471 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.teaser_integration.simulate &mdash; uesgraphs v2.2.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/demand_estimation.html">Heat and DHW Demand Estimation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/teaser_opendhw_integration.html">Workflow integration of TEASER and OpenDHW</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/pandapipes_dynamic.html">Dynamic Simulation with pandapipes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_TEASER_int.html">TEASER Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.teaser_integration.simulate</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.teaser_integration.simulate</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module to control multiprocessing of simulation of TEASER buildings.</span>
+
+<span class="sd">You need to set a couple of environment variables for you conda environment to</span>
+<span class="sd">use this module:</span>
+
+<span class="sd">PYTHONPATH</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">multiprocessing</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<div class="viewcode-block" id="set_up_terminal_logger"><a class="viewcode-back" href="../../../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.simulate.set_up_terminal_logger">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_up_terminal_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a simple console-only logger for small functions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: Logger name</span>
+<span class="sd">        level: Logging level (default: INFO)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Configured console logger</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># Avoid duplicate handlers if called multiple times</span>
+    <span class="k">if</span> <span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">logger</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+
+    <span class="c1"># Console handler only</span>
+    <span class="n">console_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">console_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">console_handler</span><span class="p">)</span>
+
+    <span class="c1"># Prevent propagation to root logger to avoid double messages</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="n">logger</span></div>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">dymola.dymola_interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">DymolaInterface</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">DymolaInterface</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="WorkerSimulation"><a class="viewcode-back" href="../../../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.simulate.WorkerSimulation">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">WorkerSimulation</span><span class="p">(</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class to enable simulation in a JoinableQueue.</span>
+
+<span class="sd">    This class inherits from multiprocessing.Proccess. Pass over your</span>
+<span class="sd">    simulation function and  all parameters that are necessary for this</span>
+<span class="sd">    function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sim_function : simulate() function</span>
+<span class="sd">    sim_part : Django QuerySet, NumPy Array or any other iterable</span>
+<span class="sd">        Iterable collection of BuildingEnergy objects</span>
+<span class="sd">    prj : Scenario instance</span>
+<span class="sd">        Scenario instance of the buildings that are simulated. Please ensure</span>
+<span class="sd">        if you are using multiprocessing that all buildings are within the same</span>
+<span class="sd">        prj.</span>
+<span class="sd">    model_path : str</span>
+<span class="sd">        Path where Modelica model from TEASER is located. This is TEASER output</span>
+<span class="sd">        path.</span>
+<span class="sd">    results_path : str</span>
+<span class="sd">        Path where Dymola results should be stored.</span>
+<span class="sd">    start_time : int</span>
+<span class="sd">        Start time of the simulation</span>
+<span class="sd">    stop_time : int</span>
+<span class="sd">        Stop time of the simulation</span>
+<span class="sd">    output_interval : int</span>
+<span class="sd">        Output interval of the simulation</span>
+<span class="sd">    solver : string</span>
+<span class="sd">        Used solver in Dymola. All Dymola solvers are supported(default:</span>
+<span class="sd">        &#39;Dassl&#39;</span>
+<span class="sd">    tolerance : float</span>
+<span class="sd">        Tolerance of used solver</span>
+<span class="sd">    process_number : int</span>
+<span class="sd">        Counter of parallel processes, if multiprocessing is used. Default is</span>
+<span class="sd">        None which indicates that no multuprocessing is used. Otherwise please</span>
+<span class="sd">        set an individual number for every process that is used.</span>
+<span class="sd">    result_queue : multiprocessing.JoinableQueue()</span>
+<span class="sd">        JoinableQueue instance for each worker.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="WorkerSimulation.__init__"><a class="viewcode-back" href="../../../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.simulate.WorkerSimulation.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sim_function</span><span class="p">,</span>
+        <span class="n">sim_part</span><span class="p">,</span>
+        <span class="n">prj</span><span class="p">,</span>
+        <span class="n">model_path</span><span class="p">,</span>
+        <span class="n">results_path</span><span class="p">,</span>
+        <span class="n">start_time</span><span class="p">,</span>
+        <span class="n">stop_time</span><span class="p">,</span>
+        <span class="n">output_interval</span><span class="p">,</span>
+        <span class="n">method</span><span class="p">,</span>
+        <span class="n">tolerance</span><span class="p">,</span>
+        <span class="n">process_number</span><span class="p">,</span>
+        <span class="n">result_queue</span><span class="p">,</span>
+        <span class="n">aixlib_path</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Init function of WorkerSimulation.&quot;&quot;&quot;</span>
+        <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sim_function</span> <span class="o">=</span> <span class="n">sim_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sim_part</span> <span class="o">=</span> <span class="n">sim_part</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prj</span> <span class="o">=</span> <span class="n">prj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_path</span> <span class="o">=</span> <span class="n">model_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_path</span> <span class="o">=</span> <span class="n">results_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">start_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_time</span> <span class="o">=</span> <span class="n">stop_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_interval</span> <span class="o">=</span> <span class="n">output_interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span> <span class="o">=</span> <span class="n">tolerance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">process_number</span> <span class="o">=</span> <span class="n">process_number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_queue</span> <span class="o">=</span> <span class="n">result_queue</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aixlib_path</span> <span class="o">=</span> <span class="n">aixlib_path</span></div>
+
+<div class="viewcode-block" id="WorkerSimulation.run"><a class="viewcode-back" href="../../../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.simulate.WorkerSimulation.run">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the specified simulation function with all parameters.&quot;&quot;&quot;</span>
+        <span class="n">res_tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim_function</span><span class="p">(</span>
+            <span class="n">sim_part</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sim_part</span><span class="p">,</span>
+            <span class="n">prj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prj</span><span class="p">,</span>
+            <span class="n">model_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_path</span><span class="p">,</span>
+            <span class="n">results_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">results_path</span><span class="p">,</span>
+            <span class="n">start_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span>
+            <span class="n">stop_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stop_time</span><span class="p">,</span>
+            <span class="n">output_interval</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_interval</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+            <span class="n">tolerance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span><span class="p">,</span>
+            <span class="n">process_number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">process_number</span><span class="p">,</span>
+            <span class="n">aixlib_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aixlib_path</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">res_tmp</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="simulate"><a class="viewcode-back" href="../../../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.simulate.simulate">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span>
+    <span class="n">sim_part</span><span class="p">,</span>
+    <span class="n">prj</span><span class="p">,</span>
+    <span class="n">model_path</span><span class="p">,</span>
+    <span class="n">results_path</span><span class="p">,</span>
+    <span class="n">start_time</span><span class="p">,</span>
+    <span class="n">stop_time</span><span class="p">,</span>
+    <span class="n">output_interval</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">,</span>
+    <span class="n">tolerance</span><span class="p">,</span>
+    <span class="n">process_number</span><span class="p">,</span>
+    <span class="n">aixlib_path</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate building models in serial using Dymola.</span>
+
+<span class="sd">    This function simulates all buidlings given in the building_query_set in</span>
+<span class="sd">    serial(one after another). This function can be used for parallel</span>
+<span class="sd">    processing of simulation. There are no default values because it caused</span>
+<span class="sd">    trouble with multiprocessing.</span>
+
+<span class="sd">    Note: Please ensure that for all buildings corresponding models have been</span>
+<span class="sd">    generated. Also ensure that all models are within the same</span>
+<span class="sd">    prj, otherwise this will neither work for single nor for</span>
+<span class="sd">    multiprocessing.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sim_part :any iterable</span>
+<span class="sd">        Iterable collection of Building objects</span>
+<span class="sd">    prj : Scenario instance</span>
+<span class="sd">        Scenario instance of the buildings that are simulated. Please ensure</span>
+<span class="sd">        if you are using multiprocessing that all buildings are within the same</span>
+<span class="sd">        prj.</span>
+<span class="sd">    model_path : str</span>
+<span class="sd">        Path where Modelica model from TEASER is located. This is TEASER output</span>
+<span class="sd">        path.</span>
+<span class="sd">    results_path : str</span>
+<span class="sd">        Path where Dymola results should be stored.</span>
+<span class="sd">    start_time : int</span>
+<span class="sd">        Start time of the simulation</span>
+<span class="sd">    stop_time : int</span>
+<span class="sd">        Stop time of the simulation</span>
+<span class="sd">    output_interval : int</span>
+<span class="sd">        Output interval of the simulation</span>
+<span class="sd">    solver : string</span>
+<span class="sd">        Used solver in Dymola. All Dymola solvers are supported(default:</span>
+<span class="sd">        &#39;Dassl&#39;</span>
+<span class="sd">    tolerance : float</span>
+<span class="sd">        Tolerance of used solver</span>
+<span class="sd">    process_number : int</span>
+<span class="sd">        Counter of parallel processes, if multiprocessing is used. Default is</span>
+<span class="sd">        None which indicates that no multuprocessing is used. Otherwise please</span>
+<span class="sd">        set an individual number for every process that is used.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span> <span class="o">=</span><span class="n">set_up_terminal_logger</span><span class="p">(</span><span class="s2">&quot;simulate_worker_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">process_number</span><span class="p">))</span>
+    <span class="n">SIMULATIONS_BEFORE_RESTART</span> <span class="o">=</span> <span class="mi">20</span>
+
+    <span class="n">dir_result</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_path</span><span class="p">,</span> <span class="n">prj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">dir_temp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_path</span><span class="p">,</span> <span class="s2">&quot;temp&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">process_number</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dir_result</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dir_result</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dir_temp</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dir_temp</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">bldg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sim_part</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">count</span> <span class="o">%</span> <span class="n">SIMULATIONS_BEFORE_RESTART</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">dymola</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="n">dymola</span> <span class="o">=</span> <span class="n">DymolaInterface</span><span class="p">()</span>
+            <span class="n">dymola</span><span class="o">.</span><span class="n">openModel</span><span class="p">(</span>
+                <span class="n">path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">aixlib_path</span><span class="p">,</span> <span class="s2">&quot;package.mo&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="n">dymola</span><span class="o">.</span><span class="n">openModel</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">prj</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;package.mo&quot;</span><span class="p">))</span>
+
+            <span class="n">dymola</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="n">Dir</span><span class="o">=</span><span class="n">dir_temp</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;simulate building </span><span class="si">{}</span><span class="s2"> in progres&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bldg</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prj</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">bldg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">bldg</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">dymola</span><span class="o">.</span><span class="n">translateModel</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+
+        <span class="c1"># Simulate the model</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="n">dymola</span><span class="o">.</span><span class="n">simulateExtendedModel</span><span class="p">(</span>
+            <span class="n">problem</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+            <span class="n">startTime</span><span class="o">=</span><span class="n">start_time</span><span class="p">,</span>
+            <span class="n">stopTime</span><span class="o">=</span><span class="n">stop_time</span><span class="p">,</span>
+            <span class="n">outputInterval</span><span class="o">=</span><span class="n">output_interval</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+            <span class="n">tolerance</span><span class="o">=</span><span class="n">tolerance</span><span class="p">,</span>
+            <span class="n">resultFile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_result</span><span class="p">,</span> <span class="n">bldg</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Simulation failed. Below is the translation log.&quot;</span><span class="p">)</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="n">dymola</span><span class="o">.</span><span class="n">getLastError</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">dymola</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="queue_simulation"><a class="viewcode-back" href="../../../code/uesgraphs.teaser_integration.html#uesgraphs.teaser_integration.simulate.queue_simulation">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">queue_simulation</span><span class="p">(</span>
+    <span class="n">sim_function</span><span class="p">,</span>
+    <span class="n">prj</span><span class="p">,</span>
+    <span class="n">number_of_workers</span><span class="o">=</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">model_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;TEASEROutput&quot;</span><span class="p">),</span>
+    <span class="n">results_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;djangoteaserout&quot;</span><span class="p">),</span>
+    <span class="n">start_time</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">stop_time</span><span class="o">=</span><span class="mf">31532400.0</span><span class="p">,</span>
+    <span class="n">output_interval</span><span class="o">=</span><span class="mf">3600.0</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;Dassl&quot;</span><span class="p">,</span>
+    <span class="n">tolerance</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span>
+    <span class="n">aixlib_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate multiple buildings in a JoinableQueue.</span>
+
+<span class="sd">    This function simulates all buidlings given in the building_query_set. It</span>
+<span class="sd">    uses JoinableQueue for multiprocessing.</span>
+
+<span class="sd">    Note: Please ensure that for all buildings corresponding models have been</span>
+<span class="sd">    generated. Also ensure that all models are within the same</span>
+<span class="sd">    prj, otherwise this will neither work for single nor for</span>
+<span class="sd">    multiprocessing.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sim_function : simulate() function</span>
+<span class="sd">    prj : Scenario instance</span>
+<span class="sd">        Scenario instance of the buildings that are simulated. Please ensure</span>
+<span class="sd">        if you are using multiprocessing that all buildings are within the same</span>
+<span class="sd">        prj.</span>
+<span class="sd">    number_of_workers : int</span>
+<span class="sd">        Number of workers used for the simulation. (default: number of</span>
+<span class="sd">        physical processors - 1)</span>
+<span class="sd">    model_path : str</span>
+<span class="sd">        Path where Modelica model from TEASER is located. This is TEASER output</span>
+<span class="sd">        path.</span>
+<span class="sd">    results_path : str</span>
+<span class="sd">        Path where Dymola results should be stored.</span>
+<span class="sd">    start_time : int</span>
+<span class="sd">        Start time of the simulation</span>
+<span class="sd">    stop_time : int</span>
+<span class="sd">        Stop time of the simulation</span>
+<span class="sd">    output_interval : int</span>
+<span class="sd">        Output interval of the simulation</span>
+<span class="sd">    solver : string</span>
+<span class="sd">        Used solver in Dymola. All Dymola solvers are supported(default:</span>
+<span class="sd">        &#39;Dassl&#39;</span>
+<span class="sd">    tolerance : float</span>
+<span class="sd">        Tolerance of used solver</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">workers</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">list_office</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">list_other</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">sim_office</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">sim_other</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">simulation_parts</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">bldg</span> <span class="ow">in</span> <span class="n">prj</span><span class="o">.</span><span class="n">buildings</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">bldg</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;Office&quot;</span><span class="p">:</span>
+            <span class="n">list_office</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bldg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">list_other</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bldg</span><span class="p">)</span>
+    <span class="n">sim_office</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">list_office</span><span class="p">,</span> <span class="n">number_of_workers</span><span class="p">)</span>
+    <span class="n">sim_other</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">list_other</span><span class="p">,</span> <span class="n">number_of_workers</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sim_office</span><span class="p">):</span>
+        <span class="n">simulation_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sim_office</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">sim_other</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+    <span class="n">result_queues</span> <span class="o">=</span> <span class="p">[</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">JoinableQueue</span><span class="p">()]</span> <span class="o">*</span> <span class="n">number_of_workers</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">sim_part</span><span class="p">,</span> <span class="n">result_queue</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">simulation_parts</span><span class="p">,</span> <span class="n">result_queues</span><span class="p">)):</span>
+        <span class="n">workers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">WorkerSimulation</span><span class="p">(</span>
+                <span class="n">sim_function</span><span class="o">=</span><span class="n">sim_function</span><span class="p">,</span>
+                <span class="n">sim_part</span><span class="o">=</span><span class="n">sim_part</span><span class="p">,</span>
+                <span class="n">prj</span><span class="o">=</span><span class="n">prj</span><span class="p">,</span>
+                <span class="n">model_path</span><span class="o">=</span><span class="n">model_path</span><span class="p">,</span>
+                <span class="n">results_path</span><span class="o">=</span><span class="n">results_path</span><span class="p">,</span>
+                <span class="n">start_time</span><span class="o">=</span><span class="n">start_time</span><span class="p">,</span>
+                <span class="n">stop_time</span><span class="o">=</span><span class="n">stop_time</span><span class="p">,</span>
+                <span class="n">output_interval</span><span class="o">=</span><span class="n">output_interval</span><span class="p">,</span>
+                <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+                <span class="n">tolerance</span><span class="o">=</span><span class="n">tolerance</span><span class="p">,</span>
+                <span class="n">process_number</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
+                <span class="n">result_queue</span><span class="o">=</span><span class="n">result_queue</span><span class="p">,</span>
+                <span class="n">aixlib_path</span><span class="o">=</span><span class="n">aixlib_path</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">workers</span><span class="p">:</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>  <span class="c1"># Start worker</span>
+
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">workers</span><span class="p">:</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>  <span class="c1"># Block worker</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

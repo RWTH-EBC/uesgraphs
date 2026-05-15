@@ -1,0 +1,339 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.DHW_estimation.utilities &mdash; uesgraphs v2.2.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="TEASER Integration" href="../api_TEASER_int.html" />
+    <link rel="prev" title="uesgraphs.DHW_estimation.OpenDHW" href="uesgraphs.DHW_estimation.OpenDHW.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/demand_estimation.html">Heat and DHW Demand Estimation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/teaser_opendhw_integration.html">Workflow integration of TEASER and OpenDHW</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/pandapipes_dynamic.html">Dynamic Simulation with pandapipes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api_OpenDHW_int.html">OpenDHW integration</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="uesgraphs.DHW_estimation.OpenDHW.html">uesgraphs.DHW_estimation.OpenDHW</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">uesgraphs.DHW_estimation.utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.DHW_estimation.utilities.set_up_file_logger"><code class="docutils literal notranslate"><span class="pre">set_up_file_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.DHW_estimation.utilities.set_up_logger"><code class="docutils literal notranslate"><span class="pre">set_up_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.DHW_estimation.utilities.load_simulation_settings_from_excel"><code class="docutils literal notranslate"><span class="pre">load_simulation_settings_from_excel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.DHW_estimation.utilities.load_component_parameters"><code class="docutils literal notranslate"><span class="pre">load_component_parameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.DHW_estimation.utilities.create_profiles"><code class="docutils literal notranslate"><span class="pre">create_profiles()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uesgraphs.DHW_estimation.utilities.generate_DHW_profiles_from_geojson"><code class="docutils literal notranslate"><span class="pre">generate_DHW_profiles_from_geojson()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_TEASER_int.html">TEASER Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api_OpenDHW_int.html">OpenDHW integration</a></li>
+      <li class="breadcrumb-item active">uesgraphs.DHW_estimation.utilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/uesgraphs.DHW_estimation.utilities.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-uesgraphs.DHW_estimation.utilities">
+<span id="uesgraphs-dhw-estimation-utilities"></span><h1>uesgraphs.DHW_estimation.utilities<a class="headerlink" href="#module-uesgraphs.DHW_estimation.utilities" title="Permalink to this heading"></a></h1>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.DHW_estimation.html#uesgraphs.DHW_estimation.utilities.create_profiles" title="uesgraphs.DHW_estimation.utilities.create_profiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_profiles</span></code></a>(info_path, timestep, ...[, ...])</p></td>
+<td><p>Create DHW profiles according to infos in geojson.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.DHW_estimation.html#uesgraphs.DHW_estimation.utilities.generate_DHW_profiles_from_geojson" title="uesgraphs.DHW_estimation.utilities.generate_DHW_profiles_from_geojson"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_DHW_profiles_from_geojson</span></code></a>(...[, ...])</p></td>
+<td><p>Run OpenDHW for demand estimation based on building information from a .geojson file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.DHW_estimation.html#uesgraphs.DHW_estimation.utilities.load_component_parameters" title="uesgraphs.DHW_estimation.utilities.load_component_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_component_parameters</span></code></a>(excel_path, ...)</p></td>
+<td><p>Load component parameters from an Excel file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.DHW_estimation.html#uesgraphs.DHW_estimation.utilities.load_simulation_settings_from_excel" title="uesgraphs.DHW_estimation.utilities.load_simulation_settings_from_excel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_simulation_settings_from_excel</span></code></a>(excel_path)</p></td>
+<td><p>Load simulation settings from Excel 'Simulation' sheet.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../code/uesgraphs.DHW_estimation.html#uesgraphs.DHW_estimation.utilities.set_up_file_logger" title="uesgraphs.DHW_estimation.utilities.set_up_file_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_file_logger</span></code></a>(name[, log_dir, level])</p></td>
+<td><p>Set up a full file+console logger for major functions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../code/uesgraphs.DHW_estimation.html#uesgraphs.DHW_estimation.utilities.set_up_logger" title="uesgraphs.DHW_estimation.utilities.set_up_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_logger</span></code></a>(name[, log_dir, level])</p></td>
+<td><p>Sets up a configured logger with file handler.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.utilities.set_up_file_logger">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_file_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><span class="pre">Logger</span></a></span></span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/utilities.html#set_up_file_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.utilities.set_up_file_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Set up a full file+console logger for major functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Logger name</p></li>
+<li><p><strong>log_dir</strong> – Directory for log files (default: temp directory)</p></li>
+<li><p><strong>level</strong> – Logging level (default: ERROR)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured file+console logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.utilities.set_up_logger">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.utilities.</span></span><span class="sig-name descname"><span class="pre">set_up_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/utilities.html#set_up_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.utilities.set_up_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Sets up a configured logger with file handler.</p>
+<p>Creates a logger with specified name and logging level.
+Log files are stored in a directory with timestamp in filename.
+If no directory is specified, the system’s temporary directory is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the logger, also used for filename</p></li>
+<li><p><strong>log_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Directory for log files.
+Defaults to None (uses temp directory)</p></li>
+<li><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Logging level (e.g. logging.ERROR, logging.INFO).
+Defaults to logging.ERROR</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured logger object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)">logging.Logger</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_logger</span><span class="p">(</span><span class="s2">&quot;my_app&quot;</span><span class="p">,</span> <span class="s2">&quot;/var/log&quot;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Application started&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Log filename format: {name}_{YYYYMMDD_HHMMSS}.log</p></li>
+<li><p>Log entry format: time - logger_name - [<a class="reference external" href="file:line">file:line</a>] - level - message</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.utilities.load_simulation_settings_from_excel">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.utilities.</span></span><span class="sig-name descname"><span class="pre">load_simulation_settings_from_excel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">excel_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/utilities.html#load_simulation_settings_from_excel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.utilities.load_simulation_settings_from_excel" title="Permalink to this definition"></a></dt>
+<dd><p>Load simulation settings from Excel ‘Simulation’ sheet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>excel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to Excel file containing simulation settings</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger instance</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>sim_params</strong> – Dictionary of simulation parameters</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If required simulation parameters are missing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.utilities.load_component_parameters">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.utilities.</span></span><span class="sig-name descname"><span class="pre">load_component_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">excel_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/utilities.html#load_component_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.utilities.load_component_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Load component parameters from an Excel file.</p>
+<p>Reads a specific sheet from an Excel file and returns parameters as a dictionary.
+Expected Excel structure:
+- Column A: Parameter (parameter names)
+- Column B: Value (parameter values)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>excel_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to the Excel file containing component parameters</p></li>
+<li><p><strong>component_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Type of component, must be one of: ‘pipes’, ‘supply’, ‘demands’, ‘simulation’
+This determines which sheet to read from the Excel file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with parameter names as keys and their values
+Returns empty dict if sheet not found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If the Excel file does not exist</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the component_type is not valid or Excel structure is incorrect</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">load_component_parameters</span><span class="p">(</span><span class="s1">&#39;parameters.xlsx&#39;</span><span class="p">,</span> <span class="s1">&#39;pipes&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;dp_nominal&#39;</span><span class="p">])</span>
+<span class="go">0.10</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.utilities.create_profiles">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.utilities.</span></span><span class="sig-name descname"><span class="pre">create_profiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_drawoff_vol_per_day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_dT_dhw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">holidays</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">108,</span> <span class="pre">111,</span> <span class="pre">121,</span> <span class="pre">149,</span> <span class="pre">160,</span> <span class="pre">276,</span> <span class="pre">359,</span> <span class="pre">360]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/utilities.html#create_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.utilities.create_profiles" title="Permalink to this definition"></a></dt>
+<dd><p>Create DHW profiles according to infos in geojson.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>info_path</strong> (<em>path</em>) – Full path to json with building infos.</p></li>
+<li><p><strong>timestep</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Timestep in seconds for the generated time-series.</p></li>
+<li><p><strong>holidays</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.14)"><em>datetime.date</em></a><em>, </em><em>optional</em>) – List of holiday dates to consider in the profile generation (default: German holidays for 2025).</p></li>
+<li><p><strong>mean_drawoff_vol_per_day</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Average drawoff volume per day in liters per occupant</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – Logger instance for logging progress and warnings (default: None, creates a new logger if not provided).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame containing the generated DHW profiles for each building</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="uesgraphs.DHW_estimation.utilities.generate_DHW_profiles_from_geojson">
+<span class="sig-prename descclassname"><span class="pre">uesgraphs.DHW_estimation.utilities.</span></span><span class="sig-name descname"><span class="pre">generate_DHW_profiles_from_geojson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buildings_info_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_drawoff_vol_per_day</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_dT_dhw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">35</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_setup_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/uesgraphs/DHW_estimation/utilities.html#generate_DHW_profiles_from_geojson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#uesgraphs.DHW_estimation.utilities.generate_DHW_profiles_from_geojson" title="Permalink to this definition"></a></dt>
+<dd><p>Run OpenDHW for demand estimation based on building information from a .geojson file.</p>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>buildings_info_path<span class="classifier">str</span></dt><dd><p>The path to the .geojson file containing building information for TEASER model creation.</p>
+</dd>
+<dt>save_path<span class="classifier">str or Path</span></dt><dd><p>Directory path where the resulting demand CSV files will be saved.</p>
+</dd>
+<dt>timestep<span class="classifier">int, optinal</span></dt><dd><p>Simulation timestep in seconds (default is 3600 for hourly data)</p>
+</dd>
+<dt>mean_drawoff_vol_per_day<span class="classifier">float, optional</span></dt><dd><p>Average drawoff volume per day in liters per occupant (default is 40 L/day/occupant)</p>
+</dd>
+<dt>temp_dT_dhw<span class="classifier">float, optional</span></dt><dd><p>Temperature difference for Heat calculation from mass flows in K (default is 35 K)</p>
+</dd>
+<dt>sim_setup_path<span class="classifier">str or Path, optional</span></dt><dd><p>Path to the simulation setup for timestep and stop time. If not provided, default values will be used.</p>
+</dd>
+<dt>logger<span class="classifier">logging.Logger, optional</span></dt><dd><p>Logger instance. If None, creates a new file logger in temp directory</p>
+</dd>
+<dt>log_level<span class="classifier">int, optional</span></dt><dd><p>Logging level (default is logging.DEBUG). Only used if logger is None</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns:<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>tuple</dt><dd><p>Paths to the generated demand CSV files: (heating_demand_csv, cooling_demand_csv)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="uesgraphs.DHW_estimation.OpenDHW.html" class="btn btn-neutral float-left" title="uesgraphs.DHW_estimation.OpenDHW" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api_TEASER_int.html" class="btn btn-neutral float-right" title="TEASER Integration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

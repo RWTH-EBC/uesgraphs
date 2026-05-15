@@ -1,0 +1,593 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>uesgraphs.DHW_estimation.utilities &mdash; uesgraphs v2.2.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/demand_estimation.html">Heat and DHW Demand Estimation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/teaser_opendhw_integration.html">Workflow integration of TEASER and OpenDHW</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/pandapipes_dynamic.html">Dynamic Simulation with pandapipes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_TEASER_int.html">TEASER Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../uesgraphs.html">uesgraphs</a></li>
+      <li class="breadcrumb-item active">uesgraphs.DHW_estimation.utilities</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for uesgraphs.DHW_estimation.utilities</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uesgraphs.DHW_estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenDHW</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<div class="viewcode-block" id="set_up_file_logger"><a class="viewcode-back" href="../../../code/uesgraphs.DHW_estimation.html#uesgraphs.DHW_estimation.utilities.set_up_file_logger">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_up_file_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a full file+console logger for major functions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: Logger name</span>
+<span class="sd">        log_dir: Directory for log files (default: temp directory)</span>
+<span class="sd">        level: Logging level (default: ERROR)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Configured file+console logger</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+   <span class="c1"># if logger.handlers:</span>
+    <span class="c1">#    return logger</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">log_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">log_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
+
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+    <span class="n">log_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">log_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.log&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Logfile findable here: </span><span class="si">{</span><span class="n">log_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># File handler</span>
+    <span class="n">file_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+    <span class="n">file_formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - [</span><span class="si">%(filename)s</span><span class="s1">:</span><span class="si">%(lineno)d</span><span class="s1">] - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">file_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">file_formatter</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="n">logger</span></div>
+
+<div class="viewcode-block" id="set_up_logger"><a class="viewcode-back" href="../../../code/uesgraphs.DHW_estimation.html#uesgraphs.DHW_estimation.utilities.set_up_logger">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_up_logger</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">log_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">level</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sets up a configured logger with file handler.</span>
+<span class="sd">    </span>
+<span class="sd">    Creates a logger with specified name and logging level.</span>
+<span class="sd">    Log files are stored in a directory with timestamp in filename.</span>
+<span class="sd">    If no directory is specified, the system&#39;s temporary directory is used.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): Name of the logger, also used for filename</span>
+<span class="sd">        log_dir (str, optional): Directory for log files.</span>
+<span class="sd">            Defaults to None (uses temp directory)</span>
+<span class="sd">        level (int, optional): Logging level (e.g. logging.ERROR, logging.INFO).</span>
+<span class="sd">            Defaults to logging.ERROR</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        logging.Logger: Configured logger object</span>
+<span class="sd">        </span>
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; logger = set_up_logger(&quot;my_app&quot;, &quot;/var/log&quot;, logging.INFO)</span>
+<span class="sd">        &gt;&gt;&gt; logger.info(&quot;Application started&quot;)</span>
+<span class="sd">        </span>
+<span class="sd">    Notes:</span>
+<span class="sd">        - Log filename format: {name}_{YYYYMMDD_HHMMSS}.log</span>
+<span class="sd">        - Log entry format: time - logger_name - [file:line] - level - message</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">log_dir</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">log_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+    <span class="n">log_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">log_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.log&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Logfile findable here: </span><span class="si">{</span><span class="n">log_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - [</span><span class="si">%(filename)s</span><span class="s1">:</span><span class="si">%(lineno)d</span><span class="s1">] - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">logger</span></div>
+
+<span class="c1">## Helper functions</span>
+<div class="viewcode-block" id="load_simulation_settings_from_excel"><a class="viewcode-back" href="../../../code/uesgraphs.DHW_estimation.html#uesgraphs.DHW_estimation.utilities.load_simulation_settings_from_excel">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_simulation_settings_from_excel</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load simulation settings from Excel &#39;Simulation&#39; sheet.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    excel_path : str or Path</span>
+<span class="sd">        Path to Excel file containing simulation settings</span>
+<span class="sd">    logger : logging.Logger, optional</span>
+<span class="sd">        Logger instance</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sim_params : dict</span>
+<span class="sd">        Dictionary of simulation parameters</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If required simulation parameters are missing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.load_simulation_settings_from_excel&quot;</span><span class="p">)</span>
+
+    <span class="n">sim_params</span> <span class="o">=</span> <span class="n">_load_excel</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="s1">&#39;Simulation&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+    <span class="c1"># Validate required simulation parameters</span>
+    <span class="n">required</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timestep&#39;</span><span class="p">,</span><span class="s1">&#39;stop_time&#39;</span><span class="p">]</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">param</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">required</span> <span class="k">if</span> <span class="n">param</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sim_params</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required simulation parameters in &#39;Simulation&#39; sheet: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulation settings loaded from Excel: </span><span class="si">{</span><span class="n">sim_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;simulation_name&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sim_params</span></div>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_excel</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">excel_sheet_name</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load parameters from Excel file.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    excel_path : str or Path or None</span>
+<span class="sd">        Path to Excel file (optional)</span>
+<span class="sd">    excel_sheet_name : str</span>
+<span class="sd">        Name of the Excel sheet to load</span>
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">        Logger instance</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    excel_params : dict</span>
+<span class="sd">        Dictionary of parameters from Excel (empty dict if excel_path is None)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">excel_params</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">if</span> <span class="n">excel_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading parameters from Excel: </span><span class="si">{</span><span class="n">excel_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">excel_params</span> <span class="o">=</span> <span class="n">load_component_parameters</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">excel_sheet_name</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Excel parameters loaded: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">excel_params</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">warning_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Could not load Excel parameters: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">warning_msg</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No Excel file provided, using only graph attributes&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">excel_params</span>
+
+<div class="viewcode-block" id="load_component_parameters"><a class="viewcode-back" href="../../../code/uesgraphs.DHW_estimation.html#uesgraphs.DHW_estimation.utilities.load_component_parameters">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_component_parameters</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">component_type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load component parameters from an Excel file.</span>
+<span class="sd">    </span>
+<span class="sd">    Reads a specific sheet from an Excel file and returns parameters as a dictionary.</span>
+<span class="sd">    Expected Excel structure:</span>
+<span class="sd">    - Column A: Parameter (parameter names)</span>
+<span class="sd">    - Column B: Value (parameter values)</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    excel_path : str or Path</span>
+<span class="sd">        Path to the Excel file containing component parameters</span>
+<span class="sd">    component_type : str</span>
+<span class="sd">        Type of component, must be one of: &#39;pipes&#39;, &#39;supply&#39;, &#39;demands&#39;, &#39;simulation&#39;</span>
+<span class="sd">        This determines which sheet to read from the Excel file</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Dictionary with parameter names as keys and their values</span>
+<span class="sd">        Returns empty dict if sheet not found</span>
+<span class="sd">        </span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If the Excel file does not exist</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the component_type is not valid or Excel structure is incorrect</span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; params = load_component_parameters(&#39;parameters.xlsx&#39;, &#39;pipes&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(params[&#39;dp_nominal&#39;])</span>
+<span class="sd">    0.10</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate component type</span>
+    <span class="n">valid_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Pipes&#39;</span><span class="p">,</span> <span class="s1">&#39;Supply&#39;</span><span class="p">,</span> <span class="s1">&#39;Demands&#39;</span><span class="p">,</span> <span class="s1">&#39;Simulation&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">component_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_types</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid component_type &#39;</span><span class="si">{</span><span class="n">component_type</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Must be one of: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">valid_types</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="c1"># Check if file exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">excel_path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Excel file not found: </span><span class="si">{</span><span class="n">excel_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Read the specific sheet</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">excel_path</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">component_type</span><span class="p">)</span>
+        
+        <span class="c1"># Validate Excel structure</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Excel sheet &#39;</span><span class="si">{</span><span class="n">component_type</span><span class="si">}</span><span class="s2">&#39; must have at least 2 columns &quot;</span>
+                <span class="s2">&quot;(Parameter and Value)&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="c1"># Check if first row contains expected column names</span>
+        <span class="k">if</span> <span class="s1">&#39;Parameter&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;parameter&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+            <span class="c1"># Assume first two columns are Parameter and Value</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+        
+        <span class="c1"># Create dictionary from Parameter and Value columns</span>
+        <span class="c1"># Drop rows where Parameter is NaN</span>
+        <span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Convert to dictionary</span>
+        <span class="n">param_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">],</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]))</span>
+
+        <span class="c1"># Convert and clean values</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">param_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Convert NaN to None</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="c1"># Try to convert string values to appropriate types</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">value_stripped</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                <span class="c1"># Skip if it looks like a reference (@something) or template path/name</span>
+                <span class="k">if</span> <span class="n">value_stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">value_stripped</span> <span class="ow">or</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">value_stripped</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">value_stripped</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Try boolean conversion</span>
+                <span class="k">if</span> <span class="n">value_stripped</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;TRUE&#39;</span><span class="p">,</span> <span class="s1">&#39;FALSE&#39;</span><span class="p">):</span>
+                    <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value_stripped</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;TRUE&#39;</span>
+                <span class="c1"># Try numeric conversion (handles scientific notation like &#39;1e5&#39;)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="c1"># Try float first (handles both &#39;123&#39; and &#39;1.23&#39; and &#39;1e5&#39;)</span>
+                        <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value_stripped</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="c1"># Keep as string if conversion fails (e.g., template names)</span>
+                        <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">param_dict</span>
+        
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;Worksheet named&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+            <span class="c1"># Sheet doesn&#39;t exist</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Sheet &#39;</span><span class="si">{</span><span class="n">component_type</span><span class="si">}</span><span class="s2">&#39; not found in </span><span class="si">{</span><span class="n">excel_path</span><span class="si">}</span><span class="s2">. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Returning empty dictionary.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span>
+    
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Error reading Excel file </span><span class="si">{</span><span class="n">excel_path</span><span class="si">}</span><span class="s2">, sheet &#39;</span><span class="si">{</span><span class="n">component_type</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span></div>
+    
+<div class="viewcode-block" id="create_profiles"><a class="viewcode-back" href="../../../code/uesgraphs.DHW_estimation.html#uesgraphs.DHW_estimation.utilities.create_profiles">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">create_profiles</span><span class="p">(</span><span class="n">info_path</span><span class="p">,</span> 
+                    <span class="n">timestep</span><span class="p">,</span> 
+                    <span class="n">mean_drawoff_vol_per_day</span><span class="p">,</span>
+                    <span class="n">temp_dT_dhw</span><span class="p">,</span>
+                    <span class="n">holidays</span><span class="o">=</span> <span class="n">OpenDHW</span><span class="o">.</span><span class="n">get_holidays</span><span class="p">(</span><span class="n">country_code</span> <span class="o">=</span> <span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="mi">2025</span><span class="p">),</span>
+                    <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create DHW profiles according to infos in geojson.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    info_path : path</span>
+<span class="sd">        Full path to json with building infos.</span>
+<span class="sd">    timestep : int</span>
+<span class="sd">        Timestep in seconds for the generated time-series.</span>
+<span class="sd">    holidays : list of datetime.date, optional</span>
+<span class="sd">        List of holiday dates to consider in the profile generation (default: German holidays for 2025).</span>
+<span class="sd">    mean_drawoff_vol_per_day : float</span>
+<span class="sd">        Average drawoff volume per day in liters per occupant</span>
+<span class="sd">    logger : logging.Logger, optional</span>
+<span class="sd">        Logger instance for logging progress and warnings (default: None, creates a new logger if not provided).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">        DataFrame containing the generated DHW profiles for each building</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">district_file</span> <span class="o">=</span> <span class="n">info_path</span>       
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">district_file</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;District file not found: </span><span class="si">{</span><span class="n">district_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">district_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+        <span class="n">geojson</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+
+    <span class="n">building_info</span> <span class="o">=</span> <span class="n">geojson</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">building_info</span><span class="p">)</span><span class="si">}</span><span class="s2"> buildings...&quot;</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="n">successful_buildings</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">building_info</span><span class="p">)):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">bldg_info</span> <span class="o">=</span> <span class="n">building_info</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>  <span class="c1"># More frequent feedback</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Processing building </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">building_info</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">bldg_info</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+            <span class="c1"># Map archetype to OpenDHW types</span>
+            <span class="n">archetype</span> <span class="o">=</span> <span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;archetype&quot;</span><span class="p">]</span>
+            
+            <span class="k">if</span> <span class="n">archetype</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;OfficeExisting&quot;</span><span class="p">,</span> <span class="s2">&quot;OfficeWithDataCenter&quot;</span><span class="p">,</span> <span class="s2">&quot;OfficeHighRise&quot;</span><span class="p">,</span> <span class="s2">&quot;OfficeHighRiseKita&quot;</span><span class="p">]:</span>
+                <span class="c1"># generate time-series with OpenDHW</span>
+                <span class="n">timeseries_df</span> <span class="o">=</span> <span class="n">OpenDHW</span><span class="o">.</span><span class="n">generate_dhw_profile</span><span class="p">(</span>
+                    <span class="n">s_step</span><span class="o">=</span><span class="n">timestep</span><span class="p">,</span>
+                    <span class="n">categories</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                    <span class="n">occupancy</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;occupants&quot;</span><span class="p">],</span>
+                    <span class="n">building_type</span><span class="o">=</span><span class="s2">&quot;OB&quot;</span><span class="p">,</span>
+                    <span class="n">weekend_weekday_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">holidays</span><span class="o">=</span><span class="n">holidays</span><span class="p">,</span>
+                    <span class="n">mean_drawoff_vol_per_day</span><span class="o">=</span><span class="n">mean_drawoff_vol_per_day</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">timeseries_df</span> <span class="o">=</span> <span class="n">OpenDHW</span><span class="o">.</span><span class="n">compute_heat</span><span class="p">(</span>
+                    <span class="n">timeseries_df</span><span class="o">=</span><span class="n">timeseries_df</span><span class="p">,</span>
+                    <span class="n">temp_dT</span><span class="o">=</span><span class="n">temp_dT_dhw</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">archetype</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;MultiFamilyHouse&quot;</span><span class="p">]:</span>
+                <span class="c1"># generate time-series with OpenDHW</span>
+                <span class="n">timeseries_df</span> <span class="o">=</span> <span class="n">OpenDHW</span><span class="o">.</span><span class="n">generate_dhw_profile</span><span class="p">(</span>
+                    <span class="n">s_step</span><span class="o">=</span><span class="n">timestep</span><span class="p">,</span>
+                    <span class="n">categories</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                    <span class="n">occupancy</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;occupants&quot;</span><span class="p">],</span>
+                    <span class="n">building_type</span><span class="o">=</span><span class="s2">&quot;MFH&quot;</span><span class="p">,</span>
+                    <span class="n">weekend_weekday_factor</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span>
+                    <span class="n">holidays</span><span class="o">=</span><span class="n">holidays</span><span class="p">,</span>
+                    <span class="n">mean_drawoff_vol_per_day</span><span class="o">=</span><span class="n">mean_drawoff_vol_per_day</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">timeseries_df</span> <span class="o">=</span> <span class="n">OpenDHW</span><span class="o">.</span><span class="n">compute_heat</span><span class="p">(</span>
+                    <span class="n">timeseries_df</span><span class="o">=</span><span class="n">timeseries_df</span><span class="p">,</span>
+                    <span class="n">temp_dT</span><span class="o">=</span><span class="n">temp_dT_dhw</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">archetype</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;SingleFamilyHouse&quot;</span><span class="p">]:</span>
+                <span class="c1"># generate time-series with OpenDHW</span>
+                <span class="n">timeseries_df</span> <span class="o">=</span> <span class="n">OpenDHW</span><span class="o">.</span><span class="n">generate_dhw_profile</span><span class="p">(</span>
+                    <span class="n">s_step</span><span class="o">=</span><span class="n">timestep</span><span class="p">,</span>
+                    <span class="n">categories</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                    <span class="n">occupancy</span><span class="o">=</span><span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;occupants&quot;</span><span class="p">],</span>
+                    <span class="n">building_type</span><span class="o">=</span><span class="s2">&quot;SFH&quot;</span><span class="p">,</span>
+                    <span class="n">weekend_weekday_factor</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span>
+                    <span class="n">holidays</span><span class="o">=</span><span class="n">holidays</span><span class="p">,</span>
+                    <span class="n">mean_drawoff_vol_per_day</span><span class="o">=</span><span class="n">mean_drawoff_vol_per_day</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">timeseries_df</span> <span class="o">=</span> <span class="n">OpenDHW</span><span class="o">.</span><span class="n">compute_heat</span><span class="p">(</span>
+                    <span class="n">timeseries_df</span><span class="o">=</span><span class="n">timeseries_df</span><span class="p">,</span>
+                    <span class="n">temp_dT</span><span class="o">=</span><span class="n">temp_dT_dhw</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Warning: Unknown archetype &#39;</span><span class="si">{</span><span class="n">archetype</span><span class="si">}</span><span class="s2">&#39; for building &#39;</span><span class="si">{</span><span class="n">bldg_info</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; - skipping&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+                
+            <span class="n">successful_buildings</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timeseries_df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+                <span class="k">if</span> <span class="s2">&quot;Heat_W&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">timeseries_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;Heat_W&#39; not found in columns: </span><span class="si">{</span><span class="n">timeseries_df</span><span class="o">.</span><span class="n">columns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    
+                <span class="n">series</span> <span class="o">=</span> <span class="n">timeseries_df</span><span class="p">[</span><span class="s2">&quot;Heat_W&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;timeseries_df is not a DataFrame as expected&quot;</span><span class="p">)</span>
+
+            <span class="n">series</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">bldg_info</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">series</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">series</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+                    
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Warning: Could not process building &#39;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully created </span><span class="si">{</span><span class="n">successful_buildings</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">building_info</span><span class="p">)</span><span class="si">}</span><span class="s2"> buildings&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">df</span></div>
+
+<div class="viewcode-block" id="generate_DHW_profiles_from_geojson"><a class="viewcode-back" href="../../../code/uesgraphs.DHW_estimation.html#uesgraphs.DHW_estimation.utilities.generate_DHW_profiles_from_geojson">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">generate_DHW_profiles_from_geojson</span><span class="p">(</span><span class="n">buildings_info_path</span><span class="p">,</span> <span class="n">save_path</span><span class="p">,</span> 
+                    <span class="n">timestep</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>
+                    <span class="n">mean_drawoff_vol_per_day</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+                    <span class="n">temp_dT_dhw</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> 
+                    <span class="n">sim_setup_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                    <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span>
+                    <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run OpenDHW for demand estimation based on building information from a .geojson file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    buildings_info_path : str</span>
+<span class="sd">        The path to the .geojson file containing building information for TEASER model creation.</span>
+<span class="sd">    save_path : str or Path</span>
+<span class="sd">        Directory path where the resulting demand CSV files will be saved.</span>
+<span class="sd">    timestep : int, optinal</span>
+<span class="sd">        Simulation timestep in seconds (default is 3600 for hourly data)</span>
+<span class="sd">    mean_drawoff_vol_per_day : float, optional</span>
+<span class="sd">        Average drawoff volume per day in liters per occupant (default is 40 L/day/occupant)</span>
+<span class="sd">    temp_dT_dhw : float, optional</span>
+<span class="sd">        Temperature difference for Heat calculation from mass flows in K (default is 35 K)</span>
+<span class="sd">    sim_setup_path : str or Path, optional</span>
+<span class="sd">        Path to the simulation setup for timestep and stop time. If not provided, default values will be used.</span>
+<span class="sd">    logger : logging.Logger, optional</span>
+<span class="sd">        Logger instance. If None, creates a new file logger in temp directory</span>
+<span class="sd">    log_level : int, optional</span>
+<span class="sd">        Logging level (default is logging.DEBUG). Only used if logger is None</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        Paths to the generated demand CSV files: (heating_demand_csv, cooling_demand_csv)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">set_up_file_logger</span><span class="p">(</span><span class="s2">&quot;OpenDHWRun&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">log_level</span><span class="p">))</span>
+
+    <span class="c1"># Step 0: Load simulation settings</span>
+
+    <span class="k">if</span> <span class="n">sim_setup_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sim_params</span> <span class="o">=</span> <span class="n">load_simulation_settings_from_excel</span><span class="p">(</span><span class="n">sim_setup_path</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+            <span class="n">timestep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sim_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timestep&#39;</span><span class="p">,</span> <span class="n">timestep</span><span class="p">))</span>
+            <span class="n">mean_drawoff_vol_per_day</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sim_params</span><span class="p">[</span><span class="s1">&#39;mean_drawoff_vol_per_day&#39;</span><span class="p">])</span>
+            <span class="n">temp_dT_dhw</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sim_params</span><span class="p">[</span><span class="s1">&#39;temp_dT_dhw&#39;</span><span class="p">])</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded simulation settings from Excel: timestep=</span><span class="si">{</span><span class="n">timestep</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not load simulation settings from Excel: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. Using default values.&quot;</span><span class="p">)</span>
+
+    <span class="n">timesteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">365</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">3600</span><span class="o">/</span> <span class="n">timestep</span><span class="p">)</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
+        <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">periods</span><span class="o">=</span><span class="n">timesteps</span><span class="p">,</span>
+        <span class="n">freq</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">timestep</span><span class="o">/</span><span class="mi">3600</span><span class="p">)</span><span class="si">}</span><span class="s2">h&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">demand_csv_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="s2">&quot;demand_csv&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">demand_csv_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">demand_csv_path</span><span class="p">)</span>
+
+    <span class="c1"># Step 1: Create DHW profiles</span>
+
+    <span class="n">dhw</span> <span class="o">=</span> <span class="n">create_profiles</span><span class="p">(</span><span class="n">buildings_info_path</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">mean_drawoff_vol_per_day</span><span class="p">,</span> <span class="n">temp_dT_dhw</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dhw</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Length mismatch between DHW data and index&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dhw</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
+    
+    <span class="c1"># Step 2: Save to CSV</span>
+
+    <span class="n">dhw</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">demand_csv_path</span><span class="p">,</span> <span class="s2">&quot;demands-dhw.csv&quot;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">demand_csv_path</span><span class="p">,</span> <span class="s2">&quot;demands-dhw.csv&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

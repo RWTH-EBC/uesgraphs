@@ -1,0 +1,35 @@
+﻿uesgraphs.examples.e12\_template\_generation\_example
+=====================================================
+
+.. automodule:: uesgraphs.examples.e12_template_generation_example
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      demonstrate_bulk_generation
+      demonstrate_config_generation
+      demonstrate_manual_generation
+      get_aixlib_path
+      get_test_data
+      get_user_choice
+      main
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

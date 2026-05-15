@@ -1,0 +1,30 @@
+﻿uesgraphs.examples.e17\_teaser\_and\_OpenDHW\_integration\_pandapipes\_sim
+==========================================================================
+
+.. automodule:: uesgraphs.examples.e17_teaser_and_OpenDHW_integration_pandapipes_sim
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      main
+      workspace_example
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

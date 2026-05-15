@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Simulation with pandapipes &mdash; uesgraphs v2.2.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Core Modules" href="../api_core_modules.html" />
+    <link rel="prev" title="Workflow integration of TEASER and OpenDHW" href="teaser_opendhw_integration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            uesgraphs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pipeline.html">Model Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/hydronic_sizing.html">Hydraulic Network Sizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/Template_Generation.html">Template Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/model_generation_pandapipes.html">Model Generation Pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/analysis_tools_pp.html">Analysis of pandapipes simulation results with UESGraph return and supply side graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/demand_estimation.html">Heat and DHW Demand Estimation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modelica_pipeline.html">UESGraphs Modelica Code Generation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="graph_transformation.html">Graph Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pandapipes_pipeline.html">UESGraphs pandapipes simulation Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teaser_opendhw_integration.html">Workflow integration of TEASER and OpenDHW</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dynamic Simulation with pandapipes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#architecture-documentation">Architecture Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#main-idea">Main Idea</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#equations">Equations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pipe-order-scheme">Pipe Order Scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#numerical-solver">Numerical Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transient-pandapipes-approach">Transient pandapipes approach</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_core_modules.html">Core Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_OpenDHW_int.html">OpenDHW integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_TEASER_int.html">TEASER Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models.html">System Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_system_models_pp.html">System Models pandapipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">uesgraphs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Dynamic Simulation with pandapipes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/architecture/pandapipes_dynamic.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dynamic-simulation-with-pandapipes">
+<h1>Dynamic Simulation with pandapipes<a class="headerlink" href="#dynamic-simulation-with-pandapipes" title="Permalink to this heading"></a></h1>
+<section id="architecture-documentation">
+<h2>Architecture Documentation<a class="headerlink" href="#architecture-documentation" title="Permalink to this heading"></a></h2>
+<p><strong>Version:</strong> —
+<strong>Last Updated:</strong> —</p>
+</section>
+<hr class="docutils" />
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="#overview">Overview</a></p></li>
+<li><p><a class="reference external" href="#main-idea">Main Idea</a></p></li>
+<li><p><a class="reference external" href="#equations">Equations</a></p></li>
+<li><p><a class="reference external" href="#pipe-order-scheme">Pipe Order Scheme</a></p></li>
+<li><p><a class="reference external" href="#numerical-solver">Numerical Solver</a></p></li>
+<li><p><a class="reference external" href="#transient-pandapipes-approach">Transient pandapipes approach</a></p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>The dynamic simulation extends the static hydraulic pandapipes model
+with a dynamic temperature calculation. Hydraulic states are solved
+at every timestep using pandapipes, while the thermal behaviour of the
+network is calculated separately using a time-dependent pipe model.</p>
+<p>The resulting thermo-hydraulic states can be used for further analysis,
+visualization, and export to UESGraph.</p>
+</section>
+<hr class="docutils" />
+<section id="main-idea">
+<h2>Main Idea<a class="headerlink" href="#main-idea" title="Permalink to this heading"></a></h2>
+<p>The simulation combines steady-state hydraulics with dynamic thermal
+calculations.</p>
+<p>At each timestep:</p>
+<ol class="arabic simple">
+<li><p>The hydraulic state is solved using pandapipes.</p></li>
+<li><p>Current mass flows and flow directions are extracted.</p></li>
+<li><p>Pipes are sorted according to the flow direction.</p></li>
+<li><p>Pipe temperatures are updated using an implicit Euler scheme.</p></li>
+</ol>
+<p>The ordering of the pipes is necessary because downstream temperatures
+depend on already calculated upstream temperatures.</p>
+<p>The same network structure and parameters as in the static simulation
+are reused, ensuring consistency and modularity between both approaches.</p>
+</section>
+<hr class="docutils" />
+<section id="equations">
+<h2>Equations<a class="headerlink" href="#equations" title="Permalink to this heading"></a></h2>
+<p>Hydraulic calculations are performed using the pandapipes solver.
+The thermal simulation is based on a dynamic one-dimensional heat
+transport equation including convective heat transport and thermal
+losses to the surrounding ground. This is also the main difference to
+the static pandapipes approach, where the temperature is calculated
+based on a steady-state assumption and all calculations are performed
+within the pandapipes framework.</p>
+<p>The governing equation is:</p>
+<div class="math notranslate nohighlight">
+\[\rho c_p \pi D^2 \Delta x
+\frac{\partial T}{\partial t}
++
+\dot m(x,t)
+\frac{\partial T}{\partial x}
+=
+\alpha \pi D \Delta x
+(T - T_{amb})\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(T\)</span> is the fluid temperature,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\dot m\)</span> is the mass flow,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\rho\)</span> is the fluid density,</p></li>
+<li><p><span class="math notranslate nohighlight">\(c_p\)</span> is the specific heat capacity,</p></li>
+<li><p><span class="math notranslate nohighlight">\(D\)</span> is the inner pipe diameter,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha\)</span> is the heat transfer coefficient,</p></li>
+<li><p><span class="math notranslate nohighlight">\(T_{amb}\)</span> is the ambient ground temperature.</p></li>
+</ul>
+<p>For the dynamic-thermal simulation, the equation is discretized in space and
+solved using an implicit Euler scheme in time direction.</p>
+<p>This results in the following linear equation system:</p>
+<div class="math notranslate nohighlight">
+\[-\Delta t F_{conv} T_{i-1}^{n+1}
++
+\left(
+1 + \Delta t (F_{conv} + F_{loss})
+\right)
+T_i^{n+1}
+=
+T_i^n + \Delta t F_{loss} T_{amb}\]</div>
+<p>with:</p>
+<div class="math notranslate nohighlight">
+\[F_{conv} =
+\frac{4 \dot m}
+{\rho \pi D^2 \Delta x}\]</div>
+<div class="math notranslate nohighlight">
+\[F_{loss} =
+\frac{4 \alpha}
+{\rho D c_p}\]</div>
+<p>The resulting system is solved for every pipe and timestep to obtain
+the updated temperature distribution.</p>
+</section>
+<hr class="docutils" />
+<section id="pipe-order-scheme">
+<h2>Pipe Order Scheme<a class="headerlink" href="#pipe-order-scheme" title="Permalink to this heading"></a></h2>
+<p>The temperature calculation requires a physically consistent processing
+order because each pipe depends on upstream temperatures.</p>
+<p>Before the thermal calculation starts, the current mass flow directions
+from the hydraulic solution are evaluated. Pipe directions are updated
+automatically if flow reversals occur.</p>
+<p>A layer-based graph traversal algorithm is then used to sort the pipes
+starting from the heat source and following the mass flow direction.</p>
+<p>The supply and return networks are processed separately:</p>
+<ul class="simple">
+<li><p>Supply pipes are ordered from the source to the consumers.</p></li>
+<li><p>Return pipes are ordered from the consumers back to the source.</p></li>
+</ul>
+<p>This ordering guarantees that all required upstream temperatures are
+already available during the calculation.</p>
+<p>The approach is based on the Layer-idea in Qin et al. (2019).</p>
+</section>
+<hr class="docutils" />
+<section id="numerical-solver">
+<h2>Numerical Solver<a class="headerlink" href="#numerical-solver" title="Permalink to this heading"></a></h2>
+<p>The dynamic thermal calculation uses an implicit Euler method.</p>
+<p>Compared to explicit schemes, the implicit formulation provides improved
+numerical stability and allows larger timestep sizes.</p>
+<p>For every timestep:</p>
+<ol class="arabic simple">
+<li><p>Hydraulic states are recalculated.</p></li>
+<li><p>Pipe ordering is updated.</p></li>
+<li><p>Pipe temperatures are solved sequentially.</p></li>
+<li><p>Results are stored in the standard pandapipes result structure.</p></li>
+</ol>
+<p>The calculated results care exported as CSV files and integrated into
+UESGraph files for supply and return side.</p>
+<p>—</p>
+</section>
+<section id="transient-pandapipes-approach">
+<h2>Transient pandapipes approach<a class="headerlink" href="#transient-pandapipes-approach" title="Permalink to this heading"></a></h2>
+<p>This approach is activated if in the Excel sheet mode is set to “transient”
+and allows transient simulation from pandapipes.
+See in pandapipes documentation for more details: <a class="reference external" href="https://pandapipes.readthedocs.io/en/latest/">https://pandapipes.readthedocs.io/en/latest/</a></p>
+<p><em>This document describes the dynamic simulation approach using pandapipes.</em></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="teaser_opendhw_integration.html" class="btn btn-neutral float-left" title="Workflow integration of TEASER and OpenDHW" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api_core_modules.html" class="btn btn-neutral float-right" title="Core Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Institute for Energy Efficient Buildings and Indoor Climate (EBC), RWTH Aachen University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
