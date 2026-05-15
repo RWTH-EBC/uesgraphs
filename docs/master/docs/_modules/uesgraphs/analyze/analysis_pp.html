@@ -307,26 +307,27 @@
             <span class="n">T_out</span> <span class="o">=</span> <span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_out&quot;</span><span class="p">)</span>
 
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Note: This is only used if you want to check the physical consistency of the results </span>
-<span class="sd">                by comparing pipe temperatures to ground temperatures.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="n">T_ground</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">T_in_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">T_in</span><span class="p">)</span>
-                <span class="n">T_out_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">T_out</span><span class="p">)</span>
-                <span class="n">Tamb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">T_ground</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">T_in_arr</span><span class="p">)])</span>
+<span class="sd">                by comparing pipe temperatures to ground temperatures.</span>
+<span class="sd">            if T_ground is not None:</span>
+<span class="sd">                T_in_arr = np.array(T_in)</span>
+<span class="sd">                T_out_arr = np.array(T_out)</span>
+<span class="sd">                Tamb = np.array(T_ground[:len(T_in_arr)])</span>
 
-                <span class="n">mask_problem</span> <span class="o">=</span> <span class="p">(</span><span class="n">T_out_arr</span> <span class="o">-</span> <span class="n">T_in_arr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.1</span>
+<span class="sd">                mask_problem = (T_out_arr - T_in_arr) &gt; 0.1</span>
 
-                <span class="k">if</span> <span class="n">mask_problem</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
-                    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask_problem</span><span class="p">)[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">5</span><span class="p">]</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Edge </span><span class="si">{</span><span class="n">edge_data_R</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeID&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> hat T_out &gt; T_in!&quot;</span><span class="p">)</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Indices: </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;T_in: </span><span class="si">{</span><span class="n">T_in_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;T_out: </span><span class="si">{</span><span class="n">T_out_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;T_amb: </span><span class="si">{</span><span class="n">Tamb</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="sd">                if mask_problem.any():</span>
+<span class="sd">                    idx = np.where(mask_problem)[0][:5]</span>
+<span class="sd">                    logger.warning(f&quot;\nEdge {edge_data_R.get(&#39;pipeID&#39;)} hat T_out &gt; T_in!&quot;)</span>
+<span class="sd">                    logger.warning(f&quot;Indices: {idx}&quot;)</span>
+<span class="sd">                    logger.warning(f&quot;T_in: {T_in_arr[idx]}&quot;)</span>
+<span class="sd">                    logger.warning(f&quot;T_out: {T_out_arr[idx]}&quot;)</span>
+<span class="sd">                    logger.warning(f&quot;T_amb: {Tamb[idx]}&quot;)</span>
 
-                    <span class="k">if</span> <span class="p">(</span><span class="n">Tamb</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">T_in_arr</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Physikalisch OK (Umgebung wärmer)&quot;</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;UNPHYSIKALISCH! Check deine Simulation!&quot;</span><span class="p">)</span>
+<span class="sd">                    if (Tamb[idx] &gt; T_in_arr[idx]).all():</span>
+<span class="sd">                        logger.warning(&quot;Physikalisch OK (Umgebung wärmer)&quot;)</span>
+<span class="sd">                    else:</span>
+<span class="sd">                        logger.error(&quot;UNPHYSIKALISCH! Check deine Simulation!&quot;)</span>
+<span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">if</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_in&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">edge_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;T_out&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
