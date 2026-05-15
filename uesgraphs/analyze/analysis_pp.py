@@ -213,7 +213,7 @@ class analysis_pp:
             T_out = edge_data_R.get("T_out")
 
             """Note: This is only used if you want to check the physical consistency of the results 
-                by comparing pipe temperatures to ground temperatures."""
+                by comparing pipe temperatures to ground temperatures.
             if T_ground is not None:
                 T_in_arr = np.array(T_in)
                 T_out_arr = np.array(T_out)
@@ -233,6 +233,7 @@ class analysis_pp:
                         logger.warning("Physikalisch OK (Umgebung wärmer)")
                     else:
                         logger.error("UNPHYSIKALISCH! Check deine Simulation!")
+            """
 
             if edge_data.get("T_in") is not None and edge_data.get("T_out") is not None:
                 plt.figure(figsize=(14, 5))

@@ -56,6 +56,12 @@ class TestUESModelsUtilities:
                 # points can be away from each other to be considered a cluster.
                 assert utils.cluster_bldg(uesgenerator, eps=50), "cluster_bldg failed"
 
+                assert utils.add_years_of_construction(uesgenerator), "add_years_of_construction failed"
+
+                assert utils.add_floor_heights(uesgenerator), "add_floor_heights failed"
+
+                assert utils.add_number_of_floors(uesgenerator), "add_number_of_floors failed"
+
                 # Adds the network to the district based on the street layout using
                 # add_network_new function. There are three parameters to set. 'supply_node'
                 # specifies the heating supply building. 'number_of_buildings' gives
@@ -78,6 +84,8 @@ class TestUESModelsUtilities:
                     success_rate=1.0,
                     workspace=workspace,
                     ), "add_network_new failed"
+                
+                assert utils.add_loop(uesgenerator)
 
             except Exception as e:
                 pytest.fail(f"UESModels example failed: {e}")
