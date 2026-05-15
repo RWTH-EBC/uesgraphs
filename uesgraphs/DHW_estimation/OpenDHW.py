@@ -118,7 +118,7 @@ def import_from_dhwcalc(s_step, daylight_saving, categories,occupancy,
         max_flow=max_flowrate,
     )
 
-    dhw_profile = Path.cwd().parent / "DHWcalc_Files" / dhw_file
+    dhw_profile = Path.cwd() / "uesgraphs" / "DHW_estimation" / "DHWcalc_Files" / dhw_file
 
     assert dhw_profile.exists(), 'No DHWcalc File for the selected ' \
                                  'parameters: {}'.format(dhw_file)

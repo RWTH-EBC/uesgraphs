@@ -40,9 +40,6 @@ class TestUESModelsUtilities:
                     check_boundary=False,
                     transform_positions=True,
                 )
-                example_district.network_simplification("heating")
-
-                assert example_district.simplification_level == 1, "Network simplification failed to change the graph structure"
 
                 # Generate a urban energy system using the 'UESGenerator' and the data just
                 # created from OSM file.
@@ -58,6 +55,12 @@ class TestUESModelsUtilities:
                 # function. The parameter 'eps' indicates the maximum distance (in m) that
                 # points can be away from each other to be considered a cluster.
                 assert utils.cluster_bldg(uesgenerator, eps=50), "cluster_bldg failed"
+
+                assert utils.add_years_of_construction(uesgenerator), "add_years_of_construction failed"
+
+                assert utils.add_floor_heights(uesgenerator), "add_floor_heights failed"
+
+                assert utils.add_number_of_floors(uesgenerator), "add_number_of_floors failed"
 
                 # Adds the network to the district based on the street layout using
                 # add_network_new function. There are three parameters to set. 'supply_node'

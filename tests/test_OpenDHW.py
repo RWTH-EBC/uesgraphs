@@ -36,6 +36,14 @@ class Test_OpenDHW:
 
             OpenDHW.draw_histplot(timeseries_df=timeseries_df)
 
+            timeseries_dhw_calc = OpenDHW.import_from_dhwcalc(s_step=60*15,
+                    categories=1,
+                    occupancy=4,
+                    mean_drawoff_vol_per_day=40,
+                    daylight_saving=False)
+            
+            OpenDHW.draw_detailed_histplot(timeseries_df=timeseries_dhw_calc)
+
             timeseries_df_1 = OpenDHW.add_additional_runs(timeseries_df=timeseries_df, 
                                     holidays=holidays, 
                                     occupancy=10, 

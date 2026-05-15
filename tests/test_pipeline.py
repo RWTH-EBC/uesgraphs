@@ -20,7 +20,7 @@ from uesgraphs.systemmodels.model_generation_pipeline import (
     assign_pipe_parameters,
     assign_supply_parameters
 )
-from uesgraphs.systemmodels.utilities import estimate_m_flow_demand_based
+from uesgraphs.systemmodels.utilities import size_hydronic_network
 from uesgraphs import UESGraph
 
 
@@ -190,7 +190,7 @@ class TestE15IntegrationPipeline:
                     save_path=workspace,
                     generate_visualizations=False
                 )
-                
+
                 # Verify graph was created
                 assert len(graph.nodelist_building) > 0
                 assert graph.number_of_edges() > 0
@@ -217,8 +217,14 @@ class TestE15IntegrationPipeline:
                 
                 assign_demand_parameters(test_graph, params_template)
 
-                assert estimate_m_flow_demand_based(test_graph, dT_attribute="dTDesign")
-                
+                #assert estimate_m_flow_demand_based(test_graph, dT_attribute="dTDesign")
+                catalog = "isoplus"
+                size_hydronic_network(graph= test_graph, catalog=catalog, dT_attribute="dTDesign")
+
+                test_graph.network_simplification("heating")
+
+                assert test_graph.simplification_level == 1, "Network simplification failed to change the graph structure"
+
                 # Step 3: Verify output
                 models_dir = os.path.join(workspace, 'models')
                 assert os.path.exists(models_dir), "Models directory was not created"
