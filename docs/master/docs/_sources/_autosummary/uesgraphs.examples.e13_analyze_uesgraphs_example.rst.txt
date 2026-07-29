@@ -1,0 +1,29 @@
+﻿uesgraphs.examples.e13\_analyze\_uesgraphs\_example
+===================================================
+
+.. automodule:: uesgraphs.examples.e13_analyze_uesgraphs_example
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      main
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

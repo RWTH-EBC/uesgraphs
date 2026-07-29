@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_15b4b1c316851423_uesgenerator_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2026-05-15 14:22 +0000
+            created at 2026-07-29 14:33 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -1861,9 +1861,9 @@
     <p class="pln"><span class="n"><a id="t1779" href="#t1779">1779</a></span><span class="t">            <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1780" href="#t1780">1780</a></span><span class="t">                <span class="com"># Multiple matches - find closest</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t1781" href="#t1781">1781</a></span><span class="t">                <span class="key">raise</span> <span class="nam">ValueError</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t1782" href="#t1782">1782</a></span><span class="t">                        <span class="str">f"Ambiguous building-node matching: Found {len(candidates)} network nodes "</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t1783" href="#t1783">1783</a></span><span class="t">                        <span class="str">f"within tolerance {tolerance} degrees for building at {polygon.coords[0]}. "</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t1784" href="#t1784">1784</a></span><span class="t">                        <span class="str">f"Reduce tolerance or check for overlapping network nodes."</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t1782" href="#t1782">1782</a></span><span class="t">                        <span class="fst">f"</span><span class="fst">Ambiguous building-node matching: Found </span><span class="op">{</span><span class="nam">len</span><span class="op">(</span><span class="nam">candidates</span><span class="op">)</span><span class="op">}</span><span class="fst"> network nodes </span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t1783" href="#t1783">1783</a></span><span class="t">                        <span class="fst">f"</span><span class="fst">within tolerance </span><span class="op">{</span><span class="nam">tolerance</span><span class="op">}</span><span class="fst"> degrees for building at </span><span class="op">{</span><span class="nam">polygon</span><span class="op">.</span><span class="nam">coords</span><span class="op">[</span><span class="num">0</span><span class="op">]</span><span class="op">}</span><span class="fst">. </span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t1784" href="#t1784">1784</a></span><span class="t">                        <span class="fst">f"</span><span class="fst">Reduce tolerance or check for overlapping network nodes.</span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1785" href="#t1785">1785</a></span><span class="t">                    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1786" href="#t1786">1786</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1787" href="#t1787">1787</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -1908,7 +1908,7 @@
     <p class="mis show_mis"><span class="n"><a id="t1826" href="#t1826">1826</a></span><span class="t">        <span class="key">from</span> <span class="nam">uesgraphs</span><span class="op">.</span><span class="nam">visuals</span> <span class="key">import</span> <span class="nam">Visuals</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1827" href="#t1827">1827</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1828" href="#t1828">1828</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t1829" href="#t1829">1829</a></span><span class="t">        <span class="nam">save_as</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">join</span><span class="op">(</span><span class="nam">save_path</span><span class="op">,</span> <span class="str">f"{filename}.pdf"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t1829" href="#t1829">1829</a></span><span class="t">        <span class="nam">save_as</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">join</span><span class="op">(</span><span class="nam">save_path</span><span class="op">,</span> <span class="fst">f"</span><span class="op">{</span><span class="nam">filename</span><span class="op">}</span><span class="fst">.pdf</span><span class="fst">"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t1830" href="#t1830">1830</a></span><span class="t">        <span class="nam">vis</span> <span class="op">=</span> <span class="nam">Visuals</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t1831" href="#t1831">1831</a></span><span class="t">        <span class="nam">vis</span><span class="op">.</span><span class="nam">show_network</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1832" href="#t1832">1832</a></span><span class="t">            <span class="nam">save_as</span><span class="op">=</span><span class="nam">save_as</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -1917,7 +1917,7 @@
     <p class="pln"><span class="n"><a id="t1835" href="#t1835">1835</a></span><span class="t">            <span class="nam">simple</span><span class="op">=</span><span class="nam">simple</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1836" href="#t1836">1836</a></span><span class="t">            <span class="nam">labels</span><span class="op">=</span><span class="nam">labels</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1837" href="#t1837">1837</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t1838" href="#t1838">1838</a></span><span class="t">        <span class="nam">print</span><span class="op">(</span><span class="str">f"Saved visualization to {save_as}"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t1838" href="#t1838">1838</a></span><span class="t">        <span class="nam">print</span><span class="op">(</span><span class="fst">f"</span><span class="fst">Saved visualization to </span><span class="op">{</span><span class="nam">save_as</span><span class="op">}</span><span class="fst">"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1839" href="#t1839">1839</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t1840" href="#t1840">1840</a></span><span class="t">        <span class="key">return</span> <span class="key">None</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t1841" href="#t1841">1841</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -2488,12 +2488,12 @@
     <p class="run"><span class="n"><a id="t2406" href="#t2406">2406</a></span><span class="t">                    <span class="nam">record_list</span><span class="op">[</span><span class="nam">edge</span><span class="op">]</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">edges</span><span class="op">[</span><span class="nam">edge</span><span class="op">]</span><span class="op">[</span><span class="nam">key</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t2407" href="#t2407">2407</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t2408" href="#t2408">2408</a></span><span class="t">            <span class="key">if</span> <span class="key">not</span> <span class="nam">record_list</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t2409" href="#t2409">2409</a></span><span class="t">                <span class="key">raise</span> <span class="nam">ValueError</span><span class="op">(</span><span class="str">f"No values found for key '{key}' in mode '{mode}'"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t2409" href="#t2409">2409</a></span><span class="t">                <span class="key">raise</span> <span class="nam">ValueError</span><span class="op">(</span><span class="fst">f"</span><span class="fst">No values found for key '</span><span class="op">{</span><span class="nam">key</span><span class="op">}</span><span class="fst">' in mode '</span><span class="op">{</span><span class="nam">mode</span><span class="op">}</span><span class="fst">'</span><span class="fst">"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t2410" href="#t2410">2410</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t2411" href="#t2411">2411</a></span><span class="t">            <span class="key">return</span> <span class="nam">min</span><span class="op">(</span><span class="nam">record_list</span><span class="op">.</span><span class="nam">values</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">,</span> <span class="nam">max</span><span class="op">(</span><span class="nam">record_list</span><span class="op">.</span><span class="nam">values</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t2412" href="#t2412">2412</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t2413" href="#t2413">2413</a></span><span class="t">        <span class="key">except</span> <span class="nam">KeyError</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t2414" href="#t2414">2414</a></span><span class="t">            <span class="key">raise</span> <span class="nam">KeyError</span><span class="op">(</span><span class="str">f"Attribute '{key}' not found for all {mode}s"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t2414" href="#t2414">2414</a></span><span class="t">            <span class="key">raise</span> <span class="nam">KeyError</span><span class="op">(</span><span class="fst">f"</span><span class="fst">Attribute '</span><span class="op">{</span><span class="nam">key</span><span class="op">}</span><span class="fst">' not found for all </span><span class="op">{</span><span class="nam">mode</span><span class="op">}</span><span class="fst">s</span><span class="fst">"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
@@ -2503,7 +2503,7 @@
             <a id="nextFileLink" class="nav" href="d_15b4b1c316851423_uesgenerator_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2026-05-15 14:22 +0000
+            created at 2026-07-29 14:33 +0000
         </p>
     </div>
 </footer>

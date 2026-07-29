@@ -107,6 +107,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">holidays</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">hol</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">files</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -212,14 +213,14 @@
         <span class="n">max_flow</span><span class="o">=</span><span class="n">max_flowrate</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">dhw_profile</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;uesgraphs&quot;</span> <span class="o">/</span> <span class="s2">&quot;DHW_estimation&quot;</span> <span class="o">/</span> <span class="s2">&quot;DHWcalc_Files&quot;</span> <span class="o">/</span> <span class="n">dhw_file</span>
+    <span class="n">dhw_profile</span> <span class="o">=</span> <span class="n">files</span><span class="p">(</span><span class="n">__package__</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;DHWcalc_Files&quot;</span> <span class="o">/</span> <span class="n">dhw_file</span>
 
     <span class="k">assert</span> <span class="n">dhw_profile</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="s1">&#39;No DHWcalc File for the selected &#39;</span> \
                                  <span class="s1">&#39;parameters: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dhw_file</span><span class="p">)</span>
 
     <span class="c1"># Flowrate in Liter per Hour in each Step</span>
     <span class="n">water_LperH</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span>
-                   <span class="nb">open</span><span class="p">(</span><span class="n">dhw_profile</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()]</span>  <span class="c1"># L/h each step</span>
+                   <span class="n">dhw_profile</span><span class="o">.</span><span class="n">open</span><span class="p">()</span><span class="o">.</span><span class="n">readlines</span><span class="p">()]</span>  <span class="c1"># L/h each step</span>
 
     <span class="n">date_range</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;2019-01-01&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;2020-01-01&#39;</span><span class="p">,</span>
                                <span class="n">freq</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">s_step</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;S&#39;</span><span class="p">)</span>
