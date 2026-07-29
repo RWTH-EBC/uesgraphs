@@ -8,6 +8,9 @@ recursive-include uesgraphs/data *
 recursive-include uesgraphs/data/templates *.mako
 recursive-include uesgraphs/data/pipe_catalogs *.csv
 recursive-include uesgraphs/data/examples *
+recursive-include uesgraphs/examples *.ipynb
+recursive-include uesgraphs/DHW_estimation/Data *.json
+recursive-include uesgraphs/DHW_estimation/DHWcalc_Files *
 
 # Exclude compiled Python files
 global-exclude __pycache__

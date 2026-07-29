@@ -79,7 +79,7 @@ def main():
     
     dir_ues = os.path.dirname(os.path.dirname(workspace))
     pinola_json = os.path.join(dir_ues, "workspace", "e11", "inputs","test_modelgen", "Pinola", "nodes.json")
-    pinola_sim_data = os.path.join(dir_ues,"uesgraphs","data","Pinola_low_temp_network_inputs.gzip")
+    pinola_sim_data = os.path.join(dir_ues,"uesgraphs","data","Pinola_low_temp_network_inputs.mat")
     pinola_sysm_graph = os.path.join(dir_ues, "workspace","e11","Pinola", "model_sysm_graph_pinola.json")
 
 

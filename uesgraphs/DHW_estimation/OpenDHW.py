@@ -13,6 +13,7 @@ import matplotlib.dates as mdates
 import holidays as hol
 import json
 from pathlib import Path
+from importlib.resources import files
 
 
 """
@@ -118,14 +119,14 @@ def import_from_dhwcalc(s_step, daylight_saving, categories,occupancy,
         max_flow=max_flowrate,
     )
 
-    dhw_profile = Path.cwd() / "uesgraphs" / "DHW_estimation" / "DHWcalc_Files" / dhw_file
+    dhw_profile = files(__package__) / "DHWcalc_Files" / dhw_file
 
     assert dhw_profile.exists(), 'No DHWcalc File for the selected ' \
                                  'parameters: {}'.format(dhw_file)
 
     # Flowrate in Liter per Hour in each Step
     water_LperH = [int(word.strip('\n')) for word in
-                   open(dhw_profile).readlines()]  # L/h each step
+                   dhw_profile.open().readlines()]  # L/h each step
 
     date_range = pd.date_range(start='2019-01-01', end='2020-01-01',
                                freq=str(s_step) + 'S')

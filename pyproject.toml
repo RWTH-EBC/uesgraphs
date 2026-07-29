@@ -9,7 +9,7 @@ description = "Automated graph-based simulation model generation and analysis to
 authors = [{name = "Rahul Mohandasan Karuvingal", email = "rahul.karuvingal@eonerc.rwth-aachen.de"}]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 dependencies = [
     "geopandas",
     "networkx>=2.1",
@@ -60,9 +60,16 @@ repository = "https://github.com/RWTH-EBC/uesgraphs"
 compatible_aixlib_version = "<= '2.1.1'"
 
 [tool.setuptools]
-packages = ["uesgraphs", "uesgraphs.analyze", "uesgraphs.analyze.data_handling", 
-            "uesgraphs.examples", "uesgraphs.systemmodels", "uesgraphs.uesmodels", 
-            "uesgraphs.uesmodels.utilities"]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["uesgraphs*"]
+exclude = [
+    "uesgraphs.data",
+    "uesgraphs.data.*",
+    "uesgraphs.DHW_estimation.DHWcalc_Files",
+    "uesgraphs.DHW_estimation.DHWcalc_Files.*",
+]
 
 [tool.setuptools.package-data]
 uesgraphs = [
@@ -70,6 +77,15 @@ uesgraphs = [
     "data/templates/**/*.mako",
     "data/pipe_catalogs/*.csv",
     "data/examples/**/*"
+]
+"uesgraphs.examples" = [
+    "*.ipynb"
+]
+"uesgraphs.DHW_estimation" = [
+    "DHWcalc_Files/*"
+]
+"uesgraphs.DHW_estimation.Data" = [
+    "*.json"
 ]
 
 [tool.setuptools.exclude-package-data]
