@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "uesgraphs"
-version = "2.2.2"
-description = "Automated graph-based simulation model generation and analysis tool"
+version = "2.2.3"
+description = "Automated graph based simulation model generation and analysis tool"
 authors = [{name = "Rahul Mohandasan Karuvingal", email = "rahul.karuvingal@eonerc.rwth-aachen.de"}]
 license = {text = "MIT"}
 readme = "README.md"
