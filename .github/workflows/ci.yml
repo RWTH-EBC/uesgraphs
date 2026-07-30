@@ -18,7 +18,7 @@ jobs:
       PYTHON_TEST_MATRIX: '["3.12", "3.13"]'
       USE_PYLINT: false
       USE_RUFF: false
-      BUILD_PACKAGE: false
+      BUILD_PACKAGE: true
       GENERATE_DOCUMENTATION: true
       GH_PAGES: true
       GH_PAGES_BRANCH: "gh-pages"

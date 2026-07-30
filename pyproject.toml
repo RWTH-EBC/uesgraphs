@@ -63,12 +63,10 @@ compatible_aixlib_version = "<= '2.1.1'"
 include-package-data = true
 
 [tool.setuptools.packages.find]
-include = ["uesgraphs*"]
+include = ["uesgraphs*", "uesgraphs.*"]
 exclude = [
     "uesgraphs.data",
     "uesgraphs.data.*",
-    "uesgraphs.DHW_estimation.DHWcalc_Files",
-    "uesgraphs.DHW_estimation.DHWcalc_Files.*",
 ]
 
 [tool.setuptools.package-data]
@@ -86,6 +84,12 @@ uesgraphs = [
 ]
 "uesgraphs.DHW_estimation.Data" = [
     "*.json"
+]
+"uesgraphs.systemmodels_pp" = [
+    "**/*"
+]
+"uesgraphs.teaser_integration" = [
+    "**/*"
 ]
 
 [tool.setuptools.exclude-package-data]
