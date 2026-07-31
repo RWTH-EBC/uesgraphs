@@ -1,4 +1,4 @@
-.. image:: _static/EBC_Logo.png
+.. image:: _static/rwth_eon_erc_cmyk.jpg
    :alt: EBC Logo
    :align: right
 
