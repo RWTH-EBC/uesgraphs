@@ -1,4 +1,4 @@
-![E.ON EBC RWTH Aachen University](./uesgraphs/img/EBC_Logo.png)
+![E.ON EBC RWTH Aachen University](./uesgraphs/img/rwth_eon_erc_cmyk.jpg)
 
 # UESgraphs
 
