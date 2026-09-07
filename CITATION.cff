@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "UESgraphs: Automated graph-based district heating and cooling simulation model generation and analysis tool."
+authors:
+  - family-names: "Karuvingal"
+    given-names: "Rahul Mohandasan"
+    orcid: "https://orcid.org/0009-0009-0165-0527"
+  - family-names: "Droste"
+    given-names: "Kai"
+    orcid: "https://orcid.org/0000-0002-3088-7138"
+  - family-names: "Kopka"
+    given-names: "Leon"
+    orcid: "https://orcid.org/0009-0005-4125-8811"
+  - family-names: "Klingebiel"
+    given-names: "Jonas"
+    orcid: "https://orcid.org/0000-0002-7489-0312"
+  - family-names: "Müller"
+    given-names: "Dirk"
+    orcid: "https://orcid.org/0000-0002-6106-6607"
+repository-code: "https://github.com/RWTH-EBC/uesgraphs"
+license: "MIT"
+version: "2.2.3"
