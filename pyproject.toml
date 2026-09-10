@@ -28,7 +28,7 @@ dependencies = [
     "scipy",
     "tomli>=1.2.0;python_version<'3.11'",
     "holidays==0.94",
-    "pandapipes==0.13.0",
+    "pandapipes==0.14.0",
     "teaser==1.3.1",
 ]
 
