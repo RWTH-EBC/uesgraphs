@@ -263,7 +263,20 @@ def uesgraph_to_modelica(uesgraph, simplification_level,
 
         # Extract ground temperature data (assuming ground_depth is in sim_params or use default)
         ground_depth = sim_params.get('ground_depth', '1.0 m')  # Default fallback
-        ground_temp_list = ground_temp_df[ground_depth].tolist()
+        # Simulation time 0 = first row of the demand inputs (they are written
+        # onto the same 0, dt, 2dt, ... axis); align ground data by date to it.
+        sim_start = pd.read_csv(input_heating, index_col=0, parse_dates=True, nrows=1).index[0]
+        if not isinstance(sim_start, pd.Timestamp):
+            raise ValueError(f"Cannot derive simulation start from {input_heating}: "
+                             f"first index entry {sim_start!r} is not a timestamp")
+        ground_temp_list = align_ground_temp_to_simulation(
+            ground_temp_df,
+            depth=ground_depth,
+            start=sim_start,
+            stop_time=float(sim_params['stop_time']),
+            timestep=uesgraph.graph['timestep'],
+            logger=logger,
+        )
         logger.info(f"Using ground temperature data for depth {ground_depth}")
 
         # Save simulation parameters to CSV if requested
@@ -1559,9 +1572,99 @@ def load_ground_temp_data(ground_temp_path):
         raise FileNotFoundError(f"CSV file not found: {ground_temp_path}")
     if len(ground_temp.index) == 0:
         raise ValueError("CSV file is empty")
-    
-    
+
+
     return ground_temp
+
+
+def align_ground_temp_to_simulation(ground_temp_df, depth, start, stop_time, timestep,
+                                    logger=None):
+    """Cut and resample ground temperatures onto the simulation time axis.
+
+    The Modelica input table is written against ``SystemModelHeating.time``
+    (0, timestep, ..., stop_time seconds after ``start``). Ground data must
+    therefore be matched by date, not by row position.
+
+    - File covers the window by date: values are interpolated in time onto
+      the simulation timestamps.
+    - File covers a single calendar year that does not match (typical-year
+      data such as ``ground_temps_hassel.csv``): the year is repeated onto the
+      simulation years (by calendar date, across the year boundary) and a
+      warning is logged.
+    - Otherwise a ValueError is raised.
+
+    Parameters
+    ----------
+    ground_temp_df : pd.DataFrame
+        Ground temperatures with DatetimeIndex, one column per depth (K).
+    depth : str
+        Column to use, e.g. ``"1.0 m"``.
+    start : pd.Timestamp
+        Timestamp of simulation time 0 (first row of the demand inputs).
+    stop_time : float
+        Simulation stop time in seconds.
+    timestep : float
+        Simulation timestep in seconds.
+
+    Returns
+    -------
+    list of float
+        One value per simulation timestep (``int(stop_time/timestep) + 1``).
+    """
+    if logger is None:
+        logger = logging.getLogger(__name__)
+    if depth not in ground_temp_df.columns:
+        raise KeyError(f"Depth {depth!r} not in ground temperature data "
+                       f"(available: {list(ground_temp_df.columns)})")
+    if not isinstance(ground_temp_df.index, pd.DatetimeIndex):
+        raise ValueError("ground temperature data needs a datetime index to be "
+                         "aligned to the simulation window")
+
+    s = ground_temp_df[depth].astype(float).dropna()
+    s = s[~s.index.duplicated(keep="first")].sort_index()
+
+    n_steps = int(stop_time / timestep) + 1
+    target = pd.DatetimeIndex(
+        pd.Timestamp(start) + pd.to_timedelta([i * timestep for i in range(n_steps)], unit="s")
+    )
+
+    if not (s.index[0] <= target[0] and s.index[-1] >= target[-1]):
+        years = s.index.year.unique()
+        if len(years) != 1:
+            raise ValueError(
+                f"ground temperature data ({s.index[0]} .. {s.index[-1]}) does not cover "
+                f"the simulation window ({target[0]} .. {target[-1]})"
+            )
+        base = int(years[0])
+        logger.warning(
+            f"Ground temperature data covers only {base}; projecting it as a typical "
+            f"year onto the simulation window {target[0]} .. {target[-1]}"
+        )
+        parts = []
+        for year in range(target[0].year - 1, target[-1].year + 2):
+            shifted = s.copy()
+            shifted.index = shifted.index + pd.DateOffset(years=year - base)
+            parts.append(shifted)
+        s = pd.concat(parts)
+        s = s[~s.index.duplicated(keep="first")].sort_index()
+
+    aligned = s.reindex(s.index.union(target)).interpolate(method="time").reindex(target)
+    if aligned.isna().any():
+        raise ValueError(f"ground temperature could not be aligned for "
+                         f"{int(aligned.isna().sum())} simulation timesteps")
+
+    inside = s[(s.index >= target[0]) & (s.index <= target[-1])]
+    if len(inside) > 1:
+        max_gap = inside.index.to_series().diff().max()
+        if max_gap > pd.Timedelta(hours=6):
+            logger.warning(f"Ground temperature data has a gap of {max_gap} inside the "
+                           f"simulation window (linearly interpolated)")
+
+    logger.info(
+        f"Ground temperature {depth} aligned to {target[0]} .. {target[-1]}: "
+        f"{aligned.min() - 273.15:.1f} .. {aligned.max() - 273.15:.1f} degC"
+    )
+    return aligned.tolist()
 
 def save_setup_params_to_csv(setup_params, sim_name, sim_model_dir):
     """
